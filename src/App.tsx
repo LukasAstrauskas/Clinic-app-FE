@@ -1,5 +1,5 @@
 import React from 'react';
-import AddPatients from './addPatients';
+import { AddPatients } from './addPatients';
 
 function App() {
   // return <div>Clinic app</div>;

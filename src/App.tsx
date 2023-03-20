@@ -1,7 +1,8 @@
 import React from 'react';
+import MainScreenAdminView from './components/main-screen/MainScreenAdminView';
 
 function App() {
-  return <div>Clinic app</div>;
+  return <MainScreenAdminView />;
 }
 
 export default App;

@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  padding: 20px;
+}
+.clinic-logo {
+  width: 156px;
+  height: 46px;
+}
+
+.avatar-logo {
+  color: black;
+  text-decoration: none;
+}
+
+.avatar {
+  padding: 5px;
+  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-dropdown-menu {
+  top: 50px;
+  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
+.main {
+  height: 83vh;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 210px;
+  width: 346px;
+  background-color: #25ced1;
+  border-radius: 10px;
+  margin: 10px;
+  font-weight: bold;
+  margin-top: -80%;
+}
+
+.item-link {
+  text-decoration: none;
+  color: black;
+}
+
+.item-icon {
+  padding: 5px;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: #f4f4f4;
+  border-radius: 5px;
+}

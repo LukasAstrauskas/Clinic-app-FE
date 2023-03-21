@@ -280,8 +280,10 @@ export const AddPatients = () => {
                       }}
                     >
                       <TableCell>
-                        {' '}
-                        <Checkbox />{' '}
+                        <Checkbox
+                          id={patient.id.toString()}
+                          onChange={handleChecked}
+                        />
                       </TableCell>
                       <TableCell>{patient.name}</TableCell>
                       <TableCell align='center'>{patient.email}</TableCell>

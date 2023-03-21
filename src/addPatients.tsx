@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, createTheme } from '@mui/system';
+import { Box } from '@mui/system';
 import PatientDB from './MockDB';
 import {
   TableContainer,
@@ -24,9 +24,15 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 
 export const AddPatients = () => {
   const [open, setOpen] = useState(false);
-  const [searched, setSearched] = useState<typeof PatientDB>();
+  const [searched, setSearched] = useState<typeof PatientDB>([]);
   const [searching, setSearching] = useState<boolean>(false);
   const [checkedPatients, setCheckedPatiens] = useState<any>([]);
+
+  type PatientType = {
+    name: string;
+    email: string;
+    id: number;
+  };
   const handleOpen = () => {
     setOpen(true);
   };
@@ -35,7 +41,11 @@ export const AddPatients = () => {
     setOpen(false);
   };
 
+  const [id, setId] = useState(20);
+
   const handleCreate = () => {
+    const temp = 1 + id;
+    setId(temp);
     const NameValue = (
       document.getElementById('new-patient-name-field') as HTMLInputElement
     ).value;
@@ -52,6 +62,7 @@ export const AddPatients = () => {
     const NewPatient = {
       name: NameValue + ' ' + LastNameValue,
       email: EmailValue,
+      id: id,
     };
 
     PatientDB.push(NewPatient);
@@ -62,27 +73,27 @@ export const AddPatients = () => {
     console.log('all patients to delete', checkedPatients);
   };
 
-  const handleChecked = (e) => {
+  const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedPatient = e.target;
     let temp = checkedPatients;
     if (selectedPatient.checked) {
       setCheckedPatiens([...checkedPatients, selectedPatient.id]);
     } else {
-      temp = temp.filter((patient) => patient !== selectedPatient.id);
+      temp = temp.filter((patient: any) => patient !== selectedPatient.id);
       setCheckedPatiens(temp);
     }
   };
 
-  const handleSearch = (e: any) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearched([]);
-    const tempArray: Array<typeof PatientDB> = [];
+    const tempArray: Array<PatientType> = [];
     const search = e.target.value.toLowerCase();
     if (search.length != 0) {
       setSearching(true);
     } else {
       setSearching(false);
     }
-    PatientDB.forEach((patient) => {
+    PatientDB.forEach((patient: PatientType) => {
       if (
         patient.name.toLowerCase().includes(search) ||
         patient.email.includes(search)

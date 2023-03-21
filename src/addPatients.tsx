@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
-// import { Input } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, ThemeProvider, createTheme } from '@mui/system';
+import { Box, createTheme } from '@mui/system';
 import PatientDB from './MockDB';
 import {
   TableContainer,
@@ -20,39 +19,78 @@ import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Dialog from '@mui/material/Dialog';
-// import DialogActions from '@mui/material/DialogActions';
-// import DialogContent from '@mui/material/DialogContent';
-// import DialogContentText from '@mui/material/DialogContentText';
-// import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-const theme = createTheme({
-  palette: {
-    background: {
-      paper: '#fff',
-    },
-    text: {
-      primary: '#173A5E',
-      secondary: '#e0461f',
-    },
-    action: {
-      active: '#001E3C',
-    },
-    success: {
-      dark: '#009688',
-    },
-  },
-});
 
 export const AddPatients = () => {
   const [open, setOpen] = useState(false);
-
+  const [searched, setSearched] = useState<typeof PatientDB>();
+  const [searching, setSearching] = useState<boolean>(false);
+  const [checkedPatients, setCheckedPatiens] = useState<any>([]);
   const handleOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleCreate = () => {
+    const NameValue = (
+      document.getElementById('new-patient-name-field') as HTMLInputElement
+    ).value;
+    const LastNameValue = (
+      document.getElementById('new-patient-LastName-field') as HTMLInputElement
+    ).value;
+    const EmailValue = (
+      document.getElementById('new-patient-email-field') as HTMLInputElement
+    ).value;
+    const PasswordValue = (
+      document.getElementById('new-patient-password-field') as HTMLInputElement
+    ).value;
+
+    const NewPatient = {
+      name: NameValue + ' ' + LastNameValue,
+      email: EmailValue,
+    };
+
+    PatientDB.push(NewPatient);
+    setOpen(false);
+  };
+
+  const handleDelete = () => {
+    console.log('all patients to delete', checkedPatients);
+  };
+
+  const handleChecked = (e) => {
+    const selectedPatient = e.target;
+    let temp = checkedPatients;
+    if (selectedPatient.checked) {
+      setCheckedPatiens([...checkedPatients, selectedPatient.id]);
+    } else {
+      temp = temp.filter((patient) => patient !== selectedPatient.id);
+      setCheckedPatiens(temp);
+    }
+  };
+
+  const handleSearch = (e: any) => {
+    setSearched([]);
+    const tempArray: Array<typeof PatientDB> = [];
+    const search = e.target.value.toLowerCase();
+    if (search.length != 0) {
+      setSearching(true);
+    } else {
+      setSearching(false);
+    }
+    PatientDB.forEach((patient) => {
+      if (
+        patient.name.toLowerCase().includes(search) ||
+        patient.email.includes(search)
+      ) {
+        tempArray.push(patient);
+      }
+    });
+    setSearched(tempArray);
   };
 
   return (
@@ -74,7 +112,7 @@ export const AddPatients = () => {
           }}
         />
         <TextField
-          // onChange={handleSearch}
+          onChange={handleSearch}
           sx={{ pb: 5, scale: '90%' }}
           className='search'
           id='search'
@@ -126,8 +164,12 @@ export const AddPatients = () => {
               scale: '90%',
             }}
           >
-            <TextField label='First name'></TextField>
             <TextField
+              label='First name'
+              id='new-patient-name-field'
+            ></TextField>
+            <TextField
+              id='new-patient-LastName-field'
               label='Last name'
               sx={{
                 ml: '20px',
@@ -143,8 +185,9 @@ export const AddPatients = () => {
               scale: '90%',
             }}
           >
-            <TextField label='Email'></TextField>
+            <TextField label='Email' id='new-patient-email-field'></TextField>
             <TextField
+              id='new-patient-password-field'
               type='password'
               label='Temporary password'
               sx={{
@@ -164,7 +207,13 @@ export const AddPatients = () => {
             }}
           >
             <Button onClick={handleClose}>Cancel</Button>
-            <Button variant='contained'>Create</Button>
+            <Button
+              variant='contained'
+              sx={{ marginLeft: 3 }}
+              onClick={handleCreate}
+            >
+              Create
+            </Button>
           </Box>
         </Box>
       </Dialog>
@@ -179,14 +228,15 @@ export const AddPatients = () => {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell>
+                <TableCell sx={{ bgcolor: '#d3d3d3' }}>
                   {' '}
-                  <IconButton color='error'>
+                  <IconButton onClick={handleDelete} color='error'>
                     <DeleteIcon />
                   </IconButton>{' '}
                 </TableCell>
                 <TableCell
                   sx={{
+                    bgcolor: '#d3d3d3',
                     fontWeight: '700',
                   }}
                 >
@@ -194,37 +244,70 @@ export const AddPatients = () => {
                 </TableCell>
                 <TableCell
                   sx={{
+                    bgcolor: '#d3d3d3',
                     fontWeight: '700',
                   }}
                   align='center'
                 >
                   Email
                 </TableCell>
-                <TableCell />
+                <TableCell
+                  sx={{
+                    bgcolor: '#d3d3d3',
+                  }}
+                />
               </TableRow>
             </TableHead>
             <TableBody>
-              {PatientDB.map((patient, index) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    width: '100%',
-                    '&:last-child td,  &:last-child th': { border: 0 },
-                  }}
-                >
-                  <TableCell>
-                    {' '}
-                    <Checkbox />{' '}
-                  </TableCell>
-                  <TableCell>{patient.name}</TableCell>
-                  <TableCell align='center'>{patient.email}</TableCell>
-                  <TableCell>
-                    <IconButton color='primary'>
-                      <EditIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {searching ? (
+                <>
+                  {searched.map((patient, index) => (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        width: '100%',
+                      }}
+                    >
+                      <TableCell>
+                        {' '}
+                        <Checkbox />{' '}
+                      </TableCell>
+                      <TableCell>{patient.name}</TableCell>
+                      <TableCell align='center'>{patient.email}</TableCell>
+                      <TableCell>
+                        <IconButton color='primary'>
+                          <EditIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </>
+              ) : (
+                <>
+                  {PatientDB.map((patient, index) => (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        width: '100%',
+                      }}
+                    >
+                      <TableCell>
+                        <Checkbox
+                          id={patient.id.toString()}
+                          onChange={handleChecked}
+                        />
+                      </TableCell>
+                      <TableCell>{patient.name}</TableCell>
+                      <TableCell align='center'>{patient.email}</TableCell>
+                      <TableCell>
+                        <IconButton color='primary'>
+                          <EditIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </>
+              )}
             </TableBody>
           </Table>
         </TableContainer>

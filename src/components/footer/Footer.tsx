@@ -1,9 +1,9 @@
 import React from 'react';
-import '../MainScreen.css';
+import styles from './Footer.module.css';
 
 const Footer = () => {
   return (
-    <div className='footer'>
+    <div className={styles.footer}>
       <div>2023 | The Clinic</div>
       <div>
         Made by <b>Physician Registration Team</b> &copy;

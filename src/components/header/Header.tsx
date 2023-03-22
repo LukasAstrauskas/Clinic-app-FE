@@ -1,6 +1,6 @@
 import React from 'react';
-import '../MainScreen.css';
-import clinicLogo from '../../../assets/clinic-logo.png';
+import styles from './Header.module.css';
+import clinicLogo from '../../assets/clinic-logo.svg';
 import {
   Avatar,
   Button,
@@ -53,12 +53,17 @@ const Header = () => {
   }, [open]);
 
   return (
-    <div className='header'>
-      <div>
-        <a href='#'>
-          <img src={clinicLogo} alt='clinic-logo' className='clinic-logo' />
-        </a>
-      </div>
+    <div className={styles.header}>
+      <a href='#' className={styles.headerLogoLink}>
+        <div className={styles.headerLogoSection}>
+          <img
+            src={clinicLogo}
+            alt='clinic-logo'
+            className={styles.clinicLogo}
+          />
+          <h1>The Clinic</h1>
+        </div>
+      </a>
 
       <Stack direction='row' spacing={2}>
         <div>
@@ -70,8 +75,8 @@ const Header = () => {
             aria-haspopup='true'
             onClick={handleToggle}
           >
-            <Avatar className='avatar' sx={{ bgcolor: grey[100] }}>
-              <a href='#' className='avatar-logo'>
+            <Avatar className={styles.avatar} sx={{ bgcolor: grey[100] }}>
+              <a href='#' className={styles.avatarLogo}>
                 AA
               </a>
             </Avatar>

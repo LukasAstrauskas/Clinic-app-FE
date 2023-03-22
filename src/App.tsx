@@ -1,7 +1,12 @@
 import React from 'react';
+import Login from './pages/Login';
 
 function App() {
-  return <div>Clinic app</div>;
+  return (
+    <>
+      <Login />
+    </>
+  );
 }
 
 export default App;

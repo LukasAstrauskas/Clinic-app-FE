@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Content.module.css';
+import styles from './WelcomePage.module.css';
 
 const Item = (props: { icon2?: string; icon1: string; title: string }) => {
   return (

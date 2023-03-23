@@ -27,12 +27,30 @@ export const AddPatients = () => {
   const [searched, setSearched] = useState<typeof PatientDB>([]);
   const [searching, setSearching] = useState<boolean>(false);
   const [checkedPatients, setCheckedPatiens] = useState<any>([]);
+  const [patients, setPatients] = useState<PatientType[]>([]);
+  const GETrequest = new Request('http://localhost:8080/user', {
+    method: 'GET',
+    headers: new Headers({
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    }),
+  });
+
+  useEffect(() => {
+    fetch(GETrequest)
+      .then((res) => res.json())
+      .then((resJson) => {
+        setPatients(resJson);
+      });
+  });
 
   type PatientType = {
+    id: string;
     name: string;
     email: string;
-    id: number;
+    password: string;
   };
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -41,11 +59,7 @@ export const AddPatients = () => {
     setOpen(false);
   };
 
-  const [id, setId] = useState(20);
-
   const handleCreate = () => {
-    const temp = 1 + id;
-    setId(temp);
     const NameValue = (
       document.getElementById('new-patient-name-field') as HTMLInputElement
     ).value;
@@ -62,15 +76,31 @@ export const AddPatients = () => {
     const NewPatient = {
       name: NameValue + ' ' + LastNameValue,
       email: EmailValue,
-      id: id,
+      password: PasswordValue,
     };
 
-    PatientDB.push(NewPatient);
+    fetch('http://localhost:8080/user/post', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(NewPatient),
+    });
     setOpen(false);
   };
 
   const handleDelete = () => {
-    console.log('all patients to delete', checkedPatients);
+    checkedPatients.forEach((patient: string) => {
+      fetch(`http://localhost:8080/user/${patient}`, {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+    });
+    setCheckedPatiens([]);
   };
 
   const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,23 +115,21 @@ export const AddPatients = () => {
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearched([]);
-    const tempArray: Array<PatientType> = [];
+    const allTableRows = document.querySelectorAll('tr');
     const search = e.target.value.toLowerCase();
-    if (search.length != 0) {
-      setSearching(true);
+    if (search.length === 0) {
+      allTableRows.forEach((row) => {
+        row.classList.remove('hidden');
+      });
     } else {
-      setSearching(false);
+      allTableRows.forEach((row) => {
+        const rowText = row.textContent?.toLocaleLowerCase();
+        row.classList.add('hidden');
+        if (rowText?.includes(search) || rowText?.includes('name')) {
+          row.classList.remove('hidden');
+        }
+      });
     }
-    PatientDB.forEach((patient: PatientType) => {
-      if (
-        patient.name.toLowerCase().includes(search) ||
-        patient.email.includes(search)
-      ) {
-        tempArray.push(patient);
-      }
-    });
-    setSearched(tempArray);
   };
 
   return (
@@ -239,7 +267,13 @@ export const AddPatients = () => {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ bgcolor: '#d3d3d3' }}>
+                <TableCell
+                  sx={{
+                    bgcolor: '#d3d3d3',
+                    Width: '10px',
+                    // maxWidth: 36
+                  }}
+                >
                   {' '}
                   <IconButton onClick={handleDelete} color='error'>
                     <DeleteIcon />
@@ -249,6 +283,7 @@ export const AddPatients = () => {
                   sx={{
                     bgcolor: '#d3d3d3',
                     fontWeight: '700',
+                    Width: '40%',
                   }}
                 >
                   Name
@@ -257,6 +292,7 @@ export const AddPatients = () => {
                   sx={{
                     bgcolor: '#d3d3d3',
                     fontWeight: '700',
+                    Width: '40%',
                   }}
                   align='center'
                 >
@@ -270,57 +306,28 @@ export const AddPatients = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {searching ? (
-                <>
-                  {searched.map((patient, index) => (
-                    <TableRow
-                      key={index}
-                      sx={{
-                        width: '100%',
-                      }}
-                    >
-                      <TableCell>
-                        <Checkbox
-                          id={patient.id.toString()}
-                          onChange={handleChecked}
-                        />
-                      </TableCell>
-                      <TableCell>{patient.name}</TableCell>
-                      <TableCell align='center'>{patient.email}</TableCell>
-                      <TableCell>
-                        <IconButton color='primary'>
-                          <EditIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </>
-              ) : (
-                <>
-                  {PatientDB.map((patient, index) => (
-                    <TableRow
-                      key={index}
-                      sx={{
-                        width: '100%',
-                      }}
-                    >
-                      <TableCell>
-                        <Checkbox
-                          id={patient.id.toString()}
-                          onChange={handleChecked}
-                        />
-                      </TableCell>
-                      <TableCell>{patient.name}</TableCell>
-                      <TableCell align='center'>{patient.email}</TableCell>
-                      <TableCell>
-                        <IconButton color='primary'>
-                          <EditIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </>
-              )}
+              {patients.map((patient, index) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    width: '100%',
+                  }}
+                >
+                  <TableCell>
+                    <Checkbox
+                      id={patient.id.toString()}
+                      onChange={handleChecked}
+                    />
+                  </TableCell>
+                  <TableCell>{patient.name}</TableCell>
+                  <TableCell align='center'>{patient.email}</TableCell>
+                  <TableCell>
+                    <IconButton color='primary'>
+                      <EditIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>

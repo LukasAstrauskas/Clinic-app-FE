@@ -1,8 +1,7 @@
 import React from 'react';
 import { AddPatients } from './addPatients';
-
+import './style.css';
 function App() {
-  // return <div>Clinic app</div>;
   return <AddPatients />;
 }
 

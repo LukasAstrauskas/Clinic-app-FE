@@ -1,5 +1,7 @@
 .main {
-  height: 75vh;
+  height: 100%;
+  width: 100%;
+  margin-top: 20%;
 }
 
 .item {
@@ -13,7 +15,6 @@
   border-radius: 10px;
   margin: 10px;
   font-weight: bold;
-  margin-top: -80%;
 }
 
 .itemLink {

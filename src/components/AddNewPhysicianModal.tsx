@@ -4,7 +4,6 @@ import {
   Modal,
   Typography,
   TextField,
-  MenuItem,
   InputAdornment,
   IconButton,
 } from '@mui/material';
@@ -31,6 +30,13 @@ const Occupations = [
     label: 'Neurologist',
   },
 ];
+type Physician = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  occupation: string;
+};
 const modalStyle = {
   position: 'absolute' as const,
   top: '50%',
@@ -42,24 +48,26 @@ const modalStyle = {
   borderRadius: '20px',
   boxShadow: 24,
   p: 4,
-};
-const textFieldBoxStyle = {
-  display: 'flex',
-  flexWrap: 'wrap',
+  '& .physiciansModalForm': {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+  },
 };
 const textFieldStyle = {
   width: '46%',
-  margin: '2%',
   '& .MuiInputBase-root': {
-    background: 'lightgray',
+    background: '#ededed',
+  },
+  '& .MuiFormHelperText-root': {
+    minHeight: '40px',
   },
   '& .MuiInputLabel-root': {
-    color: '#9a9a9a',
-    fontSize: '25px',
-    marginTop: '1.5rem',
+    color: '#28cdcb',
+    marginTop: '0.8rem',
   },
   '& .css-14lo706': {
-    ariaHidden: 'false',
+    width: '0px',
   },
 };
 export default function AddNewPhysicianModal() {
@@ -69,6 +77,7 @@ export default function AddNewPhysicianModal() {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [physicians, setPhysicians] = useState<Physician[]>([]);
 
   const handleOpen = () => {
     setShowPassword(false);
@@ -84,28 +93,32 @@ export default function AddNewPhysicianModal() {
     return /\S+@\S+\.\S+/.test(email);
   }
   function isValidPassword(password: string) {
-    const errors = [];
-    if (password.length < 8) {
-      errors.push('Your password must be at least 8 characters');
-    }
-    if (password.search(/[a-z]/i) < 0) {
-      errors.push('Your password must contain at least one letter.');
-    }
-    if (password.search(/[0-9]/) < 0) {
-      errors.push('Your password must contain at least one digit.');
-    }
-    if (errors.length > 0) {
-      return false;
-    }
-    return true;
+    return (
+      password.length >= 8 && /[a-z]/i.test(password) && /[0-9]/.test(password)
+    );
   }
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    if (emailError === '' || passwordError === '') {
-      console.log('Form works');
-    } else {
-      console.log('Form baad');
+    if (emailError === '' && passwordError === '') {
+      const firstNameInput = document.getElementById(
+        'first-name',
+      ) as HTMLInputElement;
+      const lastNameInput = document.getElementById(
+        'last-name',
+      ) as HTMLInputElement;
+      const occupationInput = document.getElementById(
+        'occupation',
+      ) as HTMLInputElement;
+      const newPhysician: Physician = {
+        firstName: firstNameInput?.value || '',
+        lastName: lastNameInput?.value || '',
+        email: email,
+        password: password,
+        occupation: occupationInput?.value || '',
+      };
+      setPhysicians([...physicians, newPhysician]);
+      handleClose();
     }
   };
 
@@ -121,7 +134,7 @@ export default function AddNewPhysicianModal() {
       setPasswordError('');
     } else {
       setPasswordError(
-        'Password needs 1 letter, 1 number, and be 8+ characters.',
+        'Password requires 1 letter, 1 number, and be 8+ characters.',
       );
     }
   };
@@ -131,22 +144,32 @@ export default function AddNewPhysicianModal() {
       <Button onClick={handleOpen}>Open modal</Button>
       <Modal open={open} onClose={handleClose}>
         <Box sx={modalStyle}>
-          <Typography sx={{ textAlign: 'center' }} variant='h4' component='h2'>
-            Add new Physician
+          <Typography
+            sx={{
+              textAlign: 'center',
+              paddingBottom: '30px',
+              fontWeight: 'bold',
+            }}
+            variant='h5'
+            component='h2'
+          >
+            Add new physician
           </Typography>
-          <Box sx={textFieldBoxStyle}>
-            <form onSubmit={handleSubmit}>
+          <Box>
+            <form className='physiciansModalForm' onSubmit={handleSubmit}>
               <TextField
                 sx={textFieldStyle}
                 id='first-name'
-                placeholder='Name'
+                placeholder='First name'
                 variant='outlined'
+                helperText='First name'
               />
               <TextField
                 sx={textFieldStyle}
                 id='last-name'
                 placeholder='Last name'
                 variant='outlined'
+                helperText='Last name'
               />
               <TextField
                 sx={textFieldStyle}
@@ -192,17 +215,33 @@ export default function AddNewPhysicianModal() {
                 SelectProps={{ native: true }}
                 InputLabelProps={{ shrink: true }}
               >
-                <option value='' />
                 {Occupations.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
                 ))}
               </TextField>
-
-              <Box>
-                <Button type='submit'>Create</Button>
-                <Button onClick={handleClose}>Cancel</Button>
+              <Box sx={{ paddingLeft: '60%' }}>
+                <Button
+                  sx={{
+                    marginRight: '10px',
+                    color: 'orange',
+                    borderColor: 'lightGray',
+                  }}
+                  variant='outlined'
+                  onClick={handleClose}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  sx={{
+                    backgroundColor: '#28cdcb',
+                  }}
+                  variant='contained'
+                  type='submit'
+                >
+                  Create
+                </Button>
               </Box>
             </form>
           </Box>

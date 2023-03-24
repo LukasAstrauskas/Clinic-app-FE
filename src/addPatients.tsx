@@ -3,8 +3,8 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from '@mui/system';
-import PatientDB from './MockDB';
 import {
+  Modal,
   TableContainer,
   Table,
   TableHead,
@@ -24,11 +24,9 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 
 export const AddPatients = () => {
   const [open, setOpen] = useState(false);
-  const [searched, setSearched] = useState<typeof PatientDB>([]);
-  const [searching, setSearching] = useState<boolean>(false);
   const [checkedPatients, setCheckedPatiens] = useState<any>([]);
   const [patients, setPatients] = useState<PatientType[]>([]);
-  const GETrequest = new Request('http://localhost:8080/user', {
+  const GETrequest = new Request('http://localhost:8080/user/patients', {
     method: 'GET',
     headers: new Headers({
       Accept: 'application/json',
@@ -36,6 +34,31 @@ export const AddPatients = () => {
     }),
   });
 
+  const textFieldStyle = {
+    width: '47%',
+    '& .MuiInputBase-root': {
+      background: '#ededed',
+    },
+    '& .MuiFormHelperText-root': {
+      minHeight: '40px',
+    },
+    '& .MuiInputLabel-root': {
+      color: '#28cdcb',
+      marginTop: '0.8rem',
+    },
+  };
+  const modalStyle = {
+    position: 'absolute' as const,
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 550,
+    bgcolor: 'lightgrey',
+    border: '2px solid #D3D3D3',
+    borderRadius: '20px',
+    boxShadow: 24,
+    p: 4,
+  };
   useEffect(() => {
     fetch(GETrequest)
       .then((res) => res.json())
@@ -79,7 +102,7 @@ export const AddPatients = () => {
       password: PasswordValue,
     };
 
-    fetch('http://localhost:8080/user/post', {
+    fetch('http://localhost:8080/user/addpatients', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -143,6 +166,7 @@ export const AddPatients = () => {
       >
         <SearchIcon
           sx={{
+            ml: 1,
             mt: 2,
             mr: 0.6,
             scale: '170%',
@@ -152,22 +176,24 @@ export const AddPatients = () => {
         />
         <TextField
           onChange={handleSearch}
-          sx={{ pb: 5, scale: '90%' }}
+          sx={textFieldStyle}
           className='search'
           id='search'
           variant='outlined'
           placeholder='Search'
-          inputProps={{
-            style: { width: '21rem', fontSize: '17px' },
-          }}
+          style={{ width: '350px', marginLeft: 20 }}
         ></TextField>
 
         <Button
           onClick={handleOpen}
           sx={{
             ml: 5,
-            mb: 1.7,
-            scale: '130%',
+            mb: 3,
+            scale: '90%',
+            bgcolor: '#25ced1',
+            '&:hover': {
+              bgcolor: '#25ced1',
+            },
           }}
           variant='contained'
         >
@@ -176,15 +202,8 @@ export const AddPatients = () => {
         </Button>
       </Box>
 
-      <Dialog open={open} onClose={handleClose}>
-        <Box
-          sx={{
-            px: '30px',
-            py: '10px',
-            width: '500px',
-            height: '350px',
-          }}
-        >
+      <Modal open={open} onClose={handleClose}>
+        <Box sx={modalStyle}>
           <Typography
             variant='h5'
             align='center'
@@ -204,15 +223,18 @@ export const AddPatients = () => {
             }}
           >
             <TextField
+              sx={textFieldStyle}
               label='First name'
               id='new-patient-name-field'
             ></TextField>
             <TextField
+              sx={textFieldStyle}
+              // sx={{
+              //   ml: '20px',
+              // }}
               id='new-patient-LastName-field'
               label='Last name'
-              sx={{
-                ml: '20px',
-              }}
+              style={{ marginLeft: '20px' }}
             ></TextField>
           </Box>
 
@@ -224,19 +246,18 @@ export const AddPatients = () => {
               scale: '90%',
             }}
           >
-            <TextField label='Email' id='new-patient-email-field'></TextField>
+            <TextField
+              sx={textFieldStyle}
+              label='Email'
+              id='new-patient-email-field'
+            ></TextField>
             <TextField
               id='new-patient-password-field'
               type='password'
               label='Temporary password'
-              sx={{
-                ml: '20px',
-              }}
-            >
-              <IconButton>
-                <VisibilityIcon />
-              </IconButton>
-            </TextField>
+              sx={textFieldStyle}
+              style={{ marginLeft: '20px' }}
+            ></TextField>
           </Box>
 
           <Box
@@ -245,17 +266,34 @@ export const AddPatients = () => {
               textAlign: 'right',
             }}
           >
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button
+              sx={{
+                border: '1px solid orange',
+                color: 'orange',
+                '&:hover': {
+                  color: 'orange',
+                },
+              }}
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>
             <Button
               variant='contained'
-              sx={{ marginLeft: 3 }}
+              sx={{
+                marginLeft: 3,
+                bgcolor: '#25ced1',
+                '&:hover': {
+                  bgcolor: '#25ced1',
+                },
+              }}
               onClick={handleCreate}
             >
               Create
             </Button>
           </Box>
         </Box>
-      </Dialog>
+      </Modal>
 
       <Box
         sx={{
@@ -275,8 +313,8 @@ export const AddPatients = () => {
                   }}
                 >
                   {' '}
-                  <IconButton onClick={handleDelete} color='error'>
-                    <DeleteIcon />
+                  <IconButton onClick={handleDelete}>
+                    <DeleteIcon sx={{ color: 'orange' }} />
                   </IconButton>{' '}
                 </TableCell>
                 <TableCell
@@ -311,6 +349,7 @@ export const AddPatients = () => {
                   key={index}
                   sx={{
                     width: '100%',
+                    bgcolor: '#d3d3d3',
                   }}
                 >
                   <TableCell>

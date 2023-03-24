@@ -84,6 +84,8 @@ export default function AddNewPhysicianModal() {
     setOpen(true);
     setEmailError('');
     setPasswordError('');
+    setPassword('');
+    setEmail('');
   };
   const handleClose = () => setOpen(false);
 
@@ -141,7 +143,9 @@ export default function AddNewPhysicianModal() {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
+      <Button onClick={handleOpen} variant='outlined'>
+        Manage Physicians
+      </Button>
       <Modal open={open} onClose={handleClose}>
         <Box sx={modalStyle}>
           <Typography

@@ -1,0 +1,27 @@
+.main {
+  height: 100%;
+  width: 100%;
+  margin-top: 20%;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 210px;
+  width: 346px;
+  background-color: #25ced1;
+  border-radius: 10px;
+  margin: 10px;
+  font-weight: bold;
+}
+
+.itemLink {
+  text-decoration: none;
+  color: black;
+}
+
+.itemIcon {
+  padding: 5px;
+}

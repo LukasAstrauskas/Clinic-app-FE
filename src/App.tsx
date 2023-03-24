@@ -1,11 +1,17 @@
 import React from 'react';
-import Login from './pages/Login';
+import WelcomePage from './pages/welcome/WelcomePage';
+import Header from './components/header/Header';
+import Footer from './components/footer/Footer';
+import Container from '@mui/material/Container';
+import './App.css';
 
 function App() {
   return (
-    <>
-      <Login />
-    </>
+    <Container maxWidth='lg'>
+      <Header />
+      <WelcomePage />
+      <Footer />
+    </Container>
   );
 }
 

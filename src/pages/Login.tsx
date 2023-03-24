@@ -9,11 +9,23 @@ import styles from './Login.module.css';
 
 const Login = () => {
   const [errorAlertOpen, setSignInError] = useState(false);
+  const [email, setEmail] = useState('');
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,3}$/;
 
   const handleSignInClick = () => {
     // Handle Sign in logic
     // If there's an error, set signInError to true
     setSignInError(true);
+  };
+  const handleEmailChange = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setEmail(event.target.value);
+  };
+
+  const isEmailValid = () => {
+    if (email.length === 0) return true;
+    return emailRegex.test(email);
   };
   return (
     <div className={styles.login}>
@@ -27,6 +39,10 @@ const Login = () => {
           placeholder='Enter email'
           fullWidth
           margin='normal'
+          error={!isEmailValid()}
+          helperText={!isEmailValid() ? 'Invalid email' : ''}
+          value={email}
+          onChange={handleEmailChange}
         />
         <TextField
           label='Password'

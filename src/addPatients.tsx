@@ -102,7 +102,7 @@ export const AddPatients = () => {
       password: PasswordValue,
     };
 
-    fetch('http://localhost:8080/user/addpatients', {
+    fetch('http://localhost:8080/user/patients', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

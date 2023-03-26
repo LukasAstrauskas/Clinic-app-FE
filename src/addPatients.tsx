@@ -12,6 +12,7 @@ import {
   TableRow,
   TableCell,
   Paper,
+  InputAdornment,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import Checkbox from '@mui/material/Checkbox';
@@ -21,11 +22,18 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Dialog from '@mui/material/Dialog';
 import Typography from '@mui/material/Typography';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Visibility } from '@mui/icons-material';
 
 export const AddPatients = () => {
   const [open, setOpen] = useState(false);
   const [checkedPatients, setCheckedPatiens] = useState<any>([]);
   const [patients, setPatients] = useState<PatientType[]>([]);
+  const [showPassword, setShowPassword] = useState(false);
+  const [nameError, setNameError] = useState(false);
+  const [LastNameError, setLastNameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [duplicationError, setduplicationError] = useState(false);
   const GETrequest = new Request('http://localhost:8080/user/patients', {
     method: 'GET',
     headers: new Headers({
@@ -53,18 +61,22 @@ export const AddPatients = () => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 550,
-    bgcolor: 'lightgrey',
+    bgcolor: 'white',
     border: '2px solid #D3D3D3',
     borderRadius: '20px',
     boxShadow: 24,
     p: 4,
   };
   useEffect(() => {
-    fetch(GETrequest)
-      .then((res) => res.json())
-      .then((resJson) => {
-        setPatients(resJson);
-      });
+    fetch(GETrequest).then((res) => {
+      if (!res.ok) {
+        console.log('not good');
+      } else {
+        res.json().then((resJson) => {
+          setPatients(resJson);
+        });
+      }
+    });
   });
 
   type PatientType = {
@@ -74,12 +86,61 @@ export const AddPatients = () => {
     password: string;
   };
 
+  const fixDuplicationError = () => {
+    setduplicationError(false);
+  };
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleOpen = () => {
+    setNameError(false);
+    setLastNameError(false);
+    setEmailError(false);
+    setPasswordError(false);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const validation = (e: any) => {
+    const inputId = e.target.id;
+    const input = e.target.value;
+
+    if (inputId.includes('new-patient-name-field')) {
+      if (input === '') {
+        setNameError(true);
+      } else {
+        setNameError(false);
+      }
+    }
+
+    if (inputId.includes('new-patient-LastName-field')) {
+      if (input === '') {
+        setLastNameError(true);
+      } else {
+        setLastNameError(false);
+      }
+    }
+
+    if (inputId.includes('new-patient-email-field')) {
+      if (!/\S+@\S+\.\S+/.test(input)) {
+        setEmailError(true);
+      } else {
+        setEmailError(false);
+      }
+    }
+
+    if (inputId.includes('new-patient-password-field')) {
+      if (input === '') {
+        setPasswordError(true);
+      } else {
+        setPasswordError(false);
+      }
+    }
   };
 
   const handleCreate = () => {
@@ -95,22 +156,59 @@ export const AddPatients = () => {
     const PasswordValue = (
       document.getElementById('new-patient-password-field') as HTMLInputElement
     ).value;
+    if (
+      NameValue === '' ||
+      LastNameValue === '' ||
+      EmailValue === '' ||
+      PasswordValue === ''
+    ) {
+      if (NameValue === '') {
+        setNameError(true);
+      } else {
+        setNameError(false);
+      }
+      if (LastNameValue === '') {
+        setLastNameError(true);
+      } else {
+        setLastNameError(false);
+      }
+      if (EmailValue === '') {
+        setEmailError(true);
+      } else {
+        setEmailError(false);
+      }
+      if (PasswordValue === '') {
+        setPasswordError(true);
+      } else {
+        setPasswordError(false);
+      }
+    } else {
+      if (!nameError && !LastNameError && !emailError && !passwordError) {
+        const NewPatient = {
+          name: NameValue + ' ' + LastNameValue,
+          email: EmailValue,
+          password: PasswordValue,
+        };
 
-    const NewPatient = {
-      name: NameValue + ' ' + LastNameValue,
-      email: EmailValue,
-      password: PasswordValue,
-    };
-
-    fetch('http://localhost:8080/user/patients', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(NewPatient),
-    });
-    setOpen(false);
+        fetch('http://localhost:8080/user/patients', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(NewPatient),
+        }).then((res) => {
+          if (!res.ok) {
+            console.log('not good');
+            if (res.status === 500) {
+              setduplicationError(true);
+            }
+          } else {
+            setOpen(false);
+          }
+        });
+      }
+    }
   };
 
   const handleDelete = () => {
@@ -121,6 +219,10 @@ export const AddPatients = () => {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
+      }).then((res) => {
+        if (!res.ok) {
+          console.log('Not goood');
+        }
       });
     });
     setCheckedPatiens([]);
@@ -224,14 +326,17 @@ export const AddPatients = () => {
           >
             <TextField
               sx={textFieldStyle}
+              onBlur={validation}
               label='First name'
               id='new-patient-name-field'
+              helperText={nameError && <>Name cannot be empty</>}
+              error={nameError}
             ></TextField>
             <TextField
               sx={textFieldStyle}
-              // sx={{
-              //   ml: '20px',
-              // }}
+              onBlur={validation}
+              error={LastNameError}
+              helperText={LastNameError && <>Last name cannot be empty</>}
               id='new-patient-LastName-field'
               label='Last name'
               style={{ marginLeft: '20px' }}
@@ -250,16 +355,34 @@ export const AddPatients = () => {
               sx={textFieldStyle}
               label='Email'
               id='new-patient-email-field'
+              onChange={fixDuplicationError}
+              onBlur={validation}
+              error={emailError || duplicationError}
+              helperText={
+                (emailError && <>Incorrect email format</>) ||
+                (duplicationError && <>Email already taken</>)
+              }
             ></TextField>
             <TextField
+              onBlur={validation}
               id='new-patient-password-field'
-              type='password'
+              type={showPassword ? 'text' : 'password'}
+              helperText={passwordError && <>password cannot be empty</>}
+              error={passwordError}
               label='Temporary password'
               sx={textFieldStyle}
               style={{ marginLeft: '20px' }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton onClick={handleShowPassword}>
+                      <Visibility></Visibility>
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             ></TextField>
           </Box>
-
           <Box
             sx={{
               mt: 9,

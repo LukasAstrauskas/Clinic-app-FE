@@ -4,6 +4,8 @@ import TextField from '@mui/material/TextField';
 import { Box } from '@mui/system';
 import { Modal } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import axios from 'axios';
+import { isEmailValid } from '../utils';
 
 export default function AddingAdminModal() {
   const [firstName, setFirstName] = useState('');
@@ -51,10 +53,13 @@ export default function AddingAdminModal() {
 
   useEffect(() => {
     async function fetchData() {
-      await fetch(getRequestUrl, {
-        method: 'GET',
-        headers: getRequestHeaders,
-      }).then((res) => res.json());
+      try {
+        await axios.get(getRequestUrl, {
+          headers: getRequestHeaders,
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
     fetchData();
   }, []);
@@ -67,10 +72,6 @@ export default function AddingAdminModal() {
     setEmailError('');
     setOpen(true);
   };
-
-  function isEmailValid(email: string) {
-    return /\S+@\S+\.\S+/.test(email);
-  }
 
   const handleEmailCheck = () => {
     !isEmailValid(email)
@@ -85,32 +86,18 @@ export default function AddingAdminModal() {
 
   const handleCreate = async () => {
     if (emailError === '') {
-      const firstNameInput = document.getElementById(
-        'first-name',
-      ) as HTMLInputElement;
-      const lastNameInput = document.getElementById(
-        'last-name',
-      ) as HTMLInputElement;
-      const emailInput = document.getElementById('email') as HTMLInputElement;
-      const passwordInput = document.getElementById(
-        'password',
-      ) as HTMLInputElement;
-
-      const newAdmin = {
-        full_name:
-          (firstNameInput?.value || '') + ' ' + (lastNameInput?.value || ''),
-        email: emailInput?.value || '',
-        password: passwordInput?.value || '',
-        role: 'ADMIN',
-      };
-
-      console.log(newAdmin);
-
-      await fetch(postRequestUrl, {
-        method: 'POST',
-        headers: postRequestHeaders,
-        body: JSON.stringify(newAdmin),
-      });
+      await axios.post(
+        postRequestUrl,
+        {
+          full_name: (firstName || '') + ' ' + (lastName || ''),
+          email: email || '',
+          password: password || '',
+          role: 'ADMIN',
+        },
+        {
+          headers: postRequestHeaders,
+        },
+      );
       setOpen(false);
     }
   };

@@ -92,7 +92,7 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
         setLastNameError(false);
       }
 
-      if (email === '' || !/\S+@\S+\.\S+/.test(email)) {
+      if (!/\S+@\S+\.\S+/.test(email)) {
         setEmailError(true);
       } else {
         setEmailError(false);
@@ -103,12 +103,6 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
         setPasswordError(false);
       }
     } else if (!nameError && !LastNameError && !emailError && !passwordError) {
-      const NewPatient = {
-        name: name + ' ' + lastName,
-        email: email,
-        password: password,
-      };
-
       await axios.post(
         postRequestUrl,
         {

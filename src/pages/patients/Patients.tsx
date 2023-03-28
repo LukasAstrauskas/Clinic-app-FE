@@ -66,17 +66,13 @@ export const Patients = () => {
 
   useEffect(() => {
     async function getData() {
-      try {
-        await axios
-          .get(getRequestUrl, {
-            headers: getRequestHeaders,
-          })
-          .then((res) => {
-            setPatients(res.data);
-          });
-      } catch (error) {
-        console.error(error);
-      }
+      await axios
+        .get(getRequestUrl, {
+          headers: getRequestHeaders,
+        })
+        .then((res) => {
+          setPatients(res.data);
+        });
     }
     getData();
   }, [open, checkedPatients]);
@@ -101,16 +97,16 @@ export const Patients = () => {
   };
 
   const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target);
     const selectedPatient = e.target;
-    let temp = checkedPatients;
     if (selectedPatient.checked) {
       setUnCheck([...unCheck, selectedPatient]);
       setCheckedPatiens([...checkedPatients, selectedPatient.id]);
     } else {
-      temp = temp.filter((patient: any) => patient !== selectedPatient.id);
-      setCheckedPatiens(temp);
-      console.log(temp);
+      setCheckedPatiens(
+        checkedPatients.filter(
+          (patient: any) => patient !== selectedPatient.id,
+        ),
+      );
     }
   };
 

@@ -69,55 +69,6 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
     setPasswordError(false);
   };
 
-  const validation = (e: any) => {
-    const inputId = e.target.id;
-    const input = e.target.value;
-
-    if (inputId.includes('new-patient-name-field')) {
-      if (input === '') {
-        setNameError(true);
-      } else {
-        setNameError(false);
-      }
-    }
-
-    if (inputId.includes('new-patient-LastName-field')) {
-      if (input === '') {
-        setLastNameError(true);
-      } else {
-        setLastNameError(false);
-      }
-    }
-
-    if (inputId.includes('new-patient-email-field')) {
-      if (!/\S+@\S+\.\S+/.test(input)) {
-        setEmailError(true);
-      } else {
-        setEmailError(false);
-      }
-    }
-
-    if (inputId.includes('new-patient-password-field')) {
-      if (input === '') {
-        setPasswordError(true);
-      } else {
-        setPasswordError(false);
-      }
-    }
-  };
-
-  const nameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
-
-  const lastNameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLastName(e.target.value);
-  };
-
-  const passwordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
   const fixDuplicationError = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     setduplicationError(false);
@@ -201,8 +152,8 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
         >
           <TextField
             sx={textFieldStyle}
-            onBlur={validation}
-            onChange={nameHandler}
+            onBlur={(e) => setNameError(e.target.value === '')}
+            onChange={(e) => setName(e.target.value)}
             label='First name'
             id='new-patient-name-field'
             helperText={nameError && <>Name cannot be empty</>}
@@ -210,8 +161,8 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
           />
           <TextField
             sx={textFieldStyle}
-            onBlur={validation}
-            onChange={lastNameHandler}
+            onBlur={(e) => setLastNameError(e.target.value === '')}
+            onChange={(e) => setLastName(e.target.value)}
             error={LastNameError}
             helperText={LastNameError && <>Last name cannot be empty</>}
             id='new-patient-LastName-field'
@@ -233,7 +184,7 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
             label='Email'
             id='new-patient-email-field'
             onChange={fixDuplicationError}
-            onBlur={validation}
+            onBlur={(e) => setEmailError(!/\S+@\S+\.\S+/.test(e.target.value))}
             error={emailError || duplicationError}
             helperText={
               (emailError && <>Incorrect email format</>) ||
@@ -241,8 +192,8 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
             }
           />
           <TextField
-            onChange={passwordHandler}
-            onBlur={validation}
+            onChange={(e) => setPassword(e.target.value)}
+            onBlur={(e) => setPasswordError(e.target.value === '')}
             id='new-patient-password-field'
             type={showPassword ? 'text' : 'password'}
             helperText={passwordError && <>password cannot be empty</>}

@@ -6,11 +6,11 @@ import Alert from '@mui/material/Alert';
 
 import React, { useState } from 'react';
 import styles from './Login.module.css';
+import { isValidEmail } from '../../components/utils';
 
 const Login = () => {
   const [errorAlertOpen, setSignInError] = useState(false);
   const [email, setEmail] = useState('');
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,3}$/;
 
   const handleSignInClick = () => {
     // Handle Sign in logic
@@ -23,10 +23,6 @@ const Login = () => {
     setEmail(event.target.value);
   };
 
-  const isEmailValid = () => {
-    if (email.length === 0) return true;
-    return emailRegex.test(email);
-  };
   return (
     <div className={styles.login}>
       <Container maxWidth='xs'>
@@ -39,8 +35,10 @@ const Login = () => {
           placeholder='Enter email'
           fullWidth
           margin='normal'
-          error={!isEmailValid()}
-          helperText={!isEmailValid() ? 'Invalid email' : ''}
+          error={!(isValidEmail(email) || email.length === 0)}
+          helperText={
+            !(isValidEmail(email) || email.length === 0) ? 'Invalid email' : ''
+          }
           value={email}
           onChange={handleEmailChange}
         />

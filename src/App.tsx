@@ -1,8 +1,8 @@
 import React from 'react';
-import { AddPatients } from './addPatients';
+import { Patients } from './pages/patients/Patients';
 import './style.css';
 function App() {
-  return <AddPatients />;
+  return <Patients />;
 }
 
 export default App;

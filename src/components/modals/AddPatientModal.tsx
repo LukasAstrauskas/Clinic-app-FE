@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FC } from 'react';
+import React, { useState, FC } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { Box } from '@mui/system';
@@ -72,10 +72,6 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
   const fixDuplicationError = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     setduplicationError(false);
-  };
-
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
   };
 
   const handleCreate = async () => {
@@ -198,7 +194,7 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
             InputProps={{
               endAdornment: (
                 <InputAdornment position='end'>
-                  <IconButton onClick={handleShowPassword}>
+                  <IconButton onClick={() => setShowPassword(!showPassword)}>
                     <Visibility></Visibility>
                   </IconButton>
                 </InputAdornment>

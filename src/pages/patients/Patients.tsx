@@ -22,8 +22,7 @@ import axios from 'axios';
 
 export const Patients = () => {
   const [open, setOpen] = useState(false);
-  const [checkedPatients, setCheckedPatiens] = useState<any>([]);
-  const [unCheck, setUnCheck] = useState<any>([]);
+  const [checkedPatients, setCheckedPatiens] = useState<string[]>([]);
   const [patients, setPatients] = useState<PatientType[]>([]);
   const getRequestUrl = 'http://localhost:8080/user/patients';
   const getRequestHeaders = {
@@ -89,7 +88,7 @@ export const Patients = () => {
   };
 
   const handleDelete = () => {
-    checkedPatients.forEach((patient: string) => {
+    checkedPatients.forEach((patient) => {
       const deleteURL = `http://localhost:8080/user/${patient}`;
       axios.delete(deleteURL);
     });
@@ -99,13 +98,10 @@ export const Patients = () => {
   const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedPatient = e.target;
     if (selectedPatient.checked) {
-      setUnCheck([...unCheck, selectedPatient]);
       setCheckedPatiens([...checkedPatients, selectedPatient.id]);
     } else {
       setCheckedPatiens(
-        checkedPatients.filter(
-          (patient: any) => patient !== selectedPatient.id,
-        ),
+        checkedPatients.filter((patient) => patient !== selectedPatient.id),
       );
     }
   };

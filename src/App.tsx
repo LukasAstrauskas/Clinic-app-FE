@@ -5,6 +5,7 @@ import Footer from './components/footer/Footer';
 import Login from './pages/login/Login';
 import Container from '@mui/material/Container';
 import './App.css';
+import AddNewPhysicianModal from './components/modals/AddNewPhysicianModal';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Header />
       {/* <Login /> */}
       <WelcomePage />
+      <AddNewPhysicianModal />
       <Footer />
     </Container>
   );

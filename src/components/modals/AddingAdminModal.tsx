@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { Box } from '@mui/system';
@@ -15,11 +15,6 @@ export default function AddingAdminModal() {
   const [password, setPassword] = useState('');
   const [open, setOpen] = useState(false);
 
-  const getRequestHeaders = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  };
-  const getRequestUrl = 'http://localhost:8080/user';
   const postRequestHeaders = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -51,19 +46,6 @@ export default function AddingAdminModal() {
     [],
   );
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        await axios.get(getRequestUrl, {
-          headers: getRequestHeaders,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchData();
-  }, []);
-
   const handleOpen = () => {
     setPassword('');
     setEmail('');
@@ -89,7 +71,7 @@ export default function AddingAdminModal() {
       await axios.post(
         postRequestUrl,
         {
-          full_name: (firstName || '') + ' ' + (lastName || ''),
+          fullName: (firstName || '') + ' ' + (lastName || ''),
           email: email || '',
           password: password || '',
           role: 'ADMIN',

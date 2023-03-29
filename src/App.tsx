@@ -1,8 +1,18 @@
 import React from 'react';
-import { Patients } from './pages/patients/Patients';
-import './style.css';
+import WelcomePage from './pages/welcome/WelcomePage';
+import Header from './components/header/Header';
+import Footer from './components/footer/Footer';
+import Container from '@mui/material/Container';
+import './App.css';
+
 function App() {
-  return <Patients />;
+  return (
+    <Container maxWidth='lg'>
+      <Header />
+      <WelcomePage />
+      <Footer />
+    </Container>
+  );
 }
 
 export default App;

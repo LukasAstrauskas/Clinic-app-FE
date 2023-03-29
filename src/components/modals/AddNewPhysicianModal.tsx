@@ -1,13 +1,13 @@
 import { Button } from '@mui/material';
 import * as React from 'react';
-import RenderAddNewPhysicianModal from './RenderAddNewPhysicianModal';
+import PhysicianModalContent from './PhysicianModalContent';
 import { useRef, useState } from 'react';
 import {
   isValidFirstName,
   isValidLastName,
   isValidEmail,
   isValidPassword,
-} from '../../utils';
+} from '../utils';
 
 // change to data from backend.
 const Occupations = [
@@ -157,7 +157,7 @@ export default function AddNewPhysicianModal() {
       <Button onClick={handleOpen} variant='outlined'>
         Manage Physicians
       </Button>
-      <RenderAddNewPhysicianModal
+      <PhysicianModalContent
         open={open}
         handleClose={handleClose}
         setFirstName={setFirstName}

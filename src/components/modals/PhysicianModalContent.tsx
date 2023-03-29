@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 
-type RenderAddNewPhysicianModalProps = {
+type PhysicianModalContentProps = {
   open: boolean;
   handleClose: () => void;
   setFirstName: React.Dispatch<React.SetStateAction<string>>;
@@ -36,7 +36,7 @@ type RenderAddNewPhysicianModalProps = {
   textFieldStyle: React.CSSProperties;
 };
 
-const RenderAddNewPhysicianModal = (props: RenderAddNewPhysicianModalProps) => {
+const PhysicianModalContent = (props: PhysicianModalContentProps) => {
   const {
     open,
     handleClose,
@@ -172,4 +172,4 @@ const RenderAddNewPhysicianModal = (props: RenderAddNewPhysicianModalProps) => {
     </Modal>
   );
 };
-export default RenderAddNewPhysicianModal;
+export default PhysicianModalContent;

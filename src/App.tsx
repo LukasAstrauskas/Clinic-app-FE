@@ -4,12 +4,14 @@ import Header from './components/header/Header';
 import Footer from './components/footer/Footer';
 import Container from '@mui/material/Container';
 import './App.css';
+import AddNewPhysicianModal from './components/modals/AddNewPhysicianModal';
 
 function App() {
   return (
     <Container maxWidth='lg'>
       <Header />
       <WelcomePage />
+      <AddNewPhysicianModal />
       <Footer />
     </Container>
   );

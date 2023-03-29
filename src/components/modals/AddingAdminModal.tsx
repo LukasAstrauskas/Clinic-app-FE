@@ -5,7 +5,7 @@ import { Box } from '@mui/system';
 import { Modal } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import { isEmailValid } from '../utils';
+import { isValidEmail } from '../utils';
 
 export default function AddingAdminModal() {
   const [firstName, setFirstName] = useState('');
@@ -56,7 +56,7 @@ export default function AddingAdminModal() {
   };
 
   const handleEmailCheck = () => {
-    !isEmailValid(email)
+    !isValidEmail(email)
       ? setEmailError('Email is invalid')
       : setEmailError('');
   };

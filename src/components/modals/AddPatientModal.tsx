@@ -75,30 +75,11 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
   };
 
   const handleCreate = async () => {
-    if (name === '' || lastName === '' || email === '' || password === '') {
-      if (name === '') {
-        setNameError(true);
-      } else {
-        setNameError(false);
-      }
-
-      if (lastName === '') {
-        setLastNameError(true);
-      } else {
-        setLastNameError(false);
-      }
-
-      if (!/\S+@\S+\.\S+/.test(email)) {
-        setEmailError(true);
-      } else {
-        setEmailError(false);
-      }
-      if (password === '') {
-        setPasswordError(true);
-      } else {
-        setPasswordError(false);
-      }
-    } else if (!nameError && !LastNameError && !emailError && !passwordError) {
+    setNameError(name === '');
+    setLastNameError(lastName === '');
+    setEmailError(!/\S+@\S+\.\S+/.test(email));
+    setPasswordError(password === '');
+    if (!nameError && !LastNameError && !emailError && !passwordError) {
       await axios.post(
         postRequestUrl,
         {

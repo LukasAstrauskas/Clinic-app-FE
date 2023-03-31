@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ModeIcon from '@mui/icons-material/Mode';
-import { Doctor } from '../data/doctorData';
+import { Doctor } from '../../data/doctorData';
 import { Button } from '@mui/material';
 
 type Props = {

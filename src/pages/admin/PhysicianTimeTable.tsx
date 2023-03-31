@@ -9,8 +9,8 @@ import Paper from '@mui/material/Paper';
 import Timechip from './Timechip';
 import { Stack } from '@mui/system';
 import { Chip } from '@mui/material';
-import { Timeslot } from '../data/TimeSlotData';
-import TimeslotModal from './TimeslotModal';
+import { Timeslot } from '../../data/TimeSlotData';
+import TimeslotModal from '../../components/modals/TimeslotModal';
 
 type Props = {
   timeslots: Timeslot[];

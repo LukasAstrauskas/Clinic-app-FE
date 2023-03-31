@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Box, Container, Grid } from '@mui/material';
 import PhysicianTimeTable from './PhysicianTimeTable';
 import PhysicianTable from './PhysicianTable';
-import doctors from '../data/doctorData';
-import physiciansTimeslots, { Timeslot } from '../data/TimeSlotData';
+import doctors from '../../data/doctorData';
+import physiciansTimeslots, { Timeslot } from '../../data/TimeSlotData';
 
 const PhySlotsContainer = () => {
   const [timeslots, setTimeslots] = useState<Timeslot[]>([]);

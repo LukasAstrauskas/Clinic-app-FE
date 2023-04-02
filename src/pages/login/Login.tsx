@@ -3,60 +3,91 @@ import { TextField } from '@mui/material';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import axios from 'axios';
 
 import React, { useState } from 'react';
 import styles from './Login.module.css';
 import { isValidEmail } from '../../components/utils';
 
-const Login = () => {
+type LoginProps = {
+  setIsLogged: (value: boolean) => void;
+  setRole: (value: string) => void;
+};
+
+const Login = ({ setIsLogged, setRole }: LoginProps) => {
   const [errorAlertOpen, setSignInError] = useState(false);
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleSignInClick = () => {
-    // Handle Sign in logic
-    // If there's an error, set signInError to true
-    setSignInError(true);
-  };
-  const handleEmailChange = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setEmail(event.target.value);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    await axios
+      .post('http://localhost:8080/login', { email, password })
+      .then((response) => {
+        if (response.data) {
+          const id = response.data;
+          setIsLogged(true);
+          axios
+            .get(`http://localhost:8080/user/${id}`)
+            .then((response) => {
+              const { type } = response.data;
+              setRole(type);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        } else {
+          setSignInError(true);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setSignInError(true);
+      });
   };
 
   return (
     <div className={styles.login}>
       <Container maxWidth='xs'>
-        <div className={styles.centerItems}>
-          <LockIcon fontSize='large' />
-          <h2>Sign in</h2>
-        </div>
-        <TextField
-          label='Email'
-          placeholder='Enter email'
-          fullWidth
-          margin='normal'
-          error={!(isValidEmail(email) || email.length === 0)}
-          helperText={
-            !(isValidEmail(email) || email.length === 0) ? 'Invalid email' : ''
-          }
-          value={email}
-          onChange={handleEmailChange}
-        />
-        <TextField
-          label='Password'
-          placeholder='Enter password'
-          fullWidth
-          type='password'
-        />
-        <div className={styles.buttonContainer}>
-          <Button variant='contained' onClick={handleSignInClick} size='large'>
-            SIGN IN
-          </Button>
-        </div>
+        <form onSubmit={handleSubmit}>
+          <>
+            <div className={styles.centerItems}>
+              <LockIcon fontSize='large' />
+              <h2>Sign in</h2>
+            </div>
+            <TextField
+              label='Email'
+              placeholder='Enter email'
+              fullWidth
+              margin='normal'
+              error={!(isValidEmail(email) || email.length === 0)}
+              helperText={
+                !(isValidEmail(email) || email.length === 0)
+                  ? 'Invalid email'
+                  : ''
+              }
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              label='Password'
+              placeholder='Enter password'
+              fullWidth
+              type='password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <div className={styles.buttonContainer}>
+              <Button variant='contained' type='submit' size='large'>
+                SIGN IN
+              </Button>
+            </div>
+          </>
+        </form>
         {errorAlertOpen && (
           <Alert severity='error' onClose={() => setSignInError(false)}>
-            {/* Change text later */}
-            Sign In button is not implemented yet
+            Wrong email or password.
           </Alert>
         )}
       </Container>

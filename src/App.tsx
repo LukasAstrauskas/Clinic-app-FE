@@ -1,17 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import WelcomePage from './pages/welcome/WelcomePage';
 import Header from './components/header/Header';
 import Footer from './components/footer/Footer';
 import Container from '@mui/material/Container';
 import './App.css';
-import AddNewPhysicianModal from './components/modals/AddNewPhysicianModal';
+import Login from './pages/login/Login';
 
 function App() {
+  //Reminder to change isLogged, role with redux variant.
+  const [isLogged, setIsLogged] = useState(false);
+  const [role, setRole] = useState('');
+
   return (
     <Container maxWidth='lg'>
       <Header />
-      <WelcomePage />
-      <AddNewPhysicianModal />
+      {!isLogged ? (
+        <Login setIsLogged={setIsLogged} setRole={setRole} />
+      ) : (
+        <WelcomePage type={role} />
+      )}
       <Footer />
     </Container>
   );

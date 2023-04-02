@@ -13,6 +13,8 @@ import {
   Stack,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
+import { Link } from 'react-router-dom';
+import { ROUTES } from '../../routes/routes';
 
 const Header = () => {
   const [open, setOpen] = React.useState(false);
@@ -54,7 +56,8 @@ const Header = () => {
 
   return (
     <div className={styles.header}>
-      <a href='#' className={styles.headerLogoLink}>
+      {/* add validation to check if the user is logged in */}
+      <a href='/' className={styles.headerLogoLink}>
         <div className={styles.headerLogoSection}>
           <img
             src={clinicLogo}
@@ -75,8 +78,10 @@ const Header = () => {
             aria-haspopup='true'
             onClick={handleToggle}
           >
+            {/* add validation to check if the user is logged in */}
             <Avatar className={styles.avatar} sx={{ bgcolor: grey[100] }}>
               <a href='#' className={styles.avatarLogo}>
+                {/* implement avatar symbols logic */}
                 AA
               </a>
             </Avatar>
@@ -105,8 +110,15 @@ const Header = () => {
                       aria-labelledby='composition-button'
                       onKeyDown={handleListKeyDown}
                     >
-                      <MenuItem onClick={handleClose}>Profile</MenuItem>
-                      <MenuItem onClick={handleClose}>Logout</MenuItem>
+                      {/* add link to user profile */}
+                      <Link to='#' className={styles.avatarLogo}>
+                        <MenuItem onClick={handleClose}>Profile</MenuItem>
+                      </Link>
+                      <Link to={ROUTES.LOGIN} className={styles.avatarLogo}>
+                        <MenuItem tabIndex={0} onClick={handleClose}>
+                          Logout
+                        </MenuItem>
+                      </Link>
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>

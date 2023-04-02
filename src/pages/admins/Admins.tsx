@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from '@mui/system';
 import {
@@ -12,20 +11,21 @@ import {
   TableRow,
   TableCell,
   Paper,
+  Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import Checkbox from '@mui/material/Checkbox';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AddPatientModal from '../../components/modals/AddPatientModal';
 import axios from 'axios';
+import AddAdminModal from '../../components/modals/AddAdminModal';
 
-export const Patients = () => {
+export const Admins = () => {
   const [open, setOpen] = useState(false);
-  const [checkedPatients, setCheckedPatiens] = useState<string[]>([]);
-  const [patients, setPatients] = useState<PatientType[]>([]);
-  const getRequestUrl = 'http://localhost:8080/user/patients';
+  const [checkedAdmins, setCheckedAdmins] = useState<string[]>([]);
+  const [admins, setAdmins] = useState<AdminType[]>([]);
+  const getRequestUrl = 'http://localhost:8080/user/admins';
 
   const textFieldStyle = {
     width: '47%',
@@ -71,13 +71,13 @@ export const Patients = () => {
           headers: getRequestHeaders,
         })
         .then((res) => {
-          setPatients(res.data);
+          setAdmins(res.data);
         });
     }
     getData();
-  }, [open, checkedPatients]);
+  }, [open, checkedAdmins]);
 
-  type PatientType = {
+  type AdminType = {
     id: string;
     name: string;
     email: string;
@@ -89,22 +89,20 @@ export const Patients = () => {
   };
 
   const handleDelete = () => {
-    console.log('triggered');
-    checkedPatients.forEach((patient) => {
-      console.log(patient);
-      const deleteURL = `http://localhost:8080/user/patients/${patient}`;
+    checkedAdmins.forEach((admin) => {
+      const deleteURL = `http://localhost:8080/user/admins/${admin}`;
       axios.delete(deleteURL);
     });
-    setCheckedPatiens([]);
+    setCheckedAdmins([]);
   };
 
   const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedPatient = e.target;
-    if (selectedPatient.checked) {
-      setCheckedPatiens([...checkedPatients, selectedPatient.id]);
+    const selectedAdmin = e.target;
+    if (selectedAdmin.checked) {
+      setCheckedAdmins([...checkedAdmins, selectedAdmin.id]);
     } else {
-      setCheckedPatiens(
-        checkedPatients.filter((patient) => patient !== selectedPatient.id),
+      setCheckedAdmins(
+        checkedAdmins.filter((patient) => patient !== selectedAdmin.id),
       );
     }
   };
@@ -139,8 +137,9 @@ export const Patients = () => {
           color: '#28cdcb',
         }}
       >
-        Patients
+        Admins
       </Typography>
+
       <Box
         sx={{
           width: 600,
@@ -168,7 +167,7 @@ export const Patients = () => {
           <AddIcon />
         </Button>
       </Box>
-      <AddPatientModal setOpen={setOpen} open={open} />
+      <AddAdminModal setOpen={setOpen} open={open} />
 
       <Box
         sx={{
@@ -218,7 +217,7 @@ export const Patients = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {patients.map((patient, index) => (
+              {admins.map((admin, index) => (
                 <TableRow
                   key={index}
                   sx={{
@@ -228,12 +227,12 @@ export const Patients = () => {
                 >
                   <TableCell>
                     <Checkbox
-                      id={patient.id.toString()}
+                      id={admin.id.toString()}
                       onChange={handleChecked}
                     />
                   </TableCell>
-                  <TableCell>{patient.name}</TableCell>
-                  <TableCell align='center'>{patient.email}</TableCell>
+                  <TableCell>{admin.name}</TableCell>
+                  <TableCell align='center'>{admin.email}</TableCell>
                   <TableCell>
                     <IconButton color='primary'>
                       <EditIcon />

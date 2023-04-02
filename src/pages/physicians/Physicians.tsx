@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
+import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
 import {
   TableContainer,
@@ -18,14 +18,14 @@ import Checkbox from '@mui/material/Checkbox';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AddPatientModal from '../../components/modals/AddPatientModal';
 import axios from 'axios';
+import PhysicianModalContent from '../../components/modals/AddPhysicianModal';
 
-export const Patients = () => {
+export const Physicians = () => {
   const [open, setOpen] = useState(false);
-  const [checkedPatients, setCheckedPatiens] = useState<string[]>([]);
-  const [patients, setPatients] = useState<PatientType[]>([]);
-  const getRequestUrl = 'http://localhost:8080/user/patients';
+  const [checkedPhysician, setCheckedPhysician] = useState<string[]>([]);
+  const [physicians, setPhysicians] = useState<PhysicianType[]>([]);
+  const getRequestUrl = 'http://localhost:8080/physicianInfo';
 
   const textFieldStyle = {
     width: '47%',
@@ -71,17 +71,20 @@ export const Patients = () => {
           headers: getRequestHeaders,
         })
         .then((res) => {
-          setPatients(res.data);
+          setPhysicians(res.data);
         });
     }
     getData();
-  }, [open, checkedPatients]);
+  }, [open, checkedPhysician]);
 
-  type PatientType = {
+  type PhysicianType = {
     id: string;
     name: string;
     email: string;
-    password: string;
+    occupation: {
+      id: string;
+      name: string;
+    };
   };
 
   const handleOpen = () => {
@@ -89,22 +92,22 @@ export const Patients = () => {
   };
 
   const handleDelete = () => {
-    console.log('triggered');
-    checkedPatients.forEach((patient) => {
-      console.log(patient);
-      const deleteURL = `http://localhost:8080/user/patients/${patient}`;
+    checkedPhysician.forEach((physician) => {
+      const deleteURL = `http://localhost:8080/physician/${physician}`;
       axios.delete(deleteURL);
     });
-    setCheckedPatiens([]);
+    setCheckedPhysician([]);
   };
 
   const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedPatient = e.target;
-    if (selectedPatient.checked) {
-      setCheckedPatiens([...checkedPatients, selectedPatient.id]);
+    const selectePhysician = e.target;
+    if (selectePhysician.checked) {
+      setCheckedPhysician([...checkedPhysician, selectePhysician.id]);
     } else {
-      setCheckedPatiens(
-        checkedPatients.filter((patient) => patient !== selectedPatient.id),
+      setCheckedPhysician(
+        checkedPhysician.filter(
+          (physician) => physician !== selectePhysician.id,
+        ),
       );
     }
   };
@@ -139,7 +142,7 @@ export const Patients = () => {
           color: '#28cdcb',
         }}
       >
-        Patients
+        Physicians
       </Typography>
       <Box
         sx={{
@@ -168,8 +171,9 @@ export const Patients = () => {
           <AddIcon />
         </Button>
       </Box>
-      <AddPatientModal setOpen={setOpen} open={open} />
-
+      <PhysicianModalContent setOpen={setOpen} open={open} />
+      {/* <AddingAdminModal setOpen={setOpen} open={open} /> */}
+      {/* <PhysicianModalContent/> */}
       <Box
         sx={{
           m: 'auto',
@@ -208,7 +212,7 @@ export const Patients = () => {
                   }}
                   align='center'
                 >
-                  Email
+                  Occupation
                 </TableCell>
                 <TableCell
                   sx={{
@@ -218,7 +222,7 @@ export const Patients = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {patients.map((patient, index) => (
+              {physicians.map((physician, index) => (
                 <TableRow
                   key={index}
                   sx={{
@@ -228,12 +232,14 @@ export const Patients = () => {
                 >
                   <TableCell>
                     <Checkbox
-                      id={patient.id.toString()}
+                      id={physician.id.toString()}
                       onChange={handleChecked}
                     />
                   </TableCell>
-                  <TableCell>{patient.name}</TableCell>
-                  <TableCell align='center'>{patient.email}</TableCell>
+                  <TableCell>{physician.name}</TableCell>
+                  <TableCell align='center'>
+                    {physician.occupation.name}
+                  </TableCell>
                   <TableCell>
                     <IconButton color='primary'>
                       <EditIcon />

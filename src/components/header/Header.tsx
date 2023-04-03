@@ -56,8 +56,7 @@ const Header = () => {
 
   return (
     <div className={styles.header}>
-      {/* add validation to check if the user is logged in */}
-      <a href='/' className={styles.headerLogoLink}>
+      <Link to={ROUTES.HOME} className={styles.headerLogoLink}>
         <div className={styles.headerLogoSection}>
           <img
             src={clinicLogo}
@@ -66,7 +65,7 @@ const Header = () => {
           />
           <h1>The Clinic</h1>
         </div>
-      </a>
+      </Link>
 
       <Stack direction='row' spacing={2}>
         <div>

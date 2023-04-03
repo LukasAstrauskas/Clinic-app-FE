@@ -26,19 +26,9 @@ const Login = ({ setIsLogged, setRole }: LoginProps) => {
       .post('http://localhost:8080/login', { email, password })
       .then((response) => {
         if (response.data) {
-          const id = response.data;
+          const { role } = response.data;
+          setRole(role);
           setIsLogged(true);
-          axios
-            .get(`http://localhost:8080/user/${id}`)
-            .then((response) => {
-              const { type } = response.data;
-              setRole(type);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        } else {
-          setSignInError(true);
         }
       })
       .catch((error) => {

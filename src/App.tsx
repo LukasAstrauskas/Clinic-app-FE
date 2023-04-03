@@ -17,7 +17,7 @@ function App() {
       {!isLogged ? (
         <Login setIsLogged={setIsLogged} setRole={setRole} />
       ) : (
-        <WelcomePage type={role} />
+        <WelcomePage role={role} />
       )}
       <Footer />
     </Container>

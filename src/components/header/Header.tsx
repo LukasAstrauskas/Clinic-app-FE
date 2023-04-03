@@ -36,10 +36,7 @@ const Header = () => {
   };
 
   function handleListKeyDown(event: React.KeyboardEvent) {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-      setOpen(false);
-    } else if (event.key === 'Escape') {
+    if (event.key === 'Escape') {
       setOpen(false);
     }
   }
@@ -114,9 +111,7 @@ const Header = () => {
                         <MenuItem onClick={handleClose}>Profile</MenuItem>
                       </Link>
                       <Link to={ROUTES.LOGIN} className={styles.avatarLogo}>
-                        <MenuItem tabIndex={0} onClick={handleClose}>
-                          Logout
-                        </MenuItem>
+                        <MenuItem onClick={handleClose}>Logout</MenuItem>
                       </Link>
                     </MenuList>
                   </ClickAwayListener>

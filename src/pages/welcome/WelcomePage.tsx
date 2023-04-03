@@ -8,10 +8,10 @@ import manageUsersIcon from '../../assets/manage-users-icon.svg';
 import managePhysiciansIcon from '../../assets/manage-physicians-icon.svg';
 
 type WelcomePageProps = {
-  role: string;
+  type: string;
 };
 
-const WelcomePage = ({ role }: WelcomePageProps) => {
+const WelcomePage = ({ type }: WelcomePageProps) => {
   return (
     <Grid
       className={styles.main}
@@ -20,7 +20,7 @@ const WelcomePage = ({ role }: WelcomePageProps) => {
       justifyContent='center'
       alignItems='center'
     >
-      {role == 'admin' ? (
+      {type == 'admin' ? (
         <>
           <Item
             title='Manage users'

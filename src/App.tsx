@@ -7,17 +7,17 @@ import './App.css';
 import Login from './pages/login/Login';
 
 function App() {
-  //Reminder to change isLogged, role with redux variant.
+  //Reminder to change isLogged, type with redux variant.
   const [isLogged, setIsLogged] = useState(false);
-  const [role, setRole] = useState('');
+  const [type, setType] = useState('');
 
   return (
     <Container maxWidth='lg'>
       <Header />
       {!isLogged ? (
-        <Login setIsLogged={setIsLogged} setRole={setRole} />
+        <Login setIsLogged={setIsLogged} setType={setType} />
       ) : (
-        <WelcomePage role={role} />
+        <WelcomePage type={type} />
       )}
       <Footer />
     </Container>

@@ -11,13 +11,17 @@ import { isValidEmail } from '../../components/utils';
 
 type LoginProps = {
   setIsLogged: (value: boolean) => void;
-  setRole: (value: string) => void;
+  setType: (value: string) => void;
 };
 
-const Login = ({ setIsLogged, setRole }: LoginProps) => {
+const Login = ({ setIsLogged, setType }: LoginProps) => {
   const [errorAlertOpen, setSignInError] = useState(false);
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleEmailCheck = () =>
+    setEmailError(!isValidEmail(email) ? 'Email is invalid' : '');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -26,8 +30,8 @@ const Login = ({ setIsLogged, setRole }: LoginProps) => {
       .post('http://localhost:8080/login', { email, password })
       .then((response) => {
         if (response.data) {
-          const { role } = response.data;
-          setRole(role);
+          const { type } = response.data;
+          setType(type);
           setIsLogged(true);
         }
       })
@@ -36,7 +40,6 @@ const Login = ({ setIsLogged, setRole }: LoginProps) => {
         setSignInError(true);
       });
   };
-
   return (
     <div className={styles.login}>
       <Container maxWidth='xs'>
@@ -51,12 +54,9 @@ const Login = ({ setIsLogged, setRole }: LoginProps) => {
               placeholder='Enter email'
               fullWidth
               margin='normal'
-              error={!(isValidEmail(email) || email.length === 0)}
-              helperText={
-                !(isValidEmail(email) || email.length === 0)
-                  ? 'Invalid email'
-                  : ''
-              }
+              helperText={emailError === '' ? 'Email' : emailError}
+              error={emailError !== ''}
+              onBlur={handleEmailCheck}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />

@@ -1,8 +1,11 @@
-import { Chip } from '@mui/material';
 import React from 'react';
+import { Chip } from '@mui/material';
 
 interface Props {
   time: string;
+  patientId: string;
+  onDelete: (time: string) => void;
+  onClick: (patientId: string) => void;
 }
 
 const chipSX = {
@@ -12,13 +15,13 @@ const chipSX = {
   cursor: 'pointer',
 };
 
-const Timechip = ({ time }: Props) => {
+const Timechip = ({ time, patientId, onDelete, onClick }: Props) => {
   return (
     <Chip
       label={time}
       variant='outlined'
-      onDelete={() => alert('Delete: ' + time)}
-      onClick={() => alert('Clicked!')}
+      onDelete={() => onDelete(time)}
+      onClick={() => onClick(patientId)}
       sx={chipSX}
     />
   );

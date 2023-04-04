@@ -9,27 +9,31 @@ import Paper from '@mui/material/Paper';
 import Timechip from './Timechip';
 import { Stack } from '@mui/system';
 import { Chip } from '@mui/material';
-import { Timeslot } from '../../data/TimeSlotData';
 import TimeslotModal from '../../components/modals/TimeslotModal';
+import { Timeslots } from '../../model/Model';
 
 type Props = {
-  timeslots: Timeslot[];
+  physicianId: string;
+  timeslots: Timeslots[];
 };
 
-const PhysicianTimeTable = ({ timeslots }: Props) => {
+const TimetableList = ({ physicianId, timeslots }: Props) => {
   const [open, setOpen] = useState<boolean>(false);
-  const [physicianID, setPhysicianID] = useState<string>('');
+  // const [physicianID, setPhysicianID] = useState<string>('');
   const [date, setDate] = useState<string>('');
 
   const handleCloseModal = () => {
     setOpen(false);
   };
 
-  const handleOpenModal = (id: string, date: string): void => {
+  const handleOpenModal = (date: string): void => {
     setOpen(true);
-    setPhysicianID(id);
     setDate(date);
   };
+
+  const handleChipDelete = (time: string): void => alert(`Delete: ${time}!`);
+  const handleChipClick = (patientId: string): void =>
+    alert(`Patient ID: ${patientId}`);
 
   return (
     <>
@@ -50,7 +54,7 @@ const PhysicianTimeTable = ({ timeslots }: Props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {timeslots.map(({ physicianID, date, times }) => (
+            {timeslots.map(({ date, timePatientList }) => (
               <TableRow
                 key={date}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -67,14 +71,22 @@ const PhysicianTimeTable = ({ timeslots }: Props) => {
                   ></Chip>
                 </TableCell>
                 <TableCell align='left'>
-                  <Stack direction='row'>
-                    {times.map((time) => {
-                      return <Timechip time={time} key={time} />;
+                  <Stack direction='row' spacing={'0.4%'}>
+                    {timePatientList.map(({ time, patientId }) => {
+                      return (
+                        <Timechip
+                          time={time}
+                          patientId={patientId}
+                          onDelete={handleChipDelete}
+                          onClick={handleChipClick}
+                          key={time}
+                        />
+                      );
                     })}
                     <Chip
                       label='+ NEW'
                       sx={{ backgroundColor: '#1de9b6' }}
-                      onClick={() => handleOpenModal(physicianID, date)}
+                      onClick={() => handleOpenModal(date)}
                     />
                   </Stack>
                 </TableCell>
@@ -86,11 +98,11 @@ const PhysicianTimeTable = ({ timeslots }: Props) => {
       <TimeslotModal
         openModal={open}
         closeModal={handleCloseModal}
-        id={physicianID}
+        id={physicianId}
         date={date}
       />
     </>
   );
 };
 
-export default PhysicianTimeTable;
+export default TimetableList;

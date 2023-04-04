@@ -7,11 +7,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ModeIcon from '@mui/icons-material/Mode';
-import { Doctor } from '../../data/doctorData';
 import { Button } from '@mui/material';
+import { PhyNameOccupation } from '../../model/Model';
 
 type Props = {
-  physicians: Doctor[];
+  physicians: PhyNameOccupation[];
   rowClick: (id: string) => void;
 };
 
@@ -40,18 +40,18 @@ const PhysicianTable = ({ physicians, rowClick }: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {physicians.map(({ id, name, occupation }) => (
-            <TableRow key={id} hover sx={tableRowSX}>
+          {physicians.map(({ physicianId, name, occupation }) => (
+            <TableRow key={physicianId} hover sx={tableRowSX}>
               <TableCell
                 onClick={() => {
-                  rowClick(id);
+                  rowClick(physicianId);
                 }}
               >
                 {name}
               </TableCell>
               <TableCell
                 onClick={() => {
-                  rowClick(id);
+                  rowClick(physicianId);
                 }}
               >
                 {occupation}
@@ -61,7 +61,7 @@ const PhysicianTable = ({ physicians, rowClick }: Props) => {
                   variant='text'
                   onClick={(event) => {
                     event.preventDefault();
-                    console.log(`Id: ${id} edit.`);
+                    console.log(`Id: ${physicianId} edit.`);
                   }}
                 >
                   <ModeIcon />

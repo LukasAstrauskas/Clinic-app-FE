@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Box, Button, Input, Modal, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Modal,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { timeInputIsValid } from '../utils';
+import axios from 'axios';
 
 const style = {
   position: 'absolute' as const,
@@ -10,7 +19,7 @@ const style = {
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
-  p: 4,
+  padding: 4,
 };
 
 type Props = {
@@ -20,17 +29,41 @@ type Props = {
   date: string;
 };
 
-const TimeslotModal = ({ openModal, closeModal, id, date }: Props) => {
-  const [time, setTime] = useState<string>('10:30');
+const postTimeslot = (id: string, date: string, time: string) => {
+  console.log(`ID: ${id},date: ${date}, time: ${time}`);
+  axios
+    .post('http://localhost:8080/timeslot', {
+      physicianId: id,
+      date: date,
+      time: time,
+    })
+    .then((responce) => {
+      console.log(responce.status);
+    });
+};
 
-  const onModalSubmit = () => {
-    console.log(`ID: ${id},date: ${date}, time: ${time}`);
-    setTime(`10:30`);
-    closeModal();
+const TimeslotModal = ({ openModal, closeModal, id, date }: Props) => {
+  const [time, setTime] = useState<string>('');
+  const [inputValid, setInputValid] = useState<boolean>(true);
+  const [helperText, setHelperText] = useState<string>('');
+
+  const onModalSubmit = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    if (timeInputIsValid(time)) {
+      setInputValid(true);
+      setHelperText('');
+      postTimeslot(id, date, time);
+      setTime(``);
+      closeModal();
+    } else {
+      setInputValid(false);
+      setHelperText('From 06:00 to 19:59');
+    }
   };
 
   const onModalClose = () => {
-    setTime(`10:30`);
+    setTime(``);
+    setInputValid(true);
     closeModal();
   };
 
@@ -40,17 +73,18 @@ const TimeslotModal = ({ openModal, closeModal, id, date }: Props) => {
         <Typography variant='h6' component='h2'>
           Choose time
         </Typography>
-
-        <Input
-          value={time}
+        <TextField
+          error={!inputValid}
+          placeholder='10:30'
+          helperText={helperText}
           type='string'
           onChange={(event) => setTime(event.target.value)}
         />
         <Stack direction='row' spacing={2} sx={{ marginTop: 2 }}>
           <Button
             variant='contained'
-            onClick={() => {
-              onModalSubmit();
+            onClick={(event) => {
+              onModalSubmit(event);
             }}
           >
             Add timeslot

@@ -14,3 +14,7 @@ export function isValidPassword(password: string) {
     password.length >= 8 && /[a-z]/i.test(password) && /[0-9]/.test(password)
   );
 }
+
+export const timeInputIsValid = (time: string): boolean => {
+  return /^(0[6-9]|(1\d{1}))(:)([0-5]\d{1})$/.test(time);
+};

@@ -76,10 +76,10 @@ const Header = () => {
           >
             {/* add validation to check if the user is logged in */}
             <Avatar className={styles.avatar} sx={{ bgcolor: grey[100] }}>
-              <a href='#' className={styles.avatarLogo}>
+              <div className={styles.avatarLogo}>
                 {/* implement avatar symbols logic */}
                 AA
-              </a>
+              </div>
             </Avatar>
           </Button>
           <Popper

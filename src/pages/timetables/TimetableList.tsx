@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,15 +11,16 @@ import { Stack } from '@mui/system';
 import { Chip } from '@mui/material';
 import TimeslotModal from '../../components/modals/TimeslotModal';
 import { Timeslots } from '../../model/Model';
+import axios from 'axios';
 
 type Props = {
   physicianId: string;
-  timeslots: Timeslots[];
 };
 
-const TimetableList = ({ physicianId, timeslots }: Props) => {
+const TimetableList = ({ physicianId }: Props) => {
+  const timeslotsURL = 'http://localhost:8080/timeslot/getPhyTimeslots/';
   const [open, setOpen] = useState<boolean>(false);
-  // const [physicianID, setPhysicianID] = useState<string>('');
+  const [timeslots, setTimeslots] = useState<Timeslots[]>([]);
   const [date, setDate] = useState<string>('');
 
   const handleCloseModal = () => {
@@ -34,6 +35,18 @@ const TimetableList = ({ physicianId, timeslots }: Props) => {
   const handleChipDelete = (time: string): void => alert(`Delete: ${time}!`);
   const handleChipClick = (patientId: string): void =>
     alert(`Patient ID: ${patientId}`);
+
+  useEffect(() => {
+    axios
+      .get<Timeslots[]>(`${timeslotsURL}${physicianId}`)
+      .then((response) => {
+        const list = response.data;
+        setTimeslots(list);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [open, physicianId]);
 
   return (
     <>

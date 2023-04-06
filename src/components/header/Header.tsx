@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Header.module.css';
+import classnames from 'classnames';
 import clinicLogo from '../../assets/clinic-logo.svg';
 import {
   Avatar,
@@ -13,7 +14,7 @@ import {
   Stack,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import { Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
 
 const Header = () => {
@@ -33,6 +34,13 @@ const Header = () => {
     }
 
     setOpen(false);
+  };
+
+  const resolveLinkClass = ({ isActive }: { isActive: boolean }) => {
+    return classnames({
+      [styles.menuItem]: !isActive,
+      [styles.menuItemActive]: isActive,
+    });
   };
 
   function handleListKeyDown(event: React.KeyboardEvent) {
@@ -107,12 +115,12 @@ const Header = () => {
                       onKeyDown={handleListKeyDown}
                     >
                       {/* add link to user profile */}
-                      <Link to='#' className={styles.avatarLogo}>
+                      <NavLink to='/profile' className={resolveLinkClass}>
                         <MenuItem onClick={handleClose}>Profile</MenuItem>
-                      </Link>
-                      <Link to={ROUTES.LOGIN} className={styles.avatarLogo}>
+                      </NavLink>
+                      <NavLink to={ROUTES.LOGIN} className={resolveLinkClass}>
                         <MenuItem onClick={handleClose}>Logout</MenuItem>
-                      </Link>
+                      </NavLink>
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>

@@ -6,6 +6,7 @@ import { Modal, InputAdornment } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { Visibility } from '@mui/icons-material';
+import Styles from '../styles/UserManagmentStyles';
 import axios from 'axios';
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,33 +30,6 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
     'Content-Type': 'application/json',
   };
   const postRequestUrl = 'http://localhost:8080/user/patients';
-
-  const textFieldStyle = {
-    width: '47%',
-    '& .MuiInputBase-root': {
-      background: '#ededed',
-    },
-    '& .MuiFormHelperText-root': {
-      minHeight: '40px',
-    },
-    '& .MuiInputLabel-root': {
-      color: '#28cdcb',
-      marginTop: '0.8rem',
-    },
-  };
-
-  const modalStyle = {
-    position: 'absolute' as const,
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 550,
-    bgcolor: 'white',
-    border: '2px solid #D3D3D3',
-    borderRadius: '20px',
-    boxShadow: 24,
-    p: 4,
-  };
 
   const handleClose = () => {
     setOpen(false);
@@ -111,27 +85,13 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
 
   return (
     <Modal open={open} onClose={handleClose}>
-      <Box sx={modalStyle}>
-        <Typography
-          variant='h5'
-          align='center'
-          style={{
-            marginTop: 30,
-            fontWeight: '700',
-          }}
-        >
+      <Box sx={Styles.modal}>
+        <Typography variant='h5' align='center' sx={Styles.typography}>
           Add new patients
         </Typography>
-        <Box
-          sx={{
-            width: '470px',
-            m: 'auto',
-            mt: '30px',
-            scale: '90%',
-          }}
-        >
+        <Box sx={Styles.box}>
           <TextField
-            sx={textFieldStyle}
+            sx={Styles.textField}
             onBlur={(e) => setNameError(e.target.value === '')}
             onChange={(e) => setName(e.target.value)}
             label='First name'
@@ -140,7 +100,7 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
             error={nameError}
           />
           <TextField
-            sx={textFieldStyle}
+            sx={Styles.textField}
             onBlur={(e) => setLastNameError(e.target.value === '')}
             onChange={(e) => setLastName(e.target.value)}
             error={LastNameError}
@@ -151,16 +111,9 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
           />
         </Box>
 
-        <Box
-          sx={{
-            width: '470px',
-            m: 'auto',
-            mt: '30px',
-            scale: '90%',
-          }}
-        >
+        <Box sx={Styles.box}>
           <TextField
-            sx={textFieldStyle}
+            sx={Styles.textField}
             label='Email'
             id='new-patient-email-field'
             onChange={fixDuplicationError}
@@ -179,7 +132,7 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
             helperText={passwordError && <>password cannot be empty</>}
             error={passwordError}
             label='Temporary password'
-            sx={textFieldStyle}
+            sx={Styles.textField}
             style={{ marginLeft: '20px' }}
             InputProps={{
               endAdornment: (
@@ -198,27 +151,12 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
             textAlign: 'right',
           }}
         >
-          <Button
-            sx={{
-              border: '1px solid orange',
-              color: 'orange',
-              '&:hover': {
-                color: 'orange',
-              },
-            }}
-            onClick={handleClose}
-          >
+          <Button sx={Styles.cancelButton} onClick={handleClose}>
             Cancel
           </Button>
           <Button
             variant='contained'
-            sx={{
-              marginLeft: 3,
-              bgcolor: '#25ced1',
-              '&:hover': {
-                bgcolor: '#25ced1',
-              },
-            }}
+            sx={Styles.createButton}
             onClick={handleCreate}
           >
             Create

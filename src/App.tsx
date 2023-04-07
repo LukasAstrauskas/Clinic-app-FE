@@ -5,9 +5,9 @@ import Footer from './components/footer/Footer';
 import Container from '@mui/material/Container';
 import './App.css';
 import AddingAdminModal from './components/modals/AddAdminModal';
-import { Physicians } from './pages/physicians/Physicians';
+import { Physicians } from './pages/users/Physicians';
 import PhysicianModalContent from './components/modals/AddPhysicianModal';
-import Tabs from './components/tabs/Tabs';
+import UserTabs from './pages/users/Tabs';
 
 function App() {
   return (
@@ -23,7 +23,7 @@ function App() {
     // <PhysicianModalContent/>
     // </>
     <>
-      <Tabs />
+      <UserTabs />
     </>
   );
 }

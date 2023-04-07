@@ -6,7 +6,6 @@ import { Box } from '@mui/system';
 import {
   TableContainer,
   Table,
-  TableHead,
   TableBody,
   TableRow,
   TableCell,
@@ -17,48 +16,17 @@ import AddIcon from '@mui/icons-material/Add';
 import Checkbox from '@mui/material/Checkbox';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import AddAdminModal from '../../components/modals/AddAdminModal';
+import Styles from '../../components/styles/UserManagmentStyles';
+import TableHeadComponent from '../../components/tableComponents/HeadComponent';
+import TableBodyComponent from '../../components/tableComponents/BodyComponent';
 
 export const Admins = () => {
   const [open, setOpen] = useState(false);
   const [checkedAdmins, setCheckedAdmins] = useState<string[]>([]);
   const [admins, setAdmins] = useState<AdminType[]>([]);
   const getRequestUrl = 'http://localhost:8080/user/admins';
-
-  const textFieldStyle = {
-    width: '47%',
-    '& .MuiInputBase-root': {
-      background: '#ededed',
-    },
-    '& .MuiFormHelperText-root': {
-      minHeight: '40px',
-    },
-    '& .MuiInputLabel-root': {
-      color: '#28cdcb',
-      marginTop: '0.8rem',
-    },
-  };
-
-  const createNewButtonStyle = {
-    ml: 5,
-    mb: 3,
-    scale: '90%',
-    bgcolor: '#25ced1',
-    '&:hover': {
-      bgcolor: '#25ced1',
-    },
-  };
-
-  const searchIcon = {
-    ml: 1,
-    mt: 2,
-    mr: 0.6,
-    scale: '170%',
-    outline: 'none',
-    borderBottom: 0,
-  };
 
   useEffect(() => {
     const getRequestHeaders = {
@@ -147,20 +115,19 @@ export const Admins = () => {
           mt: 10,
         }}
       >
-        <SearchIcon sx={searchIcon} />
+        <SearchIcon sx={Styles.searchIcon} />
         <TextField
           onChange={handleSearch}
-          sx={textFieldStyle}
+          sx={Styles.searchField}
           className='search'
           id='search'
           variant='outlined'
           placeholder='Search'
-          style={{ width: '350px', marginLeft: 20 }}
         />
 
         <Button
           onClick={handleOpen}
-          sx={createNewButtonStyle}
+          sx={Styles.createNewUserBtn}
           variant='contained'
         >
           Create new
@@ -177,70 +144,16 @@ export const Admins = () => {
       >
         <TableContainer component={Paper} sx={{ maxHeight: '500px' }}>
           <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  sx={{
-                    bgcolor: '#d3d3d3',
-                    Width: '10px',
-                  }}
-                >
-                  {' '}
-                  <IconButton onClick={handleDelete}>
-                    <DeleteIcon sx={{ color: 'orange' }} />
-                  </IconButton>{' '}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    bgcolor: '#d3d3d3',
-                    fontWeight: '700',
-                    Width: '40%',
-                  }}
-                >
-                  Name
-                </TableCell>
-                <TableCell
-                  sx={{
-                    bgcolor: '#d3d3d3',
-                    fontWeight: '700',
-                    Width: '40%',
-                  }}
-                  align='center'
-                >
-                  Email
-                </TableCell>
-                <TableCell
-                  sx={{
-                    bgcolor: '#d3d3d3',
-                  }}
-                />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {admins.map((admin, index) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    width: '100%',
-                    bgcolor: '#d3d3d3',
-                  }}
-                >
-                  <TableCell>
-                    <Checkbox
-                      id={admin.id.toString()}
-                      onChange={handleChecked}
-                    />
-                  </TableCell>
-                  <TableCell>{admin.name}</TableCell>
-                  <TableCell align='center'>{admin.email}</TableCell>
-                  <TableCell>
-                    <IconButton color='primary'>
-                      <EditIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+            <TableHeadComponent
+              handleDelete={handleDelete}
+              collumName='email'
+            />
+
+            <TableBodyComponent
+              collumValue='admins'
+              user={admins}
+              handleChecked={handleChecked}
+            />
           </Table>
         </TableContainer>
       </Box>

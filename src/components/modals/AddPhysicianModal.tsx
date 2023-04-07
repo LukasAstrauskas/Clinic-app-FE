@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import React, { useState, FC, useEffect } from 'react';
 import axios from 'axios';
+import Styles from '../styles/UserManagmentStyles';
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
@@ -29,41 +30,6 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
   const [duplicationError, setduplicationError] = useState(false);
   const [occupations, setOccupations] = useState<OccupationType[]>([]);
   const [occupationId, setOccupationId] = useState<string>('');
-
-  const textFieldStyle = {
-    width: '46%',
-    '& .MuiInputBase-root': {
-      background: '#ededed',
-    },
-    '& .MuiFormHelperText-root': {
-      minHeight: '40px',
-    },
-    '& .MuiInputLabel-root': {
-      color: '#28cdcb',
-      marginTop: '0.8rem',
-    },
-    '& .css-14lo706': {
-      width: '0px',
-    },
-  };
-
-  const modalStyle = {
-    position: 'absolute' as const,
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 550,
-    bgcolor: 'background.paper',
-    border: '2px solid #D3D3D3',
-    borderRadius: '20px',
-    boxShadow: '0px 2px 10px 2px rgba(0,0,0,0.3)',
-    p: 4,
-    '& .physiciansModalForm': {
-      display: 'flex',
-      justifyContent: 'space-between',
-      flexWrap: 'wrap',
-    },
-  };
 
   const handleClose = () => {
     setOpen(false);
@@ -98,7 +64,6 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
       .then((res) => {
         setOccupations(res.data);
       });
-    console.log(occupations);
   }, [open]);
 
   const postRequestHeaders = {
@@ -108,7 +73,6 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
   const postRequestUrl = 'http://localhost:8080/physicianInfo';
 
   const handleCreate = async () => {
-    console.log(occupationId);
     setNameError(name === '');
     setLastNameError(lastName === '');
     setEmailError(!/\S+@\S+\.\S+/.test(email));
@@ -152,29 +116,14 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
 
   return (
     <Modal open={open} onClose={handleClose}>
-      <Box sx={modalStyle}>
-        <Typography
-          sx={{
-            textAlign: 'center',
-            paddingBottom: '30px',
-            fontWeight: 'bold',
-          }}
-          variant='h5'
-          component='h2'
-        >
+      <Box sx={Styles.modal}>
+        <Typography align='center' sx={Styles.typography} variant='h5'>
           Add new physician
         </Typography>
         <Box>
-          <Box
-            sx={{
-              width: '470px',
-              m: 'auto',
-              mt: '30px',
-              scale: '90%',
-            }}
-          >
+          <Box sx={Styles.box}>
             <TextField
-              sx={textFieldStyle}
+              sx={Styles.textField}
               onBlur={(e) => setNameError(e.target.value === '')}
               onChange={(e) => setName(e.target.value)}
               label='First name'
@@ -183,7 +132,7 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
               error={nameError}
             />
             <TextField
-              sx={textFieldStyle}
+              sx={Styles.textField}
               onBlur={(e) => setLastNameError(e.target.value === '')}
               onChange={(e) => setLastName(e.target.value)}
               error={LastNameError}
@@ -194,16 +143,9 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
             />
           </Box>
 
-          <Box
-            sx={{
-              width: '470px',
-              m: 'auto',
-              mt: '30px',
-              scale: '90%',
-            }}
-          >
+          <Box sx={Styles.box}>
             <TextField
-              sx={textFieldStyle}
+              sx={Styles.textField}
               label='Email'
               id='new-patient-email-field'
               onChange={fixDuplicationError}
@@ -224,7 +166,7 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
               helperText={passwordError && <>password cannot be empty</>}
               error={passwordError}
               label='Temporary password'
-              sx={textFieldStyle}
+              sx={Styles.textField}
               style={{ marginLeft: '20px' }}
               InputProps={{
                 endAdornment: (
@@ -238,14 +180,7 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
             />
           </Box>
 
-          <Box
-            sx={{
-              width: '470px',
-              m: 'auto',
-              mt: '30px',
-              scale: '90%',
-            }}
-          >
+          <Box sx={Styles.box}>
             <TextField
               helperText={
                 occupationError ? (
@@ -257,7 +192,7 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
               onBlur={(e) => setOccupationError(e.target.value === '')}
               error={occupationError}
               onChange={(e) => setOccupationId(e.target.value)}
-              sx={textFieldStyle}
+              sx={Styles.textField}
               id='occupation'
               select
               label='Occupation'
@@ -276,20 +211,14 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
           </Box>
           <Box sx={{ paddingLeft: '60%' }}>
             <Button
-              sx={{
-                marginRight: '10px',
-                color: 'orange',
-                borderColor: 'lightGray',
-              }}
+              sx={Styles.cancelButton}
               variant='outlined'
               onClick={handleClose}
             >
               Cancel
             </Button>
             <Button
-              sx={{
-                backgroundColor: '#28cdcb',
-              }}
+              sx={Styles.createButton}
               variant='contained'
               type='submit'
               onClick={handleCreate}

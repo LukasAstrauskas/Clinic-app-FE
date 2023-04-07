@@ -7,7 +7,6 @@ import { Box } from '@mui/system';
 import {
   TableContainer,
   Table,
-  TableHead,
   TableBody,
   TableRow,
   TableCell,
@@ -17,48 +16,16 @@ import AddIcon from '@mui/icons-material/Add';
 import Checkbox from '@mui/material/Checkbox';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddPatientModal from '../../components/modals/AddPatientModal';
 import axios from 'axios';
-
+import TableHeadComponent from '../../components/tableComponents/HeadComponent';
+import Styles from '../../components/styles/UserManagmentStyles';
+import TableBodyComponent from '../../components/tableComponents/BodyComponent';
 export const Patients = () => {
   const [open, setOpen] = useState(false);
   const [checkedPatients, setCheckedPatiens] = useState<string[]>([]);
   const [patients, setPatients] = useState<PatientType[]>([]);
   const getRequestUrl = 'http://localhost:8080/user/patients';
-
-  const textFieldStyle = {
-    width: '47%',
-    '& .MuiInputBase-root': {
-      background: '#ededed',
-    },
-    '& .MuiFormHelperText-root': {
-      minHeight: '40px',
-    },
-    '& .MuiInputLabel-root': {
-      color: '#28cdcb',
-      marginTop: '0.8rem',
-    },
-  };
-
-  const createNewButtonStyle = {
-    ml: 5,
-    mb: 3,
-    scale: '90%',
-    bgcolor: '#25ced1',
-    '&:hover': {
-      bgcolor: '#25ced1',
-    },
-  };
-
-  const searchIcon = {
-    ml: 1,
-    mt: 2,
-    mr: 0.6,
-    scale: '170%',
-    outline: 'none',
-    borderBottom: 0,
-  };
 
   useEffect(() => {
     const getRequestHeaders = {
@@ -89,9 +56,7 @@ export const Patients = () => {
   };
 
   const handleDelete = () => {
-    console.log('triggered');
     checkedPatients.forEach((patient) => {
-      console.log(patient);
       const deleteURL = `http://localhost:8080/user/patients/${patient}`;
       axios.delete(deleteURL);
     });
@@ -148,20 +113,19 @@ export const Patients = () => {
           mt: 10,
         }}
       >
-        <SearchIcon sx={searchIcon} />
+        <SearchIcon sx={Styles.searchIcon} />
         <TextField
           onChange={handleSearch}
-          sx={textFieldStyle}
+          sx={Styles.searchField}
           className='search'
           id='search'
           variant='outlined'
           placeholder='Search'
-          style={{ width: '350px', marginLeft: 20 }}
         />
 
         <Button
           onClick={handleOpen}
-          sx={createNewButtonStyle}
+          sx={Styles.createNewUserBtn}
           variant='contained'
         >
           Create new
@@ -178,70 +142,15 @@ export const Patients = () => {
       >
         <TableContainer component={Paper} sx={{ maxHeight: '500px' }}>
           <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  sx={{
-                    bgcolor: '#d3d3d3',
-                    Width: '10px',
-                  }}
-                >
-                  {' '}
-                  <IconButton onClick={handleDelete}>
-                    <DeleteIcon sx={{ color: 'orange' }} />
-                  </IconButton>{' '}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    bgcolor: '#d3d3d3',
-                    fontWeight: '700',
-                    Width: '40%',
-                  }}
-                >
-                  Name
-                </TableCell>
-                <TableCell
-                  sx={{
-                    bgcolor: '#d3d3d3',
-                    fontWeight: '700',
-                    Width: '40%',
-                  }}
-                  align='center'
-                >
-                  Email
-                </TableCell>
-                <TableCell
-                  sx={{
-                    bgcolor: '#d3d3d3',
-                  }}
-                />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {patients.map((patient, index) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    width: '100%',
-                    bgcolor: '#d3d3d3',
-                  }}
-                >
-                  <TableCell>
-                    <Checkbox
-                      id={patient.id.toString()}
-                      onChange={handleChecked}
-                    />
-                  </TableCell>
-                  <TableCell>{patient.name}</TableCell>
-                  <TableCell align='center'>{patient.email}</TableCell>
-                  <TableCell>
-                    <IconButton color='primary'>
-                      <EditIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+            <TableHeadComponent
+              handleDelete={handleDelete}
+              collumName='email'
+            />
+            <TableBodyComponent
+              collumValue='patient'
+              user={patients}
+              handleChecked={handleChecked}
+            />
           </Table>
         </TableContainer>
       </Box>

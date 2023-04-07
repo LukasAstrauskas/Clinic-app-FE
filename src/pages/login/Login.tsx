@@ -8,6 +8,8 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import styles from './Login.module.css';
 import { isValidEmail } from '../../components/utils';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../../routes/routes';
 
 type LoginProps = {
   setIsLogged: (value: boolean) => void;
@@ -22,6 +24,7 @@ const Login = ({ setIsLogged, setType }: LoginProps) => {
 
   const handleEmailCheck = () =>
     setEmailError(!isValidEmail(email) ? 'Email is invalid' : '');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -33,6 +36,7 @@ const Login = ({ setIsLogged, setType }: LoginProps) => {
           const { type } = response.data;
           setType(type);
           setIsLogged(true);
+          navigate(ROUTES.HOME);
         }
       })
       .catch((error) => {

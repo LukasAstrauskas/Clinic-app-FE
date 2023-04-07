@@ -7,14 +7,19 @@ import Alert from '@mui/material/Alert';
 import React, { useState } from 'react';
 import styles from './Login.module.css';
 import { isValidEmail } from '../../components/utils';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../../routes/routes';
 
 const Login = () => {
   const [errorAlertOpen, setSignInError] = useState(false);
   const [email, setEmail] = useState('');
+  const navigate = useNavigate();
 
   const handleSignInClick = () => {
     // Handle Sign in logic
     // If there's an error, set signInError to true
+    // Function "navigate()" should be placed inside if statement to check if the user signed in successfully
+    navigate(ROUTES.HOME);
     setSignInError(true);
   };
   const handleEmailChange = (event: {

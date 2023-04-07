@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Header.module.css';
+import classnames from 'classnames';
 import clinicLogo from '../../assets/clinic-logo.svg';
 import {
   Avatar,
@@ -13,6 +14,8 @@ import {
   Stack,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
+import { NavLink, Link } from 'react-router-dom';
+import { ROUTES } from '../../routes/routes';
 
 const Header = () => {
   const [open, setOpen] = React.useState(false);
@@ -33,11 +36,15 @@ const Header = () => {
     setOpen(false);
   };
 
+  const resolveLinkClass = ({ isActive }: { isActive: boolean }) => {
+    return classnames({
+      [styles.menuItem]: !isActive,
+      [styles.menuItemActive]: isActive,
+    });
+  };
+
   function handleListKeyDown(event: React.KeyboardEvent) {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-      setOpen(false);
-    } else if (event.key === 'Escape') {
+    if (event.key === 'Escape') {
       setOpen(false);
     }
   }
@@ -54,7 +61,7 @@ const Header = () => {
 
   return (
     <div className={styles.header}>
-      <a href='#' className={styles.headerLogoLink}>
+      <Link to={ROUTES.HOME} className={styles.headerLogoLink}>
         <div className={styles.headerLogoSection}>
           <img
             src={clinicLogo}
@@ -63,7 +70,7 @@ const Header = () => {
           />
           <h1>The Clinic</h1>
         </div>
-      </a>
+      </Link>
 
       <Stack direction='row' spacing={2}>
         <div>
@@ -75,10 +82,12 @@ const Header = () => {
             aria-haspopup='true'
             onClick={handleToggle}
           >
+            {/* add validation to check if the user is logged in */}
             <Avatar className={styles.avatar} sx={{ bgcolor: grey[100] }}>
-              <a href='#' className={styles.avatarLogo}>
+              <div className={styles.avatarLogo}>
+                {/* implement avatar symbols logic */}
                 AA
-              </a>
+              </div>
             </Avatar>
           </Button>
           <Popper
@@ -105,8 +114,13 @@ const Header = () => {
                       aria-labelledby='composition-button'
                       onKeyDown={handleListKeyDown}
                     >
-                      <MenuItem onClick={handleClose}>Profile</MenuItem>
-                      <MenuItem onClick={handleClose}>Logout</MenuItem>
+                      {/* add link to user profile */}
+                      <NavLink to='/profile' className={resolveLinkClass}>
+                        <MenuItem onClick={handleClose}>Profile</MenuItem>
+                      </NavLink>
+                      <NavLink to={ROUTES.LOGIN} className={resolveLinkClass}>
+                        <MenuItem onClick={handleClose}>Logout</MenuItem>
+                      </NavLink>
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>

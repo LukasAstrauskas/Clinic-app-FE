@@ -7,7 +7,11 @@ import physicianTimetablesIcon from '../../assets/physician-timetables-icon.svg'
 import manageUsersIcon from '../../assets/manage-users-icon.svg';
 import managePhysiciansIcon from '../../assets/manage-physicians-icon.svg';
 
-const WelcomePage = () => {
+type WelcomePageProps = {
+  type: string;
+};
+
+const WelcomePage = ({ type }: WelcomePageProps) => {
   return (
     <Grid
       className={styles.main}
@@ -16,15 +20,21 @@ const WelcomePage = () => {
       justifyContent='center'
       alignItems='center'
     >
-      <Item
-        title='Manage users'
-        icon1={manageUsersIcon}
-        icon2={managePhysiciansIcon}
-      ></Item>
-      <Item
-        title='Physicians timetables'
-        icon1={physicianTimetablesIcon}
-      ></Item>
+      {type == 'admin' ? (
+        <>
+          <Item
+            title='Manage users'
+            icon1={manageUsersIcon}
+            icon2={managePhysiciansIcon}
+          ></Item>
+          <Item
+            title='Physicians timetables'
+            icon1={physicianTimetablesIcon}
+          ></Item>
+        </>
+      ) : (
+        <Item title='New appointment' icon1={managePhysiciansIcon}></Item>
+      )}
       <Item title='Manage appointments' icon1={mannageApointmentIcon}></Item>
     </Grid>
   );

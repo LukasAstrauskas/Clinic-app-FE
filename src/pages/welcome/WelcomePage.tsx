@@ -7,11 +7,9 @@ import physicianTimetablesIcon from '../../assets/physician-timetables-icon.svg'
 import manageUsersIcon from '../../assets/manage-users-icon.svg';
 import managePhysiciansIcon from '../../assets/manage-physicians-icon.svg';
 
-type WelcomePageProps = {
-  type: string;
-};
+const WelcomePage = () => {
+  const type = localStorage.getItem('type') || '';
 
-const WelcomePage = ({ type }: WelcomePageProps) => {
   return (
     <Grid
       className={styles.main}

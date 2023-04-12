@@ -12,3 +12,9 @@ export interface PhyNameOccupation {
   name: string;
   occupation: string;
 }
+
+export interface User {
+  name: string;
+  email: string;
+  type: string;
+}

@@ -42,6 +42,7 @@ export const Patients = () => {
         });
     }
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, checkedPatients]);
 
   type PatientType = {

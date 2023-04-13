@@ -5,23 +5,26 @@ import AddingAdminModal from './components/modals/AddAdminModal';
 import { Physicians } from './pages/users/Physicians';
 import PhysicianModalContent from './components/modals/AddPhysicianModal';
 import UserTabs from './pages/users/Tabs';
+import Header from './components/header/Header';
+import WelcomePage from './pages/welcome/WelcomePage';
+import Footer from './components/footer/Footer';
+import AddPhysicianModal from './components/modals/AddPhysicianModal';
 
 function App() {
   return (
-    // <Container maxWidth='lg'>
-    //   <Header />
-    //   <WelcomePage />
-    //   <AddNewPhysicianModal />
-    //   <Footer />
-    // </Container>
+    <Container maxWidth='lg' className='container'>
+      <Header />
+      {/* <WelcomePage type={''} /> */}
+      <Footer />
+    </Container>
     // <Admins />
     // <AddingAdminModal />
     // <>
     // <PhysicianModalContent/>
     // </>
-    <>
-      <UserTabs />
-    </>
+    // <>
+    //   <UserTabs />
+    // </>
   );
 }
 export default App;

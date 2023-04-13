@@ -1,27 +1,17 @@
 import React from 'react';
 import Container from '@mui/material/Container';
 import './App.css';
-import AddingAdminModal from './components/modals/AddAdminModal';
-import { Physicians } from './pages/users/Physicians';
-import PhysicianModalContent from './components/modals/AddPhysicianModal';
-import UserTabs from './pages/users/Tabs';
+import Header from './components/header/Header';
+import Main from './components/main/Main';
+import Footer from './components/footer/Footer';
 
 function App() {
   return (
-    // <Container maxWidth='lg'>
-    //   <Header />
-    //   <WelcomePage />
-    //   <AddNewPhysicianModal />
-    //   <Footer />
-    // </Container>
-    // <Admins />
-    // <AddingAdminModal />
-    // <>
-    // <PhysicianModalContent/>
-    // </>
-    <>
-      <UserTabs />
-    </>
+    <Container maxWidth='lg'>
+      <Header />
+      <Main />
+      <Footer />
+    </Container>
   );
 }
 export default App;

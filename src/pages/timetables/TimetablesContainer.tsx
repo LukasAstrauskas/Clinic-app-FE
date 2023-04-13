@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Container, Grid } from '@mui/material';
 import TimetableList from './TimetableList';
-import PhysicianTable from './PhysicianTable';
+import PhysicianTable from '../physicians/PhysicianTable';
 import { PhyNameOccupation } from '../../model/Model';
 import axios from 'axios';
 
@@ -19,6 +19,7 @@ const TimetablesContainer = () => {
       .get<PhyNameOccupation[]>(url)
       .then((response) => {
         setPhysicians(response.data);
+        setPhyId(response.data[0].physicianId);
       })
       .catch((err) => {
         console.log(err);
@@ -33,6 +34,7 @@ const TimetablesContainer = () => {
             <PhysicianTable physicians={physicians} rowClick={handleClick} />
           </Grid>
           <Grid item lg={8}>
+            {phyId === '' && <p>ID is null</p>}
             <TimetableList physicianId={phyId} />
           </Grid>
         </Grid>

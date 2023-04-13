@@ -5,6 +5,11 @@ export function isValidFirstName(firstName: string) {
 export function isValidLastName(lastName: string) {
   return lastName.trim().length > 0;
 }
+
+export function isValidName(name: string) {
+  return name.trim().length > 0;
+}
+
 export function isValidEmail(email: string) {
   const MIN_LENGTH = 5;
   const MAX_LENGTH = 254;

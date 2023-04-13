@@ -3,6 +3,7 @@ import { TableBody, TableRow, TableCell, Paper } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
+import EditUserModal from '../modals/EditUserModal';
 
 type UserType = {
   id: string;
@@ -49,6 +50,7 @@ const TableBodyComponent: FC<Props> = ({
               <IconButton color='primary'>
                 <EditIcon />
               </IconButton>
+              <EditUserModal />
             </TableCell>
           </TableRow>
         ))}

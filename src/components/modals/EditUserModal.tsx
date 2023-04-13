@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, FC } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { Box } from '@mui/system';
@@ -166,7 +166,7 @@ const EditUserModal = () => {
 
   return (
     <>
-      <Button
+      {/* <Button
         onClick={handleOpen}
         sx={{
           ml: 5,
@@ -180,7 +180,7 @@ const EditUserModal = () => {
         variant='contained'
       >
         Modify User
-      </Button>
+      </Button> */}
 
       <Modal open={open} onClose={handleClose}>
         <Box sx={Styles.modal}>

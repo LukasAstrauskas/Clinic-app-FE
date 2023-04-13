@@ -16,9 +16,8 @@ function App() {
   return (
     <Container maxWidth='lg' className='container'>
       <Header />
+      <UserTabs />
       {/* <EditUserModal /> */}
-      <EditUserModal />
-      {/* <WelcomePage type={''} /> */}
       <Footer />
     </Container>
     // <Admins />

@@ -18,3 +18,9 @@ export interface User {
   email: string;
   type: string;
 }
+
+export interface Timeslot {
+  physicianId: string;
+  date: string;
+  time: string;
+}

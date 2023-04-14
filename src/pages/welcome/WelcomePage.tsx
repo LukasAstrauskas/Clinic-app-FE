@@ -6,6 +6,7 @@ import mannageApointmentIcon from '../../assets/manage-appointments-icon.svg';
 import physicianTimetablesIcon from '../../assets/physician-timetables-icon.svg';
 import manageUsersIcon from '../../assets/manage-users-icon.svg';
 import managePhysiciansIcon from '../../assets/manage-physicians-icon.svg';
+import { ROUTES } from '../../routes/routes';
 
 const WelcomePage = () => {
   const type = localStorage.getItem('type') || '';
@@ -18,21 +19,22 @@ const WelcomePage = () => {
       justifyContent='center'
       alignItems='center'
     >
-      {type == 'admin' ? (
+      {type == 'admin' && (
         <>
           <Item
             title='Manage users'
             icon1={manageUsersIcon}
             icon2={managePhysiciansIcon}
+            linkTo={ROUTES.PATIENTS}
           ></Item>
           <Item
             title='Physicians timetables'
             icon1={physicianTimetablesIcon}
+            linkTo={ROUTES.TIMETABLE}
           ></Item>
         </>
-      ) : (
-        <Item title='New appointment' icon1={managePhysiciansIcon}></Item>
       )}
+      <Item title='New appointment' icon1={managePhysiciansIcon}></Item>
       <Item title='Manage appointments' icon1={mannageApointmentIcon}></Item>
     </Grid>
   );

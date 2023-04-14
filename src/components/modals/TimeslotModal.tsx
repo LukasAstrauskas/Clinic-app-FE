@@ -25,6 +25,7 @@ const style = {
 type Props = {
   openModal: boolean;
   closeModal: () => void;
+  loadData: () => void;
   id: string;
   date: string;
 };
@@ -42,18 +43,25 @@ const postTimeslot = (id: string, date: string, time: string) => {
     });
 };
 
-const TimeslotModal = ({ openModal, closeModal, id, date }: Props) => {
+const TimeslotModal = ({
+  openModal,
+  closeModal,
+  loadData,
+  id,
+  date,
+}: Props) => {
   const [time, setTime] = useState<string>('');
   const [inputValid, setInputValid] = useState<boolean>(true);
   const [helperText, setHelperText] = useState<string>('');
 
-  const onModalSubmit = (event: { preventDefault: () => void }) => {
+  const onModalSubmit = (event: { preventDefault: () => void }): void => {
     event.preventDefault();
     if (timeInputIsValid(time)) {
+      postTimeslot(id, date, time);
       setInputValid(true);
       setHelperText('');
-      postTimeslot(id, date, time);
       setTime(``);
+      loadData();
       closeModal();
     } else {
       setInputValid(false);

@@ -12,6 +12,10 @@ import { Chip } from '@mui/material';
 import TimeslotModal from '../../components/modals/TimeslotModal';
 import { Timeslots } from '../../model/Model';
 import axios from 'axios';
+import { getWeekDay } from '../../components/utils';
+import { deleteTimeslot } from '../../data/fetch';
+import AlertModal from '../../components/modals/AlertModal';
+import useToggle from '../../hooks/useToggle';
 
 type Props = {
   physicianId: string;
@@ -19,34 +23,58 @@ type Props = {
 
 const TimetableList = ({ physicianId }: Props) => {
   const timeslotsURL = 'http://localhost:8080/timeslot/getPhyTimeslots/';
-  const [open, setOpen] = useState<boolean>(false);
+  const deleteMessage = 'Are you sure you want to delete this timeslot?';
+  const [openModal, setOpenModal] = useToggle();
+  const [openConfirm, setOpenConfirm] = useToggle();
+  const [openAlert, toggleAlert] = useToggle();
+  const [loadData, setloadData] = useToggle();
   const [timeslots, setTimeslots] = useState<Timeslots[]>([]);
   const [date, setDate] = useState<string>('');
-
-  const handleCloseModal = () => {
-    setOpen(false);
-  };
+  const [time, setTime] = useState<string>('');
 
   const handleOpenModal = (date: string): void => {
-    setOpen(true);
+    setOpenModal();
     setDate(date);
   };
 
-  const handleChipDelete = (time: string): void => alert(`Delete: ${time}!`);
+  const deleteButtonAction = (
+    date: string,
+    time: string,
+    patientId: string,
+  ): void => {
+    if (patientId === null) {
+      setDate(date);
+      setTime(time);
+      setOpenConfirm();
+    } else {
+      toggleAlert();
+    }
+  };
+
+  const handleDeleteTimeslot = (): void => {
+    deleteTimeslot({ physicianId, date, time });
+    setloadData();
+    setOpenConfirm();
+  };
+
   const handleChipClick = (patientId: string): void =>
     alert(`Patient ID: ${patientId}`);
 
   useEffect(() => {
-    axios
-      .get<Timeslots[]>(`${timeslotsURL}${physicianId}`)
-      .then((response) => {
-        const list = response.data;
-        setTimeslots(list);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [open, physicianId]);
+    async function getTimeslots() {
+      await axios
+        .get<Timeslots[]>(`${timeslotsURL}${physicianId}`)
+        .then((response) => {
+          const list = response.data;
+          setTimeslots(list);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    getTimeslots();
+    // eslint-disable-next-line prettier/prettier
+  }, [loadData, physicianId]);
 
   return (
     <>
@@ -60,7 +88,9 @@ const TimetableList = ({ physicianId }: Props) => {
         >
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 'bold' }}>Data</TableCell>
+              <TableCell sx={{ width: 130, fontWeight: 'bold' }}>
+                Date
+              </TableCell>
               <TableCell sx={{ fontWeight: 'bold' }} align='left'>
                 Time
               </TableCell>
@@ -80,7 +110,7 @@ const TimetableList = ({ physicianId }: Props) => {
                   <Chip
                     variant='outlined'
                     sx={{ border: 'unset' }}
-                    label={date}
+                    label={`${date} ${getWeekDay(date)}`}
                   ></Chip>
                 </TableCell>
                 <TableCell align='left'>
@@ -88,9 +118,10 @@ const TimetableList = ({ physicianId }: Props) => {
                     {timePatientList.map(({ time, patientId }) => {
                       return (
                         <Timechip
+                          date={date}
                           time={time}
                           patientId={patientId}
-                          onDelete={handleChipDelete}
+                          onDelete={deleteButtonAction}
                           onClick={handleChipClick}
                           key={time}
                         />
@@ -109,10 +140,25 @@ const TimetableList = ({ physicianId }: Props) => {
         </Table>
       </TableContainer>
       <TimeslotModal
-        openModal={open}
-        closeModal={handleCloseModal}
+        openModal={openModal}
+        closeModal={setOpenModal}
+        loadData={setloadData}
         id={physicianId}
         date={date}
+      />
+      <AlertModal
+        open={openConfirm}
+        onClose={setOpenConfirm}
+        message={deleteMessage}
+        onConfirm={handleDeleteTimeslot}
+        confirmMsg='Delete'
+        closeMsg='Cancel'
+      />
+      <AlertModal
+        open={openAlert}
+        onClose={toggleAlert}
+        message='This time slot is already booked and cannot be deleted'
+        closeMsg='Ok, close.'
       />
     </>
   );

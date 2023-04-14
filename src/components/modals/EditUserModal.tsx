@@ -6,8 +6,6 @@ import { Modal } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import { isValidName, isValidEmail, isValidPassword } from '../utils';
-// import { modalStyle } from './AddPatientModal';
-// import { textFieldStyle } from './AddingAdminModal';
 import Styles from '../styles/UserManagmentStyles';
 
 type User = {
@@ -35,13 +33,18 @@ type Physician = {
   };
 };
 
-const EditUserModal = () => {
+interface Props {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  open: boolean;
+  selectedId: string;
+}
+
+const EditUserModal: FC<Props> = ({ open, setOpen, selectedId }) => {
   const [user, setUser] = useState<User>();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [type, setType] = useState('');
-  const [open, setOpen] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [nameError, setNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -50,7 +53,13 @@ const EditUserModal = () => {
   const [occupationId, setOccupationId] = useState('');
   const [occupationName, setOccupationName] = useState('');
 
-  const id = '698e415e-ca7c-11ed-afa1-0242ac120002';
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const id = selectedId;
+  // const id = 'e89e027e-cb1f-11ed-afa1-0242ac120002';
+  console.log(selectedId);
 
   const postRequestHeaders = {
     Accept: 'application/json',
@@ -71,6 +80,8 @@ const EditUserModal = () => {
       })
       .catch((err) => console.log('Err', err));
   };
+
+  console.log(name);
 
   const fetchPhysicianById = async () => {
     const response = await axios
@@ -122,6 +133,7 @@ const EditUserModal = () => {
         console.log(data);
       }
       setIsUpdated(true);
+      setOpen(false);
       return data;
     }
     console.log('There are errors with update');
@@ -135,10 +147,6 @@ const EditUserModal = () => {
       fetchUserById();
     }
   }, [type]);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
 
   const handleEmailCheck = () => {
     !isValidEmail(email)
@@ -160,28 +168,8 @@ const EditUserModal = () => {
       : setPasswordError('');
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <>
-      {/* <Button
-        onClick={handleOpen}
-        sx={{
-          ml: 5,
-          mb: 3,
-          scale: '90%',
-          bgcolor: '#25ced1',
-          '&:hover': {
-            bgcolor: '#25ced1',
-          },
-        }}
-        variant='contained'
-      >
-        Modify User
-      </Button> */}
-
       <Modal open={open} onClose={handleClose}>
         <Box sx={Styles.modal}>
           <Typography
@@ -260,11 +248,11 @@ const EditUserModal = () => {
               </TextField>
             )}
           </Box>
-          {isUpdated && (
+          {/* {isUpdated && (
             <h4 style={{ textAlign: 'center', color: 'green' }}>
               Successfully modified!
             </h4>
-          )}
+          )} */}
           <Box
             sx={{
               mt: 9,

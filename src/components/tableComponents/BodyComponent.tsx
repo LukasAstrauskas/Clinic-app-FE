@@ -28,6 +28,16 @@ const TableBodyComponent: FC<Props> = ({
   user,
   handleChecked,
 }) => {
+  const [open, setOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState('');
+
+  const handleOpen = () => {
+    setOpen(true);
+    // setSelectedId(user.id.toString());
+  };
+
+  // console.log(selectedId);
+
   return (
     <>
       <TableBody>
@@ -47,10 +57,19 @@ const TableBodyComponent: FC<Props> = ({
               {collumValue === 'physician' ? user.occupation.name : user.email}
             </TableCell>
             <TableCell>
-              <IconButton color='primary'>
-                <EditIcon />
+              <IconButton color='primary' onClick={handleOpen}>
+                <EditIcon
+                  onClick={() => {
+                    setSelectedId(user.id);
+                  }}
+                />
               </IconButton>
-              <EditUserModal />
+              <EditUserModal
+                setOpen={setOpen}
+                open={open}
+                selectedId={user.id}
+                // selectedId={selectedId}
+              />
             </TableCell>
           </TableRow>
         ))}

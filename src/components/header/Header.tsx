@@ -36,7 +36,10 @@ const Header = () => {
     ) {
       return;
     }
-    dispatch(logout());
+    const target = event.target as HTMLElement;
+    if (target.id === 'logout') {
+      dispatch(logout());
+    }
     setOpen(false);
   };
 
@@ -123,7 +126,9 @@ const Header = () => {
                         <MenuItem onClick={handleClose}>Profile</MenuItem>
                       </NavLink>
                       <NavLink to={ROUTES.LOGIN} className={resolveLinkClass}>
-                        <MenuItem onClick={handleClose}>Logout</MenuItem>
+                        <MenuItem id='logout' onClick={handleClose}>
+                          Logout
+                        </MenuItem>
                       </NavLink>
                     </MenuList>
                   </ClickAwayListener>

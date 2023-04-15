@@ -18,3 +18,34 @@ export interface Timeslot {
   date: string;
   time: string;
 }
+
+export interface EditUser {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  open: boolean;
+  selectedId: string;
+}
+
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  type: string;
+};
+
+export type Occupation = {
+  id: string;
+  name: string;
+};
+
+export type Physician = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  type: string;
+  occupation: {
+    id: string;
+    name: string;
+  };
+};

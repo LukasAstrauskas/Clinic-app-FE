@@ -7,39 +7,10 @@ import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import { isValidName, isValidEmail, isValidPassword } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
+import { EditUser } from '../../model/Model';
+import { Physician, User, Occupation } from '../../model/Model';
 
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  type: string;
-};
-
-type Occupation = {
-  id: string;
-  name: string;
-};
-
-type Physician = {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  type: string;
-  occupation: {
-    id: string;
-    name: string;
-  };
-};
-
-interface Props {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  open: boolean;
-  selectedId: string;
-}
-
-const EditUserModal: FC<Props> = ({ open, setOpen, selectedId }) => {
+const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const [user, setUser] = useState<User>();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -56,9 +27,6 @@ const EditUserModal: FC<Props> = ({ open, setOpen, selectedId }) => {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const id = selectedId;
-  // console.log(selectedId);
 
   const postRequestHeaders = {
     Accept: 'application/json',
@@ -79,8 +47,6 @@ const EditUserModal: FC<Props> = ({ open, setOpen, selectedId }) => {
       })
       .catch((err) => console.log('Err', err));
   };
-
-  console.log(name);
 
   const fetchPhysicianById = async () => {
     const response = await axios
@@ -129,13 +95,10 @@ const EditUserModal: FC<Props> = ({ open, setOpen, selectedId }) => {
             headers: postRequestHeaders,
           },
         );
-        console.log(data);
       }
       setIsUpdated(true);
-      // setOpen(false);
       return data;
     }
-    console.log('There are errors with update');
   };
 
   useEffect(() => {
@@ -243,9 +206,9 @@ const EditUserModal: FC<Props> = ({ open, setOpen, selectedId }) => {
                 SelectProps={{ native: true }}
                 InputLabelProps={{ shrink: true }}
               >
-                {occupations.map((occupation) => (
-                  <option key={occupation.id} value={occupation.id}>
-                    {occupation.name}
+                {occupations.map(({ id, name }) => (
+                  <option key={id} value={id}>
+                    {name}
                   </option>
                 ))}
               </TextField>

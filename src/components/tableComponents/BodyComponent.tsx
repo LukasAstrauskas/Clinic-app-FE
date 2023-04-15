@@ -33,14 +33,12 @@ const TableBodyComponent: FC<Props> = ({
 
   const handleOpen = () => {
     setOpen(true);
-    // setSelectedId(user.id.toString());
   };
-
-  // console.log(selectedId);
 
   return (
     <>
       <TableBody>
+        <EditUserModal setOpen={setOpen} open={open} selectedId={selectedId} />
         {user.map((user, index) => (
           <TableRow
             key={index}
@@ -56,20 +54,14 @@ const TableBodyComponent: FC<Props> = ({
             <TableCell align='center'>
               {collumValue === 'physician' ? user.occupation.name : user.email}
             </TableCell>
-            <TableCell>
+            <TableCell
+              onClick={() => {
+                setSelectedId(user.id);
+              }}
+            >
               <IconButton color='primary' onClick={handleOpen}>
-                <EditIcon
-                  onClick={() => {
-                    setSelectedId(user.id);
-                  }}
-                />
+                <EditIcon />
               </IconButton>
-              <EditUserModal
-                setOpen={setOpen}
-                open={open}
-                selectedId={user.id}
-                // selectedId={selectedId}
-              />
             </TableCell>
           </TableRow>
         ))}

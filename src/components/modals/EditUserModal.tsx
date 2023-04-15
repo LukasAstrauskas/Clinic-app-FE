@@ -58,8 +58,7 @@ const EditUserModal: FC<Props> = ({ open, setOpen, selectedId }) => {
   };
 
   const id = selectedId;
-  // const id = 'e89e027e-cb1f-11ed-afa1-0242ac120002';
-  console.log(selectedId);
+  // console.log(selectedId);
 
   const postRequestHeaders = {
     Accept: 'application/json',
@@ -133,20 +132,24 @@ const EditUserModal: FC<Props> = ({ open, setOpen, selectedId }) => {
         console.log(data);
       }
       setIsUpdated(true);
-      setOpen(false);
+      // setOpen(false);
       return data;
     }
     console.log('There are errors with update');
   };
 
   useEffect(() => {
+    if (!open) {
+      return;
+    }
+
     if (type === 'physician') {
       fetchOccupations();
       fetchPhysicianById();
     } else {
       fetchUserById();
     }
-  }, [type]);
+  }, [type, open]);
 
   const handleEmailCheck = () => {
     !isValidEmail(email)
@@ -248,11 +251,11 @@ const EditUserModal: FC<Props> = ({ open, setOpen, selectedId }) => {
               </TextField>
             )}
           </Box>
-          {/* {isUpdated && (
+          {isUpdated && (
             <h4 style={{ textAlign: 'center', color: 'green' }}>
               Successfully modified!
             </h4>
-          )} */}
+          )}
           <Box
             sx={{
               mt: 9,

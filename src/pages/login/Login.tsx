@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
-import { login } from '../../features/auth/authActions';
+import { login } from '../../store/slices/auth/authActions';
 
 const Login = () => {
   const [errorAlertOpen, setSignInError] = useState(false);
@@ -32,7 +32,6 @@ const Login = () => {
         localStorage.setItem('type', response.payload.type);
       }
     } catch (error) {
-      console.error(error);
       setSignInError(true);
     }
   };

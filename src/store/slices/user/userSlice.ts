@@ -1,6 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import { User } from '../../model/Model';
+import { User } from '../../../model/Model';
 import axios from 'axios';
 
 interface UserState {

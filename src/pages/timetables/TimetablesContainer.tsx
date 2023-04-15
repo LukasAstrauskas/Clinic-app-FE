@@ -1,30 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Box, Container, Grid } from '@mui/material';
 import TimetableList from './TimetableList';
 import PhysicianTable from '../physicians/PhysicianTable';
-import { PhyNameOccupation } from '../../model/Model';
-import axios from 'axios';
+import { AppDispatch } from '../../store/types';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchPhysicians,
+  selectPhysicianId,
+  selectPhysicians,
+  setPhysicianId,
+} from '../../store/slices/physician/physicianSlice';
 
 const TimetablesContainer = () => {
-  const [physicians, setPhysicians] = useState<PhyNameOccupation[]>([]);
-  const [phyId, setPhyId] = useState<string>('');
-  const url = 'http://localhost:8080/physicianNamesOccupations';
+  const physicians = useSelector(selectPhysicians);
+  const physicianId = useSelector(selectPhysicianId);
+  const dispatch = useDispatch<AppDispatch>();
 
-  const handleClick = (physicianId: string) => {
-    setPhyId(physicianId);
+  const handleClick = (id: string) => {
+    dispatch(setPhysicianId(id));
   };
 
   useEffect(() => {
-    axios
-      .get<PhyNameOccupation[]>(url)
-      .then((response) => {
-        setPhysicians(response.data);
-        setPhyId(response.data[0].physicianId);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    dispatch(fetchPhysicians());
+  }, [dispatch]);
 
   return (
     <Container maxWidth='lg'>
@@ -34,8 +32,11 @@ const TimetablesContainer = () => {
             <PhysicianTable physicians={physicians} rowClick={handleClick} />
           </Grid>
           <Grid item lg={8}>
-            {phyId === '' && <p>ID is null</p>}
-            <TimetableList physicianId={phyId} />
+            {physicianId ? (
+              <TimetableList physicianId={physicianId} />
+            ) : (
+              <p>ID is null</p>
+            )}
           </Grid>
         </Grid>
       </Box>

@@ -1,13 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { login } from './authActions';
-import { RootState } from '../../store/types';
+import { RootState } from '../../types';
 
 const initialState: AuthState = {
   type: null,
   id: null,
   loading: false,
   error: null,
-  isLogged: false,
+  isLoggedIn: false,
 };
 
 export interface AuthState {
@@ -15,7 +15,7 @@ export interface AuthState {
   id: string | null;
   loading: boolean;
   error: string | null;
-  isLogged: boolean;
+  isLoggedIn: boolean;
 }
 
 export const authSlice = createSlice({
@@ -33,7 +33,7 @@ export const authSlice = createSlice({
         state.error = null;
         state.type = action.payload.type;
         state.id = action.payload.id;
-        state.isLogged = true;
+        state.isLoggedIn = true;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -46,4 +46,4 @@ export const selectType = (state: RootState) => state.auth.type;
 export const selectId = (state: RootState) => state.auth.id;
 export const selectLoading = (state: RootState) => state.auth.loading;
 export const selectError = (state: RootState) => state.auth.error;
-export const selectIsLogged = (state: RootState) => state.auth.isLogged;
+export const selectisLoggedIn = (state: RootState) => state.auth.isLoggedIn;

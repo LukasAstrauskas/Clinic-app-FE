@@ -16,7 +16,7 @@ import {
 import { grey } from '@mui/material/colors';
 import { NavLink, Link } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
-import { logout } from '../../features/auth/authActions';
+import { logout } from '../../store/slices/auth/authActions';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 

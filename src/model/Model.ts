@@ -12,3 +12,9 @@ export interface PhyNameOccupation {
   name: string;
   occupation: string;
 }
+
+export interface Timeslot {
+  physicianId: string;
+  date: string;
+  time: string;
+}

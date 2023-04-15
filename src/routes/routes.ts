@@ -3,4 +3,5 @@ export enum ROUTES {
   LOGIN = '/login',
   PATIENTS = '/patients',
   USERS = '/users',
+  TIMETABLE = '/timetable',
 }

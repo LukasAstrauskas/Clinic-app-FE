@@ -5,11 +5,11 @@ import PhysicianTable from '../physicians/PhysicianTable';
 import { AppDispatch } from '../../store/types';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  fetchPhysicians,
+  fetchPhyNameOccupation,
   selectPhysicianId,
   selectPhysicians,
   setPhysicianId,
-} from '../../store/slices/physician/physicianSlice';
+} from '../../store/slices/physician/phyNameOccupationSlice';
 
 const TimetablesContainer = () => {
   const physicians = useSelector(selectPhysicians);
@@ -21,7 +21,7 @@ const TimetablesContainer = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchPhysicians());
+    dispatch(fetchPhyNameOccupation());
   }, [dispatch]);
 
   return (
@@ -32,11 +32,7 @@ const TimetablesContainer = () => {
             <PhysicianTable physicians={physicians} rowClick={handleClick} />
           </Grid>
           <Grid item lg={8}>
-            {physicianId ? (
-              <TimetableList physicianId={physicianId} />
-            ) : (
-              <p>ID is null</p>
-            )}
+            {physicianId ? <TimetableList physicianId={physicianId} /> : <></>}
           </Grid>
         </Grid>
       </Box>

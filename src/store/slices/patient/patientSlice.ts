@@ -2,80 +2,77 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../../../model/Model';
 
-interface PhysicianState {
-  physicians: User[];
+interface PatientsState {
+  patients: User[];
   isLoading: boolean;
   error: string | null;
 }
 
-const initialState: PhysicianState = {
-  physicians: [],
+const initialState: PatientsState = {
+  patients: [],
   isLoading: false,
   error: null,
 };
 
-export const fetchPhysicians = createAsyncThunk(
-  'user/fetchPhysicians',
+export const fetchPatients = createAsyncThunk(
+  'patients/fetchPatients',
   async () => {
-    const response = await fetch('http://localhost:8080/user/physicians');
+    const response = await fetch('http://localhost:8080/user/patients');
     const data = await response.json();
     return data;
   },
 );
 
-export const deletePhysician = createAsyncThunk(
-  'user/deletePhysician',
-  async (id: string) => {
-    const response = await fetch(
-      `http://localhost:8080/user/physicians/${id}`,
-      {
-        method: 'DELETE',
-      },
-    );
+export const deletePatient = createAsyncThunk(
+  'patients/deletePatient',
+  async (id: number) => {
+    const response = await fetch(`http://localhost:8080/user/patients/${id}`, {
+      method: 'DELETE',
+    });
     const data = await response.json();
     return data;
   },
 );
 
-export const physicianSlice = createSlice({
-  name: 'physician',
+export const patientSlice = createSlice({
+  name: 'patient',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchPhysicians.pending, (state) => {
+      .addCase(fetchPatients.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
       .addCase(
-        fetchPhysicians.fulfilled,
+        fetchPatients.fulfilled,
         (state, action: PayloadAction<User[]>) => {
           state.isLoading = false;
-          state.physicians = action.payload;
+          state.patients = action.payload;
         },
       )
-      .addCase(fetchPhysicians.rejected, (state, action) => {
+      .addCase(fetchPatients.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
       })
-      .addCase(deletePhysician.pending, (state) => {
+      .addCase(deletePatient.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
       .addCase(
-        deletePhysician.fulfilled,
+        deletePatient.fulfilled,
         (state, action: PayloadAction<User>) => {
           state.isLoading = false;
-          state.physicians = state.physicians.filter(
-            (physician) => physician.id !== action.payload.id,
+          state.patients = state.patients.filter(
+            (patient) => patient.id !== action.payload.id,
           );
         },
       )
-      .addCase(deletePhysician.rejected, (state, action) => {
+      .addCase(deletePatient.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
       });
   },
 });
 
-export default physicianSlice.reducer;
+export default patientSlice.reducer;

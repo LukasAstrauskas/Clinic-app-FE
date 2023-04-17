@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, FC } from 'react';
+import React, { useState, useEffect, FC } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { Box } from '@mui/system';
@@ -11,7 +11,6 @@ import { EditUser } from '../../model/Model';
 import { Physician, User, Occupation } from '../../model/Model';
 
 const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
-  const [user, setUser] = useState<User>();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -38,7 +37,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const physicianUrl = `http://localhost:8080/physicianInfo/`;
 
   const fetchUserById = async () => {
-    const response = await axios
+    await axios
       .get<User>(usersUrl + `${id}`)
       .then((response) => {
         setName(response.data.name);
@@ -49,7 +48,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   };
 
   const fetchPhysicianById = async () => {
-    const response = await axios
+    await axios
       .get<Physician>(physicianUrl + `${id}`)
       .then((response) => {
         setOccupationId(response.data.occupation.id);
@@ -59,7 +58,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   };
 
   const fetchOccupations = async () => {
-    const response = await axios
+    await axios
       .get<Occupation, any>(occupationsUrl)
       .then((response) => {
         setOccupations(response.data);

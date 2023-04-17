@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../../../model/Model';
+import { ADMINS_URL, BASE_ADMINS_URL } from '../../../utils/httpConstants';
 
 interface AdminState {
   admins: User[];
@@ -15,7 +16,7 @@ const initialState: AdminState = {
 };
 
 export const fetchAdmins = createAsyncThunk('user/fetchAdmins', async () => {
-  const response = await fetch('http://localhost:8080/user/admins');
+  const response = await fetch(ADMINS_URL);
   const data = await response.json();
   return data;
 });
@@ -23,7 +24,7 @@ export const fetchAdmins = createAsyncThunk('user/fetchAdmins', async () => {
 export const deleteAdmin = createAsyncThunk(
   'user/deleteAdmin',
   async (id: string) => {
-    const response = await fetch(`http://localhost:8080/user/admins/${id}`, {
+    const response = await fetch(`${BASE_ADMINS_URL}${id}`, {
       method: 'DELETE',
     });
     const data = await response.json();

@@ -1,10 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { LOGIN_URL } from '../../../utils/httpConstants';
 
 export const login = createAsyncThunk(
   'auth/login',
   async (payload: { email: string; password: string }) => {
-    const response = await axios.post('http://localhost:8080/login', payload);
+    const response = await axios.post(LOGIN_URL, payload);
     return response.data;
   },
 );

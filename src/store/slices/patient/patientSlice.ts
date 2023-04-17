@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../../../model/Model';
+import { BASE_PATIENTS_URL, PATIENTS_URL } from '../../../utils/httpConstants';
 
 interface PatientsState {
   patients: User[];
@@ -17,7 +18,7 @@ const initialState: PatientsState = {
 export const fetchPatients = createAsyncThunk(
   'patients/fetchPatients',
   async () => {
-    const response = await fetch('http://localhost:8080/user/patients');
+    const response = await fetch(PATIENTS_URL);
     const data = await response.json();
     return data;
   },
@@ -26,7 +27,7 @@ export const fetchPatients = createAsyncThunk(
 export const deletePatient = createAsyncThunk(
   'patients/deletePatient',
   async (id: number) => {
-    const response = await fetch(`http://localhost:8080/user/patients/${id}`, {
+    const response = await fetch(`${BASE_PATIENTS_URL}${id}`, {
       method: 'DELETE',
     });
     const data = await response.json();

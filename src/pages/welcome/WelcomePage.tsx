@@ -9,7 +9,7 @@ import managePhysiciansIcon from '../../assets/manage-physicians-icon.svg';
 import { ROUTES } from '../../routes/routes';
 
 const WelcomePage = () => {
-  const type = localStorage.getItem('type') || '';
+  const type = sessionStorage.getItem('type') || '';
 
   return (
     <Grid

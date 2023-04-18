@@ -11,6 +11,6 @@ export const login = createAsyncThunk(
 );
 
 export const logout = createAsyncThunk('auth/logout', async () => {
-  localStorage.removeItem('isLogged');
-  localStorage.removeItem('type');
+  sessionStorage.removeItem('isLogged');
+  sessionStorage.removeItem('type');
 });

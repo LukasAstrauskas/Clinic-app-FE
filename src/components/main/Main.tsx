@@ -6,6 +6,7 @@ import Login from '../../pages/login/Login';
 import { ROUTES } from '../../routes/routes';
 import { Patients } from '../../pages/users/Patients';
 import NotFound from '../../pages/notFound/NotFound';
+import UserTabs from '../../pages/users/Tabs';
 import TimetablesContainer from '../../pages/timetables/TimetablesContainer';
 
 const Main = () => {
@@ -17,6 +18,7 @@ const Main = () => {
   return (
     <Routes>
       <Route path='/' element={<WelcomePage type={type} />} />
+      <Route path={ROUTES.USERS} element={<UserTabs />} />
       <Route
         path={ROUTES.LOGIN}
         element={<Login setIsLogged={setIsLogged} setType={setType} />}

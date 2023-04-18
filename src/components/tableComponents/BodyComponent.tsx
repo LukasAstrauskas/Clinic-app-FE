@@ -3,6 +3,7 @@ import { TableBody, TableRow, TableCell, Paper } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
+import EditUserModal from '../modals/EditUserModal';
 
 type UserType = {
   id: string;
@@ -27,9 +28,17 @@ const TableBodyComponent: FC<Props> = ({
   user,
   handleChecked,
 }) => {
+  const [open, setOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState('');
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
   return (
     <>
       <TableBody>
+        <EditUserModal setOpen={setOpen} open={open} selectedId={selectedId} />
         {user.map((user, index) => (
           <TableRow
             key={index}
@@ -45,8 +54,12 @@ const TableBodyComponent: FC<Props> = ({
             <TableCell align='center'>
               {collumValue === 'physician' ? user.occupation.name : user.email}
             </TableCell>
-            <TableCell>
-              <IconButton color='primary'>
+            <TableCell
+              onClick={() => {
+                setSelectedId(user.id);
+              }}
+            >
+              <IconButton color='primary' onClick={handleOpen}>
                 <EditIcon />
               </IconButton>
             </TableCell>

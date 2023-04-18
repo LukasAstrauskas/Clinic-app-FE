@@ -8,4 +8,4 @@ export const BASE_PATIENTS_URL = 'http://localhost:8080/user/patients/';
 export const PHYSICIANS_URL = 'http://localhost:8080/user/physicians';
 export const BASE_PHYSICIANS_URL = 'http://localhost:8080/user/physicians/';
 export const PHYNAMEOCCUPATION_URL =
-  'http://localhost:8080/physicianNamesOccupations';
+  'http://localhost:8080/physicianInfo/physicianNamesOccupations';

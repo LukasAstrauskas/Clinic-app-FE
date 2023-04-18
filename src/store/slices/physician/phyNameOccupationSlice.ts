@@ -3,6 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { PhyNameOccupation } from '../../../model/Model';
 import { RootState } from '../../types';
+import { PHYNAMEOCCUPATION_URL } from '../../../utils/httpConstants';
 
 interface PhyNameOccupationState {
   physicians: PhyNameOccupation[];
@@ -21,7 +22,7 @@ export const fetchPhyNameOccupation = createAsyncThunk<PhyNameOccupation[]>(
   'phyNameOccupation/fetchPhyNameOccupation',
   async () => {
     const response = await axios.get<PhyNameOccupation[]>(
-      'http://localhost:8080/physicianNamesOccupations',
+      PHYNAMEOCCUPATION_URL,
     );
     return response.data;
   },

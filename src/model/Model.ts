@@ -13,6 +13,13 @@ export interface PhyNameOccupation {
   occupation: string;
 }
 
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  type: string;
+}
+
 export interface Timeslot {
   physicianId: string;
   date: string;
@@ -24,14 +31,6 @@ export interface EditUser {
   open: boolean;
   selectedId: string;
 }
-
-export type User = {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  type: string;
-};
 
 export type Occupation = {
   id: string;

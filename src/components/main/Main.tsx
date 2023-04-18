@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import WelcomePage from '../../pages/welcome/WelcomePage';
 import '../../App.css';
 import { Route, Routes } from 'react-router-dom';
@@ -10,19 +10,11 @@ import UserTabs from '../../pages/users/Tabs';
 import TimetablesContainer from '../../pages/timetables/TimetablesContainer';
 
 const Main = () => {
-  // isLogged should maybe be used for protected routes?
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isLogged, setIsLogged] = useState(false);
-  const [type, setType] = useState('');
-
   return (
     <Routes>
-      <Route path='/' element={<WelcomePage type={type} />} />
+      <Route path='/' element={<WelcomePage />} />
       <Route path={ROUTES.USERS} element={<UserTabs />} />
-      <Route
-        path={ROUTES.LOGIN}
-        element={<Login setIsLogged={setIsLogged} setType={setType} />}
-      />
+      <Route path={ROUTES.LOGIN} element={<Login />} />
       <Route path={ROUTES.PATIENTS} element={<Patients />} />
       <Route path={ROUTES.TIMETABLE} element={<TimetablesContainer />} />
       <Route path='*' element={<NotFound />} />

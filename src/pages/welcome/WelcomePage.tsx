@@ -8,11 +8,9 @@ import manageUsersIcon from '../../assets/manage-users-icon.svg';
 import managePhysiciansIcon from '../../assets/manage-physicians-icon.svg';
 import { ROUTES } from '../../routes/routes';
 
-type WelcomePageProps = {
-  type: string;
-};
+const WelcomePage = () => {
+  const type = sessionStorage.getItem('type') || '';
 
-const WelcomePage = ({ type }: WelcomePageProps) => {
   return (
     <Grid
       className={styles.main}

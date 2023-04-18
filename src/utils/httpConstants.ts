@@ -1,4 +1,6 @@
 export const LOGIN_URL = 'http://localhost:8080/login';
+export const USERS_URL = 'http://localhost:8080/user';
+export const BASE_USER_URL = 'http://localhost:8080/user/';
 export const ADMINS_URL = 'http://localhost:8080/user/admins';
 export const BASE_ADMINS_URL = 'http://localhost:8080/user/admins/';
 export const PATIENTS_URL = 'http://localhost:8080/user/patients';

@@ -6,8 +6,8 @@ interface Props {
   date: string;
   time: string;
   patientId: string;
-  onDelete: (date: string, time: string, patientId: string) => void;
-  onClick: (patientId: string) => void;
+  onDelete?: (date: string, time: string, patientId: string) => void;
+  onClick: (date: string, time: string, patientId: string) => void;
 }
 
 const freeTimeSX = {
@@ -38,15 +38,26 @@ const bookedTimeSX = {
 };
 
 const Timechip = ({ date, time, patientId, onDelete, onClick }: Props) => {
-  return (
-    <Chip
-      label={time}
-      variant='outlined'
-      onDelete={() => onDelete(date, time, patientId)}
-      onClick={() => onClick(patientId)}
-      sx={patientId === null ? freeTimeSX : bookedTimeSX}
-    />
-  );
+  if (typeof onDelete === 'undefined') {
+    return (
+      <Chip
+        label={time}
+        variant='outlined'
+        onClick={() => onClick(date, time, patientId)}
+        sx={patientId === null ? freeTimeSX : bookedTimeSX}
+      />
+    );
+  } else {
+    return (
+      <Chip
+        label={time}
+        variant='outlined'
+        onDelete={() => onDelete(date, time, patientId)}
+        onClick={() => onClick(date, time, patientId)}
+        sx={patientId === null ? freeTimeSX : bookedTimeSX}
+      />
+    );
+  }
 };
 
 export default Timechip;

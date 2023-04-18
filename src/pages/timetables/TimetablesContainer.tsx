@@ -11,13 +11,24 @@ import {
   setPhysicianId,
 } from '../../store/slices/physician/phyNameOccupationSlice';
 
-const TimetablesContainer = () => {
+type props = {
+  tableTitle?: string;
+  choosePhysician?: (phyId: string) => void;
+};
+
+const TimetablesContainer = ({
+  tableTitle = 'Physicians',
+  choosePhysician,
+}: props) => {
   const physicians = useSelector(selectPhysicians);
   const physicianId = useSelector(selectPhysicianId);
   const dispatch = useDispatch<AppDispatch>();
 
   const handleClick = (id: string) => {
     dispatch(setPhysicianId(id));
+    if (choosePhysician !== undefined && physicianId !== null) {
+      choosePhysician(physicianId);
+    }
   };
 
   useEffect(() => {
@@ -26,8 +37,17 @@ const TimetablesContainer = () => {
 
   return (
     <Container maxWidth='lg'>
-      <Box sx={{ flexGrow: 1, marginTop: '15%' }}>
+      <Box sx={{ flexGrow: 1, marginTop: '10%' }}>
         <Grid container>
+          <Grid
+            item
+            lg={12}
+            display='flex'
+            justifyContent='center'
+            alignItems='center'
+          >
+            <h1>{tableTitle}</h1>
+          </Grid>
           <Grid item lg={4} sx={{ pr: 2 }}>
             <PhysicianTable physicians={physicians} rowClick={handleClick} />
           </Grid>

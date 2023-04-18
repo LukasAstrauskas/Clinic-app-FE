@@ -1,26 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from '@mui/system';
-import {
-  TableContainer,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  Paper,
-} from '@mui/material';
+import { TableContainer, Table, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import Checkbox from '@mui/material/Checkbox';
-import EditIcon from '@mui/icons-material/Edit';
-import IconButton from '@mui/material/IconButton';
 import AddPatientModal from '../../components/modals/AddPatientModal';
 import axios from 'axios';
 import TableHeadComponent from '../../components/tableComponents/HeadComponent';
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableBodyComponent from '../../components/tableComponents/BodyComponent';
+import { grey } from '@mui/material/colors';
+import AppointmentContext from '../../hooks/AppointmentContext';
 export const Patients = () => {
   const [open, setOpen] = useState(false);
   const [checkedPatients, setCheckedPatiens] = useState<string[]>([]);
@@ -52,6 +44,8 @@ export const Patients = () => {
     password: string;
   };
 
+  const { appointment, setAppointment } = useContext(AppointmentContext);
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -62,6 +56,10 @@ export const Patients = () => {
       axios.delete(deleteURL);
     });
     setCheckedPatiens([]);
+  };
+
+  const choosePatient = (patientId: string): void => {
+    setAppointment({ ...appointment, patientId: patientId });
   };
 
   const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,15 +140,22 @@ export const Patients = () => {
         }}
       >
         <TableContainer component={Paper} sx={{ maxHeight: '500px' }}>
-          <Table stickyHeader>
+          <Table
+            size='small'
+            stickyHeader
+            sx={{
+              backgroundColor: grey[200],
+            }}
+          >
             <TableHeadComponent
               handleDelete={handleDelete}
-              collumName='email'
+              collumName='Email'
             />
             <TableBodyComponent
               collumValue='patient'
               user={patients}
               handleChecked={handleChecked}
+              rowClick={choosePatient}
             />
           </Table>
         </TableContainer>

@@ -16,10 +16,14 @@ import {
 import { grey } from '@mui/material/colors';
 import { NavLink, Link } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
+import { logout } from '../../store/slices/auth/authActions';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/types';
 
 const Header = () => {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -32,7 +36,10 @@ const Header = () => {
     ) {
       return;
     }
-
+    const target = event.target as HTMLElement;
+    if (target.id === 'logout') {
+      dispatch(logout());
+    }
     setOpen(false);
   };
 
@@ -119,7 +126,9 @@ const Header = () => {
                         <MenuItem onClick={handleClose}>Profile</MenuItem>
                       </NavLink>
                       <NavLink to={ROUTES.LOGIN} className={resolveLinkClass}>
-                        <MenuItem onClick={handleClose}>Logout</MenuItem>
+                        <MenuItem id='logout' onClick={handleClose}>
+                          Logout
+                        </MenuItem>
                       </NavLink>
                     </MenuList>
                   </ClickAwayListener>

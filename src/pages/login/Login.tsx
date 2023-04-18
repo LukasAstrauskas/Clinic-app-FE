@@ -3,47 +3,42 @@ import { TextField } from '@mui/material';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
-import axios from 'axios';
 
 import React, { useState } from 'react';
 import styles from './Login.module.css';
 import { isValidEmail } from '../../components/utils';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/types';
+import { login } from '../../store/slices/auth/authActions';
 
-type LoginProps = {
-  setIsLogged: (value: boolean) => void;
-  setType: (value: string) => void;
-};
-
-const Login = ({ setIsLogged, setType }: LoginProps) => {
+const Login = () => {
   const [errorAlertOpen, setSignInError] = useState(false);
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleEmailCheck = () =>
-    setEmailError(!isValidEmail(email) ? 'Email is invalid' : '');
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    await axios
-      .post('http://localhost:8080/login', { email, password })
-      .then((response) => {
-        if (response.data) {
-          const { type } = response.data;
-          setType(type);
-          setIsLogged(true);
-          navigate(ROUTES.HOME);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        setSignInError(true);
-      });
+    try {
+      const response = await dispatch(login({ email, password }));
+      if (response.payload && response.payload.type) {
+        navigate(ROUTES.HOME);
+        sessionStorage.setItem('isLogged', 'true');
+        sessionStorage.setItem('type', response.payload.type);
+      }
+    } catch (error) {
+      setSignInError(true);
+    }
   };
+
+  const handleEmailCheck = () =>
+    setEmailError(!isValidEmail(email) ? 'Email is invalid' : '');
+
   return (
     <div className={styles.login}>
       <Container maxWidth='xs'>

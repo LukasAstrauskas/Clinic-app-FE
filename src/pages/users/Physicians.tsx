@@ -17,24 +17,25 @@ export const Physicians = () => {
   const [checkedPhysician, setCheckedPhysician] = useState<string[]>([]);
   const [physicians, setPhysicians] = useState<PhysicianType[]>([]);
   const getRequestUrl = 'http://localhost:8080/physicianInfo';
+  const [refresh, setRefresh] = useState<boolean>(false);
+
+  const getRequestHeaders = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  };
+  async function getData() {
+    await axios
+      .get(getRequestUrl, {
+        headers: getRequestHeaders,
+      })
+      .then((res) => {
+        setPhysicians(res.data);
+      });
+  }
 
   useEffect(() => {
-    const getRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    };
-    async function getData() {
-      await axios
-        .get(getRequestUrl, {
-          headers: getRequestHeaders,
-        })
-        .then((res) => {
-          setPhysicians(res.data);
-        });
-    }
     getData();
-  }, [open, checkedPhysician]);
-
+  }, [open]);
   type PhysicianType = {
     id: string;
     name: string;
@@ -71,20 +72,23 @@ export const Physicians = () => {
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const allTableRows = document.querySelectorAll('tr');
-    const search = e.target.value.toLowerCase();
-    if (search.length === 0) {
-      allTableRows.forEach((row) => {
-        row.classList.remove('hidden');
-      });
+    const search = e.target.value;
+
+    if (search.length != 0) {
+      const getRequestHeaders = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      };
+      axios
+        .get(`http://localhost:8080/user/physicianSearch/${search}`, {
+          headers: getRequestHeaders,
+        })
+        .then((res) => {
+          setPhysicians(res.data);
+        });
     } else {
-      allTableRows.forEach((row) => {
-        const rowText = row.textContent?.toLocaleLowerCase();
-        row.classList.add('hidden');
-        if (rowText?.includes(search) || rowText?.includes('name')) {
-          row.classList.remove('hidden');
-        }
-      });
+      setRefresh(true);
+      getData();
     }
   };
 
@@ -135,19 +139,24 @@ export const Physicians = () => {
           width: 600,
         }}
       >
-        <TableContainer component={Paper} sx={{ maxHeight: '500px' }}>
+        <TableContainer component={Paper}>
           <Table stickyHeader>
             <TableHeadComponent
               handleDelete={handleDelete}
               collumName='occupation'
             />
-
-            <TableBodyComponent
-              collumValue='physician'
-              user={physicians}
-              handleChecked={handleChecked}
-            />
           </Table>
+
+          <TableBodyComponent
+            sizeEndpoint='user/physicianSize'
+            endpoint='physcians/limit/'
+            collumValue='physician'
+            setRefresh={setRefresh}
+            refresh={refresh}
+            setUser={setPhysicians}
+            user={physicians}
+            handleChecked={handleChecked}
+          />
         </TableContainer>
       </Box>
     </>

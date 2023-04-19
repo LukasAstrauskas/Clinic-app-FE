@@ -13,9 +13,6 @@ import {
   Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import Checkbox from '@mui/material/Checkbox';
-import EditIcon from '@mui/icons-material/Edit';
-import IconButton from '@mui/material/IconButton';
 import axios from 'axios';
 import AddAdminModal from '../../components/modals/AddAdminModal';
 import Styles from '../../components/styles/UserManagmentStyles';
@@ -26,6 +23,7 @@ export const Admins = () => {
   const [open, setOpen] = useState(false);
   const [checkedAdmins, setCheckedAdmins] = useState<string[]>([]);
   const [admins, setAdmins] = useState<AdminType[]>([]);
+  const [refresh, setRefresh] = useState<boolean>(false);
   const getRequestUrl = 'http://localhost:8080/user/admins';
 
   useEffect(() => {
@@ -142,19 +140,23 @@ export const Admins = () => {
           width: 600,
         }}
       >
-        <TableContainer component={Paper} sx={{ maxHeight: '500px' }}>
+        <TableContainer component={Paper}>
           <Table stickyHeader>
             <TableHeadComponent
               handleDelete={handleDelete}
               collumName='email'
             />
-
-            <TableBodyComponent
-              collumValue='admins'
-              user={admins}
-              handleChecked={handleChecked}
-            />
           </Table>
+          <TableBodyComponent
+            sizeEndpoint='user/adminSize'
+            endpoint='user/admins/limit/'
+            collumValue='admins'
+            setRefresh={setRefresh}
+            refresh={refresh}
+            setUser={setAdmins}
+            user={admins}
+            handleChecked={handleChecked}
+          />
         </TableContainer>
       </Box>
     </>

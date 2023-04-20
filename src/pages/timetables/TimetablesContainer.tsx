@@ -37,7 +37,7 @@ const TimetablesContainer = ({
 
   return (
     <Container maxWidth='lg'>
-      <Box sx={{ flexGrow: 1, marginTop: '10%' }}>
+      <Box sx={{ flexGrow: 1 }}>
         <Grid container>
           <Grid
             item

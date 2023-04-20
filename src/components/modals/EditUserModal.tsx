@@ -4,11 +4,10 @@ import TextField from '@mui/material/TextField';
 import { Box } from '@mui/system';
 import { Modal } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
 import { isValidName, isValidEmail, isValidPassword } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
-import { EditUser } from '../../model/Model';
-import { Physician, User, Occupation } from '../../model/Model';
+import { EditUser, PhysicianDto } from '../../model/Model';
+import { User } from '../../model/Model';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { selectUser, updateUser } from '../../store/slices/user/userSlice';
@@ -17,7 +16,11 @@ import {
   fetchOccupations,
   selectOccupations,
 } from '../../store/slices/occupations/occupationsSlice';
-import { updatePhysician } from '../../store/slices/physician/physicianDtoSlice';
+import {
+  fetchPhysicianById,
+  updatePhysician,
+} from '../../store/slices/physician/physicianDtoSlice';
+import { useNavigate } from 'react-router-dom';
 
 const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,35 +36,15 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const [passwordError, setPasswordError] = useState('');
   const [isUpdated, setIsUpdated] = useState(false);
   const [selectedOccupationId, setSelectedOccupationId] = useState('');
-  const [occupationName, setOccupationName] = useState('');
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const postRequestHeaders = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  };
-
-  const occupationsUrl = `http://localhost:8080/occupations`;
-  const physicianUrl = `http://localhost:8080/physicianInfo/`;
 
   const handleFetchUserById = async () => {
     const user = await dispatch(fetchUserById(id));
-    setName(user.payload.name);
-    setEmail(user.payload.email);
-    setType(user.payload.type);
-  };
-
-  const fetchPhysicianById = async () => {
-    await axios
-      .get<Physician>(physicianUrl + `${id}`)
-      .then((response) => {
-        setSelectedOccupationId(response.data.occupation.id);
-        setOccupationName(response.data.occupation.name);
-      })
-      .catch((err) => console.log('Err', err));
+    if (user.payload) {
+      const userData = user.payload as User;
+      setName(userData.name);
+      setEmail(userData.email);
+      setType(userData.type);
+    }
   };
 
   const handleUpdateUserById = (event: { preventDefault: () => void }) => {
@@ -72,6 +55,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
         id: selectedUser.id,
         name,
         email,
+        password,
         type,
       };
       dispatch(updateUser(updatedUser));
@@ -81,13 +65,10 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
           id: selectedUser.id,
           name,
           email,
+          type,
           password,
-          occupation: {
-            name,
-            id: selectedOccupationId,
-          },
+          occupationId: selectedOccupationId,
         };
-        console.log(updatedPhysician);
         dispatch(updatePhysician(updatedPhysician));
       }
 
@@ -95,39 +76,17 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
     }
   };
 
-  // const updateUserById = async () => {
-  //   if (!emailError && !nameError && !passwordError) {
-  //     const { data } = await axios.put<User>(
-  //       usersUrl + `${id}`,
-  //       {
-  //         name: name,
-  //         email: email,
-  //         password: password,
-  //         type: type,
-  //       },
-  //       {
-  //         headers: postRequestHeaders,
-  //       },
-  //     );
-  //     if (type === 'physician') {
-  //       const { data } = await axios.put<Physician>(
-  //         physicianUrl + `${id}`,
-  //         {
-  //           name: name,
-  //           email: email,
-  //           password: password,
-  //           type: type,
-  //           occupationId: occupationId,
-  //         },
-  //         {
-  //           headers: postRequestHeaders,
-  //         },
-  //       );
-  //     }
-  //     setIsUpdated(true);
-  //     return data;
-  //   }
-  // };
+  const handleFetchPhysicianById = async () => {
+    const physician = await dispatch(fetchPhysicianById(id));
+    if (physician.payload) {
+      const physicianData = physician.payload as PhysicianDto;
+      setSelectedOccupationId(physicianData.occupationId);
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     if (!open) {
@@ -136,7 +95,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
 
     if (type === 'physician') {
       dispatch(fetchOccupations());
-      fetchPhysicianById();
+      handleFetchPhysicianById();
     } else {
       handleFetchUserById();
     }

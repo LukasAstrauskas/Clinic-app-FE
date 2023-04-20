@@ -22,6 +22,7 @@ import { AppDispatch } from '../../store/types';
 
 const Header = () => {
   const [open, setOpen] = React.useState(false);
+
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch<AppDispatch>();
 

@@ -29,6 +29,14 @@ export const fetchPhysicians = createAsyncThunk(
   },
 );
 
+export const fetchPhysicianById = createAsyncThunk<Physician, string>(
+  'physician/fetchPhysicianById',
+  async (id) => {
+    const response = await axios.get(`${BASE_PHYSICIANS_URL}${id}`);
+    return response.data as Physician;
+  },
+);
+
 export const updatePhysician = createAsyncThunk<Physician, Physician>(
   'physician/update',
   async (physician) => {

@@ -50,6 +50,7 @@ export type Physician = {
 };
 
 export type PhysicianDto = {
+  id: string;
   name: string;
   email: string;
   password: string;

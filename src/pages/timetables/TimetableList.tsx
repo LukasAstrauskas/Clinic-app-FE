@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -16,6 +16,8 @@ import { getWeekDay } from '../../components/utils';
 import { deleteTimeslot } from '../../data/fetch';
 import AlertModal from '../../components/modals/AlertModal';
 import useToggle from '../../hooks/useToggle';
+import AppointmentContext from '../../hooks/AppointmentContext';
+import { grey, teal } from '@mui/material/colors';
 
 type Props = {
   physicianId: string;
@@ -31,6 +33,8 @@ const TimetableList = ({ physicianId }: Props) => {
   const [timeslots, setTimeslots] = useState<Timeslots[]>([]);
   const [date, setDate] = useState<string>('');
   const [time, setTime] = useState<string>('');
+
+  const { appointment, setAppointment } = useContext(AppointmentContext);
 
   const handleOpenModal = (date: string): void => {
     setOpenModal();
@@ -57,8 +61,21 @@ const TimetableList = ({ physicianId }: Props) => {
     setOpenConfirm();
   };
 
-  const handleChipClick = (patientId: string): void =>
-    alert(`Patient ID: ${patientId}`);
+  const handleChipClick = (
+    date: string,
+    time: string,
+    patientId: string,
+  ): void => {
+    {
+      patientId === null &&
+        setAppointment({
+          ...appointment,
+          physicianId: physicianId,
+          date: date,
+          time: time,
+        });
+    }
+  };
 
   useEffect(() => {
     async function getTimeslots() {
@@ -83,7 +100,7 @@ const TimetableList = ({ physicianId }: Props) => {
           size='small'
           aria-label='a dense table'
           sx={{
-            backgroundColor: '#eeeeee',
+            backgroundColor: grey[200],
           }}
         >
           <TableHead>
@@ -105,7 +122,7 @@ const TimetableList = ({ physicianId }: Props) => {
                 <TableCell
                   component='th'
                   scope='row'
-                  sx={{ backgroundColor: '#1de9b6' }}
+                  sx={{ backgroundColor: teal['A400'] }}
                 >
                   <Chip
                     variant='outlined'
@@ -117,21 +134,35 @@ const TimetableList = ({ physicianId }: Props) => {
                   <Stack direction='row' spacing={'0.4%'}>
                     {timePatientList.map(({ time, patientId }) => {
                       return (
-                        <Timechip
-                          date={date}
-                          time={time}
-                          patientId={patientId}
-                          onDelete={deleteButtonAction}
-                          onClick={handleChipClick}
-                          key={time}
-                        />
+                        <>
+                          {appointment.physicianId ? (
+                            <Timechip
+                              date={date}
+                              time={time}
+                              patientId={patientId}
+                              onClick={handleChipClick}
+                              key={time}
+                            />
+                          ) : (
+                            <Timechip
+                              date={date}
+                              time={time}
+                              patientId={patientId}
+                              onDelete={deleteButtonAction}
+                              onClick={handleChipClick}
+                              key={time}
+                            />
+                          )}
+                        </>
                       );
                     })}
-                    <Chip
-                      label='+ NEW'
-                      sx={{ backgroundColor: '#1de9b6' }}
-                      onClick={() => handleOpenModal(date)}
-                    />
+                    {!appointment.physicianId && (
+                      <Chip
+                        label='+ NEW'
+                        sx={{ backgroundColor: '#1de9b6' }}
+                        onClick={() => handleOpenModal(date)}
+                      />
+                    )}
                   </Stack>
                 </TableCell>
               </TableRow>

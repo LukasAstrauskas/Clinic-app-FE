@@ -3,19 +3,8 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from '@mui/system';
-import {
-  TableContainer,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  Paper,
-  Typography,
-} from '@mui/material';
+import { TableContainer, Table, Paper, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import Checkbox from '@mui/material/Checkbox';
-import EditIcon from '@mui/icons-material/Edit';
-import IconButton from '@mui/material/IconButton';
 import axios from 'axios';
 import AddAdminModal from '../../components/modals/AddAdminModal';
 import Styles from '../../components/styles/UserManagmentStyles';

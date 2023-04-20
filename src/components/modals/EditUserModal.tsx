@@ -9,8 +9,21 @@ import { isValidName, isValidEmail, isValidPassword } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
 import { EditUser } from '../../model/Model';
 import { Physician, User, Occupation } from '../../model/Model';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../store/types';
+import { selectUser, updateUser } from '../../store/slices/user/userSlice';
+import { fetchUserById } from '../../store/slices/user/userSlice';
+import {
+  fetchOccupations,
+  selectOccupations,
+} from '../../store/slices/occupations/occupationsSlice';
+import { updatePhysician } from '../../store/slices/physician/physicianDtoSlice';
 
 const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const selectedUser = useSelector(selectUser);
+  const occupations = useSelector(selectOccupations);
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,8 +32,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const [nameError, setNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isUpdated, setIsUpdated] = useState(false);
-  const [occupations, setOccupations] = useState<Occupation[]>([]);
-  const [occupationId, setOccupationId] = useState('');
+  const [selectedOccupationId, setSelectedOccupationId] = useState('');
   const [occupationName, setOccupationName] = useState('');
 
   const handleClose = () => {
@@ -32,73 +44,90 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
     'Content-Type': 'application/json',
   };
 
-  const usersUrl = `http://localhost:8080/user/`;
   const occupationsUrl = `http://localhost:8080/occupations`;
   const physicianUrl = `http://localhost:8080/physicianInfo/`;
 
-  const fetchUserById = async () => {
-    await axios
-      .get<User>(usersUrl + `${id}`)
-      .then((response) => {
-        setName(response.data.name);
-        setEmail(response.data.email);
-        setType(response.data.type);
-      })
-      .catch((err) => console.log('Err', err));
+  const handleFetchUserById = async () => {
+    const user = await dispatch(fetchUserById(id));
+    setName(user.payload.name);
+    setEmail(user.payload.email);
+    setType(user.payload.type);
   };
 
   const fetchPhysicianById = async () => {
     await axios
       .get<Physician>(physicianUrl + `${id}`)
       .then((response) => {
-        setOccupationId(response.data.occupation.id);
+        setSelectedOccupationId(response.data.occupation.id);
         setOccupationName(response.data.occupation.name);
       })
       .catch((err) => console.log('Err', err));
   };
 
-  const fetchOccupations = async () => {
-    await axios
-      .get<Occupation, any>(occupationsUrl)
-      .then((response) => {
-        setOccupations(response.data);
-      })
-      .catch((err) => console.log('Err', err));
-  };
+  const handleUpdateUserById = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
 
-  const updateUserById = async () => {
-    if (!emailError && !nameError && !passwordError) {
-      const { data } = await axios.put<User>(
-        usersUrl + `${id}`,
-        {
-          name: name,
-          email: email,
-          password: password,
-          type: type,
-        },
-        {
-          headers: postRequestHeaders,
-        },
-      );
+    if (selectedUser) {
+      const updatedUser = {
+        id: selectedUser.id,
+        name,
+        email,
+        type,
+      };
+      dispatch(updateUser(updatedUser));
+
       if (type === 'physician') {
-        const { data } = await axios.put<Physician>(
-          physicianUrl + `${id}`,
-          {
-            name: name,
-            email: email,
-            password: password,
-            type: type,
-            occupationId: occupationId,
+        const updatedPhysician = {
+          id: selectedUser.id,
+          name,
+          email,
+          password,
+          occupation: {
+            name,
+            id: selectedOccupationId,
           },
-          {
-            headers: postRequestHeaders,
-          },
-        );
+        };
+        console.log(updatedPhysician);
+        dispatch(updatePhysician(updatedPhysician));
       }
+
       setIsUpdated(true);
-      return data;
     }
   };
+
+  // const updateUserById = async () => {
+  //   if (!emailError && !nameError && !passwordError) {
+  //     const { data } = await axios.put<User>(
+  //       usersUrl + `${id}`,
+  //       {
+  //         name: name,
+  //         email: email,
+  //         password: password,
+  //         type: type,
+  //       },
+  //       {
+  //         headers: postRequestHeaders,
+  //       },
+  //     );
+  //     if (type === 'physician') {
+  //       const { data } = await axios.put<Physician>(
+  //         physicianUrl + `${id}`,
+  //         {
+  //           name: name,
+  //           email: email,
+  //           password: password,
+  //           type: type,
+  //           occupationId: occupationId,
+  //         },
+  //         {
+  //           headers: postRequestHeaders,
+  //         },
+  //       );
+  //     }
+  //     setIsUpdated(true);
+  //     return data;
+  //   }
+  // };
 
   useEffect(() => {
     if (!open) {
@@ -106,12 +135,12 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
     }
 
     if (type === 'physician') {
-      fetchOccupations();
+      dispatch(fetchOccupations());
       fetchPhysicianById();
     } else {
-      fetchUserById();
+      handleFetchUserById();
     }
-  }, [type, open]);
+  }, [type, open, dispatch]);
 
   const handleEmailCheck = () => {
     !isValidEmail(email)
@@ -197,11 +226,11 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
               <TextField
                 sx={Styles.textField}
                 id='occupation'
-                value={occupationId}
+                value={selectedOccupationId}
                 select
                 variant='outlined'
                 helperText='Occupation'
-                onChange={(e) => setOccupationId(e.target.value)}
+                onChange={(e) => setSelectedOccupationId(e.target.value)}
                 SelectProps={{ native: true }}
                 InputLabelProps={{ shrink: true }}
               >
@@ -245,7 +274,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
                   bgcolor: '#25ced1',
                 },
               }}
-              onClick={updateUserById}
+              onClick={handleUpdateUserById}
             >
               Modify
             </Button>

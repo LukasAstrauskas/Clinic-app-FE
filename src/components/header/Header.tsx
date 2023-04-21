@@ -102,60 +102,67 @@ const Header = () => {
       <Stack direction='row' spacing={2}>
         <div>
           {!isLoggedIn ? null : (
-            <Button
-              ref={anchorRef}
-              id='composition-button'
-              aria-controls={open ? 'composition-menu' : undefined}
-              aria-expanded={open ? 'true' : undefined}
-              aria-haspopup='true'
-              onClick={handleToggle}
-            >
-              <Avatar className={styles.avatar} sx={{ bgcolor: grey[100] }}>
-                <div className={styles.avatarLogo}>
-                  {loggedUserNameInitials}
-                </div>
-              </Avatar>
-            </Button>
-          )}
-          <Popper
-            open={open}
-            anchorEl={anchorRef.current}
-            role={undefined}
-            placement='bottom-start'
-            transition
-            disablePortal
-          >
-            {({ TransitionProps, placement }) => (
-              <Grow
-                {...TransitionProps}
-                style={{
-                  transformOrigin:
-                    placement === 'bottom-start' ? 'left bottom' : 'left top',
-                }}
+            <>
+              <Button
+                ref={anchorRef}
+                id='composition-button'
+                aria-controls={open ? 'composition-menu' : undefined}
+                aria-expanded={open ? 'true' : undefined}
+                aria-haspopup='true'
+                onClick={handleToggle}
               >
-                <Paper>
-                  <ClickAwayListener onClickAway={handleClose}>
-                    <MenuList
-                      autoFocusItem={open}
-                      id='composition-menu'
-                      aria-labelledby='composition-button'
-                      onKeyDown={handleListKeyDown}
-                    >
-                      {/* add link to user profile */}
-                      <NavLink to='/profile' className={resolveLinkClass}>
-                        <MenuItem onClick={handleClose}>Profile</MenuItem>
-                      </NavLink>
-                      <NavLink to={ROUTES.LOGIN} className={resolveLinkClass}>
-                        <MenuItem id='logout' onClick={handleClose}>
-                          Logout
-                        </MenuItem>
-                      </NavLink>
-                    </MenuList>
-                  </ClickAwayListener>
-                </Paper>
-              </Grow>
-            )}
-          </Popper>
+                <Avatar className={styles.avatar} sx={{ bgcolor: grey[100] }}>
+                  <div className={styles.avatarLogo}>
+                    {loggedUserNameInitials}
+                  </div>
+                </Avatar>
+              </Button>
+              <Popper
+                open={open}
+                anchorEl={anchorRef.current}
+                role={undefined}
+                placement='bottom-start'
+                transition
+                disablePortal
+              >
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      transformOrigin:
+                        placement === 'bottom-start'
+                          ? 'left bottom'
+                          : 'left top',
+                    }}
+                  >
+                    <Paper>
+                      <ClickAwayListener onClickAway={handleClose}>
+                        <MenuList
+                          autoFocusItem={open}
+                          id='composition-menu'
+                          aria-labelledby='composition-button'
+                          onKeyDown={handleListKeyDown}
+                        >
+                          {/* add link to user profile */}
+                          <NavLink to='/profile' className={resolveLinkClass}>
+                            <MenuItem onClick={handleClose}>Profile</MenuItem>
+                          </NavLink>
+                          <NavLink
+                            to={ROUTES.LOGIN}
+                            className={resolveLinkClass}
+                          >
+                            <MenuItem id='logout' onClick={handleClose}>
+                              Logout
+                            </MenuItem>
+                          </NavLink>
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
+            </>
+          )}
         </div>
       </Stack>
     </div>

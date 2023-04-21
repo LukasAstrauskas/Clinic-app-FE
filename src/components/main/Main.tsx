@@ -9,6 +9,7 @@ import NotFound from '../../pages/notFound/NotFound';
 import UserTabs from '../../pages/users/Tabs';
 import TimetablesContainer from '../../pages/timetables/TimetablesContainer';
 import BookAppointment from '../../pages/admin/BookAppointment';
+import { useSelector } from 'react-redux';
 
 const Main = () => {
   return (

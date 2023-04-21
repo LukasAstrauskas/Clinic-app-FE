@@ -1,6 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { LOGIN_URL } from '../../../utils/httpConstants';
+import { BASE_USER_URL, LOGIN_URL } from '../../../utils/httpConstants';
+import { User } from '../../../model/Model';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../../../routes/routes';
 
 export const login = createAsyncThunk(
   'auth/login',
@@ -13,4 +16,14 @@ export const login = createAsyncThunk(
 export const logout = createAsyncThunk('auth/logout', async () => {
   sessionStorage.removeItem('isLogged');
   sessionStorage.removeItem('type');
+
+  // window.location.reload();
 });
+
+export const authFetchUserById = createAsyncThunk<User, string>(
+  'auth/authFetchUserById',
+  async (id) => {
+    const response = await axios.get(`${BASE_USER_URL}${id}`);
+    return response.data as User;
+  },
+);

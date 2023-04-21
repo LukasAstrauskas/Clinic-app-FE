@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { login } from './authActions';
+import { authFetchUserById, login, logout } from './authActions';
 import { RootState } from '../../types';
+import { User } from '../../../model/Model';
 
 const initialState: AuthState = {
   type: null,
@@ -8,6 +9,7 @@ const initialState: AuthState = {
   loading: false,
   error: null,
   isLoggedIn: false,
+  user: null,
 };
 
 export interface AuthState {
@@ -16,6 +18,7 @@ export interface AuthState {
   loading: boolean;
   error: string | null;
   isLoggedIn: boolean;
+  user: User | null;
 }
 
 export const authSlice = createSlice({
@@ -38,10 +41,29 @@ export const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? 'Login failed.';
+      })
+      .addCase(logout.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.isLoggedIn = false;
+      })
+      .addCase(authFetchUserById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(authFetchUserById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.user = action.payload;
+      })
+      .addCase(authFetchUserById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? 'Failed to fetch user';
       });
   },
 });
 
+export const selectUser = (state: RootState) => state.auth.user;
 export const selectType = (state: RootState) => state.auth.type;
 export const selectId = (state: RootState) => state.auth.id;
 export const selectLoading = (state: RootState) => state.auth.loading;

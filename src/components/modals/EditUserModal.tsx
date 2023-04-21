@@ -50,6 +50,8 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
     const physician = await dispatch(fetchPhysicianById(id));
     if (physician.payload) {
       const physicianData = physician.payload as Physician;
+      setName(physicianData.name);
+      setEmail(physicianData.email);
       setSelectedOccupationId(physicianData.occupation.id);
     }
   };

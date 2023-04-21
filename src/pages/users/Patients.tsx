@@ -141,13 +141,7 @@ export const Patients = () => {
         }}
       >
         <TableContainer component={Paper} sx={{ maxHeight: '500px' }}>
-          <Table
-            size='small'
-            stickyHeader
-            sx={{
-              backgroundColor: grey[200],
-            }}
-          >
+          <Table stickyHeader>
             <TableHeadComponent
               handleDelete={handleDelete}
               collumName='Email'

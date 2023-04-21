@@ -25,21 +25,21 @@ export const Admins = () => {
   const [admins, setAdmins] = useState<AdminType[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
   const getRequestUrl = 'http://localhost:8080/user/admins';
+  const getRequestHeaders = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  };
+  async function getData() {
+    await axios
+      .get(getRequestUrl, {
+        headers: getRequestHeaders,
+      })
+      .then((res) => {
+        setAdmins(res.data);
+      });
+  }
 
   useEffect(() => {
-    const getRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    };
-    async function getData() {
-      await axios
-        .get(getRequestUrl, {
-          headers: getRequestHeaders,
-        })
-        .then((res) => {
-          setAdmins(res.data);
-        });
-    }
     getData();
   }, [open, checkedAdmins]);
 
@@ -74,20 +74,23 @@ export const Admins = () => {
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const allTableRows = document.querySelectorAll('tr');
-    const search = e.target.value.toLowerCase();
-    if (search.length === 0) {
-      allTableRows.forEach((row) => {
-        row.classList.remove('hidden');
-      });
+    const search = e.target.value;
+
+    if (search.length != 0) {
+      const getRequestHeaders = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      };
+      axios
+        .get(`http://localhost:8080/user/adminSearch/${search}`, {
+          headers: getRequestHeaders,
+        })
+        .then((res) => {
+          setAdmins(res.data);
+        });
     } else {
-      allTableRows.forEach((row) => {
-        const rowText = row.textContent?.toLocaleLowerCase();
-        row.classList.add('hidden');
-        if (rowText?.includes(search) || rowText?.includes('name')) {
-          row.classList.remove('hidden');
-        }
-      });
+      setRefresh(true);
+      getData();
     }
   };
 
@@ -150,10 +153,10 @@ export const Admins = () => {
           <TableBodyComponent
             sizeEndpoint='user/adminSize'
             endpoint='user/admins/limit/'
-            collumValue='admins'
             setRefresh={setRefresh}
             refresh={refresh}
             setUser={setAdmins}
+            collumValue='admins'
             user={admins}
             handleChecked={handleChecked}
           />

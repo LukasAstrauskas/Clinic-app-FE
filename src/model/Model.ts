@@ -20,6 +20,11 @@ export interface User {
   type: string;
 }
 
+export interface endPoint {
+  endPoint: string;
+  offset: number;
+}
+
 export interface Timeslot {
   physicianId: string;
   date: string;
@@ -31,6 +36,17 @@ export interface EditUser {
   open: boolean;
   selectedId: string;
 }
+export type UniversalUser = {
+  id: string;
+  name: string;
+  email: string | number;
+  occupation?:
+    | {
+        id?: string;
+        name?: string;
+      }
+    | any;
+};
 
 export type Occupation = {
   id: string;

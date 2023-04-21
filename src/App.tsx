@@ -8,9 +8,10 @@ import Tabs from './pages/users/Tabs';
 function App() {
   return (
     <Container maxWidth='lg' className='container'>
-      <Header />
+      {/* <Header />
       <Main />
-      <Footer />
+      <Footer /> */}
+      <Tabs />
     </Container>
   );
 }

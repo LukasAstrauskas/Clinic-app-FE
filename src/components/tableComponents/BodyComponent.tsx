@@ -3,26 +3,20 @@ import { TableBody, TableRow, TableCell, Paper } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
-import EditUserModal from '../modals/EditUserModal';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-
-type UserType = {
-  id: string;
-  name: string;
-  email: string | number;
-  occupation?:
-    | {
-        id?: string;
-        name?: string;
-      }
-    | any;
-};
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchMorePatients,
+  selectLimitedPatients,
+} from '../../store/slices/patient/patientSlice';
+import { AppDispatch } from '../../store/types';
+import { UniversalUser, User } from '../../model/Model';
 
 interface Props {
   collumValue: string;
-  user: UserType[];
+  user: UniversalUser[];
   setUser: any;
   handleChecked: any;
   refresh: boolean;
@@ -41,21 +35,17 @@ const TableBodyComponent: FC<Props> = ({
   endpoint,
   sizeEndpoint,
 }) => {
-  const [open, setOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState('');
+  let try1;
+  const [try2, setTry2] = useState<any[]>([]);
+  const test = useSelector(selectLimitedPatients);
+  const dispatch = useDispatch<AppDispatch>();
   const [more, setMore] = useState<boolean>(true);
   const [dbSize, setDBsize] = useState(0);
-  const [currentSize, setCurrentSize] = useState(7);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
+  const [currentRender, setCurrentRender] = useState(7);
   const getRequestHeaders = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
   };
-
   const getSize = () => {
     axios
       .get(`http://localhost:8080/${sizeEndpoint}`, {
@@ -63,34 +53,63 @@ const TableBodyComponent: FC<Props> = ({
       })
       .then((res) => setDBsize(res.data));
   };
-  function getMoreData() {
-    {
-      axios
-        .get(`http://localhost:8080/${endpoint}${currentSize}`, {
-          headers: getRequestHeaders,
-        })
-        .then((res) => {
-          if (dbSize + 1 > currentSize) {
-            setUser(res.data);
-          } else {
-            setMore(false);
-          }
-        });
-      setCurrentSize(currentSize + 1);
+  console.log('test');
+  const handleInitialRender = () => {
+    console.log('triggered');
+    try1 = [...user];
+    setTry2(try1);
+  };
+
+  setTimeout(() => {
+    handleInitialRender;
+  }, 1000);
+
+  const getMoreData = async () => {
+    setCurrentRender(try2.length);
+    if (dbSize > currentRender) {
+      console.log('called');
+      try1 = [...try2, ...test];
+      console.log(try1);
+      setTry2(try1);
+    } else {
+      setMore(false);
     }
-  }
+    dispatch(fetchMorePatients(currentRender));
+
+    // } else {
+    //   setMore(false);
+    // }
+    // setCurrentRender(user.length);
+    // {
+    //   axios
+    //     .get(`http://localhost:8080/${endpoint}${currentRender}`, {
+    //       headers: getRequestHeaders,
+    //     })
+    //     .then((res) => {
+    //       if (dbSize >= currentRender) {
+    //         setUser([...user, ...res.data]);
+    //       } else {
+    //         setMore(false);
+    //       }
+    //     });
+    //   setCurrentSize(currentSize + 1);
+    // }
+  };
+
   useEffect(() => {
+    dispatch(fetchMorePatients(currentRender));
     setRefresh(false);
     getSize();
     setMore(true);
-    setCurrentSize(8);
+    setCurrentRender(7);
   }, [refresh]);
+
   return (
     <>
       <TableBody
         id='scrollBox'
         style={{
-          maxHeight: 500,
+          maxHeight: 400,
           overflow: 'auto',
           display: 'flex',
         }}
@@ -106,7 +125,7 @@ const TableBodyComponent: FC<Props> = ({
             </Typography>
           }
         >
-          {user.map((user, index) => (
+          {try2.map((user, index) => (
             <TableRow
               key={index}
               sx={{
@@ -119,9 +138,12 @@ const TableBodyComponent: FC<Props> = ({
               </TableCell>
               <TableCell sx={{ width: '200px' }}>{user.name}</TableCell>
               <TableCell align='center' sx={{ width: '200px' }}>
-                {collumValue === 'physician'
-                  ? user.occupation.name
-                  : user.email}
+                {
+                  // collumValue === 'physician'
+                  // ? user.occupation.name
+                  // :
+                  user.email
+                }
               </TableCell>
               <TableCell>
                 <IconButton color='primary'>

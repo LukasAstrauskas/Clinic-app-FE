@@ -1,26 +1,39 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../../../model/Model';
+import { UniversalUser, User, endPoint } from '../../../model/Model';
+import { RootState } from '../../types';
+import axios from 'axios';
 import { BASE_PATIENTS_URL, PATIENTS_URL } from '../../../utils/httpConstants';
 
 interface PatientsState {
   patients: User[];
+  toRenderPatients: UniversalUser[];
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: PatientsState = {
   patients: [],
+  toRenderPatients: [],
   isLoading: false,
   error: null,
 };
 
-export const fetchPatients = createAsyncThunk(
+export const fetchPatients = createAsyncThunk<User[]>(
   'patients/fetchPatients',
   async () => {
-    const response = await fetch(PATIENTS_URL);
-    const data = await response.json();
-    return data;
+    const response = await axios.get<User[]>(PATIENTS_URL);
+    return response.data;
+  },
+);
+
+export const fetchMorePatients = createAsyncThunk(
+  'patients/fetchMorePatients',
+  async (offset: number) => {
+    const response = await axios.get<UniversalUser[]>(
+      `http://localhost:8080/user/patients/limit/${offset}`,
+    );
+    return response.data;
   },
 );
 
@@ -72,8 +85,28 @@ export const patientSlice = createSlice({
       .addCase(deletePatient.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
+      })
+      .addCase(fetchMorePatients.pending, (state) => {
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(
+        fetchMorePatients.fulfilled,
+        (state, action: PayloadAction<UniversalUser[]>) => {
+          state.isLoading = false;
+          state.toRenderPatients = action.payload;
+        },
+      )
+      .addCase(fetchMorePatients.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Something went wrong';
       });
   },
 });
+
+export const selectPatients = (state: RootState) => state.patient.patients;
+
+export const selectLimitedPatients = (state: RootState) =>
+  state.patient.toRenderPatients;
 
 export default patientSlice.reducer;

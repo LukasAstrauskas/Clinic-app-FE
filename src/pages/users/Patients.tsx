@@ -13,18 +13,25 @@ import {
   Paper,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-
+import {
+  fetchPatients,
+  selectPatients,
+} from '../../store/slices/patient/patientSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../store/types';
 import AddPatientModal from '../../components/modals/AddPatientModal';
 import axios from 'axios';
 import TableHeadComponent from '../../components/tableComponents/HeadComponent';
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableBodyComponent from '../../components/tableComponents/BodyComponent';
 export const Patients = () => {
+  const temp = useSelector(selectPatients);
+  const dispatch = useDispatch<AppDispatch>();
   const [open, setOpen] = useState(false);
   const [checkedPatients, setCheckedPatiens] = useState<string[]>([]);
   const [patients, setPatients] = useState<PatientType[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
-  const getRequestUrl = `http://localhost:8080/user/patients?limit=2`;
+  const getRequestUrl = `http://localhost:8080/user/patients`;
   const getRequestHeaders = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -37,6 +44,11 @@ export const Patients = () => {
         setPatients(res.data);
       });
   }
+
+  const handleUserFetch = async () => {
+    const user = await dispatch(fetchPatients);
+    console.log(user);
+  };
 
   type PatientType = {
     id: string;
@@ -77,7 +89,7 @@ export const Patients = () => {
         'Content-Type': 'application/json',
       };
       axios
-        .get(`http://localhost:8080/user/test/${search}`, {
+        .get(`http://localhost:8080/user/patientSearch/${search}`, {
           headers: getRequestHeaders,
         })
         .then((res) => {
@@ -90,7 +102,10 @@ export const Patients = () => {
   };
 
   useEffect(() => {
+    dispatch(fetchPatients());
+    handleUserFetch();
     getData();
+    console.log(temp);
   }, [open]);
 
   return (
@@ -155,7 +170,7 @@ export const Patients = () => {
             refresh={refresh}
             setUser={setPatients}
             collumValue='patient'
-            user={patients}
+            user={temp}
             handleChecked={handleChecked}
           />
         </TableContainer>

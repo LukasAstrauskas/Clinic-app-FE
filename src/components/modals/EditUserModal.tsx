@@ -6,7 +6,7 @@ import { Modal } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { isValidName, isValidEmail, isValidPassword } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
-import { EditUser, PhysicianDto } from '../../model/Model';
+import { EditUser, Physician, PhysicianDto } from '../../model/Model';
 import { User } from '../../model/Model';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
@@ -20,7 +20,6 @@ import {
   fetchPhysicianById,
   updatePhysician,
 } from '../../store/slices/physician/physicianDtoSlice';
-import { useNavigate } from 'react-router-dom';
 
 const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -44,6 +43,14 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
       setName(userData.name);
       setEmail(userData.email);
       setType(userData.type);
+    }
+  };
+
+  const handleFetchPhysicianById = async () => {
+    const physician = await dispatch(fetchPhysicianById(id));
+    if (physician.payload) {
+      const physicianData = physician.payload as Physician;
+      setSelectedOccupationId(physicianData.occupation.id);
     }
   };
 
@@ -73,14 +80,6 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
       }
       window.location.reload();
       setIsUpdated(true);
-    }
-  };
-
-  const handleFetchPhysicianById = async () => {
-    const physician = await dispatch(fetchPhysicianById(id));
-    if (physician.payload) {
-      const physicianData = physician.payload as PhysicianDto;
-      setSelectedOccupationId(physicianData.occupationId);
     }
   };
 

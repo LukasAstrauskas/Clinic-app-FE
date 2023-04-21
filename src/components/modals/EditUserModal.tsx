@@ -82,7 +82,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
       }
       setIsUpdated(true);
       // setOpen(false);
-      // window.location.reload();
+      window.location.reload();
     }
   };
 

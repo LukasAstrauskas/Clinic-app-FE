@@ -16,8 +16,6 @@ export const login = createAsyncThunk(
 export const logout = createAsyncThunk('auth/logout', async () => {
   sessionStorage.removeItem('isLogged');
   sessionStorage.removeItem('type');
-
-  // window.location.reload();
 });
 
 export const authFetchUserById = createAsyncThunk<User, string>(

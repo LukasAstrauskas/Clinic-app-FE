@@ -101,7 +101,7 @@ const Header = () => {
 
       <Stack direction='row' spacing={2}>
         <div>
-          {isLoggedIn && (
+          {!isLoggedIn ? null : (
             <Button
               ref={anchorRef}
               id='composition-button'

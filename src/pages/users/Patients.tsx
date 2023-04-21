@@ -94,13 +94,14 @@ export const Patients = () => {
   return (
     <>
       <Typography
-        variant='h3'
+        // variant='h3'
         sx={{
           textAlign: 'center',
           marginTop: 5,
           marginBottom: -5,
           fontWeight: 'bold',
           color: '#28cdcb',
+          fontSize: 36,
         }}
       >
         Patients

@@ -4,6 +4,7 @@ import Checkbox from '@mui/material/Checkbox';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import EditUserModal from '../modals/EditUserModal';
+import { grey } from '@mui/material/colors';
 
 type UserType = {
   id: string;
@@ -45,6 +46,7 @@ const TableBodyComponent: FC<Props> = ({
           <TableRow
             key={id}
             sx={{
+              backgroundColor: grey[200],
               '&:hover': {
                 backgroundColor: '#ff9e80 !important',
               },

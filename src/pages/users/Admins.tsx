@@ -18,36 +18,26 @@ import AddAdminModal from '../../components/modals/AddAdminModal';
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableHeadComponent from '../../components/tableComponents/HeadComponent';
 import TableBodyComponent from '../../components/tableComponents/BodyComponent';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  AdminState,
+  deleteAdmin,
+  fetchAdmins,
+  searchAdmin,
+} from '../../store/slices/admin/adminSlice';
+import { AppDispatch } from '../../store/types';
 
 export const Admins = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const admins = useSelector(AdminState);
   const [open, setOpen] = useState(false);
+  const [more, setMore] = useState<boolean>(true);
   const [checkedAdmins, setCheckedAdmins] = useState<string[]>([]);
-  const [admins, setAdmins] = useState<AdminType[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
   const getRequestUrl = 'http://localhost:8080/user/admins';
   const getRequestHeaders = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-  };
-  async function getData() {
-    await axios
-      .get(getRequestUrl, {
-        headers: getRequestHeaders,
-      })
-      .then((res) => {
-        setAdmins(res.data);
-      });
-  }
-
-  useEffect(() => {
-    getData();
-  }, [open, checkedAdmins]);
-
-  type AdminType = {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
   };
 
   const handleOpen = () => {
@@ -56,8 +46,7 @@ export const Admins = () => {
 
   const handleDelete = () => {
     checkedAdmins.forEach((admin) => {
-      const deleteURL = `http://localhost:8080/user/admins/${admin}`;
-      axios.delete(deleteURL);
+      dispatch(deleteAdmin(admin));
     });
     setCheckedAdmins([]);
   };
@@ -77,23 +66,17 @@ export const Admins = () => {
     const search = e.target.value;
 
     if (search.length != 0) {
-      const getRequestHeaders = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      };
-      axios
-        .get(`http://localhost:8080/user/adminSearch/${search}`, {
-          headers: getRequestHeaders,
-        })
-        .then((res) => {
-          setAdmins(res.data);
-        });
+      dispatch(searchAdmin(search));
+      setMore(false);
     } else {
+      dispatch(fetchAdmins());
       setRefresh(true);
-      getData();
     }
   };
 
+  useEffect(() => {
+    dispatch(fetchAdmins());
+  }, [open]);
   return (
     <>
       <Typography
@@ -151,12 +134,11 @@ export const Admins = () => {
             />
           </Table>
           <TableBodyComponent
-            sizeEndpoint='user/adminSize'
-            endpoint='user/admins/limit/'
+            type='admin'
+            more={more}
+            setMore={setMore}
             setRefresh={setRefresh}
             refresh={refresh}
-            setUser={setAdmins}
-            collumValue='admins'
             user={admins}
             handleChecked={handleChecked}
           />

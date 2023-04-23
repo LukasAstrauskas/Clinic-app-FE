@@ -1,10 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../../../model/Model';
-import { ADMINS_URL, BASE_ADMINS_URL } from '../../../utils/httpConstants';
-
+import { UniversalUser, User } from '../../../model/Model';
+import {
+  ADMINS_URL,
+  ADMIN_SEARCH_URL,
+  BASE_ADMINS_URL,
+  INCOMING_ADMINS_TO_BE_RENDERED_URL,
+} from '../../../utils/httpConstants';
+import axios from 'axios';
+import { RootState } from '../../reducers';
 interface AdminState {
-  admins: User[];
+  admins: UniversalUser[];
   isLoading: boolean;
   error: string | null;
 }
@@ -15,20 +21,37 @@ const initialState: AdminState = {
   error: null,
 };
 
-export const fetchAdmins = createAsyncThunk('user/fetchAdmins', async () => {
-  const response = await fetch(ADMINS_URL);
-  const data = await response.json();
-  return data;
-});
+export const fetchAdmins = createAsyncThunk<User[]>(
+  'user/fetchAdmins',
+  async () => {
+    const response = await axios.get<User[]>(ADMINS_URL);
+    return response.data;
+  },
+);
+
+export const fetchMoreAdmins = createAsyncThunk(
+  'user/fetchMoreAdmins',
+  async (offset: number) => {
+    const response = await axios.get<UniversalUser[]>(
+      INCOMING_ADMINS_TO_BE_RENDERED_URL + offset,
+    );
+    return response.data;
+  },
+);
 
 export const deleteAdmin = createAsyncThunk(
   'user/deleteAdmin',
   async (id: string) => {
-    const response = await fetch(`${BASE_ADMINS_URL}${id}`, {
-      method: 'DELETE',
-    });
-    const data = await response.json();
-    return data;
+    const response = await axios.delete<UniversalUser[]>(BASE_ADMINS_URL + id);
+    return response.data;
+  },
+);
+
+export const searchAdmin = createAsyncThunk(
+  'user/searchAdmin',
+  async (search: string) => {
+    const response = await axios.get(ADMIN_SEARCH_URL + search);
+    return response.data;
   },
 );
 
@@ -53,21 +76,39 @@ export const adminSlice = createSlice({
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
       })
-      .addCase(deleteAdmin.pending, (state) => {
+      .addCase(deleteAdmin.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(fetchMoreAdmins.pending, (state) => {
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(
+        fetchMoreAdmins.fulfilled,
+        (state, action: PayloadAction<UniversalUser[]>) => {
+          state.isLoading = false;
+          state.admins = [...state.admins, ...action.payload];
+        },
+      )
+      .addCase(fetchMoreAdmins.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Something went wrong';
+      })
+      .addCase(searchAdmin.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(deleteAdmin.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(searchAdmin.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.admins = state.admins.filter(
-          (admin) => admin.id !== action.payload.id,
-        );
+        state.admins = action.payload;
       })
-      .addCase(deleteAdmin.rejected, (state, action) => {
+      .addCase(searchAdmin.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
       });
   },
 });
+
+export const AdminState = (state: RootState) => state.admin.admins;
 
 export default adminSlice.reducer;

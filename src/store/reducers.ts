@@ -5,8 +5,10 @@ import { adminSlice } from './slices/admin/adminSlice';
 import { physicianSlice } from './slices/physician/physicianSlice';
 import { phyNameOccupationSlice } from './slices/physician/phyNameOccupationSlice';
 import { userSlice } from './slices/user/userSlice';
+import { UserSizeSlice } from './slices/userSize/userSizeSlice';
 
 const rootReducer = combineReducers({
+  size: UserSizeSlice.reducer,
   user: userSlice.reducer,
   auth: authSlice.reducer,
   patient: patientSlice.reducer,

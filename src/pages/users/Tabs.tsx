@@ -20,7 +20,6 @@ const UserTabs = () => {
       </div>
     );
   }
-
   return (
     <>
       <Box>

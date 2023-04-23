@@ -11,40 +11,27 @@ import PhysicianModalContent from '../../components/modals/AddPhysicianModal';
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableHeadComponent from '../../components/tableComponents/HeadComponent';
 import TableBodyComponent from '../../components/tableComponents/BodyComponent';
+import {
+  PhysicianState,
+  fetchPhysicians,
+  searchPhysician,
+} from '../../store/slices/physician/physicianSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../store/types';
+import {
+  deletePatient,
+  fetchMorePatients,
+  fetchPatients,
+} from '../../store/slices/patient/patientSlice';
 
 export const Physicians = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const physicians = useSelector(PhysicianState);
+  const [more, setMore] = useState<boolean>(true);
   const [open, setOpen] = useState(false);
   const [checkedPhysician, setCheckedPhysician] = useState<string[]>([]);
-  const [physicians, setPhysicians] = useState<PhysicianType[]>([]);
   const getRequestUrl = 'http://localhost:8080/physicianInfo';
   const [refresh, setRefresh] = useState<boolean>(false);
-
-  const getRequestHeaders = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  };
-  async function getData() {
-    await axios
-      .get(getRequestUrl, {
-        headers: getRequestHeaders,
-      })
-      .then((res) => {
-        setPhysicians(res.data);
-      });
-  }
-
-  useEffect(() => {
-    getData();
-  }, [open]);
-  type PhysicianType = {
-    id: string;
-    name: string;
-    email: string;
-    occupation: {
-      id: string;
-      name: string;
-    };
-  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -52,8 +39,7 @@ export const Physicians = () => {
 
   const handleDelete = () => {
     checkedPhysician.forEach((physician) => {
-      const deleteURL = `http://localhost:8080/physician/${physician}`;
-      axios.delete(deleteURL);
+      dispatch(deletePatient(physician));
     });
     setCheckedPhysician([]);
   };
@@ -75,22 +61,18 @@ export const Physicians = () => {
     const search = e.target.value;
 
     if (search.length != 0) {
-      const getRequestHeaders = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      };
-      axios
-        .get(`http://localhost:8080/user/physicianSearch/${search}`, {
-          headers: getRequestHeaders,
-        })
-        .then((res) => {
-          setPhysicians(res.data);
-        });
+      dispatch(searchPhysician(search));
+      setMore(false);
     } else {
+      dispatch(fetchPhysicians());
       setRefresh(true);
-      getData();
     }
   };
+
+  useEffect(() => {
+    console.log('started');
+    dispatch(fetchPhysicians());
+  }, [open]);
 
   return (
     <>
@@ -148,12 +130,11 @@ export const Physicians = () => {
           </Table>
 
           <TableBodyComponent
-            sizeEndpoint='user/physicianSize'
-            endpoint='physcians/limit/'
-            collumValue='physician'
+            type='physician'
+            more={more}
+            setMore={setMore}
             setRefresh={setRefresh}
             refresh={refresh}
-            setUser={setPhysicians}
             user={physicians}
             handleChecked={handleChecked}
           />

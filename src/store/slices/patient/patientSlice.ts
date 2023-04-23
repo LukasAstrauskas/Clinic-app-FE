@@ -1,20 +1,23 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { UniversalUser, User, endPoint } from '../../../model/Model';
+import { UniversalUser, User } from '../../../model/Model';
 import { RootState } from '../../types';
 import axios from 'axios';
-import { BASE_PATIENTS_URL, PATIENTS_URL } from '../../../utils/httpConstants';
+import {
+  BASE_PATIENTS_URL,
+  INCOMING_PATIENTS_TO_BE_RENDERED_URL,
+  PATIENTS_URL,
+  PATIENT_SEARCH_URL,
+} from '../../../utils/httpConstants';
 
 interface PatientsState {
-  patients: User[];
-  toRenderPatients: UniversalUser[];
+  patients: UniversalUser[];
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: PatientsState = {
   patients: [],
-  toRenderPatients: [],
   isLoading: false,
   error: null,
 };
@@ -23,6 +26,7 @@ export const fetchPatients = createAsyncThunk<User[]>(
   'patients/fetchPatients',
   async () => {
     const response = await axios.get<User[]>(PATIENTS_URL);
+
     return response.data;
   },
 );
@@ -31,7 +35,7 @@ export const fetchMorePatients = createAsyncThunk(
   'patients/fetchMorePatients',
   async (offset: number) => {
     const response = await axios.get<UniversalUser[]>(
-      `http://localhost:8080/user/patients/limit/${offset}`,
+      INCOMING_PATIENTS_TO_BE_RENDERED_URL + offset,
     );
     return response.data;
   },
@@ -39,12 +43,19 @@ export const fetchMorePatients = createAsyncThunk(
 
 export const deletePatient = createAsyncThunk(
   'patients/deletePatient',
-  async (id: number) => {
-    const response = await fetch(`${BASE_PATIENTS_URL}${id}`, {
-      method: 'DELETE',
-    });
-    const data = await response.json();
-    return data;
+  async (id: string) => {
+    const response = await axios.delete<UniversalUser[]>(
+      BASE_PATIENTS_URL + id,
+    );
+    return response.data;
+  },
+);
+
+export const searchPatient = createAsyncThunk(
+  'patients/searchPatient',
+  async (search: string) => {
+    const response = await axios.get(PATIENT_SEARCH_URL + search);
+    return response.data;
   },
 );
 
@@ -69,23 +80,6 @@ export const patientSlice = createSlice({
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
       })
-      .addCase(deletePatient.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(
-        deletePatient.fulfilled,
-        (state, action: PayloadAction<User>) => {
-          state.isLoading = false;
-          state.patients = state.patients.filter(
-            (patient) => patient.id !== action.payload.id,
-          );
-        },
-      )
-      .addCase(deletePatient.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message || 'Something went wrong';
-      })
       .addCase(fetchMorePatients.pending, (state) => {
         state.isLoading = false;
         state.error = null;
@@ -94,10 +88,25 @@ export const patientSlice = createSlice({
         fetchMorePatients.fulfilled,
         (state, action: PayloadAction<UniversalUser[]>) => {
           state.isLoading = false;
-          state.toRenderPatients = action.payload;
+          state.patients = [...state.patients, ...action.payload];
         },
       )
       .addCase(fetchMorePatients.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Something went wrong';
+      })
+      .addCase(deletePatient.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(searchPatient.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(searchPatient.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.patients = action.payload;
+      })
+      .addCase(searchPatient.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
       });
@@ -105,8 +114,5 @@ export const patientSlice = createSlice({
 });
 
 export const selectPatients = (state: RootState) => state.patient.patients;
-
-export const selectLimitedPatients = (state: RootState) =>
-  state.patient.toRenderPatients;
 
 export default patientSlice.reducer;

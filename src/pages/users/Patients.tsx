@@ -14,7 +14,9 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import {
+  deletePatient,
   fetchPatients,
+  searchPatient,
   selectPatients,
 } from '../../store/slices/patient/patientSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,38 +26,15 @@ import axios from 'axios';
 import TableHeadComponent from '../../components/tableComponents/HeadComponent';
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableBodyComponent from '../../components/tableComponents/BodyComponent';
+import { selectUser } from '../../store/slices/user/userSlice';
+import { User } from '../../model/Model';
 export const Patients = () => {
-  const temp = useSelector(selectPatients);
   const dispatch = useDispatch<AppDispatch>();
+  const patients = useSelector(selectPatients);
   const [open, setOpen] = useState(false);
+  const [more, setMore] = useState<boolean>(true);
   const [checkedPatients, setCheckedPatiens] = useState<string[]>([]);
-  const [patients, setPatients] = useState<PatientType[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
-  const getRequestUrl = `http://localhost:8080/user/patients`;
-  const getRequestHeaders = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  };
-
-  async function getData() {
-    await axios
-      .get(getRequestUrl, { headers: getRequestHeaders })
-      .then((res) => {
-        setPatients(res.data);
-      });
-  }
-
-  const handleUserFetch = async () => {
-    const user = await dispatch(fetchPatients);
-    console.log(user);
-  };
-
-  type PatientType = {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -63,8 +42,7 @@ export const Patients = () => {
 
   const handleDelete = () => {
     checkedPatients.forEach((patient) => {
-      const deleteURL = `http://localhost:8080/user/patients/${patient}`;
-      axios.delete(deleteURL);
+      dispatch(deletePatient(patient));
     });
     setCheckedPatiens([]);
   };
@@ -82,30 +60,17 @@ export const Patients = () => {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const search = e.target.value;
-
     if (search.length != 0) {
-      const getRequestHeaders = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      };
-      axios
-        .get(`http://localhost:8080/user/patientSearch/${search}`, {
-          headers: getRequestHeaders,
-        })
-        .then((res) => {
-          setPatients(res.data);
-        });
+      dispatch(searchPatient(search));
+      setMore(false);
     } else {
+      dispatch(fetchPatients());
       setRefresh(true);
-      getData();
     }
   };
 
   useEffect(() => {
     dispatch(fetchPatients());
-    handleUserFetch();
-    getData();
-    console.log(temp);
   }, [open]);
 
   return (
@@ -132,6 +97,7 @@ export const Patients = () => {
         <SearchIcon sx={Styles.searchIcon} />
         <TextField
           onChange={handleSearch}
+          onBlur={() => handleSearch}
           sx={Styles.searchField}
           className='search'
           id='search'
@@ -164,13 +130,12 @@ export const Patients = () => {
             />
           </Table>
           <TableBodyComponent
-            sizeEndpoint='user/patientSize'
-            endpoint='user/patients/limit/'
+            type='patient'
+            more={more}
+            setMore={setMore}
             setRefresh={setRefresh}
             refresh={refresh}
-            setUser={setPatients}
-            collumValue='patient'
-            user={temp}
+            user={patients}
             handleChecked={handleChecked}
           />
         </TableContainer>

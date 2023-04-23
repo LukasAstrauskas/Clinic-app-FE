@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './Header.module.css';
 import classnames from 'classnames';
 import clinicLogo from '../../assets/clinic-logo.svg';
@@ -23,9 +23,9 @@ import { User } from '../../model/Model';
 import { selectId, selectisLoggedIn } from '../../store/slices/auth/authSlice';
 
 const Header = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
-  const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const anchorRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch<AppDispatch>();
 
   const isLoggedIn = useSelector(selectisLoggedIn);
@@ -43,6 +43,7 @@ const Header = () => {
 
   useEffect(() => {
     handleFetchUserById();
+    // eslint-disable-next-line prettier/prettier
   }, [loggedUserId]);
 
   const handleToggle = () => {

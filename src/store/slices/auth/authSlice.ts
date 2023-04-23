@@ -42,7 +42,7 @@ export const authSlice = createSlice({
         state.loading = false;
         state.error = action.error.message ?? 'Login failed.';
       })
-      .addCase(logout.fulfilled, (state, action) => {
+      .addCase(logout.fulfilled, (state) => {
         state.loading = false;
         state.error = null;
         state.isLoggedIn = false;

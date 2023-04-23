@@ -2,8 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_USER_URL, LOGIN_URL } from '../../../utils/httpConstants';
 import { User } from '../../../model/Model';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '../../../routes/routes';
 
 export const login = createAsyncThunk(
   'auth/login',

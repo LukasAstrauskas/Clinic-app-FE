@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { User } from '../../model/Model';
 import { selectId, selectisLoggedIn } from '../../store/slices/auth/authSlice';
+import { resetStore } from '../../store/reducers';
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -60,6 +61,7 @@ const Header = () => {
     const target = event.target as HTMLElement;
     if (target.id === 'logout') {
       dispatch(logout());
+      dispatch(resetStore());
     }
     setOpen(false);
   };

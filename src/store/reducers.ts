@@ -23,7 +23,7 @@ const rootReducer: Reducer<
   ReturnType<typeof resetStore>
 > = (state, action) => {
   if (action.type === 'RESET_STORE') {
-    state = undefined; // reset entire store
+    state = undefined;
   }
   return appReducer(state, action);
 };

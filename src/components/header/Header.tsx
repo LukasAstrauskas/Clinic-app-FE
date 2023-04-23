@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './Header.module.css';
 import classnames from 'classnames';
 import clinicLogo from '../../assets/clinic-logo.svg';
@@ -16,14 +16,35 @@ import {
 import { grey } from '@mui/material/colors';
 import { NavLink, Link } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
-import { logout } from '../../store/slices/auth/authActions';
-import { useDispatch } from 'react-redux';
+import { authFetchUserById, logout } from '../../store/slices/auth/authActions';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
+import { User } from '../../model/Model';
+import { selectId, selectisLoggedIn } from '../../store/slices/auth/authSlice';
 
 const Header = () => {
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState('');
+  const anchorRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch<AppDispatch>();
+
+  const isLoggedIn = useSelector(selectisLoggedIn);
+  const loggedUserId = useSelector(selectId);
+  const loggedUserNameInitials = name.substring(0, 2);
+
+  const handleFetchUserById = async () => {
+    if (!loggedUserId) {
+      return 'no id';
+    }
+    const user = await dispatch(authFetchUserById(loggedUserId));
+    const userData = user.payload as User;
+    setName(userData.name);
+  };
+
+  useEffect(() => {
+    handleFetchUserById();
+    // eslint-disable-next-line prettier/prettier
+  }, [loggedUserId]);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -81,61 +102,68 @@ const Header = () => {
 
       <Stack direction='row' spacing={2}>
         <div>
-          <Button
-            ref={anchorRef}
-            id='composition-button'
-            aria-controls={open ? 'composition-menu' : undefined}
-            aria-expanded={open ? 'true' : undefined}
-            aria-haspopup='true'
-            onClick={handleToggle}
-          >
-            {/* add validation to check if the user is logged in */}
-            <Avatar className={styles.avatar} sx={{ bgcolor: grey[100] }}>
-              <div className={styles.avatarLogo}>
-                {/* implement avatar symbols logic */}
-                AA
-              </div>
-            </Avatar>
-          </Button>
-          <Popper
-            open={open}
-            anchorEl={anchorRef.current}
-            role={undefined}
-            placement='bottom-start'
-            transition
-            disablePortal
-          >
-            {({ TransitionProps, placement }) => (
-              <Grow
-                {...TransitionProps}
-                style={{
-                  transformOrigin:
-                    placement === 'bottom-start' ? 'left bottom' : 'left top',
-                }}
+          {!isLoggedIn ? null : (
+            <>
+              <Button
+                ref={anchorRef}
+                id='composition-button'
+                aria-controls={open ? 'composition-menu' : undefined}
+                aria-expanded={open ? 'true' : undefined}
+                aria-haspopup='true'
+                onClick={handleToggle}
               >
-                <Paper>
-                  <ClickAwayListener onClickAway={handleClose}>
-                    <MenuList
-                      autoFocusItem={open}
-                      id='composition-menu'
-                      aria-labelledby='composition-button'
-                      onKeyDown={handleListKeyDown}
-                    >
-                      {/* add link to user profile */}
-                      <NavLink to='/profile' className={resolveLinkClass}>
-                        <MenuItem onClick={handleClose}>Profile</MenuItem>
-                      </NavLink>
-                      <NavLink to={ROUTES.LOGIN} className={resolveLinkClass}>
-                        <MenuItem id='logout' onClick={handleClose}>
-                          Logout
-                        </MenuItem>
-                      </NavLink>
-                    </MenuList>
-                  </ClickAwayListener>
-                </Paper>
-              </Grow>
-            )}
-          </Popper>
+                <Avatar className={styles.avatar} sx={{ bgcolor: grey[100] }}>
+                  <div className={styles.avatarLogo}>
+                    {loggedUserNameInitials}
+                  </div>
+                </Avatar>
+              </Button>
+              <Popper
+                open={open}
+                anchorEl={anchorRef.current}
+                role={undefined}
+                placement='bottom-start'
+                transition
+                disablePortal
+              >
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      transformOrigin:
+                        placement === 'bottom-start'
+                          ? 'left bottom'
+                          : 'left top',
+                    }}
+                  >
+                    <Paper>
+                      <ClickAwayListener onClickAway={handleClose}>
+                        <MenuList
+                          autoFocusItem={open}
+                          id='composition-menu'
+                          aria-labelledby='composition-button'
+                          onKeyDown={handleListKeyDown}
+                        >
+                          {/* add link to user profile */}
+                          <NavLink to='/profile' className={resolveLinkClass}>
+                            <MenuItem onClick={handleClose}>Profile</MenuItem>
+                          </NavLink>
+                          <NavLink
+                            to={ROUTES.LOGIN}
+                            className={resolveLinkClass}
+                          >
+                            <MenuItem id='logout' onClick={handleClose}>
+                              Logout
+                            </MenuItem>
+                          </NavLink>
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
+            </>
+          )}
         </div>
       </Stack>
     </div>

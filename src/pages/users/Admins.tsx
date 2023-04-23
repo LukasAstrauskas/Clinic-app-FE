@@ -3,17 +3,8 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from '@mui/system';
-import {
-  TableContainer,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  Paper,
-  Typography,
-} from '@mui/material';
+import { TableContainer, Table, Paper, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import axios from 'axios';
 import AddAdminModal from '../../components/modals/AddAdminModal';
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableHeadComponent from '../../components/tableComponents/HeadComponent';
@@ -30,15 +21,10 @@ import { AppDispatch } from '../../store/types';
 export const Admins = () => {
   const dispatch = useDispatch<AppDispatch>();
   const admins = useSelector(AdminState);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
   const [more, setMore] = useState<boolean>(true);
   const [checkedAdmins, setCheckedAdmins] = useState<string[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
-  const getRequestUrl = 'http://localhost:8080/user/admins';
-  const getRequestHeaders = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  };
 
   const handleOpen = () => {
     setOpen(true);

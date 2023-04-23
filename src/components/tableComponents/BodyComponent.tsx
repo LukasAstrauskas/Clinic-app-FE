@@ -5,12 +5,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { AppDispatch } from '../../store/types';
-import { UniversalUser, User } from '../../model/Model';
-import { PATIENT_SIZE_URL } from '../../utils/httpConstants';
+import { UniversalUser } from '../../model/Model';
 import {
   UserSizeState,
   fetchAdminAmount,
@@ -22,11 +19,11 @@ import { fetchMorePhysicians } from '../../store/slices/physician/physicianSlice
 
 interface Props {
   user: UniversalUser[];
-  handleChecked: any;
+  handleChecked: (e: React.ChangeEvent<HTMLInputElement>) => void;
   refresh: boolean;
-  setRefresh: any;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   more: boolean;
-  setMore: any;
+  setMore: React.Dispatch<React.SetStateAction<boolean>>;
   type: string;
 }
 
@@ -107,11 +104,14 @@ const TableBodyComponent: FC<Props> = ({
               }}
             >
               <TableCell>
-                <Checkbox id={user.id.toString()} onChange={handleChecked} />
+                <Checkbox
+                  id={user.id.toString()}
+                  onChange={() => handleChecked}
+                />
               </TableCell>
               <TableCell sx={{ width: '200px' }}>{user.name}</TableCell>
               <TableCell align='center' sx={{ width: '200px' }}>
-                {type === 'physician' ? user.occupation.name : user.email}
+                {type === 'physician' ? user.occupation?.name : user.email}
               </TableCell>
               <TableCell>
                 <IconButton color='primary'>

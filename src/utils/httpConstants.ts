@@ -1,3 +1,4 @@
+//General
 export const LOGIN_URL = 'http://localhost:8080/login';
 export const USERS_URL = 'http://localhost:8080/user';
 export const BASE_USER_URL = 'http://localhost:8080/user/';

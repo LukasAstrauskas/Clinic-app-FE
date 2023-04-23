@@ -40,12 +40,10 @@ export type UniversalUser = {
   id: string;
   name: string;
   email: string | number;
-  occupation?:
-    | {
-        id?: string;
-        name?: string;
-      }
-    | any;
+  occupation?: {
+    id?: string;
+    name?: string;
+  };
 };
 
 export type Occupation = {

@@ -4,14 +4,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from '@mui/system';
-import {
-  TableContainer,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  Paper,
-} from '@mui/material';
+import { TableContainer, Table, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import {
   deletePatient,
@@ -22,12 +15,9 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import AddPatientModal from '../../components/modals/AddPatientModal';
-import axios from 'axios';
 import TableHeadComponent from '../../components/tableComponents/HeadComponent';
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableBodyComponent from '../../components/tableComponents/BodyComponent';
-import { selectUser } from '../../store/slices/user/userSlice';
-import { User } from '../../model/Model';
 export const Patients = () => {
   const dispatch = useDispatch<AppDispatch>();
   const patients = useSelector(selectPatients);
@@ -35,18 +25,15 @@ export const Patients = () => {
   const [more, setMore] = useState<boolean>(true);
   const [checkedPatients, setCheckedPatiens] = useState<string[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
-
   const handleOpen = () => {
     setOpen(true);
   };
-
   const handleDelete = () => {
     checkedPatients.forEach((patient) => {
       dispatch(deletePatient(patient));
     });
     setCheckedPatiens([]);
   };
-
   const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedPatient = e.target;
     if (selectedPatient.checked) {
@@ -57,7 +44,6 @@ export const Patients = () => {
       );
     }
   };
-
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const search = e.target.value;
     if (search.length != 0) {
@@ -68,11 +54,9 @@ export const Patients = () => {
       setRefresh(true);
     }
   };
-
   useEffect(() => {
     dispatch(fetchPatients());
-  }, [open]);
-
+  }, []);
   return (
     <>
       <Typography

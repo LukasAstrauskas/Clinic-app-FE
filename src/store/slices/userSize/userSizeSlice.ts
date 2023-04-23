@@ -44,7 +44,7 @@ export const fetchPhysicianAmount = createAsyncThunk<number>(
   },
 );
 
-export const UserSizeSlice = createSlice({
+export const userSizeSlice = createSlice({
   name: 'size',
   initialState,
   reducers: {},
@@ -100,4 +100,4 @@ export const UserSizeSlice = createSlice({
 
 export const UserSizeState = (state: RootState) => state.size.size;
 
-export default UserSizeSlice.reducer;
+export default userSizeSlice.reducer;

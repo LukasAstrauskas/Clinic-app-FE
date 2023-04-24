@@ -37,23 +37,19 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const [isUpdated, setIsUpdated] = useState(false);
   const [selectedOccupationId, setSelectedOccupationId] = useState('');
 
-  const handleFetchUserById = async () => {
-    const user = await dispatch(fetchUserById(id));
-    if (user.payload) {
-      const userData = user.payload as User;
-      setName(userData.name);
-      setEmail(userData.email);
-      setType(userData.type);
+  const handleFetchUserById = () => {
+    if (selectedUser) {
+      setName(selectedUser.name);
+      setEmail(selectedUser.email);
+      setType(selectedUser.type);
     }
   };
 
   const handleFetchPhysicianById = async () => {
-    const physician = await dispatch(fetchPhysicianById(id));
-    if (physician.payload) {
-      const physicianData = physician.payload as Physician;
-      setName(physicianData.name);
-      setEmail(physicianData.email);
-      setSelectedOccupationId(physicianData.occupation.id);
+    if (selectedPhysician) {
+      setName(selectedPhysician.name);
+      setEmail(selectedPhysician.email);
+      setSelectedOccupationId(selectedPhysician.occupationId);
     }
   };
 
@@ -95,12 +91,20 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
     if (!open) {
       return;
     }
+    handleFetchUserById();
+    handleFetchPhysicianById();
+  }, [selectedUser, selectedPhysician]);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
 
     if (type === 'physician') {
       dispatch(fetchOccupations());
-      handleFetchPhysicianById();
+      dispatch(fetchPhysicianById(id));
     }
-    handleFetchUserById();
+    dispatch(fetchUserById(id));
   }, [type, open, dispatch]);
 
   const handleEmailCheck = () => {

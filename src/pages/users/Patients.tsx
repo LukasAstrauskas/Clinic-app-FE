@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from '@mui/system';
 import { TableContainer, Table, Paper } from '@mui/material';
-import { TableContainer, Table, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import {
   deletePatient,

@@ -4,13 +4,15 @@ import './App.css';
 import Header from './components/header/Header';
 import Footer from './components/footer/Footer';
 import Main from './components/main/Main';
+import Tabs from './pages/users/Tabs';
 
 function App() {
   return (
     <Container className='container'>
-      <Header />
+      <Tabs />
+      {/* <   <Header />
       <Main />
-      <Footer />
+      <Footer />> */}
     </Container>
   );
 }

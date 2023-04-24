@@ -1,5 +1,5 @@
-import React, { useEffect, useState, FC } from 'react';
-import { TableBody, TableRow, TableCell, Paper } from '@mui/material';
+import React, { FC, useState } from 'react';
+import { TableBody, TableRow, TableCell } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';

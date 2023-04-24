@@ -1,4 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit';
+import type { Reducer } from '@reduxjs/toolkit';
 import { authSlice } from './slices/auth/authSlice';
 import { patientSlice } from './slices/patient/patientSlice';
 import { adminSlice } from './slices/admin/adminSlice';
@@ -7,7 +8,9 @@ import { phyNameOccupationSlice } from './slices/physician/phyNameOccupationSlic
 import { userSlice } from './slices/user/userSlice';
 import { userSizeSlice } from './slices/userSize/userSizeSlice';
 
-const rootReducer = combineReducers({
+export const resetStore = () => ({ type: 'RESET_STORE' });
+
+const appReducer = combineReducers({
   size: userSizeSlice.reducer,
   user: userSlice.reducer,
   auth: authSlice.reducer,
@@ -16,6 +19,16 @@ const rootReducer = combineReducers({
   admin: adminSlice.reducer,
   phyNameOccupation: phyNameOccupationSlice.reducer,
 });
+
+const rootReducer: Reducer<
+  ReturnType<typeof appReducer>,
+  ReturnType<typeof resetStore>
+> = (state, action) => {
+  if (action.type === 'RESET_STORE') {
+    state = undefined;
+  }
+  return appReducer(state, action);
+};
 
 export type RootState = ReturnType<typeof rootReducer>;
 

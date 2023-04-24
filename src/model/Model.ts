@@ -62,3 +62,14 @@ export type Physician = {
     name: string;
   };
 };
+export interface Appointment {
+  physicianId: string;
+  date: string;
+  time: string;
+  patientId: string;
+}
+
+export interface AppointmentState {
+  appointment: Appointment;
+  setAppointment: React.Dispatch<React.SetStateAction<Appointment>>;
+}

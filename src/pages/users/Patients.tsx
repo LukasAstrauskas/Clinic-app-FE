@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from '@mui/system';
+import { TableContainer, Table, Paper } from '@mui/material';
 import { TableContainer, Table, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import {
@@ -18,6 +19,8 @@ import AddPatientModal from '../../components/modals/AddPatientModal';
 import TableHeadComponent from '../../components/tableComponents/HeadComponent';
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableBodyComponent from '../../components/tableComponents/BodyComponent';
+import { grey } from '@mui/material/colors';
+import AppointmentContext from '../../hooks/AppointmentContext';
 export const Patients = () => {
   const dispatch = useDispatch<AppDispatch>();
   const patients = useSelector(selectPatients);
@@ -110,7 +113,7 @@ export const Patients = () => {
           <Table stickyHeader>
             <TableHeadComponent
               handleDelete={handleDelete}
-              collumName='email'
+              collumName='Email'
             />
           </Table>
           <TableBodyComponent

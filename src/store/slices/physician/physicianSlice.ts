@@ -7,15 +7,18 @@ import {
   PHYSICIANS_URL,
 } from '../../../utils/httpConstants';
 import axios from 'axios';
+import { RootState } from '../../types';
 
 interface PhysicianState {
   physicians: Physician[];
+  selectedPhysician: Physician | null;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: PhysicianState = {
   physicians: [],
+  selectedPhysician: null,
   isLoading: false,
   error: null,
 };
@@ -81,6 +84,19 @@ export const physicianSlice = createSlice({
         state.error = action.error.message || 'Something went wrong';
       })
 
+      .addCase(fetchPhysicianById.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchPhysicianById.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.selectedPhysician = action.payload;
+      })
+      .addCase(fetchPhysicianById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Something went wrong';
+      })
+
       .addCase(deletePhysician.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -100,5 +116,8 @@ export const physicianSlice = createSlice({
       });
   },
 });
+
+export const selectPhysician = (state: RootState) =>
+  state.physician.selectedPhysician;
 
 export default physicianSlice.reducer;

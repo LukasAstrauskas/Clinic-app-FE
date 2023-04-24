@@ -6,7 +6,7 @@ import { Modal } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { isValidName, isValidEmail, isValidPassword } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
-import { EditUser, Physician, PhysicianDto, User } from '../../model/Model';
+import { EditUser } from '../../model/Model';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { selectUser, updateUser } from '../../store/slices/user/userSlice';
@@ -19,7 +19,7 @@ import {
   fetchPhysicianById,
   updatePhysician,
 } from '../../store/slices/physician/physicianDtoSlice';
-import { selectPhysician } from '../../store/slices/physician/physicianDtoSlice';
+import { selectPhysician } from '../../store/slices/physician/physicianSlice';
 
 const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -45,13 +45,12 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
     }
   };
 
-  const handleFetchPhysicianById = async () => {
-    const physician = await dispatch(fetchPhysicianById(id));
-    if (physician.payload) {
-      const physicianData = physician.payload as Physician;
-      setName(physicianData.name);
-      setEmail(physicianData.email);
-      setSelectedOccupationId(physicianData.occupation.id);
+  const handleFetchPhysicianById = () => {
+    if (selectedPhysician) {
+      setName(selectedPhysician.name);
+      setEmail(selectedPhysician.email);
+      setSelectedOccupationId(selectedPhysician.occupation.id);
+      console.log(selectedOccupationId);
     }
   };
 
@@ -80,7 +79,6 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
         dispatch(updatePhysician(updatedPhysician));
       }
       setIsUpdated(true);
-      // setOpen(false);
       window.location.reload();
     }
   };
@@ -88,6 +86,13 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    handleFetchPhysicianById();
+  }, [selectedPhysician]);
 
   useEffect(() => {
     if (!open) {
@@ -103,22 +108,10 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
 
     if (type === 'physician') {
       dispatch(fetchOccupations());
-      handleFetchPhysicianById();
+      dispatch(fetchPhysicianById(id));
     }
     dispatch(fetchUserById(id));
   }, [type, open, dispatch]);
-
-  // useEffect(() => {
-  //   if (!open) {
-  //     return;
-  //   }
-  //   if (type === 'physician') {
-  //     dispatch(fetchOccupations());
-  //     handleFetchPhysicianById();
-  //   } else {
-  //     handleFetchUserById();
-  //   }
-  // }, [type, open, dispatch]);
 
   const handleEmailCheck = () => {
     !isValidEmail(email)

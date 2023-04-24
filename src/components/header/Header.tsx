@@ -28,7 +28,7 @@ const Header = () => {
   const anchorRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch<AppDispatch>();
 
-  const isLoggedIn = useSelector(selectisLoggedIn);
+  const isLoggedIn = sessionStorage.getItem('isLogged') || '';
   const loggedUserId = useSelector(selectId);
   const loggedUserNameInitials = name.substring(0, 2);
 

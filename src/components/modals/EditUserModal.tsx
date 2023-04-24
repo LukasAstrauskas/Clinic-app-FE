@@ -6,7 +6,7 @@ import { Modal } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { isValidName, isValidEmail, isValidPassword } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
-import { EditUser, Physician, PhysicianDto } from '../../model/Model';
+import { EditUser, Physician, PhysicianDto, User } from '../../model/Model';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { selectUser, updateUser } from '../../store/slices/user/userSlice';
@@ -37,12 +37,13 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const [isUpdated, setIsUpdated] = useState(false);
   const [selectedOccupationId, setSelectedOccupationId] = useState('');
 
-  const handleFetchUserById = () => {
-    dispatch(fetchUserById(id));
-    if (selectedUser) {
-      setName(selectedUser.name);
-      setEmail(selectedUser.email);
-      setType(selectedUser.type);
+  const handleFetchUserById = async () => {
+    const user = await dispatch(fetchUserById(id));
+    if (user.payload) {
+      const userData = user.payload as User;
+      setName(userData.name);
+      setEmail(userData.email);
+      setType(userData.type);
     }
   };
 
@@ -100,7 +101,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
       handleFetchPhysicianById();
     }
     handleFetchUserById();
-  }, [type, open, dispatch, selectedUser]);
+  }, [type, open, dispatch]);
 
   const handleEmailCheck = () => {
     !isValidEmail(email)

@@ -30,7 +30,8 @@ const Header = () => {
 
   const isLoggedIn = sessionStorage.getItem('isLogged') || '';
   const loggedUserId = useSelector(selectId);
-  const loggedUserNameInitials = name.substring(0, 2);
+  const loggedUserName = sessionStorage.getItem('name') || '';
+  const loggedUserNameInitials = loggedUserName.substring(0, 2);
 
   const handleFetchUserById = async () => {
     if (!loggedUserId) {
@@ -39,6 +40,7 @@ const Header = () => {
     const user = await dispatch(authFetchUserById(loggedUserId));
     const userData = user.payload as User;
     setName(userData.name);
+    sessionStorage.setItem('name', userData.name);
   };
 
   useEffect(() => {

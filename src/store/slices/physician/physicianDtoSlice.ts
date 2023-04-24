@@ -53,7 +53,7 @@ export const updatePhysician = createAsyncThunk<PhysicianDto, PhysicianDto>(
 );
 
 export const physicianDtoSlice = createSlice({
-  name: 'physicianDto',
+  name: 'physician',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -89,7 +89,6 @@ export const physicianDtoSlice = createSlice({
   },
 });
 
-export const selectPhysician = (state: RootState) =>
-  state.physicianDto.selectedPhysician;
+export const selectPhysician = (state: RootState) => state.physician.physicians;
 
 export default physicianDtoSlice.reducer;

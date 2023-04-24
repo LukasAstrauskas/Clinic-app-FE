@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Physician, User } from '../../../model/Model';
+import { Physician, PhysicianDto } from '../../../model/Model';
 import {
   BASE_PHYSICIANS_FULL_URL,
   BASE_PHYSICIANS_URL,
@@ -23,15 +23,6 @@ const initialState: PhysicianState = {
   error: null,
 };
 
-export const fetchPhysicians = createAsyncThunk(
-  'user/fetchPhysicians',
-  async () => {
-    const response = await fetch(PHYSICIANS_URL);
-    const data = await response.json();
-    return data;
-  },
-);
-
 export const fetchPhysicianById = createAsyncThunk<Physician, string>(
   'physician/fetchPhysicianById',
   async (id) => {
@@ -40,14 +31,14 @@ export const fetchPhysicianById = createAsyncThunk<Physician, string>(
   },
 );
 
-export const updatePhysician = createAsyncThunk<Physician, Physician>(
-  'physician/update',
+export const updatePhysician = createAsyncThunk<PhysicianDto, PhysicianDto>(
+  'physician/updatePhysician',
   async (physician) => {
     const response = await axios.put(
       `${BASE_PHYSICIANS_FULL_URL}${physician.id}`,
       physician,
     );
-    return response.data as Physician;
+    return response.data as PhysicianDto;
   },
 );
 
@@ -68,22 +59,6 @@ export const physicianSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchPhysicians.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(
-        fetchPhysicians.fulfilled,
-        (state, action: PayloadAction<Physician[]>) => {
-          state.isLoading = false;
-          state.physicians = action.payload;
-        },
-      )
-      .addCase(fetchPhysicians.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message || 'Something went wrong';
-      })
-
       .addCase(fetchPhysicianById.pending, (state) => {
         state.isLoading = true;
         state.error = null;

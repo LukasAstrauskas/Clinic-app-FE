@@ -1,37 +1,23 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Physician, PhysicianDto, User } from '../../../model/Model';
-import {
-  BASE_PHYSICIANS_FULL_URL,
-  BASE_PHYSICIANS_URL,
-  PHYSICIANS_FULL_URL,
-  PHYSICIANS_URL,
-} from '../../../utils/httpConstants';
+import { PhysicianDto } from '../../../model/Model';
+import { BASE_PHYSICIANS_FULL_URL } from '../../../utils/httpConstants';
 import axios from 'axios';
 import { RootState } from '../../types';
 
-interface PhysicianState {
+interface PhysicianDtoState {
   physicians: PhysicianDto[];
   selectedPhysician: PhysicianDto | null;
   isLoading: boolean;
   error: string | null;
 }
 
-const initialState: PhysicianState = {
+const initialState: PhysicianDtoState = {
   physicians: [],
   selectedPhysician: null,
   isLoading: false,
   error: null,
 };
-
-export const fetchPhysicians = createAsyncThunk(
-  'physician/fetchPhysicians',
-  async () => {
-    const response = await fetch(PHYSICIANS_FULL_URL);
-    const data = await response.json();
-    return data;
-  },
-);
 
 export const fetchPhysicianById = createAsyncThunk<PhysicianDto, string>(
   'physician/fetchPhysicianById',
@@ -52,28 +38,12 @@ export const updatePhysician = createAsyncThunk<PhysicianDto, PhysicianDto>(
   },
 );
 
-export const physicianDtoSlice = createSlice({
+export const editedPhysicianSlice = createSlice({
   name: 'physicianDto',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchPhysicians.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(
-        fetchPhysicians.fulfilled,
-        (state, action: PayloadAction<PhysicianDto[]>) => {
-          state.isLoading = false;
-          state.physicians = action.payload;
-        },
-      )
-      .addCase(fetchPhysicians.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message || 'Something went wrong';
-      })
-
       .addCase(fetchPhysicianById.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -92,4 +62,4 @@ export const physicianDtoSlice = createSlice({
 export const selectPhysician = (state: RootState) =>
   state.physicianDto.selectedPhysician;
 
-export default physicianDtoSlice.reducer;
+export default editedPhysicianSlice.reducer;

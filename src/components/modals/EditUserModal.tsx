@@ -18,7 +18,7 @@ import {
 import {
   fetchPhysicianById,
   updatePhysician,
-} from '../../store/slices/physician/physicianDtoSlice';
+} from '../../store/slices/physician/editedPhysicianSlice';
 import { selectPhysician } from '../../store/slices/physician/physicianSlice';
 
 const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
@@ -50,7 +50,6 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
       setName(selectedPhysician.name);
       setEmail(selectedPhysician.email);
       setSelectedOccupationId(selectedPhysician.occupation.id);
-      console.log(selectedOccupationId);
     }
   };
 
@@ -79,7 +78,6 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
         dispatch(updatePhysician(updatedPhysician));
       }
       setIsUpdated(true);
-      window.location.reload();
     }
   };
 

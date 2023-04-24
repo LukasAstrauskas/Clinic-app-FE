@@ -8,6 +8,7 @@ import {
   PHYSICIANS_URL,
 } from '../../../utils/httpConstants';
 import axios from 'axios';
+import { RootState } from '../../types';
 
 interface PhysicianState {
   physicians: PhysicianDto[];
@@ -87,5 +88,7 @@ export const physicianDtoSlice = createSlice({
       });
   },
 });
+
+export const selectPhysician = (state: RootState) => state.physician.physicians;
 
 export default physicianDtoSlice.reducer;

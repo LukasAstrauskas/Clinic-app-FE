@@ -7,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import { isValidName, isValidEmail, isValidPassword } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
 import { EditUser, Physician, PhysicianDto } from '../../model/Model';
-import { User } from '../../model/Model';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { selectUser, updateUser } from '../../store/slices/user/userSlice';
@@ -20,10 +19,12 @@ import {
   fetchPhysicianById,
   updatePhysician,
 } from '../../store/slices/physician/physicianDtoSlice';
+import { selectPhysician } from '../../store/slices/physician/physicianDtoSlice';
 
 const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const dispatch = useDispatch<AppDispatch>();
   const selectedUser = useSelector(selectUser);
+  const selectedPhysician = useSelector(selectPhysician);
   const occupations = useSelector(selectOccupations);
 
   const [name, setName] = useState('');
@@ -36,13 +37,12 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const [isUpdated, setIsUpdated] = useState(false);
   const [selectedOccupationId, setSelectedOccupationId] = useState('');
 
-  const handleFetchUserById = async () => {
-    const user = await dispatch(fetchUserById(id));
-    if (user.payload) {
-      const userData = user.payload as User;
-      setName(userData.name);
-      setEmail(userData.email);
-      setType(userData.type);
+  const handleFetchUserById = () => {
+    dispatch(fetchUserById(id));
+    if (selectedUser) {
+      setName(selectedUser.name);
+      setEmail(selectedUser.email);
+      setType(selectedUser.type);
     }
   };
 
@@ -98,10 +98,9 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
     if (type === 'physician') {
       dispatch(fetchOccupations());
       handleFetchPhysicianById();
-    } else {
-      handleFetchUserById();
     }
-  }, [type, open, dispatch]);
+    handleFetchUserById();
+  }, [type, open, dispatch, selectedUser]);
 
   const handleEmailCheck = () => {
     !isValidEmail(email)

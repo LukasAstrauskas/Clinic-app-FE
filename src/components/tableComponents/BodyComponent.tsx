@@ -12,6 +12,7 @@ import {
   UserSizeState,
   fetchAdminAmount,
   fetchPatientAmount,
+  fetchPhysicianAmount,
 } from '../../store/slices/userSize/userSizeSlice';
 import { fetchMorePatients } from '../../store/slices/patient/patientSlice';
 import { fetchMoreAdmins } from '../../store/slices/admin/adminSlice';
@@ -48,7 +49,7 @@ const TableBodyComponent: FC<Props> = ({
       dispatch(fetchAdminAmount());
     }
     if (type === 'physician') {
-      dispatch(fetchPatientAmount());
+      dispatch(fetchPhysicianAmount());
     }
   };
 

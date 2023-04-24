@@ -25,7 +25,7 @@ export const PHYSICIAN_SEARCH_URL =
   'http://localhost:8080/user/physicianSearch/';
 export const PHYSICIAN_SIZE_URL = 'http://localhost:8080/user/physicianSize';
 export const INCOMING_PHYSICIANS_TO_BE_RENDERED_URL =
-  'http://localhost:8080/physcians/offset/';
+  'http://localhost:8080/physicianInfo/physcians/offset/';
 
 //Occupations
 export const PHYNAMEOCCUPATION_URL =

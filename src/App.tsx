@@ -7,7 +7,7 @@ import Main from './components/main/Main';
 
 function App() {
   return (
-    <Container maxWidth='lg' className='container'>
+    <Container className='container'>
       <Header />
       <Main />
       <Footer />

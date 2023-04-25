@@ -1,5 +1,5 @@
-import React, { useEffect, useState, FC } from 'react';
-import { TableBody, TableRow, TableCell, Paper } from '@mui/material';
+import React, { FC, useState } from 'react';
+import { TableBody, TableRow, TableCell } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
@@ -8,7 +8,7 @@ import EditUserModal from '../modals/EditUserModal';
 type UserType = {
   id: string;
   name: string;
-  email: string | number;
+  email: string;
   occupation?:
     | {
         id?: string;
@@ -20,13 +20,15 @@ type UserType = {
 interface Props {
   collumValue: string;
   user: UserType[];
-  handleChecked: any;
+  handleChecked: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  rowClick?: (id: string) => void;
 }
 
 const TableBodyComponent: FC<Props> = ({
   collumValue,
   user,
   handleChecked,
+  rowClick = () => undefined,
 }) => {
   const [open, setOpen] = useState(false);
   const [selectedId, setSelectedId] = useState('');
@@ -39,24 +41,29 @@ const TableBodyComponent: FC<Props> = ({
     <>
       <TableBody>
         <EditUserModal setOpen={setOpen} open={open} selectedId={selectedId} />
-        {user.map((user, index) => (
+        {user.map(({ id, name, email, occupation }) => (
           <TableRow
-            key={index}
+            key={id}
             sx={{
+              '&:hover': {
+                backgroundColor: '#ff9e80 !important',
+              },
+              cursor: 'pointer',
               width: '100%',
-              bgcolor: '#d3d3d3',
             }}
           >
-            <TableCell>
-              <Checkbox id={user.id.toString()} onChange={handleChecked} />
+            <TableCell sx={{ my: 0, py: 0 }}>
+              <Checkbox id={id} onChange={handleChecked} />
             </TableCell>
-            <TableCell>{user.name}</TableCell>
-            <TableCell align='center'>
-              {collumValue === 'physician' ? user.occupation.name : user.email}
+            <TableCell onClick={() => rowClick(id)}>{name}</TableCell>
+            <TableCell align='center' onClick={() => rowClick(id)}>
+              {collumValue === 'physician' ? occupation.name : email}
             </TableCell>
+
             <TableCell
+              sx={{ m: 0, p: 0 }}
               onClick={() => {
-                setSelectedId(user.id);
+                setSelectedId(id);
               }}
             >
               <IconButton color='primary' onClick={handleOpen}>

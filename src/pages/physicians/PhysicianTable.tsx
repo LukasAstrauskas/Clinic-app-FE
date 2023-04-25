@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import ModeIcon from '@mui/icons-material/Mode';
 import { Button } from '@mui/material';
 import { PhyNameOccupation } from '../../model/Model';
+import { grey } from '@mui/material/colors';
 
 type Props = {
   physicians: PhyNameOccupation[];
@@ -29,7 +30,7 @@ const PhysicianTable = ({ physicians, rowClick }: Props) => {
         aria-label='simple table'
         size='small'
         sx={{
-          backgroundColor: '#eeeeee',
+          backgroundColor: grey[200],
         }}
       >
         <TableHead>

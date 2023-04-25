@@ -28,8 +28,8 @@ const Header = () => {
   const anchorRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch<AppDispatch>();
 
-  const isLoggedIn = sessionStorage.getItem('isLogged') || '';
   const loggedUserId = useSelector(selectId);
+  const isLoggedIn = sessionStorage.getItem('isLogged') || '';
   const loggedUserName = sessionStorage.getItem('name') || '';
   const loggedUserNameInitials = loggedUserName.substring(0, 2);
 
@@ -40,7 +40,6 @@ const Header = () => {
     const user = await dispatch(authFetchUserById(loggedUserId));
     const userData = user.payload as User;
     setName(userData.name);
-    sessionStorage.setItem('name', userData.name);
   };
 
   useEffect(() => {

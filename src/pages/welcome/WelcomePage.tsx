@@ -25,7 +25,7 @@ const WelcomePage = () => {
             title='Manage users'
             icon1={manageUsersIcon}
             icon2={managePhysiciansIcon}
-            linkTo={ROUTES.PATIENTS}
+            linkTo={ROUTES.USERS}
           ></Item>
           <Item
             title='Physicians timetables'

@@ -109,6 +109,6 @@ export const adminSlice = createSlice({
   },
 });
 
-export const AdminState = (state: RootState) => state.admin.admins;
+export const selectAdmin = (state: RootState) => state.admin.admins;
 
 export default adminSlice.reducer;

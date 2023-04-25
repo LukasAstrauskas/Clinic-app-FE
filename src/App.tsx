@@ -9,10 +9,9 @@ import Tabs from './pages/users/Tabs';
 function App() {
   return (
     <Container className='container'>
-      <Tabs />
-      {/* <   <Header />
+      <Header />
       <Main />
-      <Footer />> */}
+      <Footer />
     </Container>
   );
 }

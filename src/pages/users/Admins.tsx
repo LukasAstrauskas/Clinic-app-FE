@@ -11,7 +11,7 @@ import TableHeadComponent from '../../components/tableComponents/HeadComponent';
 import TableBodyComponent from '../../components/tableComponents/BodyComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  AdminState,
+  selectAdmin,
   deleteAdmin,
   fetchAdmins,
   searchAdmin,
@@ -20,7 +20,7 @@ import { AppDispatch } from '../../store/types';
 
 export const Admins = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const admins = useSelector(AdminState);
+  const admins = useSelector(selectAdmin);
   const [open, setOpen] = useState<boolean>(false);
   const [more, setMore] = useState<boolean>(true);
   const [checkedAdmins, setCheckedAdmins] = useState<string[]>([]);

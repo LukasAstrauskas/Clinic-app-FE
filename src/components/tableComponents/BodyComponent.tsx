@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { UniversalUser } from '../../model/Model';
 import {
-  UserSizeState,
+  selectUserSize,
   fetchAdminAmount,
   fetchPatientAmount,
   fetchPhysicianAmount,
@@ -17,6 +17,7 @@ import {
 import { fetchMorePatients } from '../../store/slices/patient/patientSlice';
 import { fetchMoreAdmins } from '../../store/slices/admin/adminSlice';
 import { fetchMorePhysicians } from '../../store/slices/physician/physicianSlice';
+import EditUserModal from '../modals/EditUserModal';
 
 interface Props {
   user: UniversalUser[];
@@ -26,6 +27,7 @@ interface Props {
   more: boolean;
   setMore: React.Dispatch<React.SetStateAction<boolean>>;
   type: string;
+  rowClick?: (id: string) => void;
 }
 
 const TableBodyComponent: FC<Props> = ({
@@ -36,10 +38,17 @@ const TableBodyComponent: FC<Props> = ({
   more,
   setMore,
   type,
+  rowClick = () => undefined,
 }) => {
-  const UserSize = useSelector(UserSizeState);
+  const UserSize = useSelector(selectUserSize);
   const dispatch = useDispatch<AppDispatch>();
   const [currentRender, setCurrentRender] = useState(7);
+  const [selectedId, setSelectedId] = useState('');
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
   const getSize = () => {
     if (type === 'patient') {
@@ -96,33 +105,45 @@ const TableBodyComponent: FC<Props> = ({
             </Typography>
           }
         >
-          {user.map((user, index) => (
+          <EditUserModal
+            setOpen={setOpen}
+            open={open}
+            selectedId={selectedId}
+          />
+          {user.map(({ id, name, email, occupation }) => (
             <TableRow
-              key={index}
+              key={id}
               sx={{
+                '&:hover': {
+                  backgroundColor: '#ff9e80 !important',
+                },
+                cursor: 'pointer',
                 width: '100%',
-                bgcolor: '#d3d3d3',
               }}
             >
               <TableCell>
-                <Checkbox
-                  id={user.id.toString()}
-                  onChange={() => handleChecked}
-                />
+                <Checkbox id={id.toString()} onChange={() => handleChecked} />
               </TableCell>
-              <TableCell sx={{ width: '200px' }}>{user.name}</TableCell>
+              <TableCell onClick={() => rowClick(id)} sx={{ width: '200px' }}>
+                {name}
+              </TableCell>
               <TableCell align='center' sx={{ width: '200px' }}>
-                {type === 'physician' ? user.occupation?.name : user.email}
+                {type === 'physician' ? occupation?.name : email}
               </TableCell>
-              <TableCell>
-                <IconButton color='primary'>
+              <TableCell
+                sx={{ m: 0, p: 0 }}
+                onClick={() => {
+                  setSelectedId(id);
+                }}
+              >
+                <IconButton color='primary' onClick={handleOpen}>
                   <EditIcon />
                 </IconButton>
               </TableCell>
             </TableRow>
           ))}
         </InfiniteScroll>
-      </TableBody>{' '}
+      </TableBody>
     </>
   );
 };

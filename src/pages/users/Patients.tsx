@@ -18,7 +18,6 @@ import AddPatientModal from '../../components/modals/AddPatientModal';
 import TableHeadComponent from '../../components/tableComponents/HeadComponent';
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableBodyComponent from '../../components/tableComponents/BodyComponent';
-import { grey } from '@mui/material/colors';
 import AppointmentContext from '../../hooks/AppointmentContext';
 export const Patients = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -27,6 +26,10 @@ export const Patients = () => {
   const [more, setMore] = useState<boolean>(true);
   const [checkedPatients, setCheckedPatiens] = useState<string[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
+  const { appointment, setAppointment } = useContext(AppointmentContext);
+  const choosePatient = (patientId: string): void => {
+    setAppointment({ ...appointment, patientId: patientId });
+  };
   const handleOpen = () => {
     setOpen(true);
   };
@@ -123,6 +126,7 @@ export const Patients = () => {
             refresh={refresh}
             user={patients}
             handleChecked={handleChecked}
+            rowClick={choosePatient}
           />
         </TableContainer>
       </Box>

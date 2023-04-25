@@ -98,6 +98,6 @@ export const userSizeSlice = createSlice({
   },
 });
 
-export const UserSizeState = (state: RootState) => state.size.size;
+export const selectUserSize = (state: RootState) => state.size.size;
 
 export default userSizeSlice.reducer;

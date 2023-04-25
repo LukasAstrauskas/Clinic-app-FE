@@ -2,10 +2,13 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import React, { useState } from 'react';
-
+import { fetchUserById, selectUser } from '../../store/slices/user/userSlice';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/types';
+import store from '../../store/store';
 interface PatientData {
-  firstName: string;
-  lastName: string;
+  firstName: string | undefined;
+  lastName: string | undefined;
   gender: string;
   birthDate: string;
   phone: string;
@@ -25,39 +28,11 @@ interface EmergencyContactData {
   relation: string;
 }
 
-interface Props {
-  patientData: PatientData;
-  addressData: AddressData;
-  emergencyContactData: EmergencyContactData;
-}
-
-const PatientContactInfo: React.FC<Props> = ({
-  patientData,
-  addressData,
-  emergencyContactData,
-}) => {
-  const [firstName, setFirstName] = useState(patientData.firstName);
-  const [lastName, setLastName] = useState(patientData.lastName);
-  const [gender, setGender] = useState(patientData.gender);
-  const [birthDate, setBirthDate] = useState(patientData.birthDate);
-  const [phone, setPhone] = useState(patientData.phone);
-  const [street, setStreet] = useState(addressData.street);
-  const [city, setCity] = useState(addressData.city);
-  const [postalCode, setPostalCode] = useState(addressData.postalCode);
-  const [country, setCountry] = useState(addressData.country);
-  const [emergencyFirstName, setEmergencyFirstName] = useState(
-    emergencyContactData.firstName,
-  );
-  const [emergencyLastName, setEmergencyLastName] = useState(
-    emergencyContactData.lastName,
-  );
-  const [emergencyPhone, setEmergencyPhone] = useState(
-    emergencyContactData.phone,
-  );
-  const [emergencyRelation, setEmergencyRelation] = useState(
-    emergencyContactData.relation,
-  );
-
+const PatientContactInfo = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  if (store.getState().auth.isLoggedIn)
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    dispatch(fetchUserById(store.getState().auth.id!));
   return (
     <Box
       component='form'
@@ -74,31 +49,33 @@ const PatientContactInfo: React.FC<Props> = ({
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={firstName}
+          //defaultValue={firstName}
+          defaultValue={store.getState().user.user?.name}
           helperText='First name'
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={lastName}
+          //defaultValue={lastName}
+          defaultValue={store.getState().user.user?.name}
           helperText='Last name'
         />
       </div>
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={gender}
+          //defaultValue={gender}
           helperText='Gender'
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={birthDate}
+          //defaultValue={birthDate}
           helperText='Birth Date'
         />
       </div>
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={phone}
+          //defaultValue={phone}
           helperText='Phone Number'
         />
       </div>
@@ -106,24 +83,24 @@ const PatientContactInfo: React.FC<Props> = ({
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={street}
+          //defaultValue={street}
           helperText='Street'
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={city}
+          //defaultValue={city}
           helperText='City'
         />
       </div>
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={postalCode}
+          //defaultValue={postalCode}
           helperText='Postal Code'
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={country}
+          //defaultValue={country}
           helperText='Country'
         />
       </div>
@@ -131,24 +108,24 @@ const PatientContactInfo: React.FC<Props> = ({
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={emergencyFirstName}
+          //defaultValue={emergencyFirstName}
           helperText='First Name'
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={emergencyLastName}
+          //defaultValue={emergencyLastName}
           helperText='Last Name'
         />
       </div>
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={emergencyPhone}
+          //defaultValue={emergencyPhone}
           helperText='Phone Number'
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={emergencyRelation}
+          //defaultValue={emergencyRelation}
           helperText='Relation'
         />
       </div>

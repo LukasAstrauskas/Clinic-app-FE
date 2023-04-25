@@ -7,8 +7,7 @@ import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import { isValidName, isValidEmail, isValidPassword } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
-import { EditUser } from '../../model/Model';
-import { Physician, User, Occupation } from '../../model/Model';
+import { EditUser, Physician, User, Occupation } from '../../model/Model';
 
 const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const [name, setName] = useState('');

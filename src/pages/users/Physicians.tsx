@@ -94,7 +94,6 @@ export const Physicians = () => {
         sx={{
           width: 600,
           m: 'auto',
-          mt: 10,
         }}
       >
         <SearchIcon sx={Styles.searchIcon} />

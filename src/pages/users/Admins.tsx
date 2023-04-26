@@ -84,24 +84,10 @@ export const Admins = () => {
 
   return (
     <>
-      <Typography
-        variant='h3'
-        sx={{
-          textAlign: 'center',
-          marginTop: 5,
-          marginBottom: -5,
-          fontWeight: 'bold',
-          color: '#28cdcb',
-        }}
-      >
-        Admins
-      </Typography>
-
       <Box
         sx={{
           width: 600,
           m: 'auto',
-          mt: 10,
         }}
       >
         <SearchIcon sx={Styles.searchIcon} />

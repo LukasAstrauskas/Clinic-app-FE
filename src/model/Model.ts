@@ -20,6 +20,21 @@ export interface User {
   type: string;
 }
 
+export interface Patient {
+  user_id: string;
+  gender: string;
+  birth_date: Date;
+  phone: number;
+  street: string;
+  city: string;
+  postal_code: string;
+  country: string;
+  emergency_name: string;
+  emergency_surname: string;
+  emergency_phone: number;
+  emergency_relation: string;
+}
+
 export interface Timeslot {
   physicianId: string;
   date: string;

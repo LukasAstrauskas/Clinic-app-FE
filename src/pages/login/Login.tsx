@@ -12,6 +12,9 @@ import { ROUTES } from '../../routes/routes';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { login } from '../../store/slices/auth/authActions';
+import { fetchUserById } from '../../store/slices/user/userSlice';
+import store from '../../store/store';
+import { fetchPatientInfo } from '../../store/slices/patient/patientInfoSlice';
 
 const Login = () => {
   const [errorAlertOpen, setSignInError] = useState(false);
@@ -30,6 +33,10 @@ const Login = () => {
         navigate(ROUTES.HOME);
         sessionStorage.setItem('isLogged', 'true');
         sessionStorage.setItem('type', response.payload.type);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        await dispatch(fetchUserById(store.getState().auth.id!));
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        await dispatch(fetchPatientInfo(store.getState().auth.id!));
       }
     } catch (error) {
       setSignInError(true);

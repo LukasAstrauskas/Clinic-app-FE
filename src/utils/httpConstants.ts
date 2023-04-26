@@ -9,3 +9,5 @@ export const PHYSICIANS_URL = 'http://localhost:8080/user/physicians';
 export const BASE_PHYSICIANS_URL = 'http://localhost:8080/user/physicians/';
 export const PHYNAMEOCCUPATION_URL =
   'http://localhost:8080/physicianInfo/physicianNamesOccupations';
+export const PATIENTS_ADDITIONAL_INFO_URL =
+  'http://localhost:8080/patientInfo/';

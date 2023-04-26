@@ -29,10 +29,6 @@ interface EmergencyContactData {
 }
 
 const PatientContactInfo = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  if (store.getState().auth.isLoggedIn)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    dispatch(fetchUserById(store.getState().auth.id!));
   return (
     <Box
       component='form'
@@ -63,19 +59,19 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          //defaultValue={gender}
+          defaultValue={store.getState().patientInfo.additionalInfo?.gender}
           helperText='Gender'
         />
         <TextField
           id='outlined-helper-text'
-          //defaultValue={birthDate}
+          defaultValue={store.getState().patientInfo.additionalInfo?.birth_date}
           helperText='Birth Date'
         />
       </div>
       <div>
         <TextField
           id='outlined-helper-text'
-          //defaultValue={phone}
+          defaultValue={store.getState().patientInfo.additionalInfo?.phone}
           helperText='Phone Number'
         />
       </div>
@@ -83,24 +79,26 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          //defaultValue={street}
+          defaultValue={store.getState().patientInfo.additionalInfo?.street}
           helperText='Street'
         />
         <TextField
           id='outlined-helper-text'
-          //defaultValue={city}
+          defaultValue={store.getState().patientInfo.additionalInfo?.city}
           helperText='City'
         />
       </div>
       <div>
         <TextField
           id='outlined-helper-text'
-          //defaultValue={postalCode}
+          defaultValue={
+            store.getState().patientInfo.additionalInfo?.postal_code
+          }
           helperText='Postal Code'
         />
         <TextField
           id='outlined-helper-text'
-          //defaultValue={country}
+          defaultValue={store.getState().patientInfo.additionalInfo?.country}
           helperText='Country'
         />
       </div>
@@ -108,24 +106,32 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          //defaultValue={emergencyFirstName}
+          defaultValue={
+            store.getState().patientInfo.additionalInfo?.emergency_name
+          }
           helperText='First Name'
         />
         <TextField
           id='outlined-helper-text'
-          //defaultValue={emergencyLastName}
+          defaultValue={
+            store.getState().patientInfo.additionalInfo?.emergency_surname
+          }
           helperText='Last Name'
         />
       </div>
       <div>
         <TextField
           id='outlined-helper-text'
-          //defaultValue={emergencyPhone}
+          defaultValue={
+            store.getState().patientInfo.additionalInfo?.emergency_phone
+          }
           helperText='Phone Number'
         />
         <TextField
           id='outlined-helper-text'
-          //defaultValue={emergencyRelation}
+          defaultValue={
+            store.getState().patientInfo.additionalInfo?.emergency_relation
+          }
           helperText='Relation'
         />
       </div>

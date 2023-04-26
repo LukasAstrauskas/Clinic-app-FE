@@ -28,8 +28,6 @@ const Login = () => {
       const response = await dispatch(login({ email, password }));
       if (response.payload && response.payload.type) {
         navigate(ROUTES.HOME);
-        sessionStorage.setItem('isLogged', 'true');
-        sessionStorage.setItem('type', response.payload.type);
       }
     } catch (error) {
       setSignInError(true);

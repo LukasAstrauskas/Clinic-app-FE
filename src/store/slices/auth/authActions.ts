@@ -7,6 +7,9 @@ export const login = createAsyncThunk(
   'auth/login',
   async (payload: { email: string; password: string }) => {
     const response = await axios.post(LOGIN_URL, payload);
+    sessionStorage.setItem('isLogged', 'true');
+    sessionStorage.setItem('type', response.data.type);
+
     return response.data;
   },
 );
@@ -14,12 +17,15 @@ export const login = createAsyncThunk(
 export const logout = createAsyncThunk('auth/logout', async () => {
   sessionStorage.removeItem('isLogged');
   sessionStorage.removeItem('type');
+  sessionStorage.removeItem('name');
 });
 
 export const authFetchUserById = createAsyncThunk<User, string>(
   'auth/authFetchUserById',
   async (id) => {
     const response = await axios.get(`${BASE_USER_URL}${id}`);
+    sessionStorage.setItem('name', response.data.name);
+
     return response.data as User;
   },
 );

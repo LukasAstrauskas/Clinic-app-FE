@@ -29,9 +29,10 @@ const Header = () => {
   const anchorRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch<AppDispatch>();
 
-  const isLoggedIn = useSelector(selectisLoggedIn);
   const loggedUserId = useSelector(selectId);
-  const loggedUserNameInitials = name.substring(0, 2);
+  const isLoggedIn = sessionStorage.getItem('isLogged') || '';
+  const loggedUserName = sessionStorage.getItem('name') || '';
+  const loggedUserNameInitials = loggedUserName.substring(0, 2);
 
   const handleFetchUserById = async () => {
     if (!loggedUserId) {

@@ -93,23 +93,10 @@ export const Patients = () => {
 
   return (
     <>
-      <Typography
-        sx={{
-          textAlign: 'center',
-          marginTop: 5,
-          marginBottom: -5,
-          fontWeight: 'bold',
-          color: '#28cdcb',
-          fontSize: 36,
-        }}
-      >
-        Patients
-      </Typography>
       <Box
         sx={{
           width: 600,
           m: 'auto',
-          mt: 10,
         }}
       >
         <SearchIcon sx={Styles.searchIcon} />

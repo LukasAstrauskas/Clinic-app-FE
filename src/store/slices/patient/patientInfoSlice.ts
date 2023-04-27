@@ -2,11 +2,11 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { PATIENTS_ADDITIONAL_INFO_URL } from '../../../utils/httpConstants';
-import { Patient } from '../../../model/Model';
+import { PatientInfo } from '../../../model/Model';
 import { RootState } from '../../types';
 
 interface PatientInfoState {
-  additionalInfo: Patient | null;
+  additionalInfo: PatientInfo | null;
   isLoading: boolean;
   error: string | null;
 }
@@ -21,7 +21,18 @@ export const fetchPatientInfo = createAsyncThunk(
   'patientInfo/fetchPatientInfo',
   async (id: string) => {
     const response = await axios.get(`${PATIENTS_ADDITIONAL_INFO_URL}${id}`);
-    return response.data as Patient;
+    return response.data as PatientInfo;
+  },
+);
+
+export const updatePatientInfo = createAsyncThunk(
+  'patientInfo/updatePatientInfo',
+  async (updatedPatientInfo: PatientInfo) => {
+    const response = await axios.put(
+      `${PATIENTS_ADDITIONAL_INFO_URL}${updatedPatientInfo.user_id}`,
+      updatedPatientInfo,
+    );
+    return response.data as PatientInfo;
   },
 );
 
@@ -29,7 +40,7 @@ export const patientInfoSlice = createSlice({
   name: 'patientInfo',
   initialState,
   reducers: {
-    updatePatientInfo(state, action: PayloadAction<Partial<Patient>>) {
+    updatePatientInfo(state, action: PayloadAction<Partial<PatientInfo>>) {
       if (state.additionalInfo) {
         state.additionalInfo = { ...state.additionalInfo, ...action.payload };
       }

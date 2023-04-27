@@ -5,7 +5,7 @@ import { selectisLoggedIn } from '../store/slices/auth/authSlice';
 import PropTypes from 'prop-types';
 
 const PrivateRoutes = ({ redirectPath = '/login' }) => {
-  const isLoggedIn = useSelector(selectisLoggedIn);
+  const isLoggedIn = sessionStorage.getItem('isLogged') || '';
 
   if (!isLoggedIn) {
     return <Navigate to={redirectPath} replace />;

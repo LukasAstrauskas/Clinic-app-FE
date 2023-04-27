@@ -64,23 +64,10 @@ export const Patients = () => {
   }, []);
   return (
     <>
-      <Typography
-        variant='h3'
-        sx={{
-          textAlign: 'center',
-          marginTop: 5,
-          marginBottom: -5,
-          fontWeight: 'bold',
-          color: '#28cdcb',
-        }}
-      >
-        Patients
-      </Typography>
       <Box
         sx={{
           width: 600,
           m: 'auto',
-          mt: 10,
         }}
       >
         <SearchIcon sx={Styles.searchIcon} />
@@ -111,7 +98,7 @@ export const Patients = () => {
           width: 600,
         }}
       >
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{ maxHeight: '500px' }}>
           <Table stickyHeader>
             <TableHeadComponent
               handleDelete={handleDelete}

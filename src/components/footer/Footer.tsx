@@ -6,7 +6,7 @@ const Footer = () => {
     <div className={styles.footer}>
       <div>2023 | The Clinic</div>
       <div>
-        Made by <b>G-Unit</b> &copy;
+        Made by <b>G-Unit-Team</b> &copy;
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Occupation, User } from '../../../model/Model';
+import { Occupation } from '../../../model/Model';
 import { OCCUPATIONS_URL } from '../../../utils/httpConstants';
 import { RootState } from '../../types';
+import axios from 'axios';
 
 interface OccupationState {
   occupation: Occupation[];
@@ -19,9 +20,8 @@ const initialState: OccupationState = {
 export const fetchOccupations = createAsyncThunk(
   'occupations/fetchOccupations',
   async () => {
-    const response = await fetch(OCCUPATIONS_URL);
-    const data = await response.json();
-    return data;
+    const response = await axios.get(OCCUPATIONS_URL);
+    return response.data;
   },
 );
 

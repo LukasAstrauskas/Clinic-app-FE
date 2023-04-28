@@ -2,48 +2,29 @@ import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
-import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
 import { TableContainer, Table, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import axios from 'axios';
 import PhysicianModalContent from '../../components/modals/AddPhysicianModal';
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableHeadComponent from '../../components/tableComponents/HeadComponent';
 import TableBodyComponent from '../../components/tableComponents/BodyComponent';
+import {
+  PhysicianState,
+  deletePhysician,
+  fetchPhysicians,
+  searchPhysician,
+} from '../../store/slices/physician/physicianSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../store/types';
 
 export const Physicians = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const physicians = useSelector(PhysicianState);
+  const [more, setMore] = useState<boolean>(true);
   const [open, setOpen] = useState(false);
   const [checkedPhysician, setCheckedPhysician] = useState<string[]>([]);
-  const [physicians, setPhysicians] = useState<PhysicianType[]>([]);
-  const getRequestUrl = 'http://localhost:8080/physicianInfo';
-
-  useEffect(() => {
-    const getRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    };
-    async function getData() {
-      await axios
-        .get(getRequestUrl, {
-          headers: getRequestHeaders,
-        })
-        .then((res) => {
-          setPhysicians(res.data);
-        });
-    }
-    getData();
-  }, [open, checkedPhysician]);
-
-  type PhysicianType = {
-    id: string;
-    name: string;
-    email: string;
-    occupation: {
-      id: string;
-      name: string;
-    };
-  };
+  const [refresh, setRefresh] = useState<boolean>(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -51,8 +32,7 @@ export const Physicians = () => {
 
   const handleDelete = () => {
     checkedPhysician.forEach((physician) => {
-      const deleteURL = `http://localhost:8080/physician/${physician}`;
-      axios.delete(deleteURL);
+      dispatch(deletePhysician(physician));
     });
     setCheckedPhysician([]);
   };
@@ -71,22 +51,18 @@ export const Physicians = () => {
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const allTableRows = document.querySelectorAll('tr');
-    const search = e.target.value.toLowerCase();
-    if (search.length === 0) {
-      allTableRows.forEach((row) => {
-        row.classList.remove('hidden');
-      });
+    const search = e.target.value;
+    if (search.length != 0) {
+      dispatch(searchPhysician(search));
+      setMore(false);
     } else {
-      allTableRows.forEach((row) => {
-        const rowText = row.textContent?.toLocaleLowerCase();
-        row.classList.add('hidden');
-        if (rowText?.includes(search) || rowText?.includes('name')) {
-          row.classList.remove('hidden');
-        }
-      });
+      dispatch(fetchPhysicians());
+      setRefresh(true);
     }
   };
+  useEffect(() => {
+    dispatch(fetchPhysicians());
+  }, [open]);
 
   return (
     <>
@@ -122,19 +98,23 @@ export const Physicians = () => {
           width: 600,
         }}
       >
-        <TableContainer component={Paper} sx={{ maxHeight: '500px' }}>
+        <TableContainer component={Paper}>
           <Table stickyHeader>
             <TableHeadComponent
               handleDelete={handleDelete}
               collumName='occupation'
             />
-
-            <TableBodyComponent
-              collumValue='physician'
-              user={physicians}
-              handleChecked={handleChecked}
-            />
           </Table>
+
+          <TableBodyComponent
+            type='physician'
+            more={more}
+            setMore={setMore}
+            setRefresh={setRefresh}
+            refresh={refresh}
+            user={physicians}
+            handleChecked={handleChecked}
+          />
         </TableContainer>
       </Box>
     </>

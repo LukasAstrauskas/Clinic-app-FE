@@ -6,12 +6,14 @@ import { adminSlice } from './slices/admin/adminSlice';
 import { physicianSlice } from './slices/physician/physicianSlice';
 import { phyNameOccupationSlice } from './slices/physician/phyNameOccupationSlice';
 import { userSlice } from './slices/user/userSlice';
+import { userSizeSlice } from './slices/userSize/userSizeSlice';
 import { occupationSlice } from './slices/occupations/occupationsSlice';
 import { editedPhysicianSlice } from './slices/physician/editedPhysicianSlice';
 
 export const resetStore = () => ({ type: 'RESET_STORE' });
 
 const appReducer = combineReducers({
+  size: userSizeSlice.reducer,
   user: userSlice.reducer,
   auth: authSlice.reducer,
   patient: patientSlice.reducer,

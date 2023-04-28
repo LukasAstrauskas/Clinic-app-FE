@@ -30,7 +30,6 @@ const UserTabs = () => {
       </div>
     );
   }
-
   return (
     <>
       <h2 style={{ textAlign: 'center' }}>Manage Users</h2>

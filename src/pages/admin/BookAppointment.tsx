@@ -11,8 +11,11 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { NavLink } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
 import { updateTimeslot } from '../../data/fetch';
+import { useSelector } from 'react-redux';
+import { selectType } from '../../store/slices/auth/authSlice';
 
 const BookAppointment = () => {
+  const type = useSelector(selectType);
   const [picker, setpicker] = useToggle();
 
   const [appointment, setAppointment] = useState<Appointment>({
@@ -79,12 +82,12 @@ const BookAppointment = () => {
           {!picker && (
             <Button
               variant='contained'
-              onClick={setpicker}
+              onClick={type === 'patient' ? bookAppointment : setpicker}
               disabled={appointment.time === ''}
               sx={Styles.createNewUserBtn}
             >
-              Next
-              <ArrowForwardIcon />
+              {type === 'patient' ? 'Book Appointment' : 'Next'}
+              {type === 'patient' ? '' : <ArrowForwardIcon />}
             </Button>
           )}
         </Box>

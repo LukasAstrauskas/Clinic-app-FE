@@ -18,6 +18,8 @@ import AlertModal from '../../components/modals/AlertModal';
 import useToggle from '../../hooks/useToggle';
 import AppointmentContext from '../../hooks/AppointmentContext';
 import { grey, teal } from '@mui/material/colors';
+import { useSelector } from 'react-redux';
+import { selectId, selectType } from '../../store/slices/auth/authSlice';
 
 type Props = {
   physicianId: string;
@@ -31,6 +33,9 @@ const TimetableList = ({ physicianId }: Props) => {
   const [openAlert, toggleAlert] = useToggle();
   const [loadData, setloadData] = useToggle();
   const [timeslots, setTimeslots] = useState<Timeslots[]>([]);
+  const type = useSelector(selectType);
+
+  const loggedInUserId = useSelector(selectId);
 
   const [timeslot, setTimeslot] = useState<Timeslot>({
     physicianId: '',
@@ -81,6 +86,7 @@ const TimetableList = ({ physicianId }: Props) => {
           time: time,
         });
     }
+    setloadData();
   };
 
   const isSelected = (physicianId: string, date: string, time: string) => {
@@ -90,13 +96,24 @@ const TimetableList = ({ physicianId }: Props) => {
       time === timeslot.time
     );
   };
-
   useEffect(() => {
-    setAppointment({
-      ...appointment,
-      physicianId: physicianId,
-      date: '',
-      time: '',
+    setAppointment((appointment) => {
+      if (type === 'patient' || loggedInUserId) {
+        return {
+          ...appointment,
+          patientId: loggedInUserId || '',
+          physicianId: physicianId,
+          date: '',
+          time: '',
+        };
+      } else {
+        return {
+          ...appointment,
+          physicianId: physicianId,
+          date: '',
+          time: '',
+        };
+      }
     });
     setTimeslot({ physicianId: physicianId, date: '', time: '' });
     // eslint-disable-next-line

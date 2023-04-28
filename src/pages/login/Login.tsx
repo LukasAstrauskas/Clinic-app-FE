@@ -35,8 +35,10 @@ const Login = () => {
         sessionStorage.setItem('type', response.payload.type);
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         await dispatch(fetchUserById(store.getState().auth.id!));
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await dispatch(fetchPatientInfo(store.getState().auth.id!));
+        if (store.getState().auth.type === 'patient') {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          await dispatch(fetchPatientInfo(store.getState().auth.id!));
+        }
       }
     } catch (error) {
       setSignInError(true);

@@ -9,7 +9,7 @@ import { updatePatientInfo } from '../../store/slices/patient/patientInfoSlice';
 
 const PatientContactInfo = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const userId = store.getState().patientInfo.additionalInfo?.user_id;
+  const userId = store.getState().user.user?.id;
   const [gender, setGender] = useState(
     store.getState().patientInfo.additionalInfo?.gender,
   );
@@ -73,19 +73,8 @@ const PatientContactInfo = () => {
       noValidate
       autoComplete='off'
     >
+      <h1>{store.getState().user.user?.name}</h1>
       <h2>Main information</h2>
-      <div>
-        <TextField
-          id='outlined-helper-text'
-          defaultValue={store.getState().user.user?.name}
-          helperText='First name'
-        />
-        <TextField
-          id='outlined-helper-text'
-          defaultValue={store.getState().user.user?.name}
-          helperText='Last name'
-        />
-      </div>
       <div>
         <TextField
           id='outlined-helper-text'

@@ -10,20 +10,25 @@ import ModeIcon from '@mui/icons-material/Mode';
 import { Button } from '@mui/material';
 import { PhyNameOccupation } from '../../model/Model';
 import { grey } from '@mui/material/colors';
+import { selectId } from '../../store/slices/auth/authSlice';
 
 type Props = {
   physicians: PhyNameOccupation[];
+  selectedId: string | null;
   rowClick: (id: string) => void;
 };
 
-const tableRowSX = {
-  '&:hover': {
-    backgroundColor: '#ff9e80 !important',
-  },
-  cursor: 'pointer',
+const tableRowSX = (isSelected: boolean) => {
+  return {
+    backgroundColor: isSelected ? '#ff9e80 !important' : 'none',
+    '&:hover': {
+      backgroundColor: '#ff9e80 !important',
+    },
+    cursor: 'pointer',
+  };
 };
 
-const PhysicianTable = ({ physicians, rowClick }: Props) => {
+const PhysicianTable = ({ physicians, selectedId, rowClick }: Props) => {
   return (
     <TableContainer component={Paper} sx={{ maxWidth: 450 }}>
       <Table
@@ -42,7 +47,11 @@ const PhysicianTable = ({ physicians, rowClick }: Props) => {
         </TableHead>
         <TableBody>
           {physicians.map(({ physicianId, name, occupation }) => (
-            <TableRow key={physicianId} hover sx={tableRowSX}>
+            <TableRow
+              key={physicianId}
+              hover
+              sx={tableRowSX(selectedId === physicianId)}
+            >
               <TableCell
                 onClick={() => {
                   rowClick(physicianId);

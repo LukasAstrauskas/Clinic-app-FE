@@ -78,6 +78,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
         dispatch(updatePhysician(updatedPhysician));
       }
       setIsUpdated(true);
+      window.location.reload();
     }
   };
 

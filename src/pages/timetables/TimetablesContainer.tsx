@@ -50,7 +50,11 @@ const TimetablesContainer = ({
             <h1>{tableTitle}</h1>
           </Grid>
           <Grid item lg={4} sx={{ pr: 2 }}>
-            <PhysicianTable physicians={physicians} rowClick={handleClick} />
+            <PhysicianTable
+              physicians={physicians}
+              selectedId={physicianId}
+              rowClick={handleClick}
+            />
           </Grid>
           <Grid item lg={8}>
             {physicianId ? <TimetableList physicianId={physicianId} /> : <></>}

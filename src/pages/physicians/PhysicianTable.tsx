@@ -10,7 +10,6 @@ import ModeIcon from '@mui/icons-material/Mode';
 import { Button } from '@mui/material';
 import { PhyNameOccupation } from '../../model/Model';
 import { grey } from '@mui/material/colors';
-import { selectId } from '../../store/slices/auth/authSlice';
 
 type Props = {
   physicians: PhyNameOccupation[];

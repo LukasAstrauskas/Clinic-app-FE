@@ -1,25 +1,29 @@
 import React from 'react';
 import { Chip } from '@mui/material';
-import { red } from '@mui/material/colors';
+import { red, teal } from '@mui/material/colors';
 
 interface Props {
   date: string;
   time: string;
   patientId: string;
+  selected: boolean;
   onDelete?: (date: string, time: string, patientId: string) => void;
   onClick: (date: string, time: string, patientId: string) => void;
 }
 
-const freeTimeSX = {
-  '&:hover': {
-    backgroundColor: '#1de9b6 !important',
-  },
-  cursor: 'pointer',
-  '& .MuiChip-deleteIcon': {
+const freeTimeSX = (selected: boolean) => {
+  return {
+    backgroundColor: selected ? teal['A400'] : 'none',
     '&:hover': {
-      color: '#e57373 !important',
+      backgroundColor: '#1de9b6 !important',
     },
-  },
+    cursor: 'pointer',
+    '& .MuiChip-deleteIcon': {
+      '&:hover': {
+        color: '#e57373 !important',
+      },
+    },
+  };
 };
 
 const bookedTimeSX = {
@@ -37,14 +41,23 @@ const bookedTimeSX = {
   },
 };
 
-const Timechip = ({ date, time, patientId, onDelete, onClick }: Props) => {
+const Timechip = ({
+  date,
+  time,
+  patientId,
+  selected,
+  onDelete,
+  onClick,
+}: Props) => {
   if (typeof onDelete === 'undefined') {
     return (
       <Chip
         label={time}
         variant='outlined'
-        onClick={() => onClick(date, time, patientId)}
-        sx={patientId === null ? freeTimeSX : bookedTimeSX}
+        onClick={() => {
+          onClick(date, time, patientId);
+        }}
+        sx={patientId === null ? freeTimeSX(selected) : bookedTimeSX}
       />
     );
   } else {
@@ -54,7 +67,7 @@ const Timechip = ({ date, time, patientId, onDelete, onClick }: Props) => {
         variant='outlined'
         onDelete={() => onDelete(date, time, patientId)}
         onClick={() => onClick(date, time, patientId)}
-        sx={patientId === null ? freeTimeSX : bookedTimeSX}
+        sx={patientId === null ? freeTimeSX(selected) : bookedTimeSX}
       />
     );
   }

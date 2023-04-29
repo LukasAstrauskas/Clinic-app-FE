@@ -20,6 +20,11 @@ export interface User {
   type: string;
 }
 
+export interface endPoint {
+  endPoint: string;
+  offset: number;
+}
+
 export interface PatientInfo {
   user_id: string | undefined;
   gender: string | undefined;
@@ -46,6 +51,15 @@ export interface EditUser {
   open: boolean;
   selectedId: string;
 }
+export type UniversalUser = {
+  id: string;
+  name: string;
+  email: string | number;
+  occupation?: {
+    id?: string;
+    name?: string;
+  };
+};
 
 export type Occupation = {
   id: string;

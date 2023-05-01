@@ -62,6 +62,15 @@ export type Physician = {
     name: string;
   };
 };
+
+export type PhysicianDto = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  occupationId: string;
+};
+
 export interface Appointment {
   physicianId: string;
   date: string;

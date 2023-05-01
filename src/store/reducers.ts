@@ -7,6 +7,8 @@ import { physicianSlice } from './slices/physician/physicianSlice';
 import { phyNameOccupationSlice } from './slices/physician/phyNameOccupationSlice';
 import { userSlice } from './slices/user/userSlice';
 import { userSizeSlice } from './slices/userSize/userSizeSlice';
+import { occupationSlice } from './slices/occupations/occupationsSlice';
+import { editedPhysicianSlice } from './slices/physician/editedPhysicianSlice';
 
 export const resetStore = () => ({ type: 'RESET_STORE' });
 
@@ -18,6 +20,8 @@ const appReducer = combineReducers({
   physician: physicianSlice.reducer,
   admin: adminSlice.reducer,
   phyNameOccupation: phyNameOccupationSlice.reducer,
+  occupation: occupationSlice.reducer,
+  physicianDto: editedPhysicianSlice.reducer,
 });
 
 const rootReducer: Reducer<

@@ -1,32 +1,55 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import { Physician, PhysicianDto } from '../../../model/Model';
 import { UniversalUser, User } from '../../../model/Model';
 import {
+  BASE_PHYSICIANS_FULL_URL,
   BASE_PHYSICIANS_URL,
+  PHYSICIANS_FULL_URL,
   INCOMING_PHYSICIANS_TO_BE_RENDERED_URL,
-  PHYSICIANS_URL,
+  PHYSICIANS_URL_FOR_DELETE,
   PHYSICIAN_SEARCH_URL,
 } from '../../../utils/httpConstants';
-
 import axios from 'axios';
-import { RootState } from '../../reducers';
+import { RootState } from '../../types';
 
 interface PhysicianState {
   physicians: UniversalUser[];
+  selectedPhysician: Physician | null;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: PhysicianState = {
   physicians: [],
+  selectedPhysician: null,
   isLoading: false,
   error: null,
 };
 
+export const fetchPhysicianById = createAsyncThunk<Physician, string>(
+  'physician/fetchPhysicianById',
+  async (id) => {
+    const response = await axios.get(`${BASE_PHYSICIANS_URL}${id}`);
+    return response.data as Physician;
+  },
+);
+
+export const updatePhysician = createAsyncThunk<PhysicianDto, PhysicianDto>(
+  'physician/updatePhysician',
+  async (physician) => {
+    const response = await axios.put(
+      `${BASE_PHYSICIANS_FULL_URL}${physician.id}`,
+      physician,
+    );
+    return response.data as PhysicianDto;
+  },
+);
+
 export const fetchPhysicians = createAsyncThunk(
   'user/fetchPhysicians',
   async () => {
-    const response = await axios.get<User[]>(PHYSICIANS_URL);
+    const response = await axios.get<User[]>(PHYSICIANS_FULL_URL);
     return response.data;
   },
 );
@@ -45,7 +68,7 @@ export const deletePhysician = createAsyncThunk(
   'user/deletePhysician',
   async (id: string) => {
     const response = await axios.delete<UniversalUser[]>(
-      BASE_PHYSICIANS_URL + id,
+      PHYSICIANS_URL_FOR_DELETE + id,
     );
     return response.data;
   },
@@ -65,21 +88,32 @@ export const physicianSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(fetchPhysicianById.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchPhysicianById.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.selectedPhysician = action.payload;
+      })
+      .addCase(fetchPhysicianById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Something went wrong';
+      })
+
       .addCase(fetchPhysicians.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(
-        fetchPhysicians.fulfilled,
-        (state, action: PayloadAction<User[]>) => {
-          state.isLoading = false;
-          state.physicians = action.payload;
-        },
-      )
+      .addCase(fetchPhysicians.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.physicians = action.payload;
+      })
       .addCase(fetchPhysicians.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
       })
+
       .addCase(fetchMorePhysicians.pending, (state) => {
         state.isLoading = false;
         state.error = null;
@@ -99,7 +133,6 @@ export const physicianSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-
       .addCase(deletePhysician.fulfilled, (state) => {
         state.isLoading = false;
       })
@@ -118,6 +151,8 @@ export const physicianSlice = createSlice({
   },
 });
 
+export const selectPhysician = (state: RootState) =>
+  state.physician.selectedPhysician;
 export const PhysicianState = (state: RootState) => state.physician.physicians;
 
 export default physicianSlice.reducer;

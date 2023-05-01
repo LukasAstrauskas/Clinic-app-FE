@@ -28,6 +28,8 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const occupations = useSelector(selectOccupations);
 
   const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [type, setType] = useState('');
@@ -39,7 +41,10 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
 
   const handleFetchUserById = () => {
     if (selectedUser) {
-      setName(selectedUser.name);
+      const fullUserName = selectedUser.name.split(' ');
+
+      setFirstName(fullUserName[0]);
+      setLastName(fullUserName[1]);
       setEmail(selectedUser.email);
       setType(selectedUser.type);
     }
@@ -47,7 +52,10 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
 
   const handleFetchPhysicianById = () => {
     if (selectedPhysician) {
-      setName(selectedPhysician.name);
+      const fullPhysicianName = selectedPhysician.name.split(' ');
+
+      setFirstName(fullPhysicianName[0]);
+      setLastName(fullPhysicianName[1]);
       setEmail(selectedPhysician.email);
       setSelectedOccupationId(selectedPhysician.occupation.id);
     }
@@ -59,7 +67,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
     if (selectedUser) {
       const updatedUser = {
         id: selectedUser.id,
-        name,
+        name: firstName + ' ' + lastName,
         email,
         password,
         type,
@@ -69,7 +77,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
       if (type === 'physician') {
         const updatedPhysician = {
           id: selectedUser.id,
-          name,
+          name: firstName + ' ' + lastName,
           email,
           type,
           password,
@@ -156,20 +164,22 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
           >
             <TextField
               sx={Styles.textField}
-              id='name'
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              id='firstName'
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               onBlur={handleNameCheck}
-              helperText={nameError === '' ? 'Name' : nameError}
+              helperText={nameError === '' ? 'First Name' : nameError}
               error={nameError !== ''}
             />
             <TextField
               sx={Styles.textField}
-              helperText='Type'
-              id='type'
-              value={type}
+              id='lastName'
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              onBlur={handleNameCheck}
+              helperText={nameError === '' ? 'Last Name' : nameError}
+              error={nameError !== ''}
               style={{ marginLeft: '20px' }}
-              disabled
             />
 
             <TextField

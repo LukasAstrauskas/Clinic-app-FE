@@ -9,39 +9,39 @@ import { updatePatientInfo } from '../../store/slices/patient/patientInfoSlice';
 
 const PatientContactInfo = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const userId = store.getState().user.user?.id;
+  const userId = store.getState().auth.id;
   const [gender, setGender] = useState(
-    store.getState().patientInfo.additionalInfo?.gender,
+    store.getState().patientInfo.additionalInfo?.gender as string,
   );
   const [birthDate, setBirthDate] = useState(
-    store.getState().patientInfo.additionalInfo?.birth_date,
+    store.getState().patientInfo.additionalInfo?.birth_date as Date,
   );
   const [phone, setPhone] = useState(
-    store.getState().patientInfo.additionalInfo?.phone,
+    store.getState().patientInfo.additionalInfo?.phone as number,
   );
   const [street, setStreet] = useState(
-    store.getState().patientInfo.additionalInfo?.street,
+    store.getState().patientInfo.additionalInfo?.street as string,
   );
   const [city, setCity] = useState(
-    store.getState().patientInfo.additionalInfo?.city,
+    store.getState().patientInfo.additionalInfo?.city as string,
   );
   const [postalCode, setPostalCode] = useState(
-    store.getState().patientInfo.additionalInfo?.postal_code,
+    store.getState().patientInfo.additionalInfo?.postal_code as string,
   );
   const [country, setCountry] = useState(
-    store.getState().patientInfo.additionalInfo?.country,
+    store.getState().patientInfo.additionalInfo?.country as string,
   );
   const [emergencyName, setEmergencyName] = useState(
-    store.getState().patientInfo.additionalInfo?.emergency_name,
+    store.getState().patientInfo.additionalInfo?.emergency_name as string,
   );
   const [emergencySurname, setEmergencySurname] = useState(
-    store.getState().patientInfo.additionalInfo?.emergency_surname,
+    store.getState().patientInfo.additionalInfo?.emergency_surname as string,
   );
   const [emergencyPhone, setEmergencyPhone] = useState(
-    store.getState().patientInfo.additionalInfo?.emergency_phone,
+    store.getState().patientInfo.additionalInfo?.emergency_phone as number,
   );
   const [emergencyRelation, setEmergencyRelation] = useState(
-    store.getState().patientInfo.additionalInfo?.emergency_relation,
+    store.getState().patientInfo.additionalInfo?.emergency_relation as string,
   );
   const handleUpdatePatientInfo = () => {
     dispatch(
@@ -73,18 +73,18 @@ const PatientContactInfo = () => {
       noValidate
       autoComplete='off'
     >
-      <h1>{store.getState().user.user?.name}</h1>
+      <h1>{store.getState().auth.user?.name}</h1>
       <h2>Main information</h2>
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={store.getState().patientInfo.additionalInfo?.gender}
+          defaultValue={gender}
           helperText='Gender'
           onChange={(e) => setGender(e.target.value)}
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={store.getState().patientInfo.additionalInfo?.birth_date}
+          defaultValue={birthDate}
           helperText='Birth Date'
           onChange={(e) => setBirthDate(new Date(e.target.value))}
         />
@@ -92,7 +92,8 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={store.getState().patientInfo.additionalInfo?.phone}
+          defaultValue={phone}
+          value={phone === 0 ? '' : phone}
           helperText='Phone Number'
           onChange={(e) => setPhone(+e.target.value)}
         />
@@ -101,13 +102,13 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={store.getState().patientInfo.additionalInfo?.street}
+          defaultValue={street}
           helperText='Street'
           onChange={(e) => setStreet(e.target.value)}
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={store.getState().patientInfo.additionalInfo?.city}
+          defaultValue={city}
           helperText='City'
           onChange={(e) => setCity(e.target.value)}
         />
@@ -115,15 +116,13 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={
-            store.getState().patientInfo.additionalInfo?.postal_code
-          }
+          defaultValue={postalCode}
           helperText='Postal Code'
           onChange={(e) => setPostalCode(e.target.value)}
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={store.getState().patientInfo.additionalInfo?.country}
+          defaultValue={country}
           helperText='Country'
           onChange={(e) => setCountry(e.target.value)}
         />
@@ -132,17 +131,13 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={
-            store.getState().patientInfo.additionalInfo?.emergency_name
-          }
+          defaultValue={emergencyName}
           helperText='First Name'
           onChange={(e) => setEmergencyName(e.target.value)}
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={
-            store.getState().patientInfo.additionalInfo?.emergency_surname
-          }
+          defaultValue={emergencySurname}
           helperText='Last Name'
           onChange={(e) => setEmergencySurname(e.target.value)}
         />
@@ -150,17 +145,14 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={
-            store.getState().patientInfo.additionalInfo?.emergency_phone
-          }
+          defaultValue={emergencyPhone}
+          value={emergencyPhone === 0 ? '' : emergencyPhone}
           helperText='Phone Number'
           onChange={(e) => setEmergencyPhone(+e.target.value)}
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={
-            store.getState().patientInfo.additionalInfo?.emergency_relation
-          }
+          defaultValue={emergencyRelation}
           helperText='Relation'
           onChange={(e) => setEmergencyRelation(e.target.value)}
         />

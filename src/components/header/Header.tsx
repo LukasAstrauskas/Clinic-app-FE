@@ -148,7 +148,10 @@ const Header = () => {
                           onKeyDown={handleListKeyDown}
                         >
                           {/* add link to user profile */}
-                          <NavLink to='/profile' className={resolveLinkClass}>
+                          <NavLink
+                            to={ROUTES.PATIENTPROFILE}
+                            className={resolveLinkClass}
+                          >
                             <MenuItem onClick={handleClose}>Profile</MenuItem>
                           </NavLink>
                           <NavLink

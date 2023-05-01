@@ -62,7 +62,7 @@ export const Physicians = () => {
   };
   useEffect(() => {
     dispatch(fetchPhysicians());
-  }, [open]);
+  }, [open, checkedPhysician]);
 
   return (
     <>

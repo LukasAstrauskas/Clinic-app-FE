@@ -124,7 +124,7 @@ const TableBodyComponent: FC<Props> = ({
               }}
             >
               <TableCell>
-                <Checkbox id={id.toString()} onChange={() => handleChecked} />
+                <Checkbox id={id} onChange={handleChecked} />
               </TableCell>
               <TableCell onClick={() => rowClick(id)} sx={{ width: '200px' }}>
                 {name}

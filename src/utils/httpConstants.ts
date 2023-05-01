@@ -20,6 +20,8 @@ export const PATIENT_SEARCH_URL = 'http://localhost:8080/user/patientSearch/';
 
 //Physicians
 export const PHYSICIANS_URL = 'http://localhost:8080/physicianInfo';
+export const PHYSICIANS_URL_FOR_DELETE =
+  'http://localhost:8080/physicianInfo/physician/';
 export const BASE_PHYSICIANS_URL = 'http://localhost:8080/physician/';
 export const PHYSICIAN_SEARCH_URL =
   'http://localhost:8080/user/physicianSearch/';

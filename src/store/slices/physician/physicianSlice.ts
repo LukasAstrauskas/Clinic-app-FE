@@ -2,9 +2,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { UniversalUser, User } from '../../../model/Model';
 import {
-  BASE_PHYSICIANS_URL,
   INCOMING_PHYSICIANS_TO_BE_RENDERED_URL,
   PHYSICIANS_URL,
+  PHYSICIANS_URL_FOR_DELETE,
   PHYSICIAN_SEARCH_URL,
 } from '../../../utils/httpConstants';
 
@@ -45,7 +45,7 @@ export const deletePhysician = createAsyncThunk(
   'user/deletePhysician',
   async (id: string) => {
     const response = await axios.delete<UniversalUser[]>(
-      BASE_PHYSICIANS_URL + id,
+      PHYSICIANS_URL_FOR_DELETE + id,
     );
     return response.data;
   },

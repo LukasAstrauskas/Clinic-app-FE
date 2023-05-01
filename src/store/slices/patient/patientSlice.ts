@@ -4,7 +4,7 @@ import { UniversalUser, User } from '../../../model/Model';
 import { RootState } from '../../types';
 import axios from 'axios';
 import {
-  BASE_PATIENTS_URL,
+  BASE_USER_URL,
   INCOMING_PATIENTS_TO_BE_RENDERED_URL,
   PATIENTS_URL,
   PATIENT_SEARCH_URL,
@@ -44,9 +44,7 @@ export const fetchMorePatients = createAsyncThunk(
 export const deletePatient = createAsyncThunk(
   'patients/deletePatient',
   async (id: string) => {
-    const response = await axios.delete<UniversalUser[]>(
-      BASE_PATIENTS_URL + id,
-    );
+    const response = await axios.delete<UniversalUser[]>(BASE_USER_URL + id);
     return response.data;
   },
 );

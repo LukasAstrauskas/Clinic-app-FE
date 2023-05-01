@@ -34,12 +34,12 @@ const WelcomePage = () => {
           ></Item>
         </>
       )}
+
       <Item
-        title='New appointment'
-        icon1={managePhysiciansIcon}
+        title='Manage appointments'
+        icon1={mannageApointmentIcon}
         linkTo={ROUTES.BOOKAPPOINTMENT}
       ></Item>
-      <Item title='Manage appointments' icon1={mannageApointmentIcon}></Item>
     </Grid>
   );
 };

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
-import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
 import { TableContainer, Table, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -26,15 +25,18 @@ export const Physicians = () => {
   const [open, setOpen] = useState(false);
   const [checkedPhysician, setCheckedPhysician] = useState<string[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
+
   const handleOpen = () => {
     setOpen(true);
   };
+
   const handleDelete = () => {
     checkedPhysician.forEach((physician) => {
       dispatch(deletePhysician(physician));
     });
     setCheckedPhysician([]);
   };
+
   const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectePhysician = e.target;
     if (selectePhysician.checked) {
@@ -47,6 +49,7 @@ export const Physicians = () => {
       );
     }
   };
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const search = e.target.value;
     if (search.length != 0) {
@@ -59,7 +62,7 @@ export const Physicians = () => {
   };
   useEffect(() => {
     dispatch(fetchPhysicians());
-  }, [open]);
+  }, [open, checkedPhysician]);
 
   return (
     <>

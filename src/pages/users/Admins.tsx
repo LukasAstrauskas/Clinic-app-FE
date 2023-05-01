@@ -62,7 +62,7 @@ export const Admins = () => {
 
   useEffect(() => {
     dispatch(fetchAdmins());
-  }, [open]);
+  }, [open, checkedAdmins]);
   return (
     <>
       <Box

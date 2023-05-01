@@ -86,7 +86,6 @@ const TimetableList = ({ physicianId }: Props) => {
           time: time,
         });
     }
-    setloadData();
   };
 
   const isSelected = (physicianId: string, date: string, time: string) => {
@@ -98,7 +97,7 @@ const TimetableList = ({ physicianId }: Props) => {
   };
   useEffect(() => {
     setAppointment((appointment) => {
-      if (type === 'patient' || loggedInUserId) {
+      if (type === 'patient') {
         return {
           ...appointment,
           patientId: loggedInUserId || '',

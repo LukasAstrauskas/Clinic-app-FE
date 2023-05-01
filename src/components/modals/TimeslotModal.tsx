@@ -38,8 +38,8 @@ const postTimeslot = (id: string, date: string, time: string) => {
       date: date,
       time: time,
     })
-    .then((responce) => {
-      console.log(responce.status);
+    .then((response) => {
+      console.log(response.status);
     });
 };
 

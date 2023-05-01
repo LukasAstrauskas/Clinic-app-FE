@@ -30,6 +30,10 @@ export interface Timeslot {
   date: string;
   time: string;
 }
+export interface TimeslotWithPhysicianAndPatient {
+  physicianId: string;
+  patientId: string;
+}
 
 export interface EditUser {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;

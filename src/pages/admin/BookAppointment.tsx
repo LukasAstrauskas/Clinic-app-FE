@@ -4,15 +4,24 @@ import { Box, Button, Stack } from '@mui/material';
 import Patients from '../users/Patients';
 import useToggle from '../../hooks/useToggle';
 import AppointmentContext from '../../hooks/AppointmentContext';
-import { Appointment } from '../../model/Model';
+import {
+  Appointment,
+  TimeslotWithPhysicianAndPatient,
+} from '../../model/Model';
 import Styles from '../../components/styles/UserManagmentStyles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
-import { updateTimeslot } from '../../data/fetch';
+import {
+  countUpcomingTimeslotsWithPhysician,
+  removePatientFromTimeslot,
+  updateTimeslot,
+} from '../../data/fetch';
 import { useSelector } from 'react-redux';
 import { selectType } from '../../store/slices/auth/authSlice';
+import ConfirmationModal from '../../components/modals/ConfirmationModal';
+import ErrorModal from '../../components/modals/ErrorModal';
 
 const BookAppointment = () => {
   const type = useSelector(selectType);
@@ -25,8 +34,38 @@ const BookAppointment = () => {
     patientId: ' ',
   });
 
-  const bookAppointment = () => {
-    updateTimeslot(appointment);
+  const navigate = useNavigate();
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState('');
+
+  const handleConfirmationClose = () => {
+    setIsConfirmationOpen(false);
+    navigate(ROUTES.HOME);
+  };
+
+  const bookAppointment = async () => {
+    const appointments = await countUpcomingTimeslotsWithPhysician(appointment);
+
+    if (appointments > 0) {
+      setIsErrorModalOpen(true);
+      return;
+    }
+    await updateTimeslot(appointment);
+    setConfirmationMessage('Appointment booked successfully!');
+    setIsConfirmationOpen(true);
+  };
+
+  const handleRemovePatientFromTimeslot = async () => {
+    const { physicianId, patientId } = appointment;
+    const timeslot: TimeslotWithPhysicianAndPatient = {
+      physicianId,
+      patientId,
+    };
+    await removePatientFromTimeslot(timeslot);
+    setConfirmationMessage('Appointment canceled successfully!');
+    setIsErrorModalOpen(false);
+    setIsConfirmationOpen(true);
   };
 
   return (
@@ -68,15 +107,14 @@ const BookAppointment = () => {
               }
               sx={Styles.createNewUserBtn}
             >
-              <NavLink
+              <Button
                 style={{
                   color: 'white',
                   textDecoration: 'none',
                 }}
-                to={ROUTES.HOME}
               >
                 Book an appontment
-              </NavLink>
+              </Button>
             </Button>
           )}
           {!picker && (
@@ -90,6 +128,17 @@ const BookAppointment = () => {
               {type === 'patient' ? '' : <ArrowForwardIcon />}
             </Button>
           )}
+          <ConfirmationModal
+            isOpen={isConfirmationOpen}
+            onClose={handleConfirmationClose}
+            message={confirmationMessage}
+          />
+          <ErrorModal
+            isOpen={isErrorModalOpen}
+            onYesClick={handleRemovePatientFromTimeslot}
+            onClose={handleConfirmationClose}
+            message='An appointment is already scheduled with this physician. Would you like to cancel it?'
+          />
         </Box>
       </Stack>
     </Box>

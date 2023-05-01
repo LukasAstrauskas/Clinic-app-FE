@@ -3,12 +3,10 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { Physician, PhysicianDto } from '../../../model/Model';
 import { UniversalUser, User } from '../../../model/Model';
 import {
-  // BASE_PHYSICIANS_FULL_URL,
-  // BASE_PHYSICIANS_URL,
-  // PHYSICIANS_FULL_URL,
-  // INCOMING_PHYSICIANS_TO_BE_RENDERED_URL,
+  BASE_PHYSICIANS_FULL_URL,
+  BASE_PHYSICIANS_URL,
+  PHYSICIANS_FULL_URL,
   INCOMING_PHYSICIANS_TO_BE_RENDERED_URL,
-  PHYSICIANS_URL,
   PHYSICIANS_URL_FOR_DELETE,
   PHYSICIAN_SEARCH_URL,
 } from '../../../utils/httpConstants';

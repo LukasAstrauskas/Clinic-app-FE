@@ -32,7 +32,6 @@ const Header = () => {
   const loggedUserId = useSelector(selectId);
   const isLoggedIn = sessionStorage.getItem('isLogged') || '';
   const loggedUserName = sessionStorage.getItem('name') || '';
-  // const loggedUserNameInitials = loggedUserName.substring(0, 2);
 
   const handleLoggedInUserInitials = () => {
     if (loggedUserName.length > 0) {

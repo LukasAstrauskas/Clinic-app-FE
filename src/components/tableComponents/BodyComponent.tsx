@@ -18,6 +18,7 @@ import { fetchMorePatients } from '../../store/slices/patient/patientSlice';
 import { fetchMoreAdmins } from '../../store/slices/admin/adminSlice';
 import { fetchMorePhysicians } from '../../store/slices/physician/physicianSlice';
 import EditUserModal from '../modals/EditUserModal';
+import { grey } from '@mui/material/colors';
 
 interface Props {
   user: UniversalUser[];
@@ -93,6 +94,7 @@ const TableBodyComponent: FC<Props> = ({
           overflow: 'auto',
           display: 'flex',
         }}
+        sx={{ backgroundColor: grey[200] }}
       >
         <InfiniteScroll
           scrollableTarget='scrollBox'

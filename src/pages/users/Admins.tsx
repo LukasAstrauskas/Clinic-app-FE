@@ -5,41 +5,26 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Box } from '@mui/system';
 import { TableContainer, Table, Paper, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import axios from 'axios';
 import AddAdminModal from '../../components/modals/AddAdminModal';
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableHeadComponent from '../../components/tableComponents/HeadComponent';
 import TableBodyComponent from '../../components/tableComponents/BodyComponent';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectAdmin,
+  deleteAdmin,
+  fetchAdmins,
+  searchAdmin,
+} from '../../store/slices/admin/adminSlice';
+import { AppDispatch } from '../../store/types';
 
 export const Admins = () => {
-  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const admins = useSelector(selectAdmin);
+  const [open, setOpen] = useState<boolean>(false);
+  const [more, setMore] = useState<boolean>(true);
   const [checkedAdmins, setCheckedAdmins] = useState<string[]>([]);
-  const [admins, setAdmins] = useState<AdminType[]>([]);
-  const getRequestUrl = 'http://localhost:8080/user/admins';
-
-  useEffect(() => {
-    const getRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    };
-    async function getData() {
-      await axios
-        .get(getRequestUrl, {
-          headers: getRequestHeaders,
-        })
-        .then((res) => {
-          setAdmins(res.data);
-        });
-    }
-    getData();
-  }, [open, checkedAdmins]);
-
-  type AdminType = {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-  };
+  const [refresh, setRefresh] = useState<boolean>(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -47,8 +32,7 @@ export const Admins = () => {
 
   const handleDelete = () => {
     checkedAdmins.forEach((admin) => {
-      const deleteURL = `http://localhost:8080/user/admins/${admin}`;
-      axios.delete(deleteURL);
+      dispatch(deleteAdmin(admin));
     });
     setCheckedAdmins([]);
   };
@@ -65,23 +49,20 @@ export const Admins = () => {
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const allTableRows = document.querySelectorAll('tr');
-    const search = e.target.value.toLowerCase();
-    if (search.length === 0) {
-      allTableRows.forEach((row) => {
-        row.classList.remove('hidden');
-      });
+    const search = e.target.value;
+
+    if (search.length != 0) {
+      dispatch(searchAdmin(search));
+      setMore(false);
     } else {
-      allTableRows.forEach((row) => {
-        const rowText = row.textContent?.toLocaleLowerCase();
-        row.classList.add('hidden');
-        if (rowText?.includes(search) || rowText?.includes('name')) {
-          row.classList.remove('hidden');
-        }
-      });
+      dispatch(fetchAdmins());
+      setRefresh(true);
     }
   };
 
+  useEffect(() => {
+    dispatch(fetchAdmins());
+  }, [open, checkedAdmins]);
   return (
     <>
       <Box
@@ -117,19 +98,22 @@ export const Admins = () => {
           width: 600,
         }}
       >
-        <TableContainer component={Paper} sx={{ maxHeight: '500px' }}>
+        <TableContainer component={Paper}>
           <Table stickyHeader>
             <TableHeadComponent
               handleDelete={handleDelete}
               collumName='email'
             />
-
-            <TableBodyComponent
-              collumValue='admins'
-              user={admins}
-              handleChecked={handleChecked}
-            />
           </Table>
+          <TableBodyComponent
+            type='admin'
+            more={more}
+            setMore={setMore}
+            setRefresh={setRefresh}
+            refresh={refresh}
+            user={admins}
+            handleChecked={handleChecked}
+          />
         </TableContainer>
       </Box>
     </>

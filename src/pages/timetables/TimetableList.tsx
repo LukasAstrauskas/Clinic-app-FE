@@ -10,7 +10,7 @@ import Timechip from './Timechip';
 import { Stack } from '@mui/system';
 import { Chip } from '@mui/material';
 import TimeslotModal from '../../components/modals/TimeslotModal';
-import { Timeslots } from '../../model/Model';
+import { Timeslot, Timeslots } from '../../model/Model';
 import axios from 'axios';
 import { getWeekDay } from '../../components/utils';
 import { deleteTimeslot } from '../../data/fetch';
@@ -31,14 +31,18 @@ const TimetableList = ({ physicianId }: Props) => {
   const [openAlert, toggleAlert] = useToggle();
   const [loadData, setloadData] = useToggle();
   const [timeslots, setTimeslots] = useState<Timeslots[]>([]);
-  const [date, setDate] = useState<string>('');
-  const [time, setTime] = useState<string>('');
+
+  const [timeslot, setTimeslot] = useState<Timeslot>({
+    physicianId: '',
+    date: '',
+    time: '',
+  });
 
   const { appointment, setAppointment } = useContext(AppointmentContext);
 
   const handleOpenModal = (date: string): void => {
     setOpenModal();
-    setDate(date);
+    setTimeslot({ ...timeslot, date: date, time: '' });
   };
 
   const deleteButtonAction = (
@@ -47,8 +51,7 @@ const TimetableList = ({ physicianId }: Props) => {
     patientId: string,
   ): void => {
     if (patientId === null) {
-      setDate(date);
-      setTime(time);
+      setTimeslot({ ...timeslot, date: date, time: time });
       setOpenConfirm();
     } else {
       toggleAlert();
@@ -56,7 +59,7 @@ const TimetableList = ({ physicianId }: Props) => {
   };
 
   const handleDeleteTimeslot = (): void => {
-    deleteTimeslot({ physicianId, date, time });
+    deleteTimeslot(timeslot);
     setloadData();
     setOpenConfirm();
   };
@@ -68,14 +71,36 @@ const TimetableList = ({ physicianId }: Props) => {
   ): void => {
     {
       patientId === null &&
+        setTimeslot({ ...timeslot, date: date, time: time });
+    }
+    {
+      patientId === null &&
         setAppointment({
           ...appointment,
-          physicianId: physicianId,
           date: date,
           time: time,
         });
     }
   };
+
+  const isSelected = (physicianId: string, date: string, time: string) => {
+    return (
+      physicianId === timeslot.physicianId &&
+      date === timeslot.date &&
+      time === timeslot.time
+    );
+  };
+
+  useEffect(() => {
+    setAppointment({
+      ...appointment,
+      physicianId: physicianId,
+      date: '',
+      time: '',
+    });
+    setTimeslot({ physicianId: physicianId, date: '', time: '' });
+    // eslint-disable-next-line
+  }, [physicianId]);
 
   useEffect(() => {
     async function getTimeslots() {
@@ -90,7 +115,7 @@ const TimetableList = ({ physicianId }: Props) => {
         });
     }
     getTimeslots();
-    // eslint-disable-next-line prettier/prettier
+    // eslint-disable-next-line
   }, [loadData, physicianId]);
 
   return (
@@ -142,6 +167,7 @@ const TimetableList = ({ physicianId }: Props) => {
                               patientId={patientId}
                               onClick={handleChipClick}
                               key={time}
+                              selected={isSelected(physicianId, date, time)}
                             />
                           ) : (
                             <Timechip
@@ -151,6 +177,7 @@ const TimetableList = ({ physicianId }: Props) => {
                               onDelete={deleteButtonAction}
                               onClick={handleChipClick}
                               key={time}
+                              selected={isSelected(physicianId, date, time)}
                             />
                           )}
                         </>
@@ -159,7 +186,7 @@ const TimetableList = ({ physicianId }: Props) => {
                     {!appointment.physicianId && (
                       <Chip
                         label='+ NEW'
-                        sx={{ backgroundColor: '#1de9b6' }}
+                        sx={{ backgroundColor: teal['A400'] }}
                         onClick={() => handleOpenModal(date)}
                       />
                     )}
@@ -175,7 +202,7 @@ const TimetableList = ({ physicianId }: Props) => {
         closeModal={setOpenModal}
         loadData={setloadData}
         id={physicianId}
-        date={date}
+        date={timeslot.date}
       />
       <AlertModal
         open={openConfirm}

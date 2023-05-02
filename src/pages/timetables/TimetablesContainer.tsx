@@ -7,11 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchPhyNameOccupation,
   selectPhysicianId,
+  selectPhysicians,
   setPhysicianId,
 } from '../../store/slices/physician/phyNameOccupationSlice';
 import PhysicianSearchBar from '../physicians/PhysicianSearchBar';
 import axios from 'axios';
 import { Physician } from '../../model/Model';
+import { PhyNameOccupation } from '../../model/Model';
 
 type props = {
   tableTitle?: string;
@@ -19,7 +21,9 @@ type props = {
 
 const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
   const [filteredPhysicians, setFilteredPhysicians] = useState<Physician[]>([]);
-  const physicianId = useSelector(selectPhysicianId);
+
+  const physicians: PhyNameOccupation[] = useSelector(selectPhysicians);
+  const physicianId: string | null = useSelector(selectPhysicianId);
   const dispatch = useDispatch<AppDispatch>();
 
   const handleClick = (id: string) => {
@@ -55,6 +59,7 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
             <PhysicianSearchBar onSearch={handleSearch} />
             <PhysicianTable
               physicians={filteredPhysicians}
+              selectedId={physicianId}
               rowClick={handleClick}
             />
           </Grid>

@@ -32,7 +32,17 @@ const Header = () => {
   const loggedUserId = useSelector(selectId);
   const isLoggedIn = sessionStorage.getItem('isLogged') || '';
   const loggedUserName = sessionStorage.getItem('name') || '';
-  const loggedUserNameInitials = loggedUserName.substring(0, 2);
+
+  const handleLoggedInUserInitials = () => {
+    if (loggedUserName.length > 0) {
+      const countOfWords = loggedUserName.split(' ');
+
+      if (countOfWords.length === 2) {
+        return countOfWords[0].charAt(0) + countOfWords[1].charAt(0);
+      }
+      return loggedUserName.substring(0, 2);
+    }
+  };
 
   const handleFetchUserById = async () => {
     if (!loggedUserId) {
@@ -117,7 +127,7 @@ const Header = () => {
               >
                 <Avatar className={styles.avatar} sx={{ bgcolor: grey[100] }}>
                   <div className={styles.avatarLogo}>
-                    {loggedUserNameInitials}
+                    {handleLoggedInUserInitials()}
                   </div>
                 </Avatar>
               </Button>

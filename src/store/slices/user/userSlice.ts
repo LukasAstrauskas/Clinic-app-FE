@@ -16,10 +16,23 @@ const initialState: UserState = {
   error: null,
 };
 
+const postRequestHeaders = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+};
+
 export const fetchUserById = createAsyncThunk<User, string>(
   'user/fetchById',
   async (id) => {
     const response = await axios.get(`${BASE_USER_URL}${id}`);
+    return response.data as User;
+  },
+);
+
+export const updateUser = createAsyncThunk<User, User>(
+  'user/update',
+  async (user) => {
+    const response = await axios.put(`${BASE_USER_URL}${user.id}`, user);
     return response.data as User;
   },
 );
@@ -42,6 +55,19 @@ export const userSlice = createSlice({
       .addCase(fetchUserById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? 'Failed to fetch user';
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.user = action.payload;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? 'Failed to update user';
       });
   },
 });

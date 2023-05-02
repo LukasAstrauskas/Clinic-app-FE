@@ -17,17 +17,21 @@ import { AppDispatch } from '../../store/types';
 
 type Props = {
   physicians: Physician[];
+  selectedId: string | null;
   rowClick: (id: string) => void;
 };
 
-const tableRowSX = {
-  '&:hover': {
-    backgroundColor: '#ff9e80 !important',
-  },
-  cursor: 'pointer',
+const tableRowSX = (isSelected: boolean) => {
+  return {
+    backgroundColor: isSelected ? '#ff9e80 !important' : 'none',
+    '&:hover': {
+      backgroundColor: '#ff9e80 !important',
+    },
+    cursor: 'pointer',
+  };
 };
 
-const PhysicianTable = ({ physicians, rowClick }: Props) => {
+const PhysicianTable = ({ physicians, selectedId, rowClick }: Props) => {
   const UserSize = 36;
   const dispatch = useDispatch<AppDispatch>();
   const [currentRender, setCurrentRender] = useState(5);
@@ -75,7 +79,11 @@ const PhysicianTable = ({ physicians, rowClick }: Props) => {
             </TableHead>
             <TableBody>
               {physicians.map(({ id, name, occupation }) => (
-                <TableRow key={id} hover sx={tableRowSX}>
+                <TableRow
+              key={id}
+              hover
+              sx={tableRowSX(selectedId === physicianId)}
+            >
                   <TableCell
                     onClick={() => {
                       rowClick(id);

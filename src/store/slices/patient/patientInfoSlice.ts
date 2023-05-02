@@ -30,7 +30,7 @@ export const updatePatientInfo = createAsyncThunk(
   async (updatedPatientInfo: PatientInfo) => {
     try {
       const response = await axios.put(
-        `${PATIENTS_ADDITIONAL_INFO_URL}${updatedPatientInfo.user_id}`,
+        `${PATIENTS_ADDITIONAL_INFO_URL}${updatedPatientInfo.userId}`,
         updatedPatientInfo,
       );
       console.log(response);

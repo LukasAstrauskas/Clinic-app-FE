@@ -26,18 +26,18 @@ export interface endPoint {
 }
 
 export interface PatientInfo {
-  user_id: string | null;
+  userId: string | null;
   gender: string;
-  birth_date: Date;
+  birthDate: Date;
   phone: number;
   street: string;
   city: string;
-  postal_code: string;
+  postalCode: string;
   country: string;
-  emergency_name: string;
-  emergency_surname: string;
-  emergency_phone: number;
-  emergency_relation: string;
+  emergencyName: string;
+  emergencyLastName: string;
+  emergencyPhone: number;
+  emergencyRelation: string;
 }
 
 export interface Timeslot {

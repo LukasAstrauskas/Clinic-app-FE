@@ -14,7 +14,7 @@ const PatientContactInfo = () => {
     store.getState().patientInfo.additionalInfo?.gender as string,
   );
   const [birthDate, setBirthDate] = useState(
-    store.getState().patientInfo.additionalInfo?.birth_date as Date,
+    store.getState().patientInfo.additionalInfo?.birthDate as Date,
   );
   const [phone, setPhone] = useState(
     store.getState().patientInfo.additionalInfo?.phone.toString() as string,
@@ -26,46 +26,47 @@ const PatientContactInfo = () => {
     store.getState().patientInfo.additionalInfo?.city as string,
   );
   const [postalCode, setPostalCode] = useState(
-    store.getState().patientInfo.additionalInfo?.postal_code as string,
+    store.getState().patientInfo.additionalInfo?.postalCode as string,
   );
   const [country, setCountry] = useState(
     store.getState().patientInfo.additionalInfo?.country as string,
   );
   const [emergencyName, setEmergencyName] = useState(
-    store.getState().patientInfo.additionalInfo?.emergency_name as string,
+    store.getState().patientInfo.additionalInfo?.emergencyName as string,
   );
   const [emergencySurname, setEmergencySurname] = useState(
-    store.getState().patientInfo.additionalInfo?.emergency_surname as string,
+    store.getState().patientInfo.additionalInfo?.emergencyLastName as string,
   );
   const [emergencyPhone, setEmergencyPhone] = useState(
     store
       .getState()
-      .patientInfo.additionalInfo?.emergency_phone.toString() as string,
+      .patientInfo.additionalInfo?.emergencyPhone.toString() as string,
   );
   const [emergencyRelation, setEmergencyRelation] = useState(
-    store.getState().patientInfo.additionalInfo?.emergency_relation as string,
+    store.getState().patientInfo.additionalInfo?.emergencyRelation as string,
   );
   const handleUpdatePatientInfo = () => {
     dispatch(
       updatePatientInfo({
-        user_id: userId,
+        userId: userId,
         gender: gender,
-        birth_date: birthDate,
+        birthDate: birthDate,
         phone: +phone,
         street: street,
         city: city,
-        postal_code: postalCode,
+        postalCode: postalCode,
         country: country,
-        emergency_name: emergencyName,
-        emergency_surname: emergencySurname,
-        emergency_phone: +emergencyPhone,
-        emergency_relation: emergencyRelation,
+        emergencyName: emergencyName,
+        emergencyLastName: emergencySurname,
+        emergencyPhone: +emergencyPhone,
+        emergencyRelation: emergencyRelation,
       }),
     );
   };
   const handlePhoneError = (phoneStr: string) => {
     if (
-      (phoneStr.startsWith('370') && phoneStr.length === 11) ||
+      phoneStr === undefined ||
+      (phoneStr.startsWith('3706') && phoneStr.length === 11) ||
       phoneStr === '' ||
       phoneStr === '0'
     ) {
@@ -74,7 +75,21 @@ const PatientContactInfo = () => {
       return true;
     }
   };
-
+  const handleBirthDate = (date: Date) => {
+    if (date === null || date === undefined) {
+      return false;
+    }
+    const currentDate = new Date();
+    if (
+      isNaN(new Date(date).getTime()) ||
+      new Date(date) >= currentDate ||
+      new Date(date).getFullYear() < currentDate.getFullYear() - 150
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   return (
     <Box
       component='form'
@@ -101,6 +116,7 @@ const PatientContactInfo = () => {
           defaultValue={birthDate}
           helperText='Birth Date'
           onChange={(e) => setBirthDate(new Date(e.target.value))}
+          error={handleBirthDate(birthDate)}
         />
       </div>
       <div>
@@ -111,7 +127,7 @@ const PatientContactInfo = () => {
           helperText='Phone Number'
           onChange={(e) => setPhone(e.target.value)}
           error={handlePhoneError(phone)}
-          placeholder='370...'
+          placeholder='3706...'
         />
       </div>
       <h2>Address</h2>
@@ -166,7 +182,7 @@ const PatientContactInfo = () => {
           helperText='Phone Number'
           onChange={(e) => setEmergencyPhone(e.target.value)}
           error={handlePhoneError(emergencyPhone)}
-          placeholder='370...'
+          placeholder='3706...'
         />
         <TextField
           id='outlined-helper-text'
@@ -181,7 +197,9 @@ const PatientContactInfo = () => {
             variant='contained'
             onClick={handleUpdatePatientInfo}
             disabled={
-              handlePhoneError(phone) || handlePhoneError(emergencyPhone)
+              handlePhoneError(phone) ||
+              handlePhoneError(emergencyPhone) ||
+              handleBirthDate(birthDate)
             }
           >
             save information

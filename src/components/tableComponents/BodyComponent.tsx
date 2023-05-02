@@ -75,7 +75,7 @@ const TableBodyComponent: FC<Props> = ({
     } else {
       setMore(false);
     }
-    setCurrentRender(user.length);
+    setCurrentRender((prevRender) => prevRender + 5);
   };
 
   useEffect(() => {

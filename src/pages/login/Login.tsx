@@ -12,7 +12,6 @@ import { ROUTES } from '../../routes/routes';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { login } from '../../store/slices/auth/authActions';
-import { fetchUserById } from '../../store/slices/user/userSlice';
 import store from '../../store/store';
 import { fetchPatientInfo } from '../../store/slices/patient/patientSlice';
 

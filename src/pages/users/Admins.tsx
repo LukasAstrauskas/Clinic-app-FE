@@ -105,15 +105,17 @@ export const Admins = () => {
               collumName='email'
             />
           </Table>
-          <TableBodyComponent
-            type='admin'
-            more={more}
-            setMore={setMore}
-            setRefresh={setRefresh}
-            refresh={refresh}
-            user={admins}
-            handleChecked={handleChecked}
-          />
+          <Table>
+            <TableBodyComponent
+              type='admin'
+              more={more}
+              setMore={setMore}
+              setRefresh={setRefresh}
+              refresh={refresh}
+              user={admins}
+              handleChecked={handleChecked}
+            />
+          </Table>
         </TableContainer>
       </Box>
     </>

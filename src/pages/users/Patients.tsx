@@ -107,16 +107,18 @@ export const Patients = () => {
               collumName='Email'
             />
           </Table>
-          <TableBodyComponent
-            type='patient'
-            more={more}
-            setMore={setMore}
-            setRefresh={setRefresh}
-            refresh={refresh}
-            user={patients}
-            handleChecked={handleChecked}
-            rowClick={choosePatient}
-          />
+          <Table>
+            <TableBodyComponent
+              type='patient'
+              more={more}
+              setMore={setMore}
+              setRefresh={setRefresh}
+              refresh={refresh}
+              user={patients}
+              handleChecked={handleChecked}
+              rowClick={choosePatient}
+            />
+          </Table>
         </TableContainer>
       </Box>
     </>

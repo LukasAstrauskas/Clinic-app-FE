@@ -105,16 +105,17 @@ export const Physicians = () => {
               collumName='occupation'
             />
           </Table>
-
-          <TableBodyComponent
-            type='physician'
-            more={more}
-            setMore={setMore}
-            setRefresh={setRefresh}
-            refresh={refresh}
-            user={physicians}
-            handleChecked={handleChecked}
-          />
+          <Table>
+            <TableBodyComponent
+              type='physician'
+              more={more}
+              setMore={setMore}
+              setRefresh={setRefresh}
+              refresh={refresh}
+              user={physicians}
+              handleChecked={handleChecked}
+            />
+          </Table>
         </TableContainer>
       </Box>
     </>

@@ -5,45 +5,45 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import store from '../../store/store';
-import { updatePatientInfo } from '../../store/slices/patient/patientInfoSlice';
+import { updatePatientInfo } from '../../store/slices/patient/patientSlice';
 
 const PatientContactInfo = () => {
   const dispatch = useDispatch<AppDispatch>();
   const userId = store.getState().auth.id;
   const [gender, setGender] = useState(
-    store.getState().patientInfo.additionalInfo?.gender as string,
+    store.getState().patient.additionalInfo?.gender as string,
   );
   const [birthDate, setBirthDate] = useState(
-    store.getState().patientInfo.additionalInfo?.birthDate as Date,
+    store.getState().patient.additionalInfo?.birthDate as Date,
   );
   const [phone, setPhone] = useState(
-    store.getState().patientInfo.additionalInfo?.phone.toString() as string,
+    store.getState().patient.additionalInfo?.phone.toString() as string,
   );
   const [street, setStreet] = useState(
-    store.getState().patientInfo.additionalInfo?.street as string,
+    store.getState().patient.additionalInfo?.street as string,
   );
   const [city, setCity] = useState(
-    store.getState().patientInfo.additionalInfo?.city as string,
+    store.getState().patient.additionalInfo?.city as string,
   );
   const [postalCode, setPostalCode] = useState(
-    store.getState().patientInfo.additionalInfo?.postalCode as string,
+    store.getState().patient.additionalInfo?.postalCode as string,
   );
   const [country, setCountry] = useState(
-    store.getState().patientInfo.additionalInfo?.country as string,
+    store.getState().patient.additionalInfo?.country as string,
   );
   const [emergencyName, setEmergencyName] = useState(
-    store.getState().patientInfo.additionalInfo?.emergencyName as string,
+    store.getState().patient.additionalInfo?.emergencyName as string,
   );
   const [emergencySurname, setEmergencySurname] = useState(
-    store.getState().patientInfo.additionalInfo?.emergencyLastName as string,
+    store.getState().patient.additionalInfo?.emergencyLastName as string,
   );
   const [emergencyPhone, setEmergencyPhone] = useState(
     store
       .getState()
-      .patientInfo.additionalInfo?.emergencyPhone.toString() as string,
+      .patient.additionalInfo?.emergencyPhone.toString() as string,
   );
   const [emergencyRelation, setEmergencyRelation] = useState(
-    store.getState().patientInfo.additionalInfo?.emergencyRelation as string,
+    store.getState().patient.additionalInfo?.emergencyRelation as string,
   );
   const handleUpdatePatientInfo = () => {
     dispatch(

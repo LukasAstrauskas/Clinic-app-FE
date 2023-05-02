@@ -7,7 +7,6 @@ import { physicianSlice } from './slices/physician/physicianSlice';
 import { phyNameOccupationSlice } from './slices/physician/phyNameOccupationSlice';
 import { userSlice } from './slices/user/userSlice';
 import { userSizeSlice } from './slices/userSize/userSizeSlice';
-import { patientInfoSlice } from './slices/patient/patientInfoSlice';
 import { occupationSlice } from './slices/occupations/occupationsSlice';
 import { editedPhysicianSlice } from './slices/physician/editedPhysicianSlice';
 
@@ -18,7 +17,6 @@ const appReducer = combineReducers({
   user: userSlice.reducer,
   auth: authSlice.reducer,
   patient: patientSlice.reducer,
-  patientInfo: patientInfoSlice.reducer,
   physician: physicianSlice.reducer,
   admin: adminSlice.reducer,
   phyNameOccupation: phyNameOccupationSlice.reducer,

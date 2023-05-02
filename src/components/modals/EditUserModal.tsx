@@ -9,12 +9,15 @@ import Styles from '../styles/UserManagmentStyles';
 import { EditUser } from '../../model/Model';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
-import { selectUser, updateUser } from '../../store/slices/user/userSlice';
-import { fetchUserById } from '../../store/slices/user/userSlice';
+import {
+  selectUser,
+  updateUser,
+  fetchUserById,
+} from '../../store/slices/user/userSlice';
 import {
   fetchOccupations,
   selectOccupations,
-} from '../../store/slices/occupations/occupationsSlice';
+} from '../../store/slices/occupation/occupationSlice';
 import {
   fetchPhysicianById,
   updatePhysician,

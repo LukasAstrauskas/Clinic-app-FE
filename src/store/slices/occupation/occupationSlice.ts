@@ -18,15 +18,15 @@ const initialState: OccupationsState = {
 };
 
 export const fetchOccupations = createAsyncThunk(
-  'occupations/fetchOccupations',
+  'occupation/fetchOccupations',
   async () => {
     const response = await axios.get(OCCUPATIONS_URL);
     return response.data;
   },
 );
 
-export const occupationsSlice = createSlice({
-  name: 'occupations',
+export const occupationSlice = createSlice({
+  name: 'occupation',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -51,4 +51,5 @@ export const occupationsSlice = createSlice({
 
 export const selectOccupations = (state: RootState) =>
   state.occupation.occupations;
-export default occupationsSlice.reducer;
+
+export default occupationSlice.reducer;

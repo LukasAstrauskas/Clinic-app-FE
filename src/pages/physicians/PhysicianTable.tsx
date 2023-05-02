@@ -79,11 +79,7 @@ const PhysicianTable = ({ physicians, selectedId, rowClick }: Props) => {
             </TableHead>
             <TableBody>
               {physicians.map(({ id, name, occupation }) => (
-                <TableRow
-              key={id}
-              hover
-              sx={tableRowSX(selectedId === physicianId)}
-            >
+                <TableRow key={id} hover sx={tableRowSX(selectedId === id)}>
                   <TableCell
                     onClick={() => {
                       rowClick(id);

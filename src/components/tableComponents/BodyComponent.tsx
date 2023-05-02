@@ -86,77 +86,76 @@ const TableBodyComponent: FC<Props> = ({
   }, [refresh]);
 
   return (
-    <>
-      <TableBody
-        id='scrollBox'
-        style={{
-          maxHeight: 400,
-          overflow: 'auto',
-          display: 'flex',
-        }}
-        sx={{ backgroundColor: grey[200] }}
-      >
-        <TableRow>
-          <TableCell>
-            <InfiniteScroll
-              scrollableTarget='scrollBox'
-              dataLength={user.length}
-              next={getMoreData}
-              hasMore={more}
-              loader={
-                <Typography variant='h5' sx={{ textAlign: 'center' }}>
-                  loading...
-                </Typography>
-              }
-            >
-              <EditUserModal
-                setOpen={setOpen}
-                open={open}
-                selectedId={selectedId}
-              />
-              {user.map(({ id, name, email, occupation }) => (
-                <Table key={id}>
-                  <TableBody>
-                    <TableRow
-                      sx={{
-                        '&:hover': {
-                          backgroundColor: '#ff9e80 !important',
-                        },
-                        cursor: 'pointer',
-                        width: '100%',
+    <TableBody
+      id='scrollBox'
+      style={{
+        maxHeight: 400,
+        overflow: 'auto',
+        display: 'flex',
+      }}
+      sx={{ backgroundColor: grey[200] }}
+    >
+      <TableRow>
+        <TableCell>
+          <InfiniteScroll
+            scrollableTarget='scrollBox'
+            dataLength={user.length}
+            next={getMoreData}
+            hasMore={more}
+            loader={
+              <Typography variant='h5' sx={{ textAlign: 'center' }}>
+                loading...
+              </Typography>
+            }
+          >
+            <EditUserModal
+              setOpen={setOpen}
+              open={open}
+              selectedId={selectedId}
+            />
+            <Table>
+              <TableBody>
+                {user.map(({ id, name, email, occupation }) => (
+                  <TableRow
+                    key={id}
+                    sx={{
+                      '&:hover': {
+                        backgroundColor: '#ff9e80 !important',
+                      },
+                      cursor: 'pointer',
+                      width: '100%',
+                    }}
+                  >
+                    <TableCell>
+                      <Checkbox id={id} onChange={handleChecked} />
+                    </TableCell>
+                    <TableCell
+                      onClick={() => rowClick(id)}
+                      sx={{ width: '200px' }}
+                    >
+                      {name}
+                    </TableCell>
+                    <TableCell align='center' sx={{ width: '200px' }}>
+                      {type === 'physician' ? occupation?.name : email}
+                    </TableCell>
+                    <TableCell
+                      sx={{ m: 0, p: 0 }}
+                      onClick={() => {
+                        setSelectedId(id);
                       }}
                     >
-                      <TableCell>
-                        <Checkbox id={id} onChange={handleChecked} />
-                      </TableCell>
-                      <TableCell
-                        onClick={() => rowClick(id)}
-                        sx={{ width: '200px' }}
-                      >
-                        {name}
-                      </TableCell>
-                      <TableCell align='center' sx={{ width: '200px' }}>
-                        {type === 'physician' ? occupation?.name : email}
-                      </TableCell>
-                      <TableCell
-                        sx={{ m: 0, p: 0 }}
-                        onClick={() => {
-                          setSelectedId(id);
-                        }}
-                      >
-                        <IconButton color='primary' onClick={handleOpen}>
-                          <EditIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              ))}
-            </InfiniteScroll>
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </>
+                      <IconButton color='primary' onClick={handleOpen}>
+                        <EditIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </InfiniteScroll>
+        </TableCell>
+      </TableRow>
+    </TableBody>
   );
 };
 

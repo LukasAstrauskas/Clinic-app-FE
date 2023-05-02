@@ -70,7 +70,7 @@ const TableBodyComponent: FC<Props> = ({
       } else if (type === 'admin') {
         dispatch(fetchMoreAdmins(currentRender));
       } else if (type === 'physician') {
-        dispatch(fetchMorePhysicians(currentRender + 2));
+        dispatch(fetchMorePhysicians(currentRender));
       }
     } else {
       setMore(false);

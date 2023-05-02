@@ -17,7 +17,7 @@ const PatientContactInfo = () => {
     store.getState().patientInfo.additionalInfo?.birth_date as Date,
   );
   const [phone, setPhone] = useState(
-    store.getState().patientInfo.additionalInfo?.phone as number,
+    store.getState().patientInfo.additionalInfo?.phone.toString() as string,
   );
   const [street, setStreet] = useState(
     store.getState().patientInfo.additionalInfo?.street as string,
@@ -38,7 +38,9 @@ const PatientContactInfo = () => {
     store.getState().patientInfo.additionalInfo?.emergency_surname as string,
   );
   const [emergencyPhone, setEmergencyPhone] = useState(
-    store.getState().patientInfo.additionalInfo?.emergency_phone as number,
+    store
+      .getState()
+      .patientInfo.additionalInfo?.emergency_phone.toString() as string,
   );
   const [emergencyRelation, setEmergencyRelation] = useState(
     store.getState().patientInfo.additionalInfo?.emergency_relation as string,
@@ -49,18 +51,30 @@ const PatientContactInfo = () => {
         user_id: userId,
         gender: gender,
         birth_date: birthDate,
-        phone: phone,
+        phone: +phone,
         street: street,
         city: city,
         postal_code: postalCode,
         country: country,
         emergency_name: emergencyName,
         emergency_surname: emergencySurname,
-        emergency_phone: emergencyPhone,
+        emergency_phone: +emergencyPhone,
         emergency_relation: emergencyRelation,
       }),
     );
   };
+  const handlePhoneError = (phoneStr: string) => {
+    if (
+      (phoneStr.startsWith('370') && phoneStr.length === 11) ||
+      phoneStr === '' ||
+      phoneStr === '0'
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
   return (
     <Box
       component='form'
@@ -93,9 +107,11 @@ const PatientContactInfo = () => {
         <TextField
           id='outlined-helper-text'
           defaultValue={phone}
-          value={phone === 0 ? '' : phone}
+          value={phone === '0' ? '' : phone}
           helperText='Phone Number'
-          onChange={(e) => setPhone(+e.target.value)}
+          onChange={(e) => setPhone(e.target.value)}
+          error={handlePhoneError(phone)}
+          placeholder='370...'
         />
       </div>
       <h2>Address</h2>
@@ -146,9 +162,11 @@ const PatientContactInfo = () => {
         <TextField
           id='outlined-helper-text'
           defaultValue={emergencyPhone}
-          value={emergencyPhone === 0 ? '' : emergencyPhone}
+          value={emergencyPhone === '0' ? '' : emergencyPhone}
           helperText='Phone Number'
-          onChange={(e) => setEmergencyPhone(+e.target.value)}
+          onChange={(e) => setEmergencyPhone(e.target.value)}
+          error={handlePhoneError(emergencyPhone)}
+          placeholder='370...'
         />
         <TextField
           id='outlined-helper-text'
@@ -159,7 +177,13 @@ const PatientContactInfo = () => {
       </div>
       <div>
         <Box textAlign='right' sx={{ marginRight: '9%' }}>
-          <Button variant='contained' onClick={handleUpdatePatientInfo}>
+          <Button
+            variant='contained'
+            onClick={handleUpdatePatientInfo}
+            disabled={
+              handlePhoneError(phone) || handlePhoneError(emergencyPhone)
+            }
+          >
             save information
           </Button>
         </Box>

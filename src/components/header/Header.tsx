@@ -147,7 +147,6 @@ const Header = () => {
                           aria-labelledby='composition-button'
                           onKeyDown={handleListKeyDown}
                         >
-                          {/* add link to user profile */}
                           <NavLink
                             to={ROUTES.PATIENTPROFILE}
                             className={resolveLinkClass}

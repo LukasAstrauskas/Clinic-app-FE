@@ -38,7 +38,7 @@ const WelcomePage = () => {
       <Item
         title='Manage appointments'
         icon1={mannageApointmentIcon}
-        linkTo={ROUTES.BOOKAPPOINTMENT}
+        linkTo={ROUTES.MANAGEAPPOINTMENTS}
       ></Item>
     </Grid>
   );

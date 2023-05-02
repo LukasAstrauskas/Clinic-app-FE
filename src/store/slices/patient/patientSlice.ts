@@ -7,20 +7,31 @@ import {
   BASE_USER_URL,
   INCOMING_PATIENTS_TO_BE_RENDERED_URL,
   PATIENTS_URL,
+  PATIENT_APPOINTMENTS,
   PATIENT_SEARCH_URL,
 } from '../../../utils/httpConstants';
 
 interface PatientsState {
   patients: UniversalUser[];
   isLoading: boolean;
+  appointments: any;
   error: string | null;
 }
 
 const initialState: PatientsState = {
   patients: [],
+  appointments: [],
   isLoading: false,
   error: null,
 };
+
+export const fetchPatientAppointments = createAsyncThunk(
+  'patients/patient-appointments',
+  async (id: string) => {
+    const response = await axios.get(PATIENT_APPOINTMENTS + id);
+    return response.data;
+  },
+);
 
 export const fetchPatients = createAsyncThunk<User[]>(
   'patients/fetchPatients',
@@ -107,10 +118,24 @@ export const patientSlice = createSlice({
       .addCase(searchPatient.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
+      })
+      .addCase(fetchPatientAppointments.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchPatientAppointments.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.appointments = action.payload;
+      })
+      .addCase(fetchPatientAppointments.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Something went wrong';
       });
   },
 });
 
 export const selectPatients = (state: RootState) => state.patient.patients;
+export const selectAppointments = (state: RootState) =>
+  state.patient.appointments;
 
 export default patientSlice.reducer;

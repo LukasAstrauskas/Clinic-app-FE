@@ -24,7 +24,6 @@ export const Patients = () => {
   const patients = useSelector(selectPatients);
   const [open, setOpen] = useState(false);
   const [more, setMore] = useState<boolean>(true);
-  const [checkedPatients, setCheckedPatiens] = useState<string[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
   const { appointment, setAppointment } = useContext(AppointmentContext);
   const choosePatient = (patientId: string): void => {
@@ -35,22 +34,6 @@ export const Patients = () => {
     setOpen(true);
   };
 
-  const handleDelete = () => {
-    checkedPatients.forEach((patient) => {
-      dispatch(deletePatient(patient));
-    });
-    setCheckedPatiens([]);
-  };
-  const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedPatient = e.target;
-    if (selectedPatient.checked) {
-      setCheckedPatiens([...checkedPatients, selectedPatient.id]);
-    } else {
-      setCheckedPatiens(
-        checkedPatients.filter((patient) => patient !== selectedPatient.id),
-      );
-    }
-  };
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const search = e.target.value;
     if (search.length != 0) {
@@ -61,9 +44,7 @@ export const Patients = () => {
       setRefresh(true);
     }
   };
-  useEffect(() => {
-    dispatch(fetchPatients());
-  }, [checkedPatients]);
+
   return (
     <>
       <Box
@@ -102,10 +83,7 @@ export const Patients = () => {
       >
         <TableContainer component={Paper} sx={{ maxHeight: '500px' }}>
           <Table stickyHeader>
-            <TableHeadComponent
-              handleDelete={handleDelete}
-              collumName='Email'
-            />
+            <TableHeadComponent collumName='Email' />
           </Table>
           <TableBodyComponent
             type='patient'
@@ -114,7 +92,6 @@ export const Patients = () => {
             setRefresh={setRefresh}
             refresh={refresh}
             user={patients}
-            handleChecked={handleChecked}
             rowClick={choosePatient}
           />
         </TableContainer>

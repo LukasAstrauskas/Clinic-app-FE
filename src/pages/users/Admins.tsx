@@ -23,29 +23,10 @@ export const Admins = () => {
   const admins = useSelector(selectAdmin);
   const [open, setOpen] = useState<boolean>(false);
   const [more, setMore] = useState<boolean>(true);
-  const [checkedAdmins, setCheckedAdmins] = useState<string[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
 
   const handleOpen = () => {
     setOpen(true);
-  };
-
-  const handleDelete = () => {
-    checkedAdmins.forEach((admin) => {
-      dispatch(deleteAdmin(admin));
-    });
-    setCheckedAdmins([]);
-  };
-
-  const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedAdmin = e.target;
-    if (selectedAdmin.checked) {
-      setCheckedAdmins([...checkedAdmins, selectedAdmin.id]);
-    } else {
-      setCheckedAdmins(
-        checkedAdmins.filter((patient) => patient !== selectedAdmin.id),
-      );
-    }
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,9 +41,6 @@ export const Admins = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(fetchAdmins());
-  }, [open, checkedAdmins]);
   return (
     <>
       <Box
@@ -100,10 +78,7 @@ export const Admins = () => {
       >
         <TableContainer component={Paper}>
           <Table stickyHeader>
-            <TableHeadComponent
-              handleDelete={handleDelete}
-              collumName='email'
-            />
+            <TableHeadComponent collumName='email' />
           </Table>
           <TableBodyComponent
             type='admin'
@@ -112,7 +87,6 @@ export const Admins = () => {
             setRefresh={setRefresh}
             refresh={refresh}
             user={admins}
-            handleChecked={handleChecked}
           />
         </TableContainer>
       </Box>

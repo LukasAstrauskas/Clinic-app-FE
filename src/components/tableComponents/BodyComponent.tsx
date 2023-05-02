@@ -1,6 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
 import { TableBody, TableRow, TableCell } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -14,15 +13,27 @@ import {
   fetchPatientAmount,
   fetchPhysicianAmount,
 } from '../../store/slices/userSize/userSizeSlice';
-import { fetchMorePatients } from '../../store/slices/patient/patientSlice';
-import { fetchMoreAdmins } from '../../store/slices/admin/adminSlice';
-import { fetchMorePhysicians } from '../../store/slices/physician/physicianSlice';
+import {
+  deletePatient,
+  fetchMorePatients,
+  fetchPatients,
+} from '../../store/slices/patient/patientSlice';
+import {
+  deleteAdmin,
+  fetchAdmins,
+  fetchMoreAdmins,
+} from '../../store/slices/admin/adminSlice';
+import {
+  deletePhysician,
+  fetchMorePhysicians,
+  fetchPhysicians,
+} from '../../store/slices/physician/physicianSlice';
 import EditUserModal from '../modals/EditUserModal';
 import { grey } from '@mui/material/colors';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Props {
   user: UniversalUser[];
-  handleChecked: (e: React.ChangeEvent<HTMLInputElement>) => void;
   refresh: boolean;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   more: boolean;
@@ -33,7 +44,6 @@ interface Props {
 
 const TableBodyComponent: FC<Props> = ({
   user,
-  handleChecked,
   refresh,
   setRefresh,
   more,
@@ -46,9 +56,23 @@ const TableBodyComponent: FC<Props> = ({
   const [currentRender, setCurrentRender] = useState(7);
   const [selectedId, setSelectedId] = useState('');
   const [open, setOpen] = useState(false);
+  const [users, setUsers] = useState([]);
 
   const handleOpen = () => {
     setOpen(true);
+  };
+
+  const handleDelete = (id: string) => {
+    if (type === 'patient') {
+      dispatch(deletePatient(id));
+    }
+    if (type === 'physician') {
+      dispatch(deletePhysician(id));
+    }
+    if (type === 'admin') {
+      dispatch(deleteAdmin(id));
+    }
+    setUsers(users.filter((user) => user != id));
   };
 
   const getSize = () => {
@@ -84,6 +108,18 @@ const TableBodyComponent: FC<Props> = ({
     setMore(true);
     setCurrentRender(7);
   }, [refresh]);
+
+  useEffect(() => {
+    if (type === 'patient') {
+      dispatch(fetchPatients());
+    }
+    if (type === 'physician') {
+      dispatch(fetchPhysicians());
+    }
+    if (type === 'admin') {
+      dispatch(fetchAdmins());
+    }
+  }, [open, users]);
 
   return (
     <>
@@ -123,9 +159,6 @@ const TableBodyComponent: FC<Props> = ({
                 width: '100%',
               }}
             >
-              <TableCell>
-                <Checkbox id={id} onChange={handleChecked} />
-              </TableCell>
               <TableCell onClick={() => rowClick(id)} sx={{ width: '200px' }}>
                 {name}
               </TableCell>
@@ -140,6 +173,11 @@ const TableBodyComponent: FC<Props> = ({
               >
                 <IconButton color='primary' onClick={handleOpen}>
                   <EditIcon />
+                </IconButton>
+              </TableCell>
+              <TableCell>
+                <IconButton color='primary' onClick={() => handleDelete(id)}>
+                  <DeleteIcon sx={{ color: 'orange' }} />
                 </IconButton>
               </TableCell>
             </TableRow>

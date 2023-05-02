@@ -9,16 +9,18 @@ interface Props {
 }
 
 const TableHeadComponent: FC<Props> = ({ handleDelete, collumName }) => {
+  const tableHeadName =
+    collumName.charAt(0).toUpperCase() +
+    collumName.substring(1, collumName.length);
   return (
     <TableHead>
       <TableRow>
         <TableCell
           sx={{
             backgroundColor: grey[200],
-            Width: '10px',
+            width: '10%',
           }}
         >
-          {' '}
           <IconButton onClick={handleDelete}>
             <DeleteIcon sx={{ color: 'orange' }} />
           </IconButton>{' '}
@@ -40,11 +42,12 @@ const TableHeadComponent: FC<Props> = ({ handleDelete, collumName }) => {
           }}
           align='center'
         >
-          {collumName}
+          {tableHeadName}
         </TableCell>
         <TableCell
           sx={{
             backgroundColor: grey[200],
+            width: '10%',
           }}
         />
       </TableRow>

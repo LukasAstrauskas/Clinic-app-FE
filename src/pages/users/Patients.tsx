@@ -30,9 +30,11 @@ export const Patients = () => {
   const choosePatient = (patientId: string): void => {
     setAppointment({ ...appointment, patientId: patientId });
   };
+
   const handleOpen = () => {
     setOpen(true);
   };
+
   const handleDelete = () => {
     checkedPatients.forEach((patient) => {
       dispatch(deletePatient(patient));
@@ -61,7 +63,7 @@ export const Patients = () => {
   };
   useEffect(() => {
     dispatch(fetchPatients());
-  }, []);
+  }, [checkedPatients]);
   return (
     <>
       <Box

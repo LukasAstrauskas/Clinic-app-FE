@@ -17,12 +17,18 @@ export const INCOMING_PATIENTS_TO_BE_RENDERED_URL =
   'http://localhost:8080/user/patients/offset/';
 export const PATIENT_SIZE_URL = 'http://localhost:8080/user/patientSize';
 export const PATIENT_SEARCH_URL = 'http://localhost:8080/user/patientSearch/';
+export const PATIENTS_ADDITIONAL_INFO_URL =
+  'http://localhost:8080/patientInfo/';
 
 //Physicians
-export const PHYSICIANS_URL = 'http://localhost:8080/physicianInfo';
-export const BASE_PHYSICIANS_URL = 'http://localhost:8080/physician/';
+export const PHYSICIANS_FULL_URL = 'http://localhost:8080/physicianInfo';
+export const BASE_PHYSICIANS_FULL_URL = 'http://localhost:8080/physicianInfo/';
+export const PHYSICIANS_URL_FOR_DELETE =
+  'http://localhost:8080/physicianInfo/physician/';
 export const PHYSICIAN_SEARCH_URL =
   'http://localhost:8080/user/physicianSearch/';
+export const PHYSICIANS_URL = 'http://localhost:8080/user/physicians';
+export const BASE_PHYSICIANS_URL = 'http://localhost:8080/user/physicians/';
 export const PHYSICIAN_SIZE_URL = 'http://localhost:8080/user/physicianSize';
 export const INCOMING_PHYSICIANS_TO_BE_RENDERED_URL =
   'http://localhost:8080/physicianInfo/physcians/offset/';
@@ -30,5 +36,4 @@ export const INCOMING_PHYSICIANS_TO_BE_RENDERED_URL =
 //Occupations
 export const PHYNAMEOCCUPATION_URL =
   'http://localhost:8080/physicianInfo/physicianNamesOccupations';
-export const PATIENTS_ADDITIONAL_INFO_URL =
-  'http://localhost:8080/patientInfo/';
+export const OCCUPATIONS_URL = 'http://localhost:8080/occupations';

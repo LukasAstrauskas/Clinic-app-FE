@@ -7,24 +7,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchPhyNameOccupation,
   selectPhysicianId,
-  selectPhysicians,
   setPhysicianId,
 } from '../../store/slices/physician/phyNameOccupationSlice';
 import PhysicianSearchBar from '../physicians/PhysicianSearchBar';
-import axios from 'axios';
-import { Physician } from '../../model/Model';
-import { PhyNameOccupation } from '../../model/Model';
+import {
+  PhysicianState,
+  fetchPhysicians,
+  searchPhysician,
+} from '../../store/slices/physician/physicianSlice';
 
 type props = {
   tableTitle?: string;
 };
 
 const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
-  const [filteredPhysicians, setFilteredPhysicians] = useState<Physician[]>([]);
-
-  const physicians: PhyNameOccupation[] = useSelector(selectPhysicians);
   const physicianId: string | null = useSelector(selectPhysicianId);
+  const physicians = useSelector(PhysicianState);
   const dispatch = useDispatch<AppDispatch>();
+  const [refresh, setRefresh] = useState<boolean>(false);
+  const [more, setMore] = useState<boolean>(true);
 
   const handleClick = (id: string) => {
     dispatch(setPhysicianId(id));
@@ -32,15 +33,18 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
 
   const handleSearch = async (searchText: string, searchBy: string) => {
     if (searchText.length != 0) {
-      await axios
-        .get(`http://localhost:8080/user/physicianSearch/${searchText}`)
-        .then((response) => setFilteredPhysicians(response.data));
+      dispatch(searchPhysician(searchText));
+      setMore(false);
+    } else {
+      dispatch(fetchPhysicians());
+      setRefresh(true);
     }
   };
 
   useEffect(() => {
+    dispatch(fetchPhysicians());
     dispatch(fetchPhyNameOccupation());
-  }, [dispatch]);
+  }, [open]);
 
   return (
     <Container maxWidth='lg'>
@@ -58,9 +62,13 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
           <Grid item lg={4} sx={{ pr: 2 }}>
             <PhysicianSearchBar onSearch={handleSearch} />
             <PhysicianTable
-              physicians={filteredPhysicians}
+              physicians={physicians}
               selectedId={physicianId}
               rowClick={handleClick}
+              refresh={refresh}
+              setRefresh={setRefresh}
+              more={more}
+              setMore={setMore}
             />
           </Grid>
           <Grid item lg={8}>

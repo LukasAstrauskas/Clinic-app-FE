@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,16 +8,24 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ModeIcon from '@mui/icons-material/Mode';
 import { Button, Typography } from '@mui/material';
-import { Physician } from '../../model/Model';
+import { UniversalUser } from '../../model/Model';
 import { grey } from '@mui/material/colors';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { fetchPhysicians } from '../../store/slices/physician/physicianSlice';
-import { useDispatch } from 'react-redux';
+import { fetchMorePhysicians } from '../../store/slices/physician/physicianSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
+import {
+  fetchPhysicianAmount,
+  selectUserSize,
+} from '../../store/slices/userSize/userSizeSlice';
 
 type Props = {
-  physicians: Physician[];
+  physicians: UniversalUser[];
   selectedId: string | null;
+  refresh: boolean;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  more: boolean;
+  setMore: React.Dispatch<React.SetStateAction<boolean>>;
   rowClick: (id: string) => void;
 };
 
@@ -31,36 +39,50 @@ const tableRowSX = (isSelected: boolean) => {
   };
 };
 
-const PhysicianTable = ({ physicians, selectedId, rowClick }: Props) => {
-  const UserSize = 36;
+const PhysicianTable = ({
+  physicians,
+  selectedId,
+  refresh,
+  setRefresh,
+  more,
+  setMore,
+  rowClick,
+}: Props) => {
+  const UserSize = useSelector(selectUserSize);
   const dispatch = useDispatch<AppDispatch>();
   const [currentRender, setCurrentRender] = useState(5);
-  const [more, setMore] = useState<boolean>(true);
 
-  const fetchMoreData = async () => {
+  const getSize = () => {
+    dispatch(fetchPhysicianAmount());
+  };
+
+  const getMoreData = async () => {
     if (UserSize > currentRender) {
-      dispatch(fetchPhysicians());
+      dispatch(fetchMorePhysicians(currentRender));
       setCurrentRender(currentRender + 5);
     } else {
       setMore(false);
     }
+    setCurrentRender((prevRender) => prevRender + 5);
   };
+
+  useEffect(() => {
+    setRefresh(false);
+    getSize();
+    setMore(more);
+    setCurrentRender(7);
+  }, [refresh]);
 
   return (
     <div style={{ maxHeight: 400, overflowY: 'scroll' }}>
       <TableContainer component={Paper}>
         <InfiniteScroll
           dataLength={currentRender}
-          next={fetchMoreData}
+          next={getMoreData}
           hasMore={more}
           loader={
             <Typography variant='h5' sx={{ textAlign: 'center' }}>
               loading...
-            </Typography>
-          }
-          endMessage={
-            <Typography variant='h5' sx={{ textAlign: 'center' }}>
-              No more items to display
             </Typography>
           }
         >
@@ -92,7 +114,7 @@ const PhysicianTable = ({ physicians, selectedId, rowClick }: Props) => {
                       rowClick(id);
                     }}
                   >
-                    {occupation.name}
+                    {occupation?.name}
                   </TableCell>
                   <TableCell sx={{ m: 0, p: 0 }}>
                     <Button

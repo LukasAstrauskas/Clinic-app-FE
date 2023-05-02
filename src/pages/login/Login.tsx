@@ -30,9 +30,7 @@ const Login = () => {
       const response = await dispatch(login({ email, password }));
       if (response.payload && response.payload.type) {
         navigate(ROUTES.HOME);
-        sessionStorage.setItem('isLogged', 'true');
-        sessionStorage.setItem('type', response.payload.type);
-        if (store.getState().auth.type === 'patient') {
+        if (sessionStorage.getItem('type') === 'patient') {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           await dispatch(fetchPatientInfo(store.getState().auth.id!));
         }

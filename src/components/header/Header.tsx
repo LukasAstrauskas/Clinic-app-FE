@@ -158,7 +158,11 @@ const Header = () => {
                           onKeyDown={handleListKeyDown}
                         >
                           <NavLink
-                            to={ROUTES.PATIENTPROFILE}
+                            to={
+                              sessionStorage.getItem('type') === 'patient'
+                                ? ROUTES.PATIENTPROFILE
+                                : 'not-existing-page' // TODO: implement profile for physician/administrators
+                            }
                             className={resolveLinkClass}
                           >
                             <MenuItem onClick={handleClose}>Profile</MenuItem>

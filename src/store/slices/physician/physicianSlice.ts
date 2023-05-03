@@ -1,7 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Physician, PhysicianDto } from '../../../model/Model';
-import { UniversalUser, User } from '../../../model/Model';
+import {
+  Physician,
+  PhysicianDto,
+  UniversalUser,
+  User,
+} from '../../../model/Model';
 import {
   BASE_PHYSICIANS_FULL_URL,
   BASE_PHYSICIANS_URL,

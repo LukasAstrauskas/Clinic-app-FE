@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from '@mui/system';
-import { TableContainer, Table, Paper, Typography } from '@mui/material';
+import { TableContainer, Table, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import AddAdminModal from '../../components/modals/AddAdminModal';
 import Styles from '../../components/styles/UserManagmentStyles';

@@ -76,8 +76,14 @@ export const deletePhysician = createAsyncThunk(
 
 export const searchPhysician = createAsyncThunk(
   'user/searchPhysician',
-  async (search: string) => {
-    const response = await axios.get(PHYSICIAN_SEARCH_URL + search);
+  async ({ search, occupation }: { search: string; occupation?: string }) => {
+    const searchQueryParam = search ? `search=${search}` : '';
+    const occupationQueryParam = occupation ? `occupation=${occupation}` : '';
+    const queryParamSeparator =
+      searchQueryParam && occupationQueryParam ? '&' : '';
+    const response = await axios.get(
+      `${PHYSICIAN_SEARCH_URL}?${searchQueryParam}${queryParamSeparator}${occupationQueryParam}`,
+    );
     return response.data;
   },
 );

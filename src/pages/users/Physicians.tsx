@@ -53,7 +53,7 @@ export const Physicians = () => {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const search = e.target.value;
     if (search.length != 0) {
-      dispatch(searchPhysician(search));
+      dispatch(searchPhysician({ search }));
       setMore(false);
     } else {
       dispatch(fetchPhysicians());

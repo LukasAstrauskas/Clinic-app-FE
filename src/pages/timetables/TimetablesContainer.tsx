@@ -31,11 +31,15 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
     dispatch(setPhysicianId(id));
   };
 
-  const handleSearch = async (searchText: string, searchBy: string) => {
-    if (searchText.length != 0) {
-      dispatch(searchPhysician(searchText));
+  const handleSearch = async (search: string, occupation: string) => {
+    console.log(occupation);
+    if (search.length != 0 || occupation) {
+      dispatch(searchPhysician({ search, occupation }));
+      console.log('search= ' + search);
+      console.log('occupation= ' + occupation);
       setMore(false);
     } else {
+      console.log('bad');
       dispatch(fetchPhysicians());
       setRefresh(true);
     }

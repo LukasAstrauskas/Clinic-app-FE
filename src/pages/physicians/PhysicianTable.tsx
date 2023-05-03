@@ -59,11 +59,12 @@ const PhysicianTable = ({
   const getMoreData = async () => {
     if (UserSize > currentRender) {
       dispatch(fetchMorePhysicians(currentRender));
+      console.log(physicians);
       setCurrentRender(currentRender + 5);
     } else {
       setMore(false);
     }
-    setCurrentRender((prevRender) => prevRender + 5);
+    //setCurrentRender((prevRender) => prevRender + 5);
   };
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
@@ -11,7 +11,6 @@ import TableHeadComponent from '../../components/tableComponents/HeadComponent';
 import TableBodyComponent from '../../components/tableComponents/BodyComponent';
 import {
   PhysicianState,
-  deletePhysician,
   fetchPhysicians,
   searchPhysician,
 } from '../../store/slices/physician/physicianSlice';
@@ -23,31 +22,10 @@ export const Physicians = () => {
   const physicians = useSelector(PhysicianState);
   const [more, setMore] = useState<boolean>(true);
   const [open, setOpen] = useState(false);
-  const [checkedPhysician, setCheckedPhysician] = useState<string[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
 
   const handleOpen = () => {
     setOpen(true);
-  };
-
-  const handleDelete = () => {
-    checkedPhysician.forEach((physician) => {
-      dispatch(deletePhysician(physician));
-    });
-    setCheckedPhysician([]);
-  };
-
-  const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectePhysician = e.target;
-    if (selectePhysician.checked) {
-      setCheckedPhysician([...checkedPhysician, selectePhysician.id]);
-    } else {
-      setCheckedPhysician(
-        checkedPhysician.filter(
-          (physician) => physician !== selectePhysician.id,
-        ),
-      );
-    }
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,9 +38,6 @@ export const Physicians = () => {
       setRefresh(true);
     }
   };
-  useEffect(() => {
-    dispatch(fetchPhysicians());
-  }, [open, checkedPhysician]);
 
   return (
     <>
@@ -100,10 +75,7 @@ export const Physicians = () => {
       >
         <TableContainer component={Paper}>
           <Table stickyHeader>
-            <TableHeadComponent
-              handleDelete={handleDelete}
-              collumName='occupation'
-            />
+            <TableHeadComponent collumName='occupation' />
           </Table>
 
           <TableBodyComponent
@@ -113,7 +85,6 @@ export const Physicians = () => {
             setRefresh={setRefresh}
             refresh={refresh}
             user={physicians}
-            handleChecked={handleChecked}
           />
         </TableContainer>
       </Box>

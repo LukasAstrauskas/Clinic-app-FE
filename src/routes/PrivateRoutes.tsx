@@ -1,7 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
-import { selectisLoggedIn } from '../store/slices/auth/authSlice';
 import PropTypes from 'prop-types';
 
 const PrivateRoutes = ({ redirectPath = '/login' }) => {

@@ -22,7 +22,12 @@ import {
   fetchPhysicianById,
   updatePhysician,
 } from '../../store/slices/physician/editedPhysicianSlice';
-import { selectPhysician } from '../../store/slices/physician/physicianSlice';
+import {
+  fetchPhysicians,
+  selectPhysician,
+} from '../../store/slices/physician/physicianSlice';
+import { fetchAdmins } from '../../store/slices/admin/adminSlice';
+import { fetchPatients } from '../../store/slices/patient/patientSlice';
 
 const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -89,13 +94,21 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
         dispatch(updatePhysician(updatedPhysician));
       }
       setIsUpdated(true);
-      window.location.reload();
+      setOpen(false);
     }
   };
 
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (!open) {
+      dispatch(fetchPatients());
+      dispatch(fetchPhysicians());
+      dispatch(fetchAdmins());
+    }
+  }, [open]);
 
   useEffect(() => {
     if (!open) {
@@ -225,11 +238,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
               </TextField>
             )}
           </Box>
-          {isUpdated && (
-            <h4 style={{ textAlign: 'center', color: 'green' }}>
-              Successfully modified!
-            </h4>
-          )}
+
           <Box
             sx={{
               mt: 9,

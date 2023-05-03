@@ -83,15 +83,18 @@ export const Patients = () => {
           <Table stickyHeader>
             <TableHeadComponent collumName='Email' />
           </Table>
-          <TableBodyComponent
-            type='patient'
-            more={more}
-            setMore={setMore}
-            setRefresh={setRefresh}
-            refresh={refresh}
-            user={patients}
-            rowClick={choosePatient}
-          />
+
+          <Table>
+            <TableBodyComponent
+              type='patient'
+              more={more}
+              setMore={setMore}
+              setRefresh={setRefresh}
+              refresh={refresh}
+              user={patients}
+              rowClick={choosePatient}
+            />
+          </Table>
         </TableContainer>
       </Box>
     </>

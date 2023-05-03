@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
-import { TableBody, TableRow, TableCell } from '@mui/material';
+import { TableBody, TableRow, TableCell, Table } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -122,69 +122,81 @@ const TableBodyComponent: FC<Props> = ({
   }, [open, users]);
 
   return (
-    <>
-      <TableBody
-        id='scrollBox'
-        style={{
-          maxHeight: 400,
-          overflow: 'auto',
-          display: 'flex',
-        }}
-        sx={{ backgroundColor: grey[200] }}
-      >
-        <InfiniteScroll
-          scrollableTarget='scrollBox'
-          dataLength={user.length}
-          next={getMoreData}
-          hasMore={more}
-          loader={
-            <Typography variant='h5' sx={{ textAlign: 'center' }}>
-              loading...
-            </Typography>
-          }
-        >
-          <EditUserModal
-            setOpen={setOpen}
-            open={open}
-            selectedId={selectedId}
-          />
-          {user.map(({ id, name, email, occupation }) => (
-            <TableRow
-              key={id}
-              sx={{
-                '&:hover': {
-                  backgroundColor: '#ff9e80 !important',
-                },
-                cursor: 'pointer',
-                width: '100%',
-              }}
-            >
-              <TableCell onClick={() => rowClick(id)} sx={{ width: '200px' }}>
-                {name}
-              </TableCell>
-              <TableCell align='center' sx={{ width: '200px' }}>
-                {type === 'physician' ? occupation?.name : email}
-              </TableCell>
-              <TableCell
-                sx={{ m: 0, p: 0 }}
-                onClick={() => {
-                  setSelectedId(id);
-                }}
-              >
-                <IconButton color='primary' onClick={handleOpen}>
-                  <EditIcon />
-                </IconButton>
-              </TableCell>
-              <TableCell>
-                <IconButton color='primary' onClick={() => handleDelete(id)}>
-                  <DeleteIcon sx={{ color: 'orange' }} />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
-        </InfiniteScroll>
-      </TableBody>
-    </>
+    <TableBody
+      id='scrollBox'
+      style={{
+        maxHeight: 400,
+        overflow: 'auto',
+        display: 'flex',
+      }}
+      sx={{ backgroundColor: grey[200] }}
+    >
+      <TableRow>
+        <TableCell>
+          <InfiniteScroll
+            scrollableTarget='scrollBox'
+            dataLength={user.length}
+            next={getMoreData}
+            hasMore={more}
+            loader={
+              <Typography variant='h5' sx={{ textAlign: 'center' }}>
+                loading...
+              </Typography>
+            }
+          >
+            <EditUserModal
+              setOpen={setOpen}
+              open={open}
+              selectedId={selectedId}
+            />
+            <Table>
+              <TableBody>
+                {user.map(({ id, name, email, occupation }) => (
+                  <TableRow
+                    key={id}
+                    sx={{
+                      '&:hover': {
+                        backgroundColor: '#ff9e80 !important',
+                      },
+                      cursor: 'pointer',
+                      width: '100%',
+                    }}
+                  >
+                    <TableCell
+                      onClick={() => rowClick(id)}
+                      sx={{ width: '200px' }}
+                    >
+                      {name}
+                    </TableCell>
+                    <TableCell align='center' sx={{ width: '200px' }}>
+                      {type === 'physician' ? occupation?.name : email}
+                    </TableCell>
+                    <TableCell
+                      sx={{ m: 0, p: 0 }}
+                      onClick={() => {
+                        setSelectedId(id);
+                      }}
+                    >
+                      <IconButton color='primary' onClick={handleOpen}>
+                        <EditIcon />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton
+                        color='primary'
+                        onClick={() => handleDelete(id)}
+                      >
+                        <DeleteIcon sx={{ color: 'orange' }} />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </InfiniteScroll>
+        </TableCell>
+      </TableRow>
+    </TableBody>
   );
 };
 

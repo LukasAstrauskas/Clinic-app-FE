@@ -79,14 +79,17 @@ export const Admins = () => {
           <Table stickyHeader>
             <TableHeadComponent collumName='email' />
           </Table>
-          <TableBodyComponent
-            type='admin'
-            more={more}
-            setMore={setMore}
-            setRefresh={setRefresh}
-            refresh={refresh}
-            user={admins}
-          />
+
+          <Table>
+            <TableBodyComponent
+              type='admin'
+              more={more}
+              setMore={setMore}
+              setRefresh={setRefresh}
+              refresh={refresh}
+              user={admins}
+            />
+          </Table>
         </TableContainer>
       </Box>
     </>

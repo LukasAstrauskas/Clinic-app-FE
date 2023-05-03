@@ -97,22 +97,13 @@ const TimetableList = ({ physicianId }: Props) => {
   };
   useEffect(() => {
     setAppointment((appointment) => {
-      if (type === 'patient') {
-        return {
-          ...appointment,
-          patientId: loggedInUserId || '',
-          physicianId: physicianId,
-          date: '',
-          time: '',
-        };
-      } else {
-        return {
-          ...appointment,
-          physicianId: physicianId,
-          date: '',
-          time: '',
-        };
-      }
+      return {
+        ...appointment,
+        patientId: type === 'patient' ? loggedInUserId : undefined,
+        physicianId: physicianId,
+        date: '',
+        time: '',
+      };
     });
     setTimeslot({ physicianId: physicianId, date: '', time: '' });
     // eslint-disable-next-line

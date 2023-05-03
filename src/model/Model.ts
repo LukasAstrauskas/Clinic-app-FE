@@ -32,7 +32,7 @@ export interface Timeslot {
 }
 export interface TimeslotWithPhysicianAndPatient {
   physicianId: string;
-  patientId: string;
+  patientId?: string | null;
 }
 
 export interface EditUser {
@@ -79,7 +79,7 @@ export interface Appointment {
   physicianId: string;
   date: string;
   time: string;
-  patientId: string;
+  patientId?: string | null;
 }
 
 export interface AppointmentState {

@@ -27,7 +27,7 @@ const BookAppointment = () => {
     physicianId: ' ',
     date: '',
     time: '',
-    patientId: ' ',
+    patientId: undefined,
   });
 
   const navigate = useNavigate();
@@ -97,7 +97,7 @@ const BookAppointment = () => {
               variant='contained'
               onClick={bookAppointment}
               disabled={
-                appointment.patientId === ' ' || appointment.time === ''
+                appointment.patientId === undefined || appointment.time === ''
               }
               sx={Styles.createNewUserBtn}
             >
@@ -107,19 +107,28 @@ const BookAppointment = () => {
                   textDecoration: 'none',
                 }}
               >
-                Book an appontment
+                Book an appointment
               </Button>
             </Button>
           )}
-          {!picker && (
+          {!picker && type === 'patient' && (
             <Button
               variant='contained'
-              onClick={type === 'patient' ? bookAppointment : setpicker}
+              onClick={bookAppointment}
               disabled={appointment.time === ''}
               sx={Styles.createNewUserBtn}
             >
-              {type === 'patient' ? 'Book Appointment' : 'Next'}
-              {type === 'patient' ? '' : <ArrowForwardIcon />}
+              Book Appointment
+            </Button>
+          )}
+          {!picker && type !== 'patient' && (
+            <Button
+              variant='contained'
+              onClick={setpicker}
+              sx={Styles.createNewUserBtn}
+            >
+              Next
+              <ArrowForwardIcon />
             </Button>
           )}
           <ConfirmationModal

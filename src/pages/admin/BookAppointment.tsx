@@ -13,11 +13,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
-import {
-  countUpcomingTimeslotsWithPhysician,
-  removePatientFromTimeslot,
-  updateTimeslot,
-} from '../../data/fetch';
+import { removePatientFromTimeslot, updateTimeslot } from '../../data/fetch';
 import { useSelector } from 'react-redux';
 import { selectType } from '../../store/slices/auth/authSlice';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
@@ -45,15 +41,13 @@ const BookAppointment = () => {
   };
 
   const bookAppointment = async () => {
-    const appointments = await countUpcomingTimeslotsWithPhysician(appointment);
-
-    if (appointments > 0) {
+    try {
+      await updateTimeslot(appointment);
+      setConfirmationMessage('Appointment booked successfully!');
+      setIsConfirmationOpen(true);
+    } catch (error) {
       setIsErrorModalOpen(true);
-      return;
     }
-    await updateTimeslot(appointment);
-    setConfirmationMessage('Appointment booked successfully!');
-    setIsConfirmationOpen(true);
   };
 
   const handleRemovePatientFromTimeslot = async () => {

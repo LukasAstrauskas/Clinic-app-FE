@@ -33,16 +33,8 @@ export const updateTimeslot = async (
   await axios
     .patch('http://localhost:8080/timeslot', appointment)
     .catch((error) => {
-      console.error('Error deleting timeslot:', error);
+      throw new Error(
+        `You already have an appointment with this physician: ${error.message}`,
+      );
     });
-};
-
-export const countUpcomingTimeslotsWithPhysician = async (
-  timeslot: TimeslotWithPhysicianAndPatient,
-): Promise<number> => {
-  const { physicianId, patientId } = timeslot;
-  const response = await axios.get(
-    `http://localhost:8080/timeslot/count/${physicianId}/${patientId}`,
-  );
-  return response.data;
 };

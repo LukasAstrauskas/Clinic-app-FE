@@ -1,34 +1,54 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { UniversalUser, User } from '../../../model/Model';
+import { PatientAppointments, UniversalUser, User } from '../../../model/Model';
 import { RootState } from '../../types';
 import axios from 'axios';
 import {
   BASE_USER_URL,
+  DELETE_TIMESLOT,
   INCOMING_PATIENTS_TO_BE_RENDERED_URL,
   PATIENTS_URL,
   PATIENT_APPOINTMENTS,
+  PATIENT_PAST_APPOINTMENTS,
   PATIENT_SEARCH_URL,
 } from '../../../utils/httpConstants';
 
 interface PatientsState {
   patients: UniversalUser[];
   isLoading: boolean;
-  appointments: any;
+  upcomingAppointments: PatientAppointments[];
+  pastAppointments: PatientAppointments[];
   error: string | null;
 }
 
 const initialState: PatientsState = {
   patients: [],
-  appointments: [],
+  upcomingAppointments: [],
+  pastAppointments: [],
   isLoading: false,
   error: null,
 };
+
+export const deleteAppointment = createAsyncThunk(
+  'patients/patient-cancel-appointment',
+  async (id: string) => {
+    const response = await axios.delete(DELETE_TIMESLOT + id);
+    return response.data;
+  },
+);
 
 export const fetchPatientAppointments = createAsyncThunk(
   'patients/patient-appointments',
   async (id: string) => {
     const response = await axios.get(PATIENT_APPOINTMENTS + id);
+    return response.data;
+  },
+);
+
+export const fetchPastPatientAppointments = createAsyncThunk(
+  'patients/patient-past-appointments',
+  async (id: string) => {
+    const response = await axios.get(PATIENT_PAST_APPOINTMENTS + id);
     return response.data;
   },
 );
@@ -125,17 +145,34 @@ export const patientSlice = createSlice({
       })
       .addCase(fetchPatientAppointments.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.appointments = action.payload;
+        state.upcomingAppointments = action.payload;
       })
       .addCase(fetchPatientAppointments.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
+      })
+      .addCase(fetchPastPatientAppointments.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchPastPatientAppointments.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.pastAppointments = action.payload;
+      })
+      .addCase(fetchPastPatientAppointments.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Something went wrong';
+      })
+      .addCase(deleteAppointment.fulfilled, (state) => {
+        state.isLoading = false;
       });
   },
 });
 
 export const selectPatients = (state: RootState) => state.patient.patients;
 export const selectAppointments = (state: RootState) =>
-  state.patient.appointments;
+  state.patient.upcomingAppointments;
+export const selectPastAppointments = (state: RootState) =>
+  state.patient.pastAppointments;
 
 export default patientSlice.reducer;

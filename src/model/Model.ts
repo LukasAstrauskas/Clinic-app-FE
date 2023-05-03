@@ -7,6 +7,21 @@ export interface Timeslots {
   timePatientList: TimePatient[];
 }
 
+export interface PatientAppointments {
+  physicianId: string;
+  physicianName: string;
+  physicianEmail: string;
+  occupation: {
+    id: string;
+    name: string;
+  };
+  timeslot: {
+    physicianId: string;
+    date: string;
+    patientId: string;
+  };
+}
+
 export interface PhyNameOccupation {
   physicianId: string;
   name: string;

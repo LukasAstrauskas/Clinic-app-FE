@@ -23,9 +23,15 @@ const ConfirmModal = ({
 }: Props) => {
   return (
     <div>
-      <Dialog open={open} onClose={onClose}>
+      <Dialog
+        open={open}
+        onClose={onClose}
+        sx={{
+          backdropFilter: 'blur(5px)',
+        }}
+      >
         <DialogTitle>{message}</DialogTitle>
-        <DialogActions>
+        <DialogActions sx={{ m: 'auto' }}>
           {onConfirm !== undefined && (
             <Button onClick={onConfirm}>{agree}</Button>
           )}

@@ -10,19 +10,22 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  deleteAppointment,
+  fetchPastPatientAppointments,
   fetchPatientAppointments,
   selectAppointments,
+  selectPastAppointments,
 } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
 import moment from 'moment';
 import AppointmentSlot from './appointment-slot';
+import { PatientAppointments } from '../../model/Model';
 
 const AppointmentTabs = () => {
-  const appointments = useSelector(selectAppointments);
+  const upcomingAppointments = useSelector(selectAppointments);
+  const pastAppointments = useSelector(selectPastAppointments);
   const dispatch = useDispatch<AppDispatch>();
   const [value, setValue] = useState(0);
-
-  const [upcomingAppointments, setupcomingAppointments] = useState<[]>([]);
 
   const theme = createTheme({
     palette: {
@@ -47,14 +50,12 @@ const AppointmentTabs = () => {
 
   useEffect(() => {
     dispatch(fetchPatientAppointments('52e2fc8e-d5b1-43e0-bde6-5dca5f96ced3'));
-    appointments.forEach((appointment: any) => {
-      if (!moment().isAfter(appointment.timeslot.date)) {
-        setupcomingAppointments(upcomingAppointments + appointment);
-      }
-    });
-    console.log(upcomingAppointments);
+    dispatch(
+      fetchPastPatientAppointments('52e2fc8e-d5b1-43e0-bde6-5dca5f96ced3'),
+    );
   }, []);
 
+  console.log(upcomingAppointments);
   return (
     <>
       <h2 style={{ textAlign: 'center' }}>Appointments</h2>
@@ -80,8 +81,8 @@ const AppointmentTabs = () => {
         </Box>
 
         <TabPanel value={value} index={0}>
-          {appointments.length ? (
-            <AppointmentSlot appointments={appointments} />
+          {upcomingAppointments.length ? (
+            <AppointmentSlot appointments={upcomingAppointments} />
           ) : (
             <Typography
               variant='h5'
@@ -95,7 +96,7 @@ const AppointmentTabs = () => {
           )}
         </TabPanel>
         <TabPanel value={value} index={1}>
-          {/* <AppointmentSlot appointments={appointments} /> */}
+          <AppointmentSlot appointments={pastAppointments} />
         </TabPanel>
       </ThemeProvider>
     </>

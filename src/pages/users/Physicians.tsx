@@ -10,7 +10,7 @@ import Styles from '../../components/styles/UserManagmentStyles';
 import TableHeadComponent from '../../components/tableComponents/HeadComponent';
 import TableBodyComponent from '../../components/tableComponents/BodyComponent';
 import {
-  PhysicianState,
+  selectPhysicians,
   fetchPhysicians,
   searchPhysician,
 } from '../../store/slices/physician/physicianSlice';
@@ -19,7 +19,7 @@ import { AppDispatch } from '../../store/types';
 
 export const Physicians = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const physicians = useSelector(PhysicianState);
+  const physicians = useSelector(selectPhysicians);
   const [more, setMore] = useState<boolean>(true);
   const [open, setOpen] = useState(false);
   const [refresh, setRefresh] = useState<boolean>(false);

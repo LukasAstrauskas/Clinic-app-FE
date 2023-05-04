@@ -21,11 +21,11 @@ import {
 
 type Props = {
   physicians: UniversalUser[];
-  selectedId: string | null;
   refresh: boolean;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   more: boolean;
   setMore: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedId: string | null;
   rowClick: (id: string) => void;
 };
 
@@ -41,48 +41,49 @@ const tableRowSX = (isSelected: boolean) => {
 
 const PhysicianTable = ({
   physicians,
-  selectedId,
   refresh,
   setRefresh,
   more,
   setMore,
+  selectedId,
   rowClick,
 }: Props) => {
   const UserSize = useSelector(selectUserSize);
   const dispatch = useDispatch<AppDispatch>();
   const [currentRender, setCurrentRender] = useState(5);
 
-  const getSize = () => {
-    dispatch(fetchPhysicianAmount());
-  };
-
   const getMoreData = async () => {
     if (UserSize > currentRender) {
-      dispatch(fetchMorePhysicians(currentRender));
-      console.log(physicians);
-      setCurrentRender(currentRender + 5);
+      await dispatch(fetchMorePhysicians(currentRender));
     } else {
       setMore(false);
     }
-    //setCurrentRender((prevRender) => prevRender + 5);
+    setCurrentRender((prevRender) => prevRender + 5);
   };
 
   useEffect(() => {
-    setRefresh(false);
-    getSize();
+    setRefresh(!false);
     setMore(more);
     setCurrentRender(7);
   }, [refresh]);
 
+  useEffect(() => {
+    dispatch(fetchPhysicianAmount());
+  }, []);
+
   return (
-    <div style={{ maxHeight: 400, overflowY: 'scroll' }}>
+    <div id='scrollBox' style={{ maxHeight: 300, overflowY: 'scroll' }}>
       <TableContainer component={Paper}>
         <InfiniteScroll
-          dataLength={currentRender}
+          scrollableTarget='scrollBox'
+          dataLength={physicians.length}
           next={getMoreData}
           hasMore={more}
           loader={
-            <Typography variant='h5' sx={{ textAlign: 'center' }}>
+            <Typography
+              variant='h5'
+              sx={{ textAlign: 'center', backgroundColor: grey[200] }}
+            >
               loading...
             </Typography>
           }

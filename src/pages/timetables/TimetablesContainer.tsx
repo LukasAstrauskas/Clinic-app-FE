@@ -11,7 +11,7 @@ import {
 } from '../../store/slices/physician/phyNameOccupationSlice';
 import PhysicianSearchBar from '../physicians/PhysicianSearchBar';
 import {
-  PhysicianState,
+  selectPhysicians,
   fetchPhysicians,
   searchPhysician,
 } from '../../store/slices/physician/physicianSlice';
@@ -22,7 +22,7 @@ type props = {
 
 const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
   const physicianId: string | null = useSelector(selectPhysicianId);
-  const physicians = useSelector(PhysicianState);
+  const physicians = useSelector(selectPhysicians);
   const dispatch = useDispatch<AppDispatch>();
   const [refresh, setRefresh] = useState<boolean>(false);
   const [more, setMore] = useState<boolean>(true);
@@ -31,24 +31,19 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
     dispatch(setPhysicianId(id));
   };
 
-  const handleSearch = async (search: string, occupation: string) => {
-    console.log(occupation);
+  const handleSearch = (search: string, occupation: string) => {
     if (search.length != 0 || occupation) {
       dispatch(searchPhysician({ search, occupation }));
-      console.log('search= ' + search);
-      console.log('occupation= ' + occupation);
       setMore(false);
     } else {
-      console.log('bad');
       dispatch(fetchPhysicians());
       setRefresh(true);
     }
   };
 
   useEffect(() => {
-    dispatch(fetchPhysicians());
     dispatch(fetchPhyNameOccupation());
-  }, [open]);
+  }, []);
 
   return (
     <Container maxWidth='lg'>

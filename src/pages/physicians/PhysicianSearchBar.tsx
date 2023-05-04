@@ -10,6 +10,7 @@ import {
   selectOccupations,
 } from '../../store/slices/occupation/occupationSlice';
 import { AppDispatch } from '../../store/types';
+import useDebouncedSearch from '../../hooks/useDebouncedSearch';
 
 interface SearchProps {
   onSearch: (value: string, searchBy: string) => void;
@@ -20,6 +21,7 @@ const Search: React.FC<SearchProps> = ({ onSearch }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [searchTerm, setsearchTerm] = useState('');
   const [searchBy, setSearchBy] = useState('');
+  const debouncedSearchTerm = useDebouncedSearch(searchTerm, 300);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setsearchTerm(event.target.value);
@@ -34,10 +36,8 @@ const Search: React.FC<SearchProps> = ({ onSearch }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    onSearch(searchTerm, searchBy);
-    console.log('search= ' + searchTerm);
-    console.log('occupation= ' + searchBy);
-  }, [searchBy, searchTerm]);
+    onSearch(debouncedSearchTerm, searchBy);
+  }, [debouncedSearchTerm, searchBy]);
 
   return (
     <form>

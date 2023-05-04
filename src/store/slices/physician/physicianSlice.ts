@@ -159,6 +159,7 @@ export const physicianSlice = createSlice({
 
 export const selectPhysician = (state: RootState) =>
   state.physician.selectedPhysician;
-export const PhysicianState = (state: RootState) => state.physician.physicians;
+export const selectPhysicians = (state: RootState) =>
+  state.physician.physicians;
 
 export default physicianSlice.reducer;

@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteAppointment,
   fetchPastPatientAppointments,
+  // fetchPastPatientAppointments,
   fetchPatientAppointments,
   selectAppointments,
   selectPastAppointments,
@@ -20,6 +21,8 @@ import { AppDispatch } from '../../store/types';
 import moment from 'moment';
 import AppointmentSlot from './appointment-slot';
 import { selectId } from '../../store/slices/auth/authSlice';
+import PastAppointmentsTab from './pastAppointmets';
+import UpcomingAppointmentsTab from './upcomingApppointments';
 
 const AppointmentTabs = () => {
   const userId = useSelector(selectId);
@@ -49,13 +52,12 @@ const AppointmentTabs = () => {
     setValue(val);
   };
 
-  console.log(userId);
   useEffect(() => {
     dispatch(fetchPatientAppointments(userId));
     dispatch(fetchPastPatientAppointments(userId));
+    // dispatch(fetchPastPatientAppointments(userId));
   }, []);
 
-  console.log(upcomingAppointments);
   return (
     <>
       <h2 style={{ textAlign: 'center' }}>Appointments</h2>
@@ -82,7 +84,8 @@ const AppointmentTabs = () => {
 
         <TabPanel value={value} index={0}>
           {upcomingAppointments.length ? (
-            <AppointmentSlot appointments={upcomingAppointments} />
+            // <AppointmentSlot appointments={upcomingAppointments} />
+            <UpcomingAppointmentsTab appointments={upcomingAppointments} />
           ) : (
             <Typography
               variant='h5'
@@ -95,7 +98,8 @@ const AppointmentTabs = () => {
           )}
         </TabPanel>
         <TabPanel value={value} index={1}>
-          {pastAppointments.length ? (
+          <PastAppointmentsTab appointments={pastAppointments} />
+          {/* {pastAppointments.length ? (
             <AppointmentSlot appointments={pastAppointments} />
           ) : (
             <Typography
@@ -104,9 +108,9 @@ const AppointmentTabs = () => {
               sx={{ marginTop: '60px' }}
               fontWeight={'bold'}
             >
-              You have no upcoming appointments
+              You have no past appointments
             </Typography>
-          )}
+          )} */}
         </TabPanel>
       </ThemeProvider>
     </>

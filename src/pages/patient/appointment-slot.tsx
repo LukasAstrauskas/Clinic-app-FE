@@ -11,18 +11,18 @@ import moment from 'moment';
 import { Box, Button, Typography } from '@mui/material';
 import ConfirmModal from '../../components/modals/AlertModal';
 import { selectId } from '../../store/slices/auth/authSlice';
+import InfiniteScroll from 'react-infinite-scroll-component';
 interface Props {
-  appointments: any;
+  appointment: any;
 }
 
-const AppointmentSlot: FC<Props> = ({ appointments }) => {
+const AppointmentSlot: FC<Props> = ({ appointment }) => {
   const userId = useSelector(selectId);
   const dispatch = useDispatch<AppDispatch>();
   const [open, setOpen] = useState(false);
   const [physicianAndPatientId, setPhysicianAndPatientId] =
     useState<string>('');
   const handleCancel = async () => {
-    console.log('cancel called', physicianAndPatientId);
     await dispatch(deleteAppointment(physicianAndPatientId));
     dispatch(fetchPatientAppointments(userId));
     setOpen(true);
@@ -47,61 +47,60 @@ const AppointmentSlot: FC<Props> = ({ appointments }) => {
         confirmMsg='Yes'
         closeMsg='No'
       />
-      {appointments.map((appointment: any) => (
+
+      <Box
+        key={appointment.physicianId}
+        sx={{
+          marginTop: '40px',
+          borderRadius: '20px',
+          border: '1px solid black',
+          height: '130px',
+        }}
+      >
         <Box
-          key={appointment.physicianId}
           sx={{
-            marginTop: '40px',
-            borderRadius: '20px',
-            border: '1px solid black',
-            height: '130px',
+            padding: '20px',
+            paddingX: '40px',
+            display: 'flex',
+            flexDirection: 'row',
           }}
         >
-          <Box
-            sx={{
-              padding: '20px',
-              paddingX: '40px',
-              display: 'flex',
-              flexDirection: 'row',
-            }}
-          >
-            <Box sx={{ width: '330px' }}>
-              <Typography fontWeight={'bold'} variant='h5'>
-                Physician
-              </Typography>
-              <Typography sx={{ marginTop: '20px' }} fontWeight={'500'}>
-                {appointment.physicianName}, {appointment.occupation.name}
-              </Typography>
-            </Box>
-            <Box sx={{ marginLeft: '40px', width: '160px' }}>
-              <Typography fontWeight={'bold'} variant='h5'>
-                Date
-              </Typography>
-              <Typography sx={{ marginTop: '20px' }} fontWeight={'600'}>
-                {moment(appointment.timeslot.date).format('Y-MM-DD ')}
-                {moment(appointment.timeslot.date).format('h:mm')}
-              </Typography>
-            </Box>
-            <Box>
-              {!moment().isAfter(appointment.timeslot.date) && (
-                <Button
-                  // onClick={() => handleCancel(appointment.physicianId)}
-                  onClick={() => handleAlertOpen(appointment.physicianId)}
-                  variant='outlined'
-                  sx={{
-                    marginLeft: '300px',
-                    color: 'orange',
-                    border: '1px solid orange !important',
-                    fontWeight: '600',
-                  }}
-                >
-                  CANCEL APPOINTMENT
-                </Button>
-              )}
-            </Box>
+          <Box sx={{ width: '330px' }}>
+            <Typography fontWeight={'bold'} variant='h5'>
+              Physician
+            </Typography>
+            <Typography sx={{ marginTop: '20px' }} fontWeight={'500'}>
+              {appointment.physicianName}, {appointment.occupation.name}
+            </Typography>
+          </Box>
+          <Box sx={{ marginLeft: '40px', width: '160px' }}>
+            <Typography fontWeight={'bold'} variant='h5'>
+              Date
+            </Typography>
+            <Typography sx={{ marginTop: '20px' }} fontWeight={'600'}>
+              {moment(appointment.timeslot.date).format('Y-MM-DD ')}
+              {moment(appointment.timeslot.date).format('h:mm')}
+            </Typography>
+          </Box>
+          <Box>
+            {!moment().isAfter(appointment.timeslot.date) && (
+              <Button
+                // onClick={() => handleCancel(appointment.physicianId)}
+                onClick={() => handleAlertOpen(appointment.physicianId)}
+                variant='outlined'
+                sx={{
+                  marginLeft: '300px',
+                  color: 'orange',
+                  border: '1px solid orange !important',
+                  fontWeight: '600',
+                }}
+              >
+                CANCEL APPOINTMENT
+              </Button>
+            )}
           </Box>
         </Box>
-      ))}
+      </Box>
     </>
   );
 };

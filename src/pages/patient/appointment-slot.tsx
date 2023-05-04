@@ -10,18 +10,21 @@ import { AppDispatch } from '../../store/types';
 import moment from 'moment';
 import { Box, Button, Typography } from '@mui/material';
 import ConfirmModal from '../../components/modals/AlertModal';
+import { selectId } from '../../store/slices/auth/authSlice';
 interface Props {
   appointments: any;
 }
 
 const AppointmentSlot: FC<Props> = ({ appointments }) => {
+  const userId = useSelector(selectId);
   const dispatch = useDispatch<AppDispatch>();
   const [open, setOpen] = useState(false);
-  const [selectedAppointmentToCancel, setSelectedAppointmentToCancel] =
-    useState('string');
+  const [physicianAndPatientId, setPhysicianAndPatientId] =
+    useState<string>('');
   const handleCancel = async () => {
-    await dispatch(deleteAppointment(selectedAppointmentToCancel));
-    dispatch(fetchPatientAppointments('52e2fc8e-d5b1-43e0-bde6-5dca5f96ced3'));
+    console.log('cancel called', physicianAndPatientId);
+    await dispatch(deleteAppointment(physicianAndPatientId));
+    dispatch(fetchPatientAppointments(userId));
     setOpen(true);
   };
 
@@ -31,7 +34,7 @@ const AppointmentSlot: FC<Props> = ({ appointments }) => {
 
   const handleAlertOpen = (id: string) => {
     setOpen(true);
-    setSelectedAppointmentToCancel(id);
+    setPhysicianAndPatientId(id + '/' + userId);
   };
 
   return (
@@ -70,12 +73,12 @@ const AppointmentSlot: FC<Props> = ({ appointments }) => {
                 {appointment.physicianName}, {appointment.occupation.name}
               </Typography>
             </Box>
-            <Box sx={{ marginLeft: '150px' }}>
+            <Box sx={{ marginLeft: '40px', width: '160px' }}>
               <Typography fontWeight={'bold'} variant='h5'>
                 Date
               </Typography>
               <Typography sx={{ marginTop: '20px' }} fontWeight={'600'}>
-                {moment(appointment.timeslot.date).format('Y-M-D ')}
+                {moment(appointment.timeslot.date).format('Y-MM-DD ')}
                 {moment(appointment.timeslot.date).format('h:mm')}
               </Typography>
             </Box>
@@ -86,7 +89,7 @@ const AppointmentSlot: FC<Props> = ({ appointments }) => {
                   onClick={() => handleAlertOpen(appointment.physicianId)}
                   variant='outlined'
                   sx={{
-                    marginLeft: '230px',
+                    marginLeft: '300px',
                     color: 'orange',
                     border: '1px solid orange !important',
                     fontWeight: '600',

@@ -10,6 +10,7 @@ import {
   PATIENTS_URL,
   PATIENT_APPOINTMENTS,
   PATIENT_PAST_APPOINTMENTS,
+  PATIENT_REMOVE_APPOINTMENT,
   PATIENT_SEARCH_URL,
 } from '../../../utils/httpConstants';
 
@@ -31,15 +32,17 @@ const initialState: PatientsState = {
 
 export const deleteAppointment = createAsyncThunk(
   'patients/patient-cancel-appointment',
-  async (id: string) => {
-    const response = await axios.delete(DELETE_TIMESLOT + id);
+  async (PhysicianAndPatientIds: string) => {
+    const response = await axios.patch(
+      PATIENT_REMOVE_APPOINTMENT + PhysicianAndPatientIds,
+    );
     return response.data;
   },
 );
 
 export const fetchPatientAppointments = createAsyncThunk(
   'patients/patient-appointments',
-  async (id: string) => {
+  async (id: string | null) => {
     const response = await axios.get(PATIENT_APPOINTMENTS + id);
     return response.data;
   },
@@ -47,7 +50,7 @@ export const fetchPatientAppointments = createAsyncThunk(
 
 export const fetchPastPatientAppointments = createAsyncThunk(
   'patients/patient-past-appointments',
-  async (id: string) => {
+  async (id: string | null) => {
     const response = await axios.get(PATIENT_PAST_APPOINTMENTS + id);
     return response.data;
   },

@@ -19,9 +19,10 @@ import {
 import { AppDispatch } from '../../store/types';
 import moment from 'moment';
 import AppointmentSlot from './appointment-slot';
-import { PatientAppointments } from '../../model/Model';
+import { selectId } from '../../store/slices/auth/authSlice';
 
 const AppointmentTabs = () => {
+  const userId = useSelector(selectId);
   const upcomingAppointments = useSelector(selectAppointments);
   const pastAppointments = useSelector(selectPastAppointments);
   const dispatch = useDispatch<AppDispatch>();
@@ -48,11 +49,10 @@ const AppointmentTabs = () => {
     setValue(val);
   };
 
+  console.log(userId);
   useEffect(() => {
-    dispatch(fetchPatientAppointments('52e2fc8e-d5b1-43e0-bde6-5dca5f96ced3'));
-    dispatch(
-      fetchPastPatientAppointments('52e2fc8e-d5b1-43e0-bde6-5dca5f96ced3'),
-    );
+    dispatch(fetchPatientAppointments(userId));
+    dispatch(fetchPastPatientAppointments(userId));
   }, []);
 
   console.log(upcomingAppointments);
@@ -90,13 +90,23 @@ const AppointmentTabs = () => {
               sx={{ marginTop: '60px' }}
               fontWeight={'bold'}
             >
-              {' '}
               You have no upcoming appointments
             </Typography>
           )}
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <AppointmentSlot appointments={pastAppointments} />
+          {pastAppointments.length ? (
+            <AppointmentSlot appointments={pastAppointments} />
+          ) : (
+            <Typography
+              variant='h5'
+              textAlign={'center'}
+              sx={{ marginTop: '60px' }}
+              fontWeight={'bold'}
+            >
+              You have no upcoming appointments
+            </Typography>
+          )}
         </TabPanel>
       </ThemeProvider>
     </>

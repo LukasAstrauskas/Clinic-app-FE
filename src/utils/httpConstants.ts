@@ -21,7 +21,7 @@ export const PATIENT_APPOINTMENTS =
   'http://localhost:8080/user/patientUpcomingAppointments/';
 export const PATIENT_PAST_APPOINTMENTS =
   'http://localhost:8080/user/patientPastAppointments/';
-
+export const PATIENT_REMOVE_APPOINTMENT = 'http://localhost:8080/timeslot/';
 //Physicians
 export const PHYSICIANS_FULL_URL = 'http://localhost:8080/physicianInfo';
 export const BASE_PHYSICIANS_FULL_URL = 'http://localhost:8080/physicianInfo/';

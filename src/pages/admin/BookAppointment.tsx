@@ -74,7 +74,12 @@ const BookAppointment = () => {
           {picker ? (
             <Patients />
           ) : (
-            <TimetablesContainer tableTitle='Select Physician and Time' />
+            <TimetablesContainer
+              tableTitle={
+                (type === 'physician' && 'Select Time') ||
+                'Select Physician and Time'
+              }
+            />
           )}
         </AppointmentContext.Provider>
         <Box

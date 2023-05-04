@@ -11,6 +11,7 @@ import {
   setPhysicianId,
 } from '../../store/slices/physician/phyNameOccupationSlice';
 import { PhyNameOccupation } from '../../model/Model';
+import { selectId, selectType } from '../../store/slices/auth/authSlice';
 
 type props = {
   tableTitle?: string;
@@ -21,6 +22,8 @@ const TimetablesContainer = ({
   tableTitle = 'Physicians',
   choosePhysician,
 }: props) => {
+  const type = useSelector(selectType);
+  const loggedInPhysicianId = useSelector(selectId);
   const physicians: PhyNameOccupation[] = useSelector(selectPhysicians);
   const physicianId: string | null = useSelector(selectPhysicianId);
   const dispatch = useDispatch<AppDispatch>();
@@ -37,7 +40,7 @@ const TimetablesContainer = ({
   }, [dispatch]);
 
   return (
-    <Container maxWidth='lg'>
+    <Container maxWidth={type === 'physician' ? 'md' : 'lg'}>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container>
           <Grid
@@ -49,16 +52,28 @@ const TimetablesContainer = ({
           >
             <h1>{tableTitle}</h1>
           </Grid>
-          <Grid item lg={4} sx={{ pr: 2 }}>
-            <PhysicianTable
-              physicians={physicians}
-              selectedId={physicianId}
-              rowClick={handleClick}
-            />
-          </Grid>
-          <Grid item lg={8}>
-            {physicianId ? <TimetableList physicianId={physicianId} /> : <></>}
-          </Grid>
+          {type !== 'physician' && (
+            <Grid item lg={4} sx={{ pr: 2 }}>
+              <PhysicianTable
+                physicians={physicians}
+                selectedId={physicianId}
+                rowClick={handleClick}
+              />
+            </Grid>
+          )}
+          {type === 'physician' ? (
+            <Grid item lg={12}>
+              <TimetableList physicianId={loggedInPhysicianId || ''} />
+            </Grid>
+          ) : (
+            <Grid item lg={8}>
+              {physicianId ? (
+                <TimetableList physicianId={physicianId} />
+              ) : (
+                <></>
+              )}
+            </Grid>
+          )}
         </Grid>
       </Box>
     </Container>

@@ -30,8 +30,6 @@ const BookAppointment = () => {
     patientId: undefined,
   });
 
-  console.log(appointment);
-
   const navigate = useNavigate();
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
@@ -82,7 +80,7 @@ const BookAppointment = () => {
         </AppointmentContext.Provider>
         <Box
           display='flex'
-          justifyContent='space-between'
+          justifyContent='center'
           sx={{
             width: '95%',
           }}

@@ -72,7 +72,6 @@ const TableBodyComponent: FC<Props> = ({
     setOpen(true);
   };
 
-  console.log(selectedId);
   const handleDelete = (id: string) => {
     if (type === 'patient') {
       dispatch(deletePatient(id));
@@ -165,7 +164,10 @@ const TableBodyComponent: FC<Props> = ({
                 {user.map(({ id, name, email, occupation }) => (
                   <TableRow key={id} hover sx={tableRowSX(selectedId === id)}>
                     <TableCell
-                      onClick={() => rowClick(id)}
+                      onClick={() => {
+                        rowClick(id);
+                        setSelectedId(id);
+                      }}
                       sx={{ width: '200px' }}
                     >
                       {name}

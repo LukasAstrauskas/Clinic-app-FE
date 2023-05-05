@@ -127,7 +127,7 @@ const TimetableList = ({ physicianId }: Props) => {
 
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ marginBottom: 5 }}>
         <Table
           size='small'
           aria-label='a dense table'

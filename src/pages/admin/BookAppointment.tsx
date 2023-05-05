@@ -71,6 +71,7 @@ const BookAppointment = () => {
         justifyContent='center'
         alignItems='center'
         spacing={2}
+        marginBottom={3}
       >
         <AppointmentContext.Provider value={{ appointment, setAppointment }}>
           {picker ? (
@@ -83,7 +84,7 @@ const BookAppointment = () => {
           display='flex'
           justifyContent='space-between'
           sx={{
-            width: '60%',
+            width: '95%',
           }}
         >
           <Button

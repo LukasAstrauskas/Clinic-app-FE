@@ -42,7 +42,6 @@ export const Patients = () => {
       setRefresh(true);
     }
   };
-
   return (
     <>
       <Box

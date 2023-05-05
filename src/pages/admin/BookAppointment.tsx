@@ -102,14 +102,7 @@ const BookAppointment = () => {
               }
               sx={Styles.createNewUserBtn}
             >
-              <Button
-                style={{
-                  color: 'white',
-                  textDecoration: 'none',
-                }}
-              >
-                Book an appointment
-              </Button>
+              Book an appointment
             </Button>
           )}
           {!picker && type === 'patient' && (

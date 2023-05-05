@@ -1,16 +1,16 @@
 import {
   Box,
-  Button,
   Tab,
   Tabs,
   ThemeProvider,
   Typography,
   createTheme,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { selectId } from '../../store/slices/auth/authSlice';
 import {
-  deleteAppointment,
   fetchPastPatientAppointments,
   // fetchPastPatientAppointments,
   fetchPatientAppointments,
@@ -18,16 +18,11 @@ import {
   selectPastAppointments,
 } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
-import moment from 'moment';
-import AppointmentSlot from './appointment-slot';
-import { selectId } from '../../store/slices/auth/authSlice';
 import PastAppointmentsTab from './pastAppointmets';
 import UpcomingAppointmentsTab from './upcomingApppointments';
 
 const AppointmentTabs = () => {
   const userId = useSelector(selectId);
-  const upcomingAppointments = useSelector(selectAppointments);
-  const pastAppointments = useSelector(selectPastAppointments);
   const dispatch = useDispatch<AppDispatch>();
   const [value, setValue] = useState(0);
 
@@ -55,7 +50,6 @@ const AppointmentTabs = () => {
   useEffect(() => {
     dispatch(fetchPatientAppointments(userId));
     dispatch(fetchPastPatientAppointments(userId));
-    // dispatch(fetchPastPatientAppointments(userId));
   }, []);
 
   return (
@@ -83,34 +77,10 @@ const AppointmentTabs = () => {
         </Box>
 
         <TabPanel value={value} index={0}>
-          {upcomingAppointments.length ? (
-            // <AppointmentSlot appointments={upcomingAppointments} />
-            <UpcomingAppointmentsTab appointments={upcomingAppointments} />
-          ) : (
-            <Typography
-              variant='h5'
-              textAlign={'center'}
-              sx={{ marginTop: '60px' }}
-              fontWeight={'bold'}
-            >
-              You have no upcoming appointments
-            </Typography>
-          )}
+          <UpcomingAppointmentsTab />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <PastAppointmentsTab appointments={pastAppointments} />
-          {/* {pastAppointments.length ? (
-            <AppointmentSlot appointments={pastAppointments} />
-          ) : (
-            <Typography
-              variant='h5'
-              textAlign={'center'}
-              sx={{ marginTop: '60px' }}
-              fontWeight={'bold'}
-            >
-              You have no past appointments
-            </Typography>
-          )} */}
+          <PastAppointmentsTab />
         </TabPanel>
       </ThemeProvider>
     </>

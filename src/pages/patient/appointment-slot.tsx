@@ -1,17 +1,15 @@
-// import { Box, Button, Typography } from '@mui/material';
-import React, { FC, useEffect, useState } from 'react';
+import React from 'react';
+import { Box, Button, Typography } from '@mui/material';
+import moment from 'moment';
+import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import ConfirmModal from '../../components/modals/AlertModal';
+import { selectId } from '../../store/slices/auth/authSlice';
 import {
   deleteAppointment,
   fetchPatientAppointments,
-  selectAppointments,
 } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
-import moment from 'moment';
-import { Box, Button, Typography } from '@mui/material';
-import ConfirmModal from '../../components/modals/AlertModal';
-import { selectId } from '../../store/slices/auth/authSlice';
-import InfiniteScroll from 'react-infinite-scroll-component';
 interface Props {
   appointment: any;
 }
@@ -85,7 +83,6 @@ const AppointmentSlot: FC<Props> = ({ appointment }) => {
           <Box>
             {!moment().isAfter(appointment.timeslot.date) && (
               <Button
-                // onClick={() => handleCancel(appointment.physicianId)}
                 onClick={() => handleAlertOpen(appointment.physicianId)}
                 variant='outlined'
                 sx={{

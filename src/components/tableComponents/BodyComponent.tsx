@@ -42,6 +42,16 @@ interface Props {
   rowClick?: (id: string) => void;
 }
 
+const tableRowSX = (isSelected: boolean) => {
+  return {
+    backgroundColor: isSelected ? '#ff9e80 !important' : 'none',
+    '&:hover': {
+      backgroundColor: '#ff9e80 !important',
+    },
+    cursor: 'pointer',
+  };
+};
+
 const TableBodyComponent: FC<Props> = ({
   user,
   refresh,
@@ -62,6 +72,7 @@ const TableBodyComponent: FC<Props> = ({
     setOpen(true);
   };
 
+  console.log(selectedId);
   const handleDelete = (id: string) => {
     if (type === 'patient') {
       dispatch(deletePatient(id));
@@ -152,16 +163,7 @@ const TableBodyComponent: FC<Props> = ({
             <Table>
               <TableBody>
                 {user.map(({ id, name, email, occupation }) => (
-                  <TableRow
-                    key={id}
-                    sx={{
-                      '&:hover': {
-                        backgroundColor: '#ff9e80 !important',
-                      },
-                      cursor: 'pointer',
-                      width: '100%',
-                    }}
-                  >
+                  <TableRow key={id} hover sx={tableRowSX(selectedId === id)}>
                     <TableCell
                       onClick={() => rowClick(id)}
                       sx={{ width: '200px' }}

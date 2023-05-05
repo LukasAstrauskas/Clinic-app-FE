@@ -30,6 +30,8 @@ const BookAppointment = () => {
     patientId: undefined,
   });
 
+  console.log(appointment);
+
   const navigate = useNavigate();
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
@@ -63,7 +65,7 @@ const BookAppointment = () => {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', marginTop: '30px' }}>
       <Stack
         display='flex'
         justifyContent='center'
@@ -126,6 +128,7 @@ const BookAppointment = () => {
               variant='contained'
               onClick={setpicker}
               sx={Styles.createNewUserBtn}
+              disabled={!appointment.date}
             >
               Next
               <ArrowForwardIcon />

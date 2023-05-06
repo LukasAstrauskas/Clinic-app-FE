@@ -106,7 +106,6 @@ const TimetableList = ({ physicianId }: Props) => {
       };
     });
     setTimeslot({ physicianId: physicianId, date: '', time: '' });
-    // eslint-disable-next-line
   }, [physicianId]);
 
   useEffect(() => {
@@ -122,7 +121,6 @@ const TimetableList = ({ physicianId }: Props) => {
         });
     }
     getTimeslots();
-    // eslint-disable-next-line
   }, [loadData, physicianId]);
 
   return (

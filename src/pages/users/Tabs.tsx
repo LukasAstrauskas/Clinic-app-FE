@@ -27,8 +27,9 @@ export function TabPanel(props: any) {
 const UserTabs = () => {
   const [value, setValue] = useState(0);
 
-  const handleTabs = (e: any, val: any) => {
-    setValue(val);
+  const handleTabs = (event: React.SyntheticEvent, newValue: number) => {
+    event.preventDefault();
+    setValue(newValue);
   };
 
   return (

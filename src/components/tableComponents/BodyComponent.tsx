@@ -31,7 +31,7 @@ import {
 import EditUserModal from '../modals/EditUserModal';
 import { grey } from '@mui/material/colors';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import { tableRowSX } from '../../pages/physicians/PhysicianTable';
 interface Props {
   user: UniversalUser[];
   refresh: boolean;
@@ -41,16 +41,6 @@ interface Props {
   type: string;
   rowClick?: (id: string) => void;
 }
-
-const tableRowSX = (isSelected: boolean) => {
-  return {
-    backgroundColor: isSelected ? '#ff9e80 !important' : 'none',
-    '&:hover': {
-      backgroundColor: '#ff9e80 !important',
-    },
-    cursor: 'pointer',
-  };
-};
 
 const TableBodyComponent: FC<Props> = ({
   user,

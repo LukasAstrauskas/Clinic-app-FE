@@ -15,6 +15,12 @@ const theme = createTheme({
   },
 });
 
+type TabPanelProps = {
+  value: number;
+  index: number;
+  children: JSX.Element;
+};
+
 export function TabPanel(props: any) {
   const { children, value, index } = props;
   return (

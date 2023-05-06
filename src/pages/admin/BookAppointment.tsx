@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TimetablesContainer from '../timetables/TimetablesContainer';
 import { Box, Button, Stack } from '@mui/material';
 import Patients from '../users/Patients';
@@ -14,14 +14,19 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
 import { removePatientFromTimeslot, updateTimeslot } from '../../data/fetch';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectType } from '../../store/slices/auth/authSlice';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import ErrorModal from '../../components/modals/ErrorModal';
+import { AppDispatch } from '../../store/types';
+import { fetchPhysicianById } from '../../store/slices/physician/editedPhysicianSlice';
+import { selectPhysician } from '../../store/slices/physician/physicianSlice';
 
 const BookAppointment = () => {
   const type = useSelector(selectType);
   const [picker, setpicker] = useToggle();
+  const dispatch = useDispatch<AppDispatch>();
+  const selectedPhysician = useSelector(selectPhysician);
 
   const [appointment, setAppointment] = useState<Appointment>({
     physicianId: ' ',
@@ -34,6 +39,7 @@ const BookAppointment = () => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState('');
+  const [selectedPhysicianName, setSelectedPhysicianName] = useState('');
 
   const handleConfirmationClose = () => {
     setIsConfirmationOpen(false);
@@ -62,6 +68,28 @@ const BookAppointment = () => {
     setIsConfirmationOpen(true);
   };
 
+  const handleFetchPhysicianById = () => {
+    if (selectedPhysician) {
+      setSelectedPhysicianName(selectedPhysician.name);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchPhysicianById();
+  }, [selectedPhysician]);
+
+  useEffect(() => {
+    dispatch(fetchPhysicianById(appointment.physicianId));
+  }, [appointment, dispatch]);
+
+  const appointmentInfo = (
+    <Box style={{ textAlign: 'center', marginTop: 10 }}>
+      {'Physician: '} <b>{selectedPhysicianName}</b>
+      {' | Time: '}
+      <b>{appointment.date + ', ' + appointment.time}</b>
+    </Box>
+  );
+
   return (
     <Box sx={{ width: '100%' }}>
       <Stack
@@ -72,7 +100,10 @@ const BookAppointment = () => {
       >
         <AppointmentContext.Provider value={{ appointment, setAppointment }}>
           {picker ? (
-            <Patients />
+            <Stack>
+              <Patients />
+              {appointmentInfo}
+            </Stack>
           ) : (
             <TimetablesContainer tableTitle='Select Physician and Time' />
           )}

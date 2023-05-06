@@ -1,6 +1,5 @@
-import React from 'react';
 import { Box, Typography } from '@mui/material';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectId } from '../../store/slices/auth/authSlice';
@@ -15,28 +14,29 @@ import AppointmentSlot from './appointment-slot';
 const PastAppointmentsTab = () => {
   const appointments = useSelector(selectPastAppointments);
   const appointmentAmount = useSelector(selectPatientPastAppointmentAmount);
-  const [more, setMore] = useState(true);
-  const [currentOffset, setCurrentOffset] = useState<number>(
-    appointments.length,
-  );
+  const [more, setMore] = useState(false);
   const userId = useSelector(selectId);
   const dispatch = useDispatch<AppDispatch>();
 
-  if (appointments.length === 0) {
-    setMore(false);
-  }
-
   const fetchMoreAppointments = async () => {
-    console.log('currentoffsetas', currentOffset);
-    if (appointmentAmount > currentOffset) {
+    if (appointmentAmount > appointments.length) {
       await dispatch(
-        fetchMorePastPatientAppointments({ id: userId, offset: currentOffset }),
+        fetchMorePastPatientAppointments({
+          id: userId,
+          offset: appointments.length,
+        }),
       );
+      setMore(true);
     } else {
       setMore(false);
     }
-    setCurrentOffset(appointments.length);
   };
+
+  useEffect(() => {
+    if (appointmentAmount > 0) {
+      setMore(true);
+    }
+  }, []);
 
   return (
     <>

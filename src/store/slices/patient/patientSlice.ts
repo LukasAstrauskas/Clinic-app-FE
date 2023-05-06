@@ -58,7 +58,7 @@ export const fetchPatientAppointments = createAsyncThunk(
 
 export const fetchMorePastPatientAppointments = createAsyncThunk(
   'patients/patient-past-appointments',
-  async ({ id, offset }: { id: string | null; offset: number }) => {
+  async ({ id, offset }: { id: string | null; offset: number | undefined }) => {
     console.log('called with parameters', id, '/', offset);
     const response = await axios.get(
       `${PATIENT_PAST_APPOINTMENTS}${id}/${offset}`,

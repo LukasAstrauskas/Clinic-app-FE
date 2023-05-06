@@ -10,6 +10,7 @@ import {
 } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
 import AppointmentSlot from './appointment-slot';
+import { PatientAppointments } from '../../model/Model';
 
 const PastAppointmentsTab = () => {
   const appointments = useSelector(selectPastAppointments);
@@ -60,7 +61,7 @@ const PastAppointmentsTab = () => {
         >
           {appointments.length != 0 ? (
             <>
-              {appointments.map((appointment: any) => (
+              {appointments.map((appointment: PatientAppointments) => (
                 <AppointmentSlot
                   key={appointment.physicianId}
                   appointment={appointment}

@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { selectType } from '../../store/slices/auth/authSlice';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import ErrorModal from '../../components/modals/ErrorModal';
+import { TabPanel } from '../users/Tabs';
 
 const BookAppointment = () => {
   const type = useSelector(selectType);
@@ -73,7 +74,9 @@ const BookAppointment = () => {
       >
         <AppointmentContext.Provider value={{ appointment, setAppointment }}>
           {picker ? (
-            <Patients />
+            <TabPanel>
+              <Patients />
+            </TabPanel>
           ) : (
             <TimetablesContainer tableTitle='Select Physician and Time' />
           )}

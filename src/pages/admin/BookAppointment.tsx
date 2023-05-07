@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import TimetablesContainer from '../timetables/TimetablesContainer';
 import { Box, Button, Stack } from '@mui/material';
 import Patients from '../users/Patients';
@@ -39,7 +39,7 @@ const BookAppointment = () => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState('');
-  const initialRender = useRef(true);
+  const initialRender = useRef(false);
 
   const handleConfirmationClose = () => {
     setIsConfirmationOpen(false);
@@ -68,13 +68,18 @@ const BookAppointment = () => {
     setIsConfirmationOpen(true);
   };
 
-  useLayoutEffect(() => {
-    if (initialRender.current) {
-      initialRender.current = false;
-    } else {
+  useEffect(() => {
+    if (initialRender.current || picker) {
       dispatch(fetchPhysicianById(appointment.physicianId));
     }
   }, [picker]);
+
+  useEffect(() => {
+    initialRender.current = true;
+    return () => {
+      initialRender.current = false;
+    };
+  }, []);
 
   const appointmentInfo = (
     <Box style={{ textAlign: 'center', marginTop: 10 }}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import TimetablesContainer from '../timetables/TimetablesContainer';
 import { Box, Button, Stack } from '@mui/material';
 import Patients from '../users/Patients';
@@ -39,7 +39,7 @@ const BookAppointment = () => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState('');
-  const [selectedPhysicianName, setSelectedPhysicianName] = useState('');
+  const initialRender = useRef(true);
 
   const handleConfirmationClose = () => {
     setIsConfirmationOpen(false);
@@ -68,23 +68,17 @@ const BookAppointment = () => {
     setIsConfirmationOpen(true);
   };
 
-  const handleFetchPhysicianById = () => {
-    if (selectedPhysician) {
-      setSelectedPhysicianName(selectedPhysician.name);
+  useLayoutEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+    } else {
+      dispatch(fetchPhysicianById(appointment.physicianId));
     }
-  };
-
-  useEffect(() => {
-    handleFetchPhysicianById();
-  }, [selectedPhysician]);
-
-  useEffect(() => {
-    dispatch(fetchPhysicianById(appointment.physicianId));
-  }, [appointment, dispatch]);
+  }, [picker]);
 
   const appointmentInfo = (
     <Box style={{ textAlign: 'center', marginTop: 10 }}>
-      {'Physician: '} <b>{selectedPhysicianName}</b>
+      {'Physician: '} <b>{selectedPhysician?.name}</b>
       {' | Time: '}
       <b>{appointment.date + ', ' + appointment.time}</b>
     </Box>

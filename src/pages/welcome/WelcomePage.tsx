@@ -10,8 +10,6 @@ import { ROUTES } from '../../routes/routes';
 
 const WelcomePage = () => {
   const type = sessionStorage.getItem('type') || '';
-  const userId = sessionStorage.getItem('userId') || '';
-  console.log(userId);
 
   return (
     <Grid

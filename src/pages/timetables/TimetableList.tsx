@@ -13,7 +13,7 @@ import TimeslotModal from '../../components/modals/TimeslotModal';
 import { Timeslot, Timeslots } from '../../model/Model';
 import axios from 'axios';
 import { getWeekDay } from '../../components/utils';
-import { deleteTimeslot } from '../../data/fetch';
+import { deleteTimeslot, removePatientFromTimeslot } from '../../data/fetch';
 import AlertModal from '../../components/modals/AlertModal';
 import useToggle from '../../hooks/useToggle';
 import AppointmentContext from '../../hooks/AppointmentContext';
@@ -67,6 +67,18 @@ const TimetableList = ({ physicianId }: Props) => {
     deleteTimeslot(timeslot);
     setloadData();
     setOpenConfirm();
+  };
+
+  const handleRemovePatientFromTimeslot = async (
+    physicianId: string,
+    patientId: string,
+  ) => {
+    const timeslot = {
+      physicianId: physicianId,
+      patientId: patientId,
+    };
+    await removePatientFromTimeslot(timeslot);
+    setloadData();
   };
 
   const handleChipClick = (
@@ -173,6 +185,12 @@ const TimetableList = ({ physicianId }: Props) => {
                               onClick={handleChipClick}
                               key={time}
                               selected={isSelected(physicianId, date, time)}
+                              onCancelAppointment={() =>
+                                handleRemovePatientFromTimeslot(
+                                  physicianId,
+                                  patientId,
+                                )
+                              }
                             />
                           ) : (
                             <Timechip

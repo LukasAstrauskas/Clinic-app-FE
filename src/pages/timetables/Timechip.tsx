@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { AppDispatch } from '../../store/types';
 import { Chip } from '@mui/material';
 import { red, teal } from '@mui/material/colors';
+import TimeChipPopper from './TimechipPopper';
+import { fetchUserById } from '../../store/slices/user/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectType } from '../../store/slices/auth/authSlice';
 
 interface Props {
   date: string;
@@ -9,6 +14,7 @@ interface Props {
   selected: boolean;
   onDelete?: (date: string, time: string, patientId: string) => void;
   onClick: (date: string, time: string, patientId: string) => void;
+  onCancelAppointment?: () => void;
 }
 
 const freeTimeSX = (selected: boolean) => {
@@ -25,7 +31,6 @@ const freeTimeSX = (selected: boolean) => {
     },
   };
 };
-
 const bookedTimeSX = {
   backgroundColor: red[300],
   '&:hover': {
@@ -48,17 +53,43 @@ const Timechip = ({
   selected,
   onDelete,
   onClick,
+  onCancelAppointment,
 }: Props) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const [open, setOpen] = useState(false);
+  const type = useSelector(selectType);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    onClick(date, time, patientId);
+    if (patientId && type === 'admin') {
+      setAnchorEl(event.currentTarget);
+      setOpen(true);
+      dispatch(fetchUserById(patientId));
+    }
+  };
+
   if (typeof onDelete === 'undefined') {
     return (
-      <Chip
-        label={time}
-        variant='outlined'
-        onClick={() => {
-          onClick(date, time, patientId);
-        }}
-        sx={patientId === null ? freeTimeSX(selected) : bookedTimeSX}
-      />
+      <>
+        <Chip
+          label={time}
+          variant='outlined'
+          onClick={handleClick}
+          sx={patientId === null ? freeTimeSX(selected) : bookedTimeSX}
+        />
+        {
+          <TimeChipPopper
+            patientId={patientId}
+            open={open}
+            setOpen={setOpen}
+            anchorEl={anchorEl}
+            onCancelAppointment={() =>
+              onCancelAppointment && onCancelAppointment()
+            }
+          />
+        }
+      </>
     );
   } else {
     return (

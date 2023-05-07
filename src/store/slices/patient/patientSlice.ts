@@ -76,7 +76,6 @@ export const updatePatientInfo = createAsyncThunk(
         `${PATIENTS_ADDITIONAL_INFO_URL}${updatedPatientInfo.userId}`,
         updatedPatientInfo,
       );
-      console.log(response);
       return response.data as PatientInfo;
     } catch (err: unknown) {
       const error = err as AxiosError;
@@ -167,5 +166,7 @@ export const patientSlice = createSlice({
 });
 
 export const selectPatients = (state: RootState) => state.patient.patients;
+export const selectPatientAdditionalInfo = (state: RootState) =>
+  state.patient.additionalInfo;
 
 export default patientSlice.reducer;

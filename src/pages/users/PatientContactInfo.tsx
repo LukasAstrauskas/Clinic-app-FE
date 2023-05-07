@@ -2,48 +2,51 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import store from '../../store/store';
-import { updatePatientInfo } from '../../store/slices/patient/patientSlice';
+import {
+  updatePatientInfo,
+  selectPatientAdditionalInfo,
+} from '../../store/slices/patient/patientSlice';
+import { selectId } from '../../store/slices/auth/authSlice';
 
 const PatientContactInfo = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const userId = store.getState().auth.id;
+  const patientInfo = useSelector(selectPatientAdditionalInfo);
+  const userId = useSelector(selectId);
   const [gender, setGender] = useState(
-    store.getState().patient.additionalInfo?.gender as string,
+    patientInfo !== null ? patientInfo.gender : '',
   );
   const [birthDate, setBirthDate] = useState(
-    store.getState().patient.additionalInfo?.birthDate as Date,
+    patientInfo !== null ? patientInfo.birthDate : null,
   );
   const [phone, setPhone] = useState(
-    store.getState().patient.additionalInfo?.phone.toString() as string,
+    patientInfo !== null ? patientInfo.phone.toString() : '',
   );
   const [street, setStreet] = useState(
-    store.getState().patient.additionalInfo?.street as string,
+    patientInfo !== null ? patientInfo.street : '',
   );
   const [city, setCity] = useState(
-    store.getState().patient.additionalInfo?.city as string,
+    patientInfo !== null ? patientInfo.city : '',
   );
   const [postalCode, setPostalCode] = useState(
-    store.getState().patient.additionalInfo?.postalCode as string,
+    patientInfo !== null ? patientInfo.postalCode : '',
   );
   const [country, setCountry] = useState(
-    store.getState().patient.additionalInfo?.country as string,
+    patientInfo !== null ? patientInfo.country : '',
   );
   const [emergencyName, setEmergencyName] = useState(
-    store.getState().patient.additionalInfo?.emergencyName as string,
+    patientInfo !== null ? patientInfo.emergencyName : '',
   );
   const [emergencySurname, setEmergencySurname] = useState(
-    store.getState().patient.additionalInfo?.emergencyLastName as string,
+    patientInfo !== null ? patientInfo.emergencyLastName : '',
   );
   const [emergencyPhone, setEmergencyPhone] = useState(
-    store
-      .getState()
-      .patient.additionalInfo?.emergencyPhone.toString() as string,
+    patientInfo !== null ? patientInfo.emergencyPhone.toString() : '',
   );
   const [emergencyRelation, setEmergencyRelation] = useState(
-    store.getState().patient.additionalInfo?.emergencyRelation as string,
+    patientInfo !== null ? patientInfo.emergencyRelation : '',
   );
   const handleUpdatePatientInfo = () => {
     dispatch(
@@ -65,8 +68,9 @@ const PatientContactInfo = () => {
   };
   const handlePhoneError = (phoneStr: string) => {
     if (
-      phoneStr === undefined ||
-      (phoneStr.startsWith('3706') && phoneStr.length === 11) ||
+      (phoneStr.startsWith('3706') &&
+        phoneStr.length === 11 &&
+        /^\d+$/.test(phoneStr)) ||
       phoneStr === '' ||
       phoneStr === '0'
     ) {
@@ -75,8 +79,8 @@ const PatientContactInfo = () => {
       return true;
     }
   };
-  const handleBirthDate = (date: Date) => {
-    if (date === null || date === undefined) {
+  const handleBirthDate = (date: Date | null) => {
+    if (date === null) {
       return false;
     }
     const currentDate = new Date();
@@ -122,7 +126,6 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={phone}
           value={phone === '0' ? '' : phone}
           helperText='Phone Number'
           onChange={(e) => setPhone(e.target.value)}
@@ -177,7 +180,6 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={emergencyPhone}
           value={emergencyPhone === '0' ? '' : emergencyPhone}
           helperText='Phone Number'
           onChange={(e) => setEmergencyPhone(e.target.value)}

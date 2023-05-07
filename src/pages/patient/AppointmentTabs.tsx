@@ -16,7 +16,6 @@ import {
   fetchPatientAppointments,
 } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
-/*eslint import/no-unresolved: [2, { caseSensitiveStrict: true }]*/
 import PastAppointments from './PastAppointmets';
 import UpcomingAppointments from './UpcomingApppointments';
 

@@ -9,8 +9,11 @@ import Styles from '../styles/UserManagmentStyles';
 import { EditUser } from '../../model/Model';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
-import { selectUser, updateUser } from '../../store/slices/user/userSlice';
-import { fetchUserById } from '../../store/slices/user/userSlice';
+import {
+  selectUser,
+  updateUser,
+  fetchUserById,
+} from '../../store/slices/user/userSlice';
 import {
   fetchOccupations,
   selectOccupations,
@@ -19,7 +22,12 @@ import {
   fetchPhysicianById,
   updatePhysician,
 } from '../../store/slices/physician/editedPhysicianSlice';
-import { selectPhysician } from '../../store/slices/physician/physicianSlice';
+import {
+  fetchPhysicians,
+  selectPhysician,
+} from '../../store/slices/physician/physicianSlice';
+import { fetchAdmins } from '../../store/slices/admin/adminSlice';
+import { fetchPatients } from '../../store/slices/patient/patientSlice';
 
 const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -27,7 +35,6 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const selectedPhysician = useSelector(selectPhysician);
   const occupations = useSelector(selectOccupations);
 
-  const [name, setName] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -36,7 +43,6 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const [emailError, setEmailError] = useState('');
   const [nameError, setNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [isUpdated, setIsUpdated] = useState(false);
   const [selectedOccupationId, setSelectedOccupationId] = useState('');
 
   const handleFetchUserById = () => {
@@ -85,14 +91,21 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
         };
         dispatch(updatePhysician(updatedPhysician));
       }
-      setIsUpdated(true);
-      window.location.reload();
+      setOpen(false);
     }
   };
 
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (!open) {
+      dispatch(fetchPatients());
+      dispatch(fetchPhysicians());
+      dispatch(fetchAdmins());
+    }
+  }, [open]);
 
   useEffect(() => {
     if (!open) {
@@ -126,9 +139,9 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
       : setEmailError('');
   };
 
-  const handleNameCheck = () => {
+  const handleNameCheck = (name: string) => {
     !isValidName(name)
-      ? setNameError('Name can not be empty')
+      ? setNameError('Field can not be empty')
       : setNameError('');
   };
 
@@ -167,7 +180,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
               id='firstName'
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              onBlur={handleNameCheck}
+              onBlur={() => handleNameCheck(firstName)}
               helperText={nameError === '' ? 'First Name' : nameError}
               error={nameError !== ''}
             />
@@ -176,7 +189,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
               id='lastName'
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              onBlur={handleNameCheck}
+              onBlur={() => handleNameCheck(lastName)}
               helperText={nameError === '' ? 'Last Name' : nameError}
               error={nameError !== ''}
               style={{ marginLeft: '20px' }}
@@ -222,11 +235,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
               </TextField>
             )}
           </Box>
-          {isUpdated && (
-            <h4 style={{ textAlign: 'center', color: 'green' }}>
-              Successfully modified!
-            </h4>
-          )}
+
           <Box
             sx={{
               mt: 9,

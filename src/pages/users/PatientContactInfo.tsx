@@ -4,7 +4,6 @@ import TextField from '@mui/material/TextField';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
-import store from '../../store/store';
 import {
   updatePatientInfo,
   selectPatientAdditionalInfo,
@@ -106,7 +105,7 @@ const PatientContactInfo = () => {
       noValidate
       autoComplete='off'
     >
-      <h1>{store.getState().auth.user?.name}</h1>
+      <h1>{sessionStorage.getItem('name')}</h1>
       <h2>Main information</h2>
       <div>
         <TextField

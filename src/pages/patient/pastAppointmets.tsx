@@ -16,7 +16,7 @@ const PastAppointmentsTab = () => {
   const appointments = useSelector(selectPastAppointments);
   const appointmentAmount = useSelector(selectPatientPastAppointmentAmount);
   const [more, setMore] = useState(false);
-  const userId = useSelector(selectId);
+  const userId = sessionStorage.getItem('userId');
   const dispatch = useDispatch<AppDispatch>();
 
   const fetchMoreAppointments = async () => {

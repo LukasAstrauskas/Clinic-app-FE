@@ -22,7 +22,7 @@ import PastAppointmentsTab from './pastAppointmets';
 import UpcomingAppointmentsTab from './upcomingApppointments';
 
 const AppointmentTabs = () => {
-  const userId = useSelector(selectId);
+  const userId = sessionStorage.getItem('userId');
   const dispatch = useDispatch<AppDispatch>();
   const [value, setValue] = useState(0);
 

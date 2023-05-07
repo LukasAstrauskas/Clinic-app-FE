@@ -9,7 +9,7 @@ export const login = createAsyncThunk(
     const response = await axios.post(LOGIN_URL, payload);
     sessionStorage.setItem('isLogged', 'true');
     sessionStorage.setItem('type', response.data.type);
-
+    sessionStorage.setItem('userId', response.data.id);
     return response.data;
   },
 );
@@ -18,6 +18,7 @@ export const logout = createAsyncThunk('auth/logout', async () => {
   sessionStorage.removeItem('isLogged');
   sessionStorage.removeItem('type');
   sessionStorage.removeItem('name');
+  sessionStorage.removeItem('userId');
 });
 
 export const authFetchUserById = createAsyncThunk<User, string>(

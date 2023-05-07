@@ -3,7 +3,7 @@ import { Box, Button, Typography } from '@mui/material';
 import moment from 'moment';
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ConfirmModal from '../../components/modals/AlertModal';
+import AlertModal from '../../components/modals/AlertModal';
 import { selectId } from '../../store/slices/auth/authSlice';
 import {
   deleteAppointment,
@@ -44,7 +44,7 @@ const AppointmentSlot: FC<Props> = ({ appointment }) => {
 
   return (
     <>
-      <ConfirmModal
+      <AlertModal
         open={open}
         message='Are you sure you want to Cancel appointment'
         onClose={closeAlert}

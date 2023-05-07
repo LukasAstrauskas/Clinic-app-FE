@@ -10,7 +10,7 @@ import UserTabs from '../../pages/users/Tabs';
 import TimetablesContainer from '../../pages/timetables/TimetablesContainer';
 import BookAppointment from '../../pages/admin/BookAppointment';
 import PrivateRoutes from '../../routes/PrivateRoutes';
-import AppointmentTabs from '../../pages/patient/appointment-tabs';
+import AppointmentTabs from '../../pages/patient/AppointmentTabs';
 
 const Main = () => {
   return (

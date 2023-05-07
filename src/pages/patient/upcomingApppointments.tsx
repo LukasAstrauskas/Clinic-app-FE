@@ -1,9 +1,9 @@
 import { Box, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { selectAppointments } from '../../store/slices/patient/patientSlice';
-import AppointmentSlot from './appointment-slot';
+import AppointmentSlot from './AppointmentSlot';
 import React from 'react';
-const UpcomingAppointmentsTab = () => {
+const UpcomingAppointments = () => {
   const appointments = useSelector(selectAppointments);
 
   return (
@@ -38,4 +38,4 @@ const UpcomingAppointmentsTab = () => {
   );
 };
 
-export default UpcomingAppointmentsTab;
+export default UpcomingAppointments;

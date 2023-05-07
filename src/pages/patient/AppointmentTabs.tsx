@@ -14,12 +14,11 @@ import {
   fetchPastPatientAppointments,
   // fetchPastPatientAppointments,
   fetchPatientAppointments,
-  selectAppointments,
-  selectPastAppointments,
 } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
-import PastAppointmentsTab from './pastAppointmets';
-import UpcomingAppointmentsTab from './upcomingApppointments';
+/*eslint import/no-unresolved: [2, { caseSensitiveStrict: true }]*/
+import PastAppointments from './PastAppointmets';
+import UpcomingAppointments from './UpcomingApppointments';
 
 const AppointmentTabs = () => {
   const userId = sessionStorage.getItem('userId');
@@ -77,10 +76,10 @@ const AppointmentTabs = () => {
         </Box>
 
         <TabPanel value={value} index={0}>
-          <UpcomingAppointmentsTab />
+          <UpcomingAppointments />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <PastAppointmentsTab />
+          <PastAppointments />
         </TabPanel>
       </ThemeProvider>
     </>

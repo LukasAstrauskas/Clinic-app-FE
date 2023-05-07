@@ -13,7 +13,7 @@ type Props = {
   closeMsg?: string;
 };
 
-const ConfirmModal = ({
+const AlertModal = ({
   open,
   onClose,
   message = 'Alert!',
@@ -44,4 +44,4 @@ const ConfirmModal = ({
   );
 };
 
-export default ConfirmModal;
+export default AlertModal;

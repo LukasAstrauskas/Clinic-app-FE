@@ -9,10 +9,10 @@ import {
   selectPatientPastAppointmentAmount,
 } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
-import AppointmentSlot from './appointment-slot';
+import AppointmentSlot from './AppointmentSlot';
 import { PatientAppointments } from '../../model/Model';
 
-const PastAppointmentsTab = () => {
+const PastAppointments = () => {
   const appointments = useSelector(selectPastAppointments);
   const appointmentAmount = useSelector(selectPatientPastAppointmentAmount);
   const [more, setMore] = useState(false);
@@ -84,4 +84,4 @@ const PastAppointmentsTab = () => {
   );
 };
 
-export default PastAppointmentsTab;
+export default PastAppointments;

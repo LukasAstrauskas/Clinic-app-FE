@@ -20,7 +20,7 @@ import { authFetchUserById, logout } from '../../store/slices/auth/authActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { User } from '../../model/Model';
-import { selectId, selectisLoggedIn } from '../../store/slices/auth/authSlice';
+import { selectId } from '../../store/slices/auth/authSlice';
 import { resetStore } from '../../store/reducers';
 
 const Header = () => {
@@ -43,7 +43,6 @@ const Header = () => {
       return loggedUserName.substring(0, 2);
     }
   };
-
   const handleFetchUserById = async () => {
     if (!loggedUserId) {
       return 'no id';
@@ -52,11 +51,9 @@ const Header = () => {
     const userData = user.payload as User;
     setName(userData.name);
   };
-
   useEffect(() => {
     handleFetchUserById();
-    // eslint-disable-next-line prettier/prettier
-  }, [loggedUserId]);
+  }, [name, loggedUserId]);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);

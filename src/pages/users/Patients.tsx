@@ -1,13 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from '@mui/system';
 import { TableContainer, Table, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import {
-  deletePatient,
   fetchPatients,
   searchPatient,
   selectPatients,
@@ -24,7 +22,6 @@ export const Patients = () => {
   const patients = useSelector(selectPatients);
   const [open, setOpen] = useState(false);
   const [more, setMore] = useState<boolean>(true);
-  const [checkedPatients, setCheckedPatiens] = useState<string[]>([]);
   const [refresh, setRefresh] = useState<boolean>(false);
   const { appointment, setAppointment } = useContext(AppointmentContext);
   const choosePatient = (patientId: string): void => {
@@ -35,22 +32,6 @@ export const Patients = () => {
     setOpen(true);
   };
 
-  const handleDelete = () => {
-    checkedPatients.forEach((patient) => {
-      dispatch(deletePatient(patient));
-    });
-    setCheckedPatiens([]);
-  };
-  const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedPatient = e.target;
-    if (selectedPatient.checked) {
-      setCheckedPatiens([...checkedPatients, selectedPatient.id]);
-    } else {
-      setCheckedPatiens(
-        checkedPatients.filter((patient) => patient !== selectedPatient.id),
-      );
-    }
-  };
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const search = e.target.value;
     if (search.length != 0) {
@@ -61,9 +42,6 @@ export const Patients = () => {
       setRefresh(true);
     }
   };
-  useEffect(() => {
-    dispatch(fetchPatients());
-  }, [checkedPatients]);
   return (
     <>
       <Box
@@ -102,21 +80,20 @@ export const Patients = () => {
       >
         <TableContainer component={Paper} sx={{ maxHeight: '500px' }}>
           <Table stickyHeader>
-            <TableHeadComponent
-              handleDelete={handleDelete}
-              collumName='Email'
+            <TableHeadComponent collumName='Email' />
+          </Table>
+
+          <Table>
+            <TableBodyComponent
+              type='patient'
+              more={more}
+              setMore={setMore}
+              setRefresh={setRefresh}
+              refresh={refresh}
+              user={patients}
+              rowClick={choosePatient}
             />
           </Table>
-          <TableBodyComponent
-            type='patient'
-            more={more}
-            setMore={setMore}
-            setRefresh={setRefresh}
-            refresh={refresh}
-            user={patients}
-            handleChecked={handleChecked}
-            rowClick={choosePatient}
-          />
         </TableContainer>
       </Box>
     </>

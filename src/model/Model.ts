@@ -45,6 +45,10 @@ export interface Timeslot {
   date: string;
   time: string;
 }
+export interface TimeslotWithPhysicianAndPatient {
+  physicianId: string;
+  patientId?: string | null;
+}
 
 export interface EditUser {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -90,7 +94,7 @@ export interface Appointment {
   physicianId: string;
   date: string;
   time: string;
-  patientId: string;
+  patientId?: string | null;
 }
 
 export interface AppointmentState {

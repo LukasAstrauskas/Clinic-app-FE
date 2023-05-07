@@ -10,18 +10,25 @@ import {
   fetchPatientAppointments,
 } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
+import { setPhysicianId } from '../../store/slices/physician/phyNameOccupationSlice';
+import { UUID } from 'crypto';
+import { PatientAppointments } from '../../model/Model';
 interface Props {
-  appointment: any;
+  appointment: PatientAppointments;
 }
 
 const AppointmentSlot: FC<Props> = ({ appointment }) => {
-  const userId = useSelector(selectId);
+  const userId = sessionStorage.getItem('userId');
   const dispatch = useDispatch<AppDispatch>();
   const [open, setOpen] = useState(false);
-  const [physicianAndPatientId, setPhysicianAndPatientId] =
-    useState<string>('');
+  const [physicianId, setphysicianId] = useState<string>();
   const handleCancel = async () => {
-    await dispatch(deleteAppointment(physicianAndPatientId));
+    await dispatch(
+      deleteAppointment({
+        PhysicianId: physicianId,
+        PatientId: userId,
+      }),
+    );
     dispatch(fetchPatientAppointments(userId));
     setOpen(true);
   };
@@ -32,7 +39,7 @@ const AppointmentSlot: FC<Props> = ({ appointment }) => {
 
   const handleAlertOpen = (id: string) => {
     setOpen(true);
-    setPhysicianAndPatientId(id + '/' + userId);
+    setphysicianId(id);
   };
 
   return (

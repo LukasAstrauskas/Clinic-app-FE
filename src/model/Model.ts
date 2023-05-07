@@ -1,3 +1,5 @@
+import { UUID } from 'crypto';
+
 export interface TimePatient {
   time: string;
   patientId: string;
@@ -27,7 +29,7 @@ export interface PatientPastAppointments {
 }
 
 export interface PatientAppointments {
-  physicianId: string;
+  physicianId: UUID;
   physicianName: string;
   physicianEmail: string;
   occupation: {

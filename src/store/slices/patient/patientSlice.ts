@@ -19,6 +19,7 @@ import {
   PATIENT_SEARCH_URL,
 } from '../../../utils/httpConstants';
 import { stat } from 'fs';
+import { UUID } from 'crypto';
 
 interface PatientsState {
   patients: UniversalUser[];
@@ -40,9 +41,15 @@ const initialState: PatientsState = {
 
 export const deleteAppointment = createAsyncThunk(
   'patients/patient-cancel-appointment',
-  async (PhysicianAndPatientIds: string) => {
+  async ({
+    PhysicianId,
+    PatientId,
+  }: {
+    PhysicianId: string | undefined;
+    PatientId: string | null;
+  }) => {
     const response = await axios.patch(
-      PATIENT_REMOVE_APPOINTMENT + PhysicianAndPatientIds,
+      PATIENT_REMOVE_APPOINTMENT + PhysicianId + '/' + PatientId,
     );
     return response.data;
   },

@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_USER_URL, LOGIN_URL } from '../../../utils/httpConstants';
 import { User } from '../../../model/Model';
+import { UUID } from 'crypto';
 
 export const login = createAsyncThunk(
   'auth/login',
@@ -9,7 +10,7 @@ export const login = createAsyncThunk(
     const response = await axios.post(LOGIN_URL, payload);
     sessionStorage.setItem('isLogged', 'true');
     sessionStorage.setItem('type', response.data.type);
-    sessionStorage.setItem('userId', response.data.id);
+    sessionStorage.setItem('userId', <UUID>response.data.id);
     return response.data;
   },
 );

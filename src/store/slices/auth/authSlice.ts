@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { authFetchUserById, login, logout } from './authActions';
 import { RootState } from '../../types';
 import { User } from '../../../model/Model';
+import { UUID } from 'crypto';
 
 const initialState: AuthState = {
   type: null,

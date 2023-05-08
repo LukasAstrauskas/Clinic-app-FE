@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TimetablesContainer from '../timetables/TimetablesContainer';
-import { Box, Button, Stack } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import Patients from '../users/Patients';
 import useToggle from '../../hooks/useToggle';
 import AppointmentContext from '../../hooks/AppointmentContext';
@@ -18,7 +18,6 @@ import { useSelector } from 'react-redux';
 import { selectType } from '../../store/slices/auth/authSlice';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import ErrorModal from '../../components/modals/ErrorModal';
-import { TabPanel } from '../users/Tabs';
 
 const BookAppointment = () => {
   const type = useSelector(selectType);
@@ -74,9 +73,9 @@ const BookAppointment = () => {
       >
         <AppointmentContext.Provider value={{ appointment, setAppointment }}>
           {picker ? (
-            <TabPanel>
+            <Typography variant='h1'>
               <Patients />
-            </TabPanel>
+            </Typography>
           ) : (
             <TimetablesContainer tableTitle='Select Physician and Time' />
           )}

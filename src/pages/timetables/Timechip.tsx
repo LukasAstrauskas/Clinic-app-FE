@@ -49,14 +49,14 @@ const Timechip = ({
   onDelete,
   onClick,
 }: Props) => {
+  const isInFuture = new Date() > new Date(`${date}T${time}`);
   if (typeof onDelete === 'undefined') {
     return (
       <Chip
         label={time}
         variant='outlined'
-        onClick={() => {
-          onClick(date, time, patientId);
-        }}
+        disabled={isInFuture}
+        onClick={() => onClick(date, time, patientId)}
         sx={patientId === null ? freeTimeSX(selected) : bookedTimeSX}
       />
     );
@@ -65,6 +65,7 @@ const Timechip = ({
       <Chip
         label={time}
         variant='outlined'
+        disabled={isInFuture}
         onDelete={() => onDelete(date, time, patientId)}
         onClick={() => onClick(date, time, patientId)}
         sx={patientId === null ? freeTimeSX(selected) : bookedTimeSX}

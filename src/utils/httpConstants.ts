@@ -35,3 +35,4 @@ export const INCOMING_PHYSICIANS_TO_BE_RENDERED_URL =
 export const PHYNAMEOCCUPATION_URL =
   'http://localhost:8080/physicianInfo/physicianNamesOccupations';
 export const OCCUPATIONS_URL = 'http://localhost:8080/occupations';
+export const TIMESLOTS_URL = 'http://localhost:8080/timeslot/getPhyTimeslots';

@@ -101,7 +101,7 @@ const BookAppointment = () => {
         <AppointmentContext.Provider value={{ appointment, setAppointment }}>
           {picker ? (
             <Stack style={{ alignItems: 'center' }}>
-              <h1>Select Patient</h1>
+              <h1 style={{ margin: 0 }}>Select Patient</h1>
               <Typography variant='h1'>
                 <Patients />
               </Typography>

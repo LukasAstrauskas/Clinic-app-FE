@@ -8,10 +8,9 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   fetchPastPatientAppointments,
-  // fetchPastPatientAppointments,
   fetchPatientAppointments,
 } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
@@ -46,8 +45,8 @@ const AppointmentTabs = () => {
     );
   }
 
-  const handleTabs = (val: any) => {
-    setValue(val);
+  const handleTabs = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
   };
 
   useEffect(() => {

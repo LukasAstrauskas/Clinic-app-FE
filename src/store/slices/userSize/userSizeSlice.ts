@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {
   ADMIN_SIZE_URL,
+  PATIENTS_BY_PHYSICIANS_ID_SIZE_URL,
   PATIENT_SIZE_URL,
   PHYSICIAN_SIZE_URL,
 } from '../../../utils/httpConstants';
@@ -40,6 +41,16 @@ export const fetchPhysicianAmount = createAsyncThunk<number>(
   'patients/fetchPhysicianAmount',
   async () => {
     const response = await axios.get<number>(PHYSICIAN_SIZE_URL);
+    return response.data;
+  },
+);
+
+export const fetchPatientsByPhysicianAmount = createAsyncThunk(
+  'patients/fetchPatientsByPhysicianAmount',
+  async ({ id }: { id: string | null }) => {
+    const response = await axios.get<number>(
+      PATIENTS_BY_PHYSICIANS_ID_SIZE_URL + id,
+    );
     return response.data;
   },
 );
@@ -92,6 +103,21 @@ export const userSizeSlice = createSlice({
         },
       )
       .addCase(fetchPhysicianAmount.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Something went wrong';
+      })
+      .addCase(fetchPatientsByPhysicianAmount.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchPatientsByPhysicianAmount.fulfilled,
+        (state, action: PayloadAction<number>) => {
+          state.isLoading = false;
+          state.size = action.payload;
+        },
+      )
+      .addCase(fetchPatientsByPhysicianAmount.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
       });

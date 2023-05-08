@@ -15,6 +15,8 @@ export const PATIENTS_URL = 'http://localhost:8080/user/patients';
 export const BASE_PATIENTS_URL = 'http://localhost:8080/user/patients/';
 export const INCOMING_PATIENTS_TO_BE_RENDERED_URL =
   'http://localhost:8080/user/patients/offset/';
+export const PATIENTS_BY_PHYSICIANS_ID_SIZE_URL =
+  'http://localhost:8080/user/patientsByPhysicianIdSize/';
 export const PATIENT_SIZE_URL = 'http://localhost:8080/user/patientSize';
 export const PATIENT_SEARCH_URL = 'http://localhost:8080/user/patientSearch/';
 

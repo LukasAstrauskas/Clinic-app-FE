@@ -51,18 +51,19 @@ const Login = () => {
               placeholder='Enter email'
               fullWidth
               margin='normal'
-              helperText={emailError === '' ? 'Email' : emailError}
+              helperText={emailError === '' ? '' : emailError}
               error={emailError !== ''}
               onBlur={handleEmailCheck}
-              value={email}
+              value={email || null}
               onChange={(e) => setEmail(e.target.value)}
+              sx={{ marginBottom: '15px' }}
             />
             <TextField
               label='Password'
               placeholder='Enter password'
               fullWidth
               type='password'
-              value={password}
+              value={password || null}
               onChange={(e) => setPassword(e.target.value)}
             />
             <div className={styles.buttonContainer}>

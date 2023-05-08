@@ -37,7 +37,11 @@
         "ignoreTemplateLiterals": true
       }
     ],
-    "object-curly-newline": ["error", { "multiline": true, "consistent": true }]
+    "object-curly-newline": [
+      "error",
+      { "multiline": true, "consistent": true }
+    ],
+    "react-hooks/exhaustive-deps": "off"
   },
   "settings": {
     "react": {

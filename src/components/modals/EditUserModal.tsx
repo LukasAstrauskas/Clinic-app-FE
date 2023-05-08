@@ -35,7 +35,6 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const selectedPhysician = useSelector(selectPhysician);
   const occupations = useSelector(selectOccupations);
 
-  const [name, setName] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -44,7 +43,6 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
   const [emailError, setEmailError] = useState('');
   const [nameError, setNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [isUpdated, setIsUpdated] = useState(false);
   const [selectedOccupationId, setSelectedOccupationId] = useState('');
 
   const handleFetchUserById = () => {
@@ -93,7 +91,6 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
         };
         dispatch(updatePhysician(updatedPhysician));
       }
-      setIsUpdated(true);
       setOpen(false);
     }
   };
@@ -142,9 +139,9 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
       : setEmailError('');
   };
 
-  const handleNameCheck = () => {
+  const handleNameCheck = (name: string) => {
     !isValidName(name)
-      ? setNameError('Name can not be empty')
+      ? setNameError('Field can not be empty')
       : setNameError('');
   };
 
@@ -183,7 +180,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
               id='firstName'
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              onBlur={handleNameCheck}
+              onBlur={() => handleNameCheck(firstName)}
               helperText={nameError === '' ? 'First Name' : nameError}
               error={nameError !== ''}
             />
@@ -192,7 +189,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
               id='lastName'
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              onBlur={handleNameCheck}
+              onBlur={() => handleNameCheck(lastName)}
               helperText={nameError === '' ? 'Last Name' : nameError}
               error={nameError !== ''}
               style={{ marginLeft: '20px' }}

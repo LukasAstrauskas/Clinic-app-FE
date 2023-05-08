@@ -43,12 +43,14 @@ interface Props {
   setMore: React.Dispatch<React.SetStateAction<boolean>>;
   type: string;
   rowClick?: (id: string) => void;
+  renderDelAndEditCells?: boolean;
 }
 
 const TableBodyComponent: FC<Props> = ({
   user,
   type,
   rowClick = () => undefined,
+  renderDelAndEditCells = true,
 }) => {
   const userSize = useSelector(selectUserSize);
   const dispatch = useDispatch<AppDispatch>();
@@ -175,27 +177,35 @@ const TableBodyComponent: FC<Props> = ({
                     >
                       {name}
                     </TableCell>
-                    <TableCell align='center' sx={{ width: '200px' }}>
+                    <TableCell
+                      align='center'
+                      sx={{ width: '200px' }}
+                      onClick={() => rowClick(id)}
+                    >
                       {type === 'physician' ? occupation?.name : email}
                     </TableCell>
-                    <TableCell
-                      sx={{ m: 0, p: 0 }}
-                      onClick={() => {
-                        setSelectedId(id);
-                      }}
-                    >
-                      <IconButton color='primary' onClick={handleOpen}>
-                        <EditIcon />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        color='primary'
-                        onClick={() => handleDelete(id)}
-                      >
-                        <DeleteIcon sx={{ color: 'orange' }} />
-                      </IconButton>
-                    </TableCell>
+                    {renderDelAndEditCells && (
+                      <>
+                        <TableCell
+                          sx={{ m: 0, p: 0 }}
+                          onClick={() => {
+                            setSelectedId(id);
+                          }}
+                        >
+                          <IconButton color='primary' onClick={handleOpen}>
+                            <EditIcon />
+                          </IconButton>
+                        </TableCell>
+                        <TableCell>
+                          <IconButton
+                            color='primary'
+                            onClick={() => handleDelete(id)}
+                          >
+                            <DeleteIcon sx={{ color: 'orange' }} />
+                          </IconButton>
+                        </TableCell>
+                      </>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>

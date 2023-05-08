@@ -6,8 +6,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import ModeIcon from '@mui/icons-material/Mode';
-import { Button } from '@mui/material';
 import { PhyNameOccupation } from '../../model/Model';
 import { grey } from '@mui/material/colors';
 
@@ -41,7 +39,6 @@ const PhysicianTable = ({ physicians, selectedId, rowClick }: Props) => {
           <TableRow>
             <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Occupation</TableCell>
-            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -64,17 +61,6 @@ const PhysicianTable = ({ physicians, selectedId, rowClick }: Props) => {
                 }}
               >
                 {occupation}
-              </TableCell>
-              <TableCell sx={{ m: 0, p: 0 }}>
-                <Button
-                  variant='text'
-                  onClick={(event) => {
-                    event.preventDefault();
-                    console.log(`Id: ${physicianId} edit.`);
-                  }}
-                >
-                  <ModeIcon />
-                </Button>
               </TableCell>
             </TableRow>
           ))}

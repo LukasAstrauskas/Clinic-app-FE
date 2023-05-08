@@ -19,6 +19,8 @@ export const PATIENTS_BY_PHYSICIANS_ID_SIZE_URL =
   'http://localhost:8080/user/patientsByPhysicianIdSize/';
 export const PATIENT_SIZE_URL = 'http://localhost:8080/user/patientSize';
 export const PATIENT_SEARCH_URL = 'http://localhost:8080/user/patientSearch/';
+export const PATIENTS_ADDITIONAL_INFO_URL =
+  'http://localhost:8080/patientInfo/';
 
 //Physicians
 export const PHYSICIANS_FULL_URL = 'http://localhost:8080/physicianInfo';
@@ -37,3 +39,4 @@ export const INCOMING_PHYSICIANS_TO_BE_RENDERED_URL =
 export const PHYNAMEOCCUPATION_URL =
   'http://localhost:8080/physicianInfo/physicianNamesOccupations';
 export const OCCUPATIONS_URL = 'http://localhost:8080/occupations';
+export const TIMESLOTS_URL = 'http://localhost:8080/timeslot/getPhyTimeslots';

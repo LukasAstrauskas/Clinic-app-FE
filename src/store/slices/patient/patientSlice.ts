@@ -1,23 +1,26 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { UniversalUser, User } from '../../../model/Model';
+import { PatientInfo, UniversalUser, User } from '../../../model/Model';
 import { RootState } from '../../types';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import {
   BASE_PATIENTS_URL,
   BASE_USER_URL,
   INCOMING_PATIENTS_TO_BE_RENDERED_URL,
+  PATIENTS_ADDITIONAL_INFO_URL,
   PATIENTS_URL,
   PATIENT_SEARCH_URL,
 } from '../../../utils/httpConstants';
 
 interface PatientsState {
   patients: UniversalUser[];
+  additionalInfo: PatientInfo | null;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: PatientsState = {
+  additionalInfo: null,
   patients: [],
   isLoading: false,
   error: null,
@@ -77,6 +80,49 @@ export const searchPatient = createAsyncThunk(
   async (search: string) => {
     const response = await axios.get(PATIENT_SEARCH_URL + search);
     return response.data;
+  },
+);
+
+export const fetchPatientInfo = createAsyncThunk(
+  'patientInfo/fetchPatientInfo',
+  async (id: string) => {
+    const response = await axios.get(`${PATIENTS_ADDITIONAL_INFO_URL}${id}`);
+    return response.data as PatientInfo;
+  },
+);
+
+export const updatePatientInfo = createAsyncThunk(
+  'patientInfo/updatePatientInfo',
+  async (updatedPatientInfo: PatientInfo) => {
+    try {
+      const response = await axios.put(
+        `${PATIENTS_ADDITIONAL_INFO_URL}${updatedPatientInfo.userId}`,
+        updatedPatientInfo,
+      );
+      return response.data as PatientInfo;
+    } catch (err: unknown) {
+      const error = err as AxiosError;
+      if (error.response?.status == 404) {
+        //if the row with data in additionalPatientInfo table doesn't exist
+        const response = await axios.post(
+          `${PATIENTS_ADDITIONAL_INFO_URL}`,
+          updatedPatientInfo,
+        );
+        return response.data as PatientInfo;
+      }
+      return null;
+    }
+  },
+);
+
+export const createPatientInfo = createAsyncThunk(
+  'patientInfo/createPatientInfo',
+  async (newPatientInfo: PatientInfo) => {
+    const response = await axios.post(
+      `${PATIENTS_ADDITIONAL_INFO_URL}`,
+      newPatientInfo,
+    );
+    return response.data as PatientInfo;
   },
 );
 
@@ -160,10 +206,20 @@ export const patientSlice = createSlice({
       .addCase(searchPatient.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
+      })
+      .addCase(fetchPatientInfo.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.additionalInfo = action.payload;
+      })
+      .addCase(updatePatientInfo.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.additionalInfo = action.payload;
       });
   },
 });
 
 export const selectPatients = (state: RootState) => state.patient.patients;
+export const selectPatientAdditionalInfo = (state: RootState) =>
+  state.patient.additionalInfo;
 
 export default patientSlice.reducer;

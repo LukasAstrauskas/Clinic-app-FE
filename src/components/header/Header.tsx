@@ -154,8 +154,14 @@ const Header = () => {
                           aria-labelledby='composition-button'
                           onKeyDown={handleListKeyDown}
                         >
-                          {/* add link to user profile */}
-                          <NavLink to='/profile' className={resolveLinkClass}>
+                          <NavLink
+                            to={
+                              sessionStorage.getItem('type') === 'patient'
+                                ? ROUTES.PATIENTPROFILE
+                                : 'not-existing-page' // TODO: implement profile for physician/administrators
+                            }
+                            className={resolveLinkClass}
+                          >
                             <MenuItem onClick={handleClose}>Profile</MenuItem>
                           </NavLink>
                           <NavLink

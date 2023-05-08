@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TimetablesContainer from '../timetables/TimetablesContainer';
-import { Box, Button, Stack } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import Patients from '../users/Patients';
 import useToggle from '../../hooks/useToggle';
 import AppointmentContext from '../../hooks/AppointmentContext';
@@ -63,25 +63,28 @@ const BookAppointment = () => {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', marginTop: '30px' }}>
       <Stack
         display='flex'
         justifyContent='center'
         alignItems='center'
         spacing={2}
+        marginBottom={3}
       >
         <AppointmentContext.Provider value={{ appointment, setAppointment }}>
           {picker ? (
-            <Patients />
+            <Typography variant='h1'>
+              <Patients />
+            </Typography>
           ) : (
             <TimetablesContainer tableTitle='Select Physician and Time' />
           )}
         </AppointmentContext.Provider>
         <Box
           display='flex'
-          justifyContent='space-between'
+          justifyContent='center'
           sx={{
-            width: '60%',
+            width: '95%',
           }}
         >
           <Button
@@ -101,14 +104,7 @@ const BookAppointment = () => {
               }
               sx={Styles.createNewUserBtn}
             >
-              <Button
-                style={{
-                  color: 'white',
-                  textDecoration: 'none',
-                }}
-              >
-                Book an appointment
-              </Button>
+              Book an appointment
             </Button>
           )}
           {!picker && type === 'patient' && (
@@ -126,6 +122,7 @@ const BookAppointment = () => {
               variant='contained'
               onClick={setpicker}
               sx={Styles.createNewUserBtn}
+              disabled={!appointment.date}
             >
               Next
               <ArrowForwardIcon />

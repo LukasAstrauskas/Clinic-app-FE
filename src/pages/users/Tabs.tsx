@@ -16,10 +16,18 @@ const theme = createTheme({
 });
 
 type TabPanelProps = {
-  value: number;
-  index: number;
-  children: JSX.Element;
+  value?: number;
+  index?: number;
+  children?: JSX.Element;
 };
+
+export function TabPanel({ children, value, index }: TabPanelProps) {
+  return (
+    <div>
+      {value === index && <Typography variant='h1'>{children} </Typography>}
+    </div>
+  );
+}
 
 const UserTabs = () => {
   const [value, setValue] = useState(0);
@@ -29,13 +37,6 @@ const UserTabs = () => {
     setValue(newValue);
   };
 
-  function TabPanel({ children, value, index }: TabPanelProps) {
-    return (
-      <div>
-        {value === index && <Typography variant='h1'>{children} </Typography>}
-      </div>
-    );
-  }
   return (
     <>
       <h2 style={{ textAlign: 'center' }}>Manage Users</h2>

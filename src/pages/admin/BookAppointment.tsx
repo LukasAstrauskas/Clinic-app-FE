@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TimetablesContainer from '../timetables/TimetablesContainer';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import Patients from '../users/Patients';
 import useToggle from '../../hooks/useToggle';
 import AppointmentContext from '../../hooks/AppointmentContext';

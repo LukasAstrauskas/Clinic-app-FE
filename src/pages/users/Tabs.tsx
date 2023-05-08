@@ -16,13 +16,12 @@ const theme = createTheme({
 });
 
 type TabPanelProps = {
-  value: number;
-  index: number;
-  children: JSX.Element;
+  value?: number;
+  index?: number;
+  children?: JSX.Element;
 };
 
-export function TabPanel(props: any) {
-  const { children, value, index } = props;
+export function TabPanel({ children, value, index }: TabPanelProps) {
   return (
     <div>
       {value === index && <Typography variant='h1'>{children} </Typography>}

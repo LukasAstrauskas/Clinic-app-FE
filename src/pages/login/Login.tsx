@@ -12,7 +12,6 @@ import { ROUTES } from '../../routes/routes';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { login } from '../../store/slices/auth/authActions';
-import store from '../../store/store';
 import { fetchPatientInfo } from '../../store/slices/patient/patientSlice';
 
 const Login = () => {
@@ -28,11 +27,11 @@ const Login = () => {
     event.preventDefault();
     try {
       const response = await dispatch(login({ email, password }));
+      const userId = sessionStorage.getItem('userId');
       if (response.payload && response.payload.type) {
         navigate(ROUTES.HOME);
-        if (sessionStorage.getItem('type') === 'patient') {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          await dispatch(fetchPatientInfo(store.getState().auth.id!));
+        if (sessionStorage.getItem('type') === 'patient' && userId !== null) {
+          await dispatch(fetchPatientInfo(userId));
         }
       }
     } catch (error) {

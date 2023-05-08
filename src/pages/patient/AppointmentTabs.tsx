@@ -9,7 +9,6 @@ import {
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectId } from '../../store/slices/auth/authSlice';
 import {
   fetchPastPatientAppointments,
   // fetchPastPatientAppointments,
@@ -32,7 +31,13 @@ const AppointmentTabs = () => {
     },
   });
 
-  function TabPanel(props: any) {
+  type TabPanelProps = {
+    value: number;
+    index: number;
+    children: JSX.Element;
+  };
+
+  function TabPanel(props: TabPanelProps) {
     const { children, value, index } = props;
     return (
       <div>
@@ -41,7 +46,7 @@ const AppointmentTabs = () => {
     );
   }
 
-  const handleTabs = (e: any, val: any) => {
+  const handleTabs = (val: any) => {
     setValue(val);
   };
 

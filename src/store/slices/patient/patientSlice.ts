@@ -1,16 +1,9 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import {
-  PatientAppointments,
-  PatientPastAppointments,
-  UniversalUser,
-  User,
-} from '../../../model/Model';
-import { RootState } from '../../types';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { PatientAppointments, UniversalUser, User } from '../../../model/Model';
 import {
   BASE_USER_URL,
-  DELETE_TIMESLOT,
   INCOMING_PATIENTS_TO_BE_RENDERED_URL,
   PATIENTS_URL,
   PATIENT_APPOINTMENTS,
@@ -18,8 +11,7 @@ import {
   PATIENT_REMOVE_APPOINTMENT,
   PATIENT_SEARCH_URL,
 } from '../../../utils/httpConstants';
-import { stat } from 'fs';
-import { UUID } from 'crypto';
+import { RootState } from '../../types';
 
 interface PatientsState {
   patients: UniversalUser[];
@@ -66,7 +58,6 @@ export const fetchPatientAppointments = createAsyncThunk(
 export const fetchMorePastPatientAppointments = createAsyncThunk(
   'patients/patient-past-appointments',
   async ({ id, offset }: { id: string | null; offset: number | undefined }) => {
-    console.log('called with parameters', id, '/', offset);
     const response = await axios.get(
       `${PATIENT_PAST_APPOINTMENTS}${id}/${offset}`,
     );

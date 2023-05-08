@@ -16,11 +16,6 @@ const initialState: UserState = {
   error: null,
 };
 
-const postRequestHeaders = {
-  Accept: 'application/json',
-  'Content-Type': 'application/json',
-};
-
 export const fetchUserById = createAsyncThunk<User, string>(
   'user/fetchById',
   async (id) => {

@@ -63,6 +63,7 @@ const Styles = {
     },
   },
   createNewUserBtn: {
+    p: 1,
     ml: 4.2,
     mb: 1,
     scale: '110%',

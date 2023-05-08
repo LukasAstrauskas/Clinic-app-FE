@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
 import { PhysicianDto } from '../../../model/Model';
 import { BASE_PHYSICIANS_FULL_URL } from '../../../utils/httpConstants';
 import axios from 'axios';

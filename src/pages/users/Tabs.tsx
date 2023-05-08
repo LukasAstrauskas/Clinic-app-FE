@@ -15,21 +15,28 @@ const theme = createTheme({
   },
 });
 
+type TabPanelProps = {
+  value?: number;
+  index?: number;
+  children?: JSX.Element;
+};
+
+export function TabPanel({ children, value, index }: TabPanelProps) {
+  return (
+    <div>
+      {value === index && <Typography variant='h1'>{children} </Typography>}
+    </div>
+  );
+}
+
 const UserTabs = () => {
   const [value, setValue] = useState(0);
 
-  const handleTabs = (e: any, val: any) => {
-    setValue(val);
+  const handleTabs = (event: React.SyntheticEvent, newValue: number) => {
+    event.preventDefault();
+    setValue(newValue);
   };
 
-  function TabPanel(props: any) {
-    const { children, value, index } = props;
-    return (
-      <div>
-        {value === index && <Typography variant='h1'>{children} </Typography>}
-      </div>
-    );
-  }
   return (
     <>
       <h2 style={{ textAlign: 'center' }}>Manage Users</h2>

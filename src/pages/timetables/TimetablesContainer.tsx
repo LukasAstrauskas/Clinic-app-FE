@@ -25,7 +25,7 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
   const physicians = useSelector(selectPhysicians);
   const dispatch = useDispatch<AppDispatch>();
   const [refresh, setRefresh] = useState<boolean>(false);
-  const [more, setMore] = useState<boolean>(true);
+  const [isSearch, setIsSearch] = useState(false);
 
   const handleClick = (id: string) => {
     dispatch(setPhysicianId(id));
@@ -34,8 +34,9 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
   const handleSearch = (search: string, occupation: string) => {
     if (search.length != 0 || occupation) {
       dispatch(searchPhysician({ search, occupation }));
-      setMore(false);
+      setIsSearch(true);
     } else {
+      setIsSearch(false);
       dispatch(fetchPhysicians());
       setRefresh(true);
     }
@@ -66,8 +67,7 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
               rowClick={handleClick}
               refresh={refresh}
               setRefresh={setRefresh}
-              more={more}
-              setMore={setMore}
+              isSearch={isSearch}
             />
           </Grid>
           <Grid item lg={8}>

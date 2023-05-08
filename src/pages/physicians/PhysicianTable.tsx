@@ -23,10 +23,9 @@ type Props = {
   physicians: UniversalUser[];
   refresh: boolean;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
-  more: boolean;
-  setMore: React.Dispatch<React.SetStateAction<boolean>>;
   selectedId: string | null;
   rowClick: (id: string) => void;
+  isSearch: boolean;
 };
 
 const tableRowSX = (isSelected: boolean) => {
@@ -41,31 +40,18 @@ const tableRowSX = (isSelected: boolean) => {
 
 const PhysicianTable = ({
   physicians,
-  refresh,
-  setRefresh,
-  more,
-  setMore,
   selectedId,
   rowClick,
+  isSearch,
 }: Props) => {
-  const UserSize = useSelector(selectUserSize);
+  const userSize = useSelector(selectUserSize);
   const dispatch = useDispatch<AppDispatch>();
-  const [currentRender, setCurrentRender] = useState(5);
 
   const getMoreData = async () => {
-    if (UserSize > currentRender) {
-      await dispatch(fetchMorePhysicians(currentRender));
-    } else {
-      setMore(false);
+    if (!isSearch) {
+      await dispatch(fetchMorePhysicians(physicians.length));
     }
-    setCurrentRender((prevRender) => prevRender + 5);
   };
-
-  useEffect(() => {
-    setRefresh(!false);
-    setMore(more);
-    setCurrentRender(7);
-  }, [refresh]);
 
   useEffect(() => {
     dispatch(fetchPhysicianAmount());
@@ -78,14 +64,16 @@ const PhysicianTable = ({
           scrollableTarget='scrollBox'
           dataLength={physicians.length}
           next={getMoreData}
-          hasMore={more}
+          hasMore={userSize > physicians.length}
           loader={
-            <Typography
-              variant='h5'
-              sx={{ textAlign: 'center', backgroundColor: grey[200] }}
-            >
-              loading...
-            </Typography>
+            !isSearch && (
+              <Typography
+                variant='h5'
+                sx={{ textAlign: 'center', backgroundColor: grey[200] }}
+              >
+                loading...
+              </Typography>
+            )
           }
         >
           <Table

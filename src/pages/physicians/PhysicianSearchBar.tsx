@@ -19,12 +19,12 @@ interface SearchProps {
 const Search: React.FC<SearchProps> = ({ onSearch }) => {
   const occupations = useSelector(selectOccupations);
   const dispatch = useDispatch<AppDispatch>();
-  const [searchTerm, setsearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [searchBy, setSearchBy] = useState('');
   const debouncedSearchTerm = useDebouncedSearch(searchTerm, 300);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setsearchTerm(event.target.value);
+    setSearchTerm(event.target.value);
   };
 
   const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {

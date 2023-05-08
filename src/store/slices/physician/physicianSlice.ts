@@ -1,7 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Physician, PhysicianDto } from '../../../model/Model';
-import { UniversalUser, User } from '../../../model/Model';
+import {
+  Physician,
+  PhysicianDto,
+  UniversalUser,
+  User,
+} from '../../../model/Model';
 import {
   BASE_PHYSICIANS_FULL_URL,
   BASE_PHYSICIANS_URL,
@@ -77,13 +81,16 @@ export const deletePhysician = createAsyncThunk(
 export const searchPhysician = createAsyncThunk(
   'user/searchPhysician',
   async ({ search, occupation }: { search: string; occupation?: string }) => {
-    const searchQueryParam = search ? `search=${search}` : '';
-    const occupationQueryParam = occupation ? `occupation=${occupation}` : '';
-    const queryParamSeparator =
-      searchQueryParam && occupationQueryParam ? '&' : '';
-    const response = await axios.get(
-      `${PHYSICIAN_SEARCH_URL}?${searchQueryParam}${queryParamSeparator}${occupationQueryParam}`,
-    );
+    const params = new URLSearchParams();
+    if (search) {
+      params.append('search', search);
+    }
+    if (occupation) {
+      params.append('occupation', occupation);
+    }
+
+    const response = await axios.get(`${PHYSICIAN_SEARCH_URL}?${params}`);
+
     return response.data;
   },
 );

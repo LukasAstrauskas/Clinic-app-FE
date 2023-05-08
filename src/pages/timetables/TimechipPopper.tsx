@@ -15,7 +15,7 @@ interface Props {
   onCancelAppointment?: () => void;
 }
 
-const TimeChipPopper = ({
+const TimechipPopper = ({
   patientId,
   open,
   setOpen,
@@ -115,4 +115,4 @@ const TimeChipPopper = ({
   );
 };
 
-export default TimeChipPopper;
+export default TimechipPopper;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { AppDispatch } from '../../store/types';
 import { Chip } from '@mui/material';
 import { red, teal } from '@mui/material/colors';
-import TimeChipPopper from './TimechipPopper';
+import TimechipPopper from './TimechipPopper';
 import { fetchUserById } from '../../store/slices/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectType } from '../../store/slices/auth/authSlice';
@@ -79,7 +79,7 @@ const Timechip = ({
           sx={patientId === null ? freeTimeSX(selected) : bookedTimeSX}
         />
         {
-          <TimeChipPopper
+          <TimechipPopper
             patientId={patientId}
             open={open}
             setOpen={setOpen}

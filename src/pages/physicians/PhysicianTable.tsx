@@ -17,7 +17,7 @@ type Props = {
   rowClick: (id: string) => void;
 };
 
-const tableRowSX = (isSelected: boolean) => {
+export const tableRowSX = (isSelected: boolean) => {
   return {
     backgroundColor: isSelected ? '#ff9e80 !important' : 'none',
     '&:hover': {

@@ -83,8 +83,8 @@ const BookAppointment = () => {
 
   const appointmentInfo = (
     <Box style={{ textAlign: 'center', marginTop: 10 }}>
-      {'Physician: '} <b>{selectedPhysician?.name}</b>
-      {' | Time: '}
+      {'Selected Physician: '} <b>{selectedPhysician?.name}</b>
+      {' | Selected Time: '}
       <b>{appointment.date + ', ' + appointment.time}</b>
     </Box>
   );
@@ -100,7 +100,8 @@ const BookAppointment = () => {
       >
         <AppointmentContext.Provider value={{ appointment, setAppointment }}>
           {picker ? (
-            <Stack>
+            <Stack style={{ alignItems: 'center' }}>
+              <h1>Select Patient</h1>
               <Typography variant='h1'>
                 <Patients />
               </Typography>
@@ -113,6 +114,7 @@ const BookAppointment = () => {
         <Box
           display='flex'
           justifyContent='center'
+          padding={3}
           sx={{
             width: '95%',
           }}

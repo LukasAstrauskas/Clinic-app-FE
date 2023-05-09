@@ -192,68 +192,71 @@ const TimetableList = ({ physicianId }: Props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {selectedTimeslots.length === 0 && (
+            {selectedTimeslots.length === 0 ? (
+              <>
+                {selectedTimeslots.map(({ date, timePatientList }) => (
+                  <TableRow
+                    key={`${date}${physicianId}`}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  >
+                    <TableCell
+                      component='th'
+                      scope='row'
+                      sx={{ backgroundColor: teal['A400'] }}
+                    >
+                      <Chip
+                        variant='outlined'
+                        sx={{ border: 'unset' }}
+                        label={`${date} ${getWeekDay(date)}`}
+                      ></Chip>
+                    </TableCell>
+                    <TableCell align='left'>
+                      <Stack direction='row' spacing={'0.4%'}>
+                        {timePatientList.map(({ time, patientId }) => {
+                          return (
+                            <>
+                              {appointment.physicianId ? (
+                                <Timechip
+                                  date={date}
+                                  time={time}
+                                  patientId={patientId}
+                                  onClick={handleChipClick}
+                                  key={`${date}${time}${physicianId}`}
+                                  selected={isSelected(physicianId, date, time)}
+                                  onCancelAppointment={() =>
+                                    handleRemovePatientFromTimeslot(
+                                      physicianId,
+                                      patientId,
+                                    )
+                                  }
+                                />
+                              ) : (
+                                <Timechip
+                                  date={date}
+                                  time={time}
+                                  patientId={patientId}
+                                  onDelete={deleteButtonAction}
+                                  onClick={handleChipClick}
+                                  key={`${date}${time}${physicianId}`}
+                                  selected={isSelected(physicianId, date, time)}
+                                />
+                              )}
+                            </>
+                          );
+                        })}
+                        {renderAddNewTimeslotButton({ date })}
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </>
+            ) : (
               <TableRow key={`${physicianId}`}>
                 <TableCell colSpan={2} align='center'>
                   No work graphic this month!
                 </TableCell>
               </TableRow>
             )}
-            {selectedTimeslots.map(({ date, timePatientList }) => (
-              <TableRow
-                key={date}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell
-                  component='th'
-                  scope='row'
-                  sx={{ backgroundColor: teal['A400'] }}
-                >
-                  <Chip
-                    variant='outlined'
-                    sx={{ border: 'unset' }}
-                    label={`${date} ${getWeekDay(date)}`}
-                  ></Chip>
-                </TableCell>
-                <TableCell align='left'>
-                  <Stack direction='row' spacing={'0.4%'}>
-                    {timePatientList.map(({ time, patientId }) => {
-                      return (
-                        <>
-                          {appointment.physicianId ? (
-                            <Timechip
-                              date={date}
-                              time={time}
-                              patientId={patientId}
-                              onClick={handleChipClick}
-                              key={time}
-                              selected={isSelected(physicianId, date, time)}
-                              onCancelAppointment={() =>
-                                handleRemovePatientFromTimeslot(
-                                  physicianId,
-                                  patientId,
-                                )
-                              }
-                            />
-                          ) : (
-                            <Timechip
-                              date={date}
-                              time={time}
-                              patientId={patientId}
-                              onDelete={deleteButtonAction}
-                              onClick={handleChipClick}
-                              key={time}
-                              selected={isSelected(physicianId, date, time)}
-                            />
-                          )}
-                        </>
-                      );
-                    })}
-                    {renderAddNewTimeslotButton({ date })}
-                  </Stack>
-                </TableCell>
-              </TableRow>
-            ))}
           </TableBody>
         </Table>
       </TableContainer>

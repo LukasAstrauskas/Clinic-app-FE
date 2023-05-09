@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import TimetablesContainer from '../timetables/TimetablesContainer';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import Patients from '../users/Patients';
@@ -19,28 +19,24 @@ import { selectType } from '../../store/slices/auth/authSlice';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import ErrorModal from '../../components/modals/ErrorModal';
 import { AppDispatch } from '../../store/types';
-import { fetchPhysicianById } from '../../store/slices/physician/editedPhysicianSlice';
-import { selectPhysician } from '../../store/slices/physician/physicianSlice';
 import { bookTimeslot } from '../../store/slices/timeslot/timeslotSlice';
+import { selectPhysicianNameById } from '../../store/slices/physician/phyNameOccupationSlice';
 
 const BookAppointment = () => {
   const type = useSelector(selectType);
   const dispatch = useDispatch<AppDispatch>();
   const [bookingStep, setBookingStep] = useToggle();
-  const selectedPhysician = useSelector(selectPhysician);
-
+  const selectedPhysicianName = useSelector(selectPhysicianNameById);
+  const navigate = useNavigate();
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState('');
   const [appointment, setAppointment] = useState<Appointment>({
     physicianId: '',
     date: '',
     time: '',
     patientId: undefined,
   });
-
-  const navigate = useNavigate();
-  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
-  const [confirmationMessage, setConfirmationMessage] = useState('');
-  const initialRender = useRef(false);
 
   const handleConfirmationClose = () => {
     setIsConfirmationOpen(false);
@@ -69,22 +65,9 @@ const BookAppointment = () => {
     setIsConfirmationOpen(true);
   };
 
-  useEffect(() => {
-    if (initialRender.current || bookingStep) {
-      dispatch(fetchPhysicianById(appointment.physicianId));
-    }
-  }, [bookingStep]);
-
-  useEffect(() => {
-    initialRender.current = true;
-    return () => {
-      initialRender.current = false;
-    };
-  }, []);
-
   const appointmentInfo = (
     <Box style={{ textAlign: 'center', marginTop: 10 }}>
-      {'Selected Physician: '} <b>{selectedPhysician?.name}</b>
+      {'Selected Physician: '} <b>{selectedPhysicianName}</b>
       {' | Selected Time: '}
       <b>{appointment.date + ', ' + appointment.time}</b>
     </Box>

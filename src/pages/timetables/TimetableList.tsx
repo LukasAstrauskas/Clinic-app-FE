@@ -192,7 +192,7 @@ const TimetableList = ({ physicianId }: Props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {selectedTimeslots.length === 0 ? (
+            {selectedTimeslots.length !== 0 ? (
               <>
                 {selectedTimeslots.map(({ date, timePatientList }) => (
                   <TableRow

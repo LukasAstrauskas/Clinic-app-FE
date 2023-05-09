@@ -25,7 +25,7 @@ import { bookTimeslot } from '../../store/slices/timeslot/timeslotSlice';
 
 const BookAppointment = () => {
   const type = useSelector(selectType);
-  const [picker, setpicker] = useToggle();
+  // const [picker, setpicker] = useToggle();
   const dispatch = useDispatch<AppDispatch>();
   const [bookingStep, setBookingStep] = useToggle();
   const selectedPhysician = useSelector(selectPhysician);
@@ -71,10 +71,10 @@ const BookAppointment = () => {
   };
 
   useEffect(() => {
-    if (initialRender.current || picker) {
+    if (initialRender.current || bookingStep) {
       dispatch(fetchPhysicianById(appointment.physicianId));
     }
-  }, [picker]);
+  }, [bookingStep]);
 
   useEffect(() => {
     initialRender.current = true;
@@ -101,7 +101,7 @@ const BookAppointment = () => {
         marginBottom={3}
       >
         <AppointmentContext.Provider value={{ appointment, setAppointment }}>
-          {picker ? (
+          {bookingStep ? (
             <Stack style={{ alignItems: 'center' }}>
               <h1 style={{ margin: 0 }}>Select Patient</h1>
               <Typography variant='h1'>

@@ -1,15 +1,13 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
 
-interface ConfirmationModalProps {
+interface Props {
   isOpen: boolean;
   onClose: () => void;
   message: string;
 }
 
-const ConfirmationModal: React.FC<ConfirmationModalProps> = (props) => {
-  const { isOpen, onClose, message } = props;
-
+const ConfirmationModal = ({ isOpen, onClose, message }: Props) => {
   return (
     <Dialog open={isOpen} onClose={onClose}>
       <DialogContent sx={{ textAlign: 'center' }}>

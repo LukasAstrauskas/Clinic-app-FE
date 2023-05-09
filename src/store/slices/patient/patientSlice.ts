@@ -20,8 +20,8 @@ interface PatientsState {
 }
 
 const initialState: PatientsState = {
-  additionalInfo: null,
   patients: [],
+  additionalInfo: null,
   isLoading: false,
   error: null,
 };
@@ -207,9 +207,19 @@ export const patientSlice = createSlice({
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
       })
+      .addCase(fetchPatientInfo.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(fetchPatientInfo.fulfilled, (state, action) => {
         state.isLoading = false;
         state.additionalInfo = action.payload;
+      })
+      .addCase(fetchPatientInfo.rejected, (state, action) => {
+        state.isLoading = false;
+        state.additionalInfo = null;
+        state.error =
+          action.error.message || 'This patient has no aditional information';
       })
       .addCase(updatePatientInfo.fulfilled, (state, action) => {
         state.isLoading = false;

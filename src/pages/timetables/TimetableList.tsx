@@ -7,34 +7,38 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Timechip from './Timechip';
-import { Stack } from '@mui/system';
-import { Chip } from '@mui/material';
+import { Chip, Stack } from '@mui/material';
 import TimeslotModal from '../../components/modals/TimeslotModal';
 import { Timeslot, Timeslots } from '../../model/Model';
-import axios from 'axios';
 import { getWeekDay } from '../../components/utils';
-import { deleteTimeslot, removePatientFromTimeslot } from '../../data/fetch';
+import { removePatientFromTimeslot } from '../../data/fetch';
 import AlertModal from '../../components/modals/AlertModal';
 import useToggle from '../../hooks/useToggle';
 import AppointmentContext from '../../hooks/AppointmentContext';
 import { grey, teal } from '@mui/material/colors';
-import { useSelector } from 'react-redux';
 import { selectId, selectType } from '../../store/slices/auth/authSlice';
+import dayjs, { Dayjs } from 'dayjs';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../store/types';
+import { selectTimeslots } from '../../store/slices/timeslot/timeslotSlice';
+import MonthPicker from './MonthPicker';
+import {
+  deleteTimeslot,
+  getTimeslot,
+} from '../../store/slices/timeslot/timeslotActions';
 
 type Props = {
   physicianId: string;
 };
 
 const TimetableList = ({ physicianId }: Props) => {
-  const timeslotsURL = 'http://localhost:8080/timeslot/getPhyTimeslots/';
   const deleteMessage = 'Are you sure you want to delete this timeslot?';
   const [openModal, setOpenModal] = useToggle();
   const [openConfirm, setOpenConfirm] = useToggle();
   const [openAlert, toggleAlert] = useToggle();
   const [loadData, setloadData] = useToggle();
-  const [timeslots, setTimeslots] = useState<Timeslots[]>([]);
   const type = useSelector(selectType);
-
+  const dispatch = useDispatch<AppDispatch>();
   const loggedInUserId = useSelector(selectId);
 
   const [timeslot, setTimeslot] = useState<Timeslot>({
@@ -44,6 +48,8 @@ const TimetableList = ({ physicianId }: Props) => {
   });
 
   const { appointment, setAppointment } = useContext(AppointmentContext);
+
+  const [pickDate, setPickDate] = useState<Dayjs>(dayjs().date(1));
 
   const handleOpenModal = (date: string): void => {
     setOpenModal();
@@ -64,7 +70,7 @@ const TimetableList = ({ physicianId }: Props) => {
   };
 
   const handleDeleteTimeslot = (): void => {
-    deleteTimeslot(timeslot);
+    dispatch(deleteTimeslot(timeslot));
     setloadData();
     setOpenConfirm();
   };
@@ -120,43 +126,80 @@ const TimetableList = ({ physicianId }: Props) => {
     setTimeslot({ physicianId: physicianId, date: '', time: '' });
   }, [physicianId]);
 
+  const selectedTimeslots: Timeslots[] = useSelector(selectTimeslots);
+
   useEffect(() => {
-    async function getTimeslots() {
-      await axios
-        .get<Timeslots[]>(`${timeslotsURL}${physicianId}`)
-        .then((response) => {
-          const list = response.data;
-          setTimeslots(list);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-    getTimeslots();
-  }, [loadData, physicianId]);
+    dispatch(
+      getTimeslot({
+        id: physicianId,
+        date: pickDate,
+      }),
+    );
+  }, [loadData, physicianId, pickDate]);
+
+  useEffect(() => {
+    setPickDate(dayjs().date(1));
+  }, [physicianId]);
+
+  const renderAddNewTimeslotButton = ({ date }: { date: string }) => {
+    return !appointment.physicianId &&
+      dayjs(date).endOf('day').isAfter(dayjs()) ? (
+      <Chip
+        label='+ NEW'
+        sx={{ backgroundColor: teal['A400'] }}
+        onClick={() => handleOpenModal(date)}
+      />
+    ) : (
+      <></>
+    );
+  };
 
   return (
     <>
       <TableContainer component={Paper} sx={{ marginBottom: 5 }}>
         <Table
           size='small'
-          aria-label='a dense table'
           sx={{
             backgroundColor: grey[200],
           }}
         >
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: 130, fontWeight: 'bold' }}>
+              <TableCell
+                align='center'
+                colSpan={2}
+                sx={{ backgroundColor: grey[200] }}
+              >
+                <MonthPicker date={pickDate} setDate={setPickDate} />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell
+                sx={{
+                  width: 130,
+                  fontWeight: 'bold',
+                  backgroundColor: grey[200],
+                }}
+              >
                 Date
               </TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }} align='left'>
+              <TableCell
+                sx={{ fontWeight: 'bold', backgroundColor: grey[200] }}
+                align='left'
+              >
                 Time
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {timeslots.map(({ date, timePatientList }) => (
+            {selectedTimeslots.length === 0 && (
+              <TableRow key={`${physicianId}`}>
+                <TableCell colSpan={2} align='center'>
+                  No work graphic this month!
+                </TableCell>
+              </TableRow>
+            )}
+            {selectedTimeslots.map(({ date, timePatientList }) => (
               <TableRow
                 key={date}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -206,13 +249,7 @@ const TimetableList = ({ physicianId }: Props) => {
                         </>
                       );
                     })}
-                    {!appointment.physicianId && (
-                      <Chip
-                        label='+ NEW'
-                        sx={{ backgroundColor: teal['A400'] }}
-                        onClick={() => handleOpenModal(date)}
-                      />
-                    )}
+                    {renderAddNewTimeslotButton({ date })}
                   </Stack>
                 </TableCell>
               </TableRow>

@@ -29,7 +29,7 @@ export interface endPoint {
 export interface PatientInfo {
   userId: string | null;
   gender: string;
-  birthDate: Date;
+  birthDate: Date | null;
   phone: number;
   street: string;
   city: string;

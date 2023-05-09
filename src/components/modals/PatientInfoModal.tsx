@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Button, Modal } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { selectPatientInfo } from '../../store/slices/patient/patientSlice';
+import { selectPatientAdditionalInfo } from '../../store/slices/patient/patientSlice';
 import Styles from '../styles/UserManagmentStyles';
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const PatientInfoModal = ({ open, onClose, patientName }: Props) => {
-  const patientInfo = useSelector(selectPatientInfo);
+  const patientInfo = useSelector(selectPatientAdditionalInfo);
 
   return (
     <Modal open={open} onClose={onClose}>

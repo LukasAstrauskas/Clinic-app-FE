@@ -59,6 +59,7 @@ const Timechip = ({
   const [open, setOpen] = useState(false);
   const type = useSelector(selectType);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const isInFuture = new Date() > new Date(`${date}T${time}`);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     onClick(date, time, patientId);
@@ -75,20 +76,19 @@ const Timechip = ({
         <Chip
           label={time}
           variant='outlined'
+          disabled={isInFuture}
           onClick={handleClick}
           sx={patientId === null ? freeTimeSX(selected) : bookedTimeSX}
         />
-        {
-          <TimechipPopper
-            patientId={patientId}
-            open={open}
-            setOpen={setOpen}
-            anchorEl={anchorEl}
-            onCancelAppointment={() =>
-              onCancelAppointment && onCancelAppointment()
-            }
-          />
-        }
+        <TimechipPopper
+          patientId={patientId}
+          open={open}
+          setOpen={setOpen}
+          anchorEl={anchorEl}
+          onCancelAppointment={() =>
+            onCancelAppointment && onCancelAppointment()
+          }
+        />
       </>
     );
   } else {
@@ -96,6 +96,7 @@ const Timechip = ({
       <Chip
         label={time}
         variant='outlined'
+        disabled={isInFuture}
         onDelete={() => onDelete(date, time, patientId)}
         onClick={() => onClick(date, time, patientId)}
         sx={patientId === null ? freeTimeSX(selected) : bookedTimeSX}

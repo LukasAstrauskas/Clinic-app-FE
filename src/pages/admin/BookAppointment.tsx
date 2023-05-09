@@ -25,7 +25,6 @@ import { bookTimeslot } from '../../store/slices/timeslot/timeslotSlice';
 
 const BookAppointment = () => {
   const type = useSelector(selectType);
-  // const [picker, setpicker] = useToggle();
   const dispatch = useDispatch<AppDispatch>();
   const [bookingStep, setBookingStep] = useToggle();
   const selectedPhysician = useSelector(selectPhysician);

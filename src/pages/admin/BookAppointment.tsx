@@ -13,7 +13,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
-import { removePatientFromTimeslot, updateTimeslot } from '../../data/fetch';
+import { removePatientFromTimeslot } from '../../data/fetch';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectType } from '../../store/slices/auth/authSlice';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
@@ -21,15 +21,17 @@ import ErrorModal from '../../components/modals/ErrorModal';
 import { AppDispatch } from '../../store/types';
 import { fetchPhysicianById } from '../../store/slices/physician/editedPhysicianSlice';
 import { selectPhysician } from '../../store/slices/physician/physicianSlice';
+import { bookTimeslot } from '../../store/slices/timeslot/timeslotSlice';
 
 const BookAppointment = () => {
   const type = useSelector(selectType);
   const [picker, setpicker] = useToggle();
   const dispatch = useDispatch<AppDispatch>();
+  const [bookingStep, setBookingStep] = useToggle();
   const selectedPhysician = useSelector(selectPhysician);
 
   const [appointment, setAppointment] = useState<Appointment>({
-    physicianId: ' ',
+    physicianId: '',
     date: '',
     time: '',
     patientId: undefined,
@@ -46,9 +48,9 @@ const BookAppointment = () => {
     navigate(ROUTES.HOME);
   };
 
-  const bookAppointment = async () => {
+  const bookAppointment = () => {
     try {
-      await updateTimeslot(appointment);
+      dispatch(bookTimeslot(appointment));
       setConfirmationMessage('Appointment booked successfully!');
       setIsConfirmationOpen(true);
     } catch (error) {
@@ -121,13 +123,13 @@ const BookAppointment = () => {
         >
           <Button
             variant='contained'
-            onClick={setpicker}
-            disabled={!picker}
-            sx={picker ? Styles.createNewUserBtn : { opacity: '0' }}
+            onClick={setBookingStep}
+            disabled={!bookingStep}
+            sx={bookingStep ? Styles.createNewUserBtn : { opacity: '0' }}
           >
             <ArrowBackIcon /> Previous
           </Button>
-          {picker && (
+          {bookingStep && (
             <Button
               variant='contained'
               onClick={bookAppointment}
@@ -139,7 +141,7 @@ const BookAppointment = () => {
               Book an appointment
             </Button>
           )}
-          {!picker && type === 'patient' && (
+          {!bookingStep && type === 'patient' && (
             <Button
               variant='contained'
               onClick={bookAppointment}
@@ -149,10 +151,10 @@ const BookAppointment = () => {
               Book Appointment
             </Button>
           )}
-          {!picker && type !== 'patient' && (
+          {!bookingStep && type !== 'patient' && (
             <Button
               variant='contained'
-              onClick={setpicker}
+              onClick={setBookingStep}
               sx={Styles.createNewUserBtn}
               disabled={!appointment.date}
             >

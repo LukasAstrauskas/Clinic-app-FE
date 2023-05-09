@@ -12,6 +12,7 @@ import { ROUTES } from '../../routes/routes';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { login } from '../../store/slices/auth/authActions';
+import { fetchPatientInfo } from '../../store/slices/patient/patientSlice';
 
 const Login = () => {
   const [errorAlertOpen, setSignInError] = useState(false);
@@ -26,8 +27,12 @@ const Login = () => {
     event.preventDefault();
     try {
       const response = await dispatch(login({ email, password }));
+      const userId = sessionStorage.getItem('userId');
       if (response.payload && response.payload.type) {
         navigate(ROUTES.HOME);
+        if (sessionStorage.getItem('type') === 'patient' && userId !== null) {
+          await dispatch(fetchPatientInfo(userId));
+        }
       }
     } catch (error) {
       setSignInError(true);

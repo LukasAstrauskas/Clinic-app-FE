@@ -1,6 +1,7 @@
 export interface TimePatient {
   time: string;
   patientId: string;
+  patientName?: string;
 }
 export interface Timeslots {
   date: string;
@@ -23,6 +24,21 @@ export interface User {
 export interface endPoint {
   endPoint: string;
   offset: number;
+}
+
+export interface PatientInfo {
+  userId: string | null;
+  gender: string;
+  birthDate: Date | null;
+  phone: number;
+  street: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  emergencyName: string;
+  emergencyLastName: string;
+  emergencyPhone: number;
+  emergencyRelation: string;
 }
 
 export interface Timeslot {

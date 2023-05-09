@@ -60,15 +60,16 @@ export const Patients = () => {
           variant='outlined'
           placeholder='Search'
         />
-
-        <Button
-          onClick={handleOpen}
-          sx={Styles.createNewUserBtn}
-          variant='contained'
-        >
-          Create new
-          <AddIcon />
-        </Button>
+        {!appointment.physicianId && (
+          <Button
+            onClick={handleOpen}
+            sx={Styles.createNewUserBtn}
+            variant='contained'
+          >
+            Create new
+            <AddIcon />
+          </Button>
+        )}
       </Box>
       <AddPatientModal setOpen={setOpen} open={open} />
 
@@ -92,6 +93,7 @@ export const Patients = () => {
               refresh={refresh}
               user={patients}
               rowClick={choosePatient}
+              renderDelAndEditCells={!appointment.physicianId}
             />
           </Table>
         </TableContainer>

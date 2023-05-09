@@ -11,6 +11,7 @@ import { Chip, Stack } from '@mui/material';
 import TimeslotModal from '../../components/modals/TimeslotModal';
 import { Timeslot, Timeslots } from '../../model/Model';
 import { getWeekDay } from '../../components/utils';
+import { removePatientFromTimeslot } from '../../data/fetch';
 import AlertModal from '../../components/modals/AlertModal';
 import useToggle from '../../hooks/useToggle';
 import AppointmentContext from '../../hooks/AppointmentContext';
@@ -72,6 +73,18 @@ const TimetableList = ({ physicianId }: Props) => {
     dispatch(deleteTimeslot(timeslot));
     setloadData();
     setOpenConfirm();
+  };
+
+  const handleRemovePatientFromTimeslot = async (
+    physicianId: string,
+    patientId: string,
+  ) => {
+    const timeslot = {
+      physicianId: physicianId,
+      patientId: patientId,
+    };
+    await removePatientFromTimeslot(timeslot);
+    setloadData();
   };
 
   const handleChipClick = (
@@ -180,12 +193,6 @@ const TimetableList = ({ physicianId }: Props) => {
           </TableHead>
           <TableBody>
             {selectedTimeslots.length === 0 ? (
-              <TableRow key={`${physicianId}`}>
-                <TableCell colSpan={2} align='center'>
-                  No work graphic this month!
-                </TableCell>
-              </TableRow>
-            ) : (
               <>
                 {selectedTimeslots.map(({ date, timePatientList }) => (
                   <TableRow
@@ -193,6 +200,7 @@ const TimetableList = ({ physicianId }: Props) => {
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
                     <TableCell
+                      component='th'
                       scope='row'
                       sx={{ backgroundColor: teal['A400'] }}
                     >
@@ -215,6 +223,12 @@ const TimetableList = ({ physicianId }: Props) => {
                                   onClick={handleChipClick}
                                   key={`${date}${time}${physicianId}`}
                                   selected={isSelected(physicianId, date, time)}
+                                  onCancelAppointment={() =>
+                                    handleRemovePatientFromTimeslot(
+                                      physicianId,
+                                      patientId,
+                                    )
+                                  }
                                 />
                               ) : (
                                 <Timechip
@@ -236,6 +250,12 @@ const TimetableList = ({ physicianId }: Props) => {
                   </TableRow>
                 ))}
               </>
+            ) : (
+              <TableRow key={`${physicianId}`}>
+                <TableCell colSpan={2} align='center'>
+                  No work graphic this month!
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>

@@ -1,6 +1,7 @@
 export interface TimePatient {
   time: string;
   patientId: string;
+  patientName?: string;
 }
 export interface Timeslots {
   date: string;

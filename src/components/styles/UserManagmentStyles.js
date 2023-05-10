@@ -54,13 +54,6 @@ const Styles = {
     '& .MuiInputBase-root': {
       background: '#ededed',
     },
-    '& .MuiFormHelperText-root': {
-      minHeight: '40px',
-    },
-    '& .MuiInputLabel-root': {
-      color: '#28cdcb',
-      marginTop: '0.8rem',
-    },
   },
   createNewUserBtn: {
     p: 1,

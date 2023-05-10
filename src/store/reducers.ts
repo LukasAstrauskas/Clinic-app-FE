@@ -7,7 +7,7 @@ import { physicianSlice } from './slices/physician/physicianSlice';
 import { phyNameOccupationSlice } from './slices/physician/phyNameOccupationSlice';
 import { userSlice } from './slices/user/userSlice';
 import { userSizeSlice } from './slices/userSize/userSizeSlice';
-import { occupationSlice } from './slices/occupations/occupationsSlice';
+import { occupationSlice } from './slices/occupation/occupationSlice';
 import { editedPhysicianSlice } from './slices/physician/editedPhysicianSlice';
 import { timeslotSlice } from './slices/timeslot/timeslotSlice';
 

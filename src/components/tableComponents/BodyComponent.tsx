@@ -42,6 +42,7 @@ interface Props {
   more: boolean;
   setMore: React.Dispatch<React.SetStateAction<boolean>>;
   type: string;
+  isSearch?: boolean;
   rowClick?: (id: string) => void;
   renderDelAndEditCells?: boolean;
 }
@@ -50,6 +51,7 @@ const TableBodyComponent: FC<Props> = ({
   user,
   type,
   rowClick = () => undefined,
+  isSearch,
   renderDelAndEditCells = true,
 }) => {
   const userSize = useSelector(selectUserSize);
@@ -78,6 +80,9 @@ const TableBodyComponent: FC<Props> = ({
   };
 
   const getMoreData = async () => {
+    if (isSearch) {
+      return;
+    }
     if (loggedInUserType === 'physician') {
       dispatch(
         fetchMorePatientsByPhysicianId({
@@ -154,9 +159,11 @@ const TableBodyComponent: FC<Props> = ({
             next={getMoreData}
             hasMore={userSize > user.length}
             loader={
-              <Typography variant='h5' sx={{ textAlign: 'center' }}>
-                loading...
-              </Typography>
+              !isSearch && (
+                <Typography variant='h5' sx={{ textAlign: 'center' }}>
+                  loading...
+                </Typography>
+              )
             }
           >
             <EditUserModal

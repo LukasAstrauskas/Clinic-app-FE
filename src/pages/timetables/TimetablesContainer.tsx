@@ -65,14 +65,14 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
           {type !== 'physician' && (
             <Grid item lg={4} sx={{ pr: 2 }}>
               <PhysicianSearchBar onSearch={handleSearch} />
-            <PhysicianTable
+              <PhysicianTable
                 physicians={physicians}
                 selectedId={physicianId}
                 rowClick={handleClick}
                 refresh={refresh}
-              setRefresh={setRefresh}
-              isSearch={isSearch}
-            />
+                setRefresh={setRefresh}
+                isSearch={isSearch}
+              />
             </Grid>
           )}
           {type === 'physician' ? (

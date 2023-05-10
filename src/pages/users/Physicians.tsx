@@ -23,6 +23,7 @@ export const Physicians = () => {
   const [more, setMore] = useState<boolean>(true);
   const [open, setOpen] = useState(false);
   const [refresh, setRefresh] = useState<boolean>(false);
+  const [isSearch, setIsSearch] = useState<boolean>(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -33,7 +34,9 @@ export const Physicians = () => {
     if (search.length != 0) {
       dispatch(searchPhysician({ search }));
       setMore(false);
+      setIsSearch(true);
     } else {
+      setIsSearch(false);
       dispatch(fetchPhysicians());
       setRefresh(true);
     }
@@ -86,6 +89,7 @@ export const Physicians = () => {
               setRefresh={setRefresh}
               refresh={refresh}
               user={physicians}
+              isSearch={isSearch}
             />
           </Table>
         </TableContainer>

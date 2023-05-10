@@ -27,6 +27,7 @@ export const Patients = () => {
   const choosePatient = (patientId: string): void => {
     setAppointment({ ...appointment, patientId: patientId });
   };
+  const [isSearch, setIsSearch] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -37,9 +38,11 @@ export const Patients = () => {
     if (search.length != 0) {
       dispatch(searchPatient(search));
       setMore(false);
+      setIsSearch(true);
     } else {
       dispatch(fetchPatients());
       setRefresh(true);
+      setIsSearch(false);
     }
   };
   return (
@@ -94,6 +97,7 @@ export const Patients = () => {
               user={patients}
               rowClick={choosePatient}
               renderDelAndEditCells={!appointment.physicianId}
+              isSearch={isSearch}
             />
           </Table>
         </TableContainer>

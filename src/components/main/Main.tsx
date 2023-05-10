@@ -11,7 +11,6 @@ import BookAppointment from '../../pages/admin/BookAppointment';
 import PrivateRoutes from '../../routes/PrivateRoutes';
 import PatientContactInfo from '../../pages/users/PatientContactInfo';
 import AppointmentTabs from '../../pages/patient/AppointmentTabs';
-import AppointmentHandler from '../../pages/ManageAppointments/AppointmentHandler';
 
 const Main = () => {
   return (

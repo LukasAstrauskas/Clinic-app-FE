@@ -1,9 +1,19 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+} from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { Appointment, Timeslots } from '../../../model/Model';
 import axios from 'axios';
 import { RootState } from '../../types';
-import { getTimeslot, deleteTimeslot, postTimeslot } from './timeslotActions';
+import {
+  getTimeslot,
+  deleteTimeslot,
+  postTimeslot,
+  deletePatientFromTimeslot,
+  deletePatientFromUpcomingTimeslot,
+} from './timeslotActions';
 
 interface TimeslotState {
   timeslots: Timeslots[];
@@ -72,6 +82,30 @@ export const timeslotSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteTimeslot.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message ?? 'Failed to delete.';
+      })
+      .addCase(deletePatientFromUpcomingTimeslot.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(deletePatientFromUpcomingTimeslot.fulfilled, (state) => {
+        state.status = 'succeeded';
+        state.error = null;
+      })
+      .addCase(deletePatientFromUpcomingTimeslot.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message ?? 'Failed to delete.';
+      })
+      .addCase(deletePatientFromTimeslot.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(deletePatientFromTimeslot.fulfilled, (state) => {
+        state.status = 'succeeded';
+        state.error = null;
+      })
+      .addCase(deletePatientFromTimeslot.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message ?? 'Failed to delete.';
       })

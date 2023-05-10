@@ -11,7 +11,6 @@ import { Chip, Stack } from '@mui/material';
 import TimeslotModal from '../../components/modals/TimeslotModal';
 import { Timeslot, Timeslots } from '../../model/Model';
 import { getWeekDay } from '../../components/utils';
-import { removePatientFromTimeslot } from '../../data/fetch';
 import AlertModal from '../../components/modals/AlertModal';
 import useToggle from '../../hooks/useToggle';
 import AppointmentContext from '../../hooks/AppointmentContext';
@@ -23,6 +22,7 @@ import { AppDispatch } from '../../store/types';
 import { selectTimeslots } from '../../store/slices/timeslot/timeslotSlice';
 import MonthPicker from './MonthPicker';
 import {
+  deletePatientFromTimeslot,
   deleteTimeslot,
   getTimeslot,
 } from '../../store/slices/timeslot/timeslotActions';
@@ -77,13 +77,17 @@ const TimetableList = ({ physicianId }: Props) => {
 
   const handleRemovePatientFromTimeslot = async (
     physicianId: string,
+    date: string,
+    time: string,
     patientId: string,
   ) => {
     const timeslot = {
       physicianId: physicianId,
+      date,
+      time,
       patientId: patientId,
     };
-    await removePatientFromTimeslot(timeslot);
+    dispatch(deletePatientFromTimeslot(timeslot));
     setloadData();
   };
 
@@ -226,6 +230,8 @@ const TimetableList = ({ physicianId }: Props) => {
                                   onCancelAppointment={() =>
                                     handleRemovePatientFromTimeslot(
                                       physicianId,
+                                      date,
+                                      time,
                                       patientId,
                                     )
                                   }

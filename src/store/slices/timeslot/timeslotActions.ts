@@ -40,6 +40,37 @@ export const deleteTimeslot = createAsyncThunk(
   },
 );
 
+export const deletePatientFromUpcomingTimeslot = createAsyncThunk(
+  'timeslot/deletePatientFromUpcomingTimeslot',
+  async ({
+    physicianId,
+    patientId,
+  }: {
+    physicianId: string;
+    patientId: string;
+  }) => {
+    await axios
+      .patch(
+        `http://localhost:8080/timeslot/removeExistingPatient/${physicianId}/${patientId}`,
+      )
+      .catch((error) => {
+        console.error('Error deleting patient from timeslot:', error);
+      });
+  },
+);
+
+export const deletePatientFromTimeslot = createAsyncThunk(
+  'timeslot/deletePatientFromTimeslot',
+  async (timeslot: Timeslot) => {
+    await axios
+      .patch('http://localhost:8080/timeslot/removePatient', timeslot)
+      .catch((error) => {
+        console.error('Error deleting patient from timeslot:', error);
+        throw error;
+      });
+  },
+);
+
 export const postTimeslot = createAsyncThunk(
   'timeslot/ postTimeslot',
   async (timeslot: Timeslot) => {

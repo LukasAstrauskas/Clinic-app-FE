@@ -20,23 +20,23 @@ import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import ErrorModal from '../../components/modals/ErrorModal';
 import { AppDispatch } from '../../store/types';
 import { bookTimeslot } from '../../store/slices/timeslot/timeslotSlice';
+import { selectPhysicianNameById } from '../../store/slices/physician/phyNameOccupationSlice';
 
 const BookAppointment = () => {
   const type = useSelector(selectType);
   const dispatch = useDispatch<AppDispatch>();
   const [bookingStep, setBookingStep] = useToggle();
-
+  const selectedPhysicianName = useSelector(selectPhysicianNameById);
+  const navigate = useNavigate();
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState('');
   const [appointment, setAppointment] = useState<Appointment>({
     physicianId: '',
     date: '',
     time: '',
     patientId: undefined,
   });
-
-  const navigate = useNavigate();
-  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
-  const [confirmationMessage, setConfirmationMessage] = useState('');
 
   const handleConfirmationClose = () => {
     setIsConfirmationOpen(false);
@@ -65,6 +65,14 @@ const BookAppointment = () => {
     setIsConfirmationOpen(true);
   };
 
+  const appointmentInfo = (
+    <Box style={{ textAlign: 'center', marginTop: 10 }}>
+      {'Selected Physician: '} <b>{selectedPhysicianName}</b>
+      {' | Selected Time: '}
+      <b>{appointment.date + ', ' + appointment.time}</b>
+    </Box>
+  );
+
   return (
     <Box sx={{ width: '100%', marginTop: '30px' }}>
       <Stack
@@ -76,9 +84,13 @@ const BookAppointment = () => {
       >
         <AppointmentContext.Provider value={{ appointment, setAppointment }}>
           {bookingStep ? (
-            <Typography variant='h1'>
-              <Patients />
-            </Typography>
+            <Stack style={{ alignItems: 'center' }}>
+              <h1 style={{ margin: 0 }}>Select Patient</h1>
+              <Typography variant='h1'>
+                <Patients />
+              </Typography>
+              {appointmentInfo}
+            </Stack>
           ) : (
             <TimetablesContainer tableTitle='Select Physician and Time' />
           )}
@@ -86,6 +98,7 @@ const BookAppointment = () => {
         <Box
           display='flex'
           justifyContent='center'
+          padding={3}
           sx={{
             width: '95%',
           }}

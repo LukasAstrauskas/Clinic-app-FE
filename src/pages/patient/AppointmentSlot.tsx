@@ -9,23 +9,24 @@ import {
   fetchPatientAppointments,
 } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
+import { deletePatientFromUpcomingTimeslot } from '../../store/slices/timeslot/timeslotActions';
 interface Props {
   appointment: PatientAppointments;
 }
 
 const AppointmentSlot: FC<Props> = ({ appointment }) => {
-  const userId = sessionStorage.getItem('userId');
+  const patientId = sessionStorage.getItem('userId') || '';
   const dispatch = useDispatch<AppDispatch>();
   const [open, setOpen] = useState(false);
-  const [physicianId, setphysicianId] = useState<string>();
+  const [physicianId, setphysicianId] = useState<string>('');
   const handleCancel = async () => {
     await dispatch(
-      deleteAppointment({
-        PhysicianId: physicianId,
-        PatientId: userId,
+      deletePatientFromUpcomingTimeslot({
+        physicianId,
+        patientId,
       }),
     );
-    dispatch(fetchPatientAppointments(userId));
+    dispatch(fetchPatientAppointments(patientId));
     setOpen(true);
   };
 
@@ -50,7 +51,6 @@ const AppointmentSlot: FC<Props> = ({ appointment }) => {
       />
 
       <Box
-        key={appointment.physicianId}
         sx={{
           marginTop: '40px',
           borderRadius: '20px',
@@ -71,7 +71,7 @@ const AppointmentSlot: FC<Props> = ({ appointment }) => {
               Physician
             </Typography>
             <Typography sx={{ marginTop: '20px' }} fontWeight={'500'}>
-              {appointment.physicianName}, {appointment.occupation.name}
+              {appointment.physicianName}, {appointment.occupation?.name || ''}
             </Typography>
           </Box>
           <Box sx={{ marginLeft: '40px', width: '160px' }}>

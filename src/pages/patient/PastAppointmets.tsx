@@ -42,12 +42,13 @@ const PastAppointments = () => {
     <>
       <Box
         id='scrollBox'
-        sx={{ maxHeight: 540 }}
         style={{
+          height: 600,
           overflow: 'auto',
         }}
       >
         <InfiniteScroll
+          style={{ overflow: 'hidden' }}
           scrollableTarget='scrollBox'
           dataLength={appointments.length}
           next={fetchMoreAppointments}

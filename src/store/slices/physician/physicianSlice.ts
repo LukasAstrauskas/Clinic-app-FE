@@ -80,8 +80,17 @@ export const deletePhysician = createAsyncThunk(
 
 export const searchPhysician = createAsyncThunk(
   'user/searchPhysician',
-  async (search: string) => {
-    const response = await axios.get(PHYSICIAN_SEARCH_URL + search);
+  async ({ search, occupation }: { search: string; occupation?: string }) => {
+    const params = new URLSearchParams();
+    if (search) {
+      params.append('search', search);
+    }
+    if (occupation) {
+      params.append('occupation', occupation);
+    }
+
+    const response = await axios.get(`${PHYSICIAN_SEARCH_URL}?${params}`);
+
     return response.data;
   },
 );
@@ -157,6 +166,7 @@ export const physicianSlice = createSlice({
 
 export const selectPhysician = (state: RootState) =>
   state.physician.selectedPhysician;
-export const PhysicianState = (state: RootState) => state.physician.physicians;
+export const selectPhysicians = (state: RootState) =>
+  state.physician.physicians;
 
 export default physicianSlice.reducer;

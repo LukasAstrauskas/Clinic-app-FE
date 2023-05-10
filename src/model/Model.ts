@@ -30,7 +30,7 @@ export interface PatientPastAppointments {
 }
 
 export interface PatientAppointments {
-  physicianId: UUID;
+  physicianId: string;
   physicianName: string;
   physicianEmail: string;
   occupation: {

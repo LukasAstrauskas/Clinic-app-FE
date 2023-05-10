@@ -23,11 +23,8 @@ const Main = () => {
         <Route path={ROUTES.USERS} element={<UserTabs />} />
         <Route path={ROUTES.PATIENTS} element={<UserTabs />} />
         <Route path={ROUTES.TIMETABLE} element={<TimetablesContainer />} />
-        {/* <Route path={ROUTES.BOOKAPPOINTMENT} element={<BookAppointment />} /> */}
-        <Route
-          path={ROUTES.MANAGEAPPOINTMENTS}
-          element={<AppointmentHandler />}
-        />
+        <Route path={ROUTES.BOOKAPPOINTMENT} element={<BookAppointment />} />
+        <Route path={ROUTES.MANAGEAPPOINTMENTS} element={<AppointmentTabs />} />
         <Route path={ROUTES.PATIENTPROFILE} element={<PatientContactInfo />} />
       </Route>
     </Routes>

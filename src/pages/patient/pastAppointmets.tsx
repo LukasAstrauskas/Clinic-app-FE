@@ -2,7 +2,6 @@ import { Box, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectId } from '../../store/slices/auth/authSlice';
 import {
   fetchMorePastPatientAppointments,
   selectPastAppointments,

@@ -14,8 +14,8 @@ import {
   fetchPatientAppointments,
 } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
-import PastAppointments from './pastAppointmets';
-import UpcomingAppointments from './upcomingApppointments';
+import UpcomingAppointments from './UpcomingApppointments';
+import PastAppointments from './PastAppointmets';
 
 const AppointmentTabs = () => {
   const userId = sessionStorage.getItem('userId');

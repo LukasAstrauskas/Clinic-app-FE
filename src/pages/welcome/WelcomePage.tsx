@@ -6,6 +6,7 @@ import mannageApointmentIcon from '../../assets/manage-appointments-icon.svg';
 import physicianTimetablesIcon from '../../assets/physician-timetables-icon.svg';
 import manageUsersIcon from '../../assets/manage-users-icon.svg';
 import managePhysiciansIcon from '../../assets/manage-physicians-icon.svg';
+import temp from '../../assets/new-appointment-icon.svg';
 import { ROUTES } from '../../routes/routes';
 
 const WelcomePage = () => {
@@ -35,10 +36,22 @@ const WelcomePage = () => {
         </>
       )}
 
+      {type == 'patient' && (
+        <>
+          <Item
+            title='New appointment'
+            icon1={temp}
+            linkTo={ROUTES.BOOKAPPOINTMENT}
+          ></Item>
+        </>
+      )}
+
       <Item
         title='Manage appointments'
         icon1={mannageApointmentIcon}
-        linkTo={ROUTES.MANAGEAPPOINTMENTS}
+        linkTo={
+          type != 'patient' ? ROUTES.BOOKAPPOINTMENT : ROUTES.MANAGEAPPOINTMENTS
+        }
       ></Item>
     </Grid>
   );

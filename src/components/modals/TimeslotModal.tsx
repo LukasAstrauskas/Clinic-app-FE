@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  Modal,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
-import { timeInputIsValid } from '../utils';
-import axios from 'axios';
+import React, { useState, MouseEvent, useEffect } from 'react';
+import { Box, Button, Modal, Stack, Typography } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/types';
+import { postTimeslot } from '../../store/slices/timeslot/timeslotActions';
+import dayjs, { Dayjs } from 'dayjs';
+import { LocalizationProvider, TimeField } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const style = {
   position: 'absolute' as const,
@@ -30,19 +27,6 @@ type Props = {
   date: string;
 };
 
-const postTimeslot = (id: string, date: string, time: string) => {
-  console.log(`ID: ${id},date: ${date}, time: ${time}`);
-  axios
-    .post('http://localhost:8080/timeslot', {
-      physicianId: id,
-      date: date,
-      time: time,
-    })
-    .then((response) => {
-      console.log(response.status);
-    });
-};
-
 const TimeslotModal = ({
   openModal,
   closeModal,
@@ -50,51 +34,51 @@ const TimeslotModal = ({
   id,
   date,
 }: Props) => {
-  const [time, setTime] = useState<string>('');
-  const [inputValid, setInputValid] = useState<boolean>(true);
-  const [helperText, setHelperText] = useState<string>('');
+  const [time, setTime] = useState<Dayjs | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
-  const onModalSubmit = (event: { preventDefault: () => void }): void => {
-    event.preventDefault();
-    if (timeInputIsValid(time)) {
-      postTimeslot(id, date, time);
-      setInputValid(true);
-      setHelperText('');
-      setTime(``);
+  useEffect(() => {
+    setTime(dayjs(date).startOf('day'));
+  }, [date]);
+
+  const onModalSubmit = (e: MouseEvent) => {
+    e.preventDefault();
+    if (time !== null) {
+      dispatch(
+        postTimeslot({
+          physicianId: id,
+          date: date,
+          time: time.format('HH:mm'),
+        }),
+      );
+      setTime(null);
       loadData();
       closeModal();
-    } else {
-      setInputValid(false);
-      setHelperText('From 06:00 to 19:59');
     }
   };
 
   const onModalClose = () => {
-    setTime(``);
-    setInputValid(true);
+    setTime(null);
     closeModal();
   };
 
   return (
     <Modal open={openModal} onClose={onModalClose}>
       <Box sx={style}>
-        <Typography variant='h6' component='h2'>
+        <Typography variant='h6' component='h2' sx={{ mb: 2 }}>
           Choose time
         </Typography>
-        <TextField
-          error={!inputValid}
-          placeholder='10:30'
-          helperText={helperText}
-          type='string'
-          onChange={(event) => setTime(event.target.value)}
-        />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <TimeField
+            label={`For date: ${time?.format('YYYY-MM-DD')}`}
+            value={time}
+            onChange={(newValue) => setTime(newValue)}
+            format='HH:mm'
+            disablePast
+          />
+        </LocalizationProvider>
         <Stack direction='row' spacing={2} sx={{ marginTop: 2 }}>
-          <Button
-            variant='contained'
-            onClick={(event) => {
-              onModalSubmit(event);
-            }}
-          >
+          <Button variant='contained' onClick={onModalSubmit}>
             Add timeslot
           </Button>
           <Button variant='contained' onClick={onModalClose}>

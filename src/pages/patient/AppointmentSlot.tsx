@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import moment from 'moment';
+import dayjs, { Dayjs } from 'dayjs';
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AlertModal from '../../components/modals/AlertModal';
@@ -82,13 +82,20 @@ const AppointmentSlot: FC<Props> = ({ appointment }) => {
             <Typography fontWeight={'bold'} variant='h5'>
               Date
             </Typography>
-            <Typography sx={{ marginTop: '20px' }} fontWeight={'600'}>
-              {moment(appointment.timeslot.date).format('Y-MM-DD ')}
-              {moment(appointment.timeslot.date).format('h:mm')}
-            </Typography>
+            <Box sx={{ display: 'flex' }}>
+              <Typography sx={{ marginTop: '20px' }} fontWeight={'600'}>
+                {dayjs(appointment.timeslot.date).format('YYYY-MM-DD')}
+              </Typography>
+              <Typography
+                sx={{ marginTop: '20px', marginLeft: '10px' }}
+                fontWeight={'600'}
+              >
+                {dayjs(appointment.timeslot.date).format('hh:mm')}
+              </Typography>
+            </Box>
           </Box>
           <Box>
-            {!moment().isAfter(appointment.timeslot.date) && (
+            {!dayjs().isAfter(appointment.timeslot.date) && (
               <Button
                 onClick={() => handleAlertOpen(appointment.physicianId)}
                 variant='outlined'

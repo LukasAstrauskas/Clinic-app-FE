@@ -9,6 +9,7 @@ import UserTabs from '../../pages/users/Tabs';
 import TimetablesContainer from '../../pages/timetables/TimetablesContainer';
 import BookAppointment from '../../pages/admin/BookAppointment';
 import PrivateRoutes from '../../routes/PrivateRoutes';
+import PatientContactInfo from '../../pages/users/PatientContactInfo';
 import AppointmentTabs from '../../pages/patient/AppointmentTabs';
 import AppointmentHandler from '../../pages/ManageAppointments/AppointmentHandler';
 
@@ -18,7 +19,7 @@ const Main = () => {
       <Route path={ROUTES.LOGIN} element={<Login />} />
       <Route path='*' element={<NotFound />} />
       <Route element={<PrivateRoutes />}>
-        <Route path='/' element={<WelcomePage />} />
+        <Route path={ROUTES.HOME} element={<WelcomePage />} />
         <Route path={ROUTES.USERS} element={<UserTabs />} />
         <Route path={ROUTES.PATIENTS} element={<UserTabs />} />
         <Route path={ROUTES.TIMETABLE} element={<TimetablesContainer />} />
@@ -27,6 +28,7 @@ const Main = () => {
           path={ROUTES.MANAGEAPPOINTMENTS}
           element={<AppointmentHandler />}
         />
+        <Route path={ROUTES.PATIENTPROFILE} element={<PatientContactInfo />} />
       </Route>
     </Routes>
   );

@@ -31,7 +31,7 @@ import {
 import EditUserModal from '../modals/EditUserModal';
 import { grey } from '@mui/material/colors';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import { tableRowSX } from '../../pages/physicians/PhysicianTable';
 interface Props {
   user: UniversalUser[];
   refresh: boolean;
@@ -40,6 +40,7 @@ interface Props {
   setMore: React.Dispatch<React.SetStateAction<boolean>>;
   type: string;
   rowClick?: (id: string) => void;
+  renderDelAndEditCells?: boolean;
 }
 
 const TableBodyComponent: FC<Props> = ({
@@ -50,6 +51,7 @@ const TableBodyComponent: FC<Props> = ({
   setMore,
   type,
   rowClick = () => undefined,
+  renderDelAndEditCells = true,
 }) => {
   const UserSize = useSelector(selectUserSize);
   const dispatch = useDispatch<AppDispatch>();
@@ -152,43 +154,45 @@ const TableBodyComponent: FC<Props> = ({
             <Table>
               <TableBody>
                 {user.map(({ id, name, email, occupation }) => (
-                  <TableRow
-                    key={id}
-                    sx={{
-                      '&:hover': {
-                        backgroundColor: '#ff9e80 !important',
-                      },
-                      cursor: 'pointer',
-                      width: '100%',
-                    }}
-                  >
+                  <TableRow key={id} hover sx={tableRowSX(selectedId === id)}>
                     <TableCell
-                      onClick={() => rowClick(id)}
+                      onClick={() => {
+                        rowClick(id);
+                        setSelectedId(id);
+                      }}
                       sx={{ width: '200px' }}
                     >
                       {name}
                     </TableCell>
-                    <TableCell align='center' sx={{ width: '200px' }}>
+                    <TableCell
+                      align='center'
+                      sx={{ width: '200px' }}
+                      onClick={() => rowClick(id)}
+                    >
                       {type === 'physician' ? occupation?.name : email}
                     </TableCell>
-                    <TableCell
-                      sx={{ m: 0, p: 0 }}
-                      onClick={() => {
-                        setSelectedId(id);
-                      }}
-                    >
-                      <IconButton color='primary' onClick={handleOpen}>
-                        <EditIcon />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        color='primary'
-                        onClick={() => handleDelete(id)}
-                      >
-                        <DeleteIcon sx={{ color: 'orange' }} />
-                      </IconButton>
-                    </TableCell>
+                    {renderDelAndEditCells && (
+                      <>
+                        <TableCell
+                          sx={{ m: 0, p: 0 }}
+                          onClick={() => {
+                            setSelectedId(id);
+                          }}
+                        >
+                          <IconButton color='primary' onClick={handleOpen}>
+                            <EditIcon />
+                          </IconButton>
+                        </TableCell>
+                        <TableCell>
+                          <IconButton
+                            color='primary'
+                            onClick={() => handleDelete(id)}
+                          >
+                            <DeleteIcon sx={{ color: 'orange' }} />
+                          </IconButton>
+                        </TableCell>
+                      </>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>

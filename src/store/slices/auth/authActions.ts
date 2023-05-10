@@ -10,7 +10,8 @@ export const login = createAsyncThunk(
     const response = await axios.post(LOGIN_URL, payload);
     sessionStorage.setItem('isLogged', 'true');
     sessionStorage.setItem('type', response.data.type);
-    sessionStorage.setItem('userId', <UUID>response.data.id);
+    sessionStorage.setItem('userId', response.data.id);
+
     return response.data;
   },
 );

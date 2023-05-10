@@ -48,7 +48,6 @@ export const fetchMorePatients = createAsyncThunk(
 export const fetchPatientsByPhysicianId = createAsyncThunk(
   'patients/fetchPatientsByPhysicianId',
   async ({ id }: { id: string | null }) => {
-    console.log('fetch');
     const response = await axios.get<User[]>(BASE_PATIENTS_URL + id + '/' + 0);
 
     return response.data;
@@ -58,7 +57,6 @@ export const fetchPatientsByPhysicianId = createAsyncThunk(
 export const fetchMorePatientsByPhysicianId = createAsyncThunk(
   'patients/fetchMorePatientsByPhysicianId',
   async ({ id, offset }: { id: string | null; offset: number | undefined }) => {
-    console.log('fetchmore');
     const response = await axios.get<User[]>(
       BASE_PATIENTS_URL + id + '/' + offset,
     );

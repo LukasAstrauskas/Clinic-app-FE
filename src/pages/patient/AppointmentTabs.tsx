@@ -6,16 +6,15 @@ import {
   Typography,
   createTheme,
 } from '@mui/material';
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   fetchPastPatientAppointments,
   fetchPatientAppointments,
 } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
-import UpcomingAppointments from './UpcomingApppointments';
 import PastAppointments from './PastAppointmets';
+import UpcomingAppointments from './UpcomingApppointments';
 
 const AppointmentTabs = () => {
   const userId = sessionStorage.getItem('userId');

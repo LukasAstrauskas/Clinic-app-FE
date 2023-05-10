@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
+import { PatientAppointments } from '../../model/Model';
 import { selectAppointments } from '../../store/slices/patient/patientSlice';
 import AppointmentSlot from './AppointmentSlot';
 const UpcomingAppointments = () => {
@@ -16,7 +17,7 @@ const UpcomingAppointments = () => {
       >
         {appointments.length != 0 ? (
           <>
-            {appointments.map((appointment: any) => (
+            {appointments.map((appointment: PatientAppointments) => (
               <AppointmentSlot
                 key={appointment.physicianId}
                 appointment={appointment}

@@ -6,7 +6,7 @@ import mannageApointmentIcon from '../../assets/manage-appointments-icon.svg';
 import physicianTimetablesIcon from '../../assets/physician-timetables-icon.svg';
 import manageUsersIcon from '../../assets/manage-users-icon.svg';
 import managePhysiciansIcon from '../../assets/manage-physicians-icon.svg';
-import temp from '../../assets/new-appointment-icon.svg';
+import newAppointmentIcon from '../../assets/new-appointment-icon.svg';
 import { ROUTES } from '../../routes/routes';
 
 const WelcomePage = () => {
@@ -40,7 +40,7 @@ const WelcomePage = () => {
         <>
           <Item
             title='New appointment'
-            icon1={temp}
+            icon1={newAppointmentIcon}
             linkTo={ROUTES.BOOKAPPOINTMENT}
           ></Item>
         </>

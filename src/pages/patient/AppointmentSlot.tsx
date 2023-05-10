@@ -1,18 +1,14 @@
-import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import dayjs, { Dayjs } from 'dayjs';
-import { FC, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import dayjs from 'dayjs';
+import React, { FC, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import AlertModal from '../../components/modals/AlertModal';
-import { selectId } from '../../store/slices/auth/authSlice';
+import { PatientAppointments } from '../../model/Model';
 import {
   deleteAppointment,
   fetchPatientAppointments,
 } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
-import { setPhysicianId } from '../../store/slices/physician/phyNameOccupationSlice';
-import { UUID } from 'crypto';
-import { PatientAppointments } from '../../model/Model';
 interface Props {
   appointment: PatientAppointments;
 }

@@ -1,5 +1,3 @@
-import { UUID } from 'crypto';
-
 export interface TimePatient {
   time: string;
   patientId: string;

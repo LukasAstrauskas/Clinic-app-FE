@@ -4,28 +4,31 @@ import { Box, Button, Stack, Typography } from '@mui/material';
 import Patients from '../users/Patients';
 import useToggle from '../../hooks/useToggle';
 import AppointmentContext from '../../hooks/AppointmentContext';
-import {
-  Appointment,
-  TimeslotWithPhysicianAndPatient,
-} from '../../model/Model';
+import { Appointment } from '../../model/Model';
 import Styles from '../../components/styles/UserManagmentStyles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
-import { removePatientFromTimeslot } from '../../data/fetch';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectType } from '../../store/slices/auth/authSlice';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import ErrorModal from '../../components/modals/ErrorModal';
 import { AppDispatch } from '../../store/types';
 import { bookTimeslot } from '../../store/slices/timeslot/timeslotSlice';
+import { deletePatientFromUpcomingTimeslot } from '../../store/slices/timeslot/timeslotActions';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { selectPhysicianNameById } from '../../store/slices/physician/phyNameOccupationSlice';
 
 const BookAppointment = () => {
   const type = useSelector(selectType);
   const dispatch = useDispatch<AppDispatch>();
   const [bookingStep, setBookingStep] = useToggle();
-
+  const selectedPhysicianName = useSelector(selectPhysicianNameById);
+  const navigate = useNavigate();
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState('');
   const [appointment, setAppointment] = useState<Appointment>({
     physicianId: '',
     date: '',
@@ -33,37 +36,40 @@ const BookAppointment = () => {
     patientId: undefined,
   });
 
-  const navigate = useNavigate();
-  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
-  const [confirmationMessage, setConfirmationMessage] = useState('');
-
   const handleConfirmationClose = () => {
     setIsConfirmationOpen(false);
     navigate(ROUTES.HOME);
   };
 
   const bookAppointment = () => {
-    try {
-      dispatch(bookTimeslot(appointment));
-      setConfirmationMessage('Appointment booked successfully!');
-      setIsConfirmationOpen(true);
-    } catch (error) {
-      setIsErrorModalOpen(true);
-    }
+    dispatch(bookTimeslot(appointment))
+      .then((resultAction) => {
+        unwrapResult(resultAction);
+        setConfirmationMessage('Appointment booked successfully!');
+        setIsConfirmationOpen(true);
+      })
+      .catch(() => {
+        setIsErrorModalOpen(true);
+      });
   };
 
   const handleRemovePatientFromTimeslot = async () => {
     const { physicianId, patientId } = appointment;
-    const timeslot: TimeslotWithPhysicianAndPatient = {
-      physicianId,
-      patientId,
-    };
-    await removePatientFromTimeslot(timeslot);
-    setConfirmationMessage('Appointment canceled successfully!');
-    setIsErrorModalOpen(false);
-    setIsConfirmationOpen(true);
+    if (typeof patientId === 'string') {
+      dispatch(deletePatientFromUpcomingTimeslot({ physicianId, patientId }));
+      setConfirmationMessage('Appointment canceled successfully!');
+      setIsErrorModalOpen(false);
+      setIsConfirmationOpen(true);
+    }
   };
+
+  const appointmentInfo = (
+    <Box style={{ textAlign: 'center', marginTop: 10 }}>
+      {'Selected Physician: '} <b>{selectedPhysicianName}</b>
+      {' | Selected Time: '}
+      <b>{appointment.date + ', ' + appointment.time}</b>
+    </Box>
+  );
 
   return (
     <Box sx={{ width: '100%', marginTop: '30px' }}>
@@ -76,16 +82,26 @@ const BookAppointment = () => {
       >
         <AppointmentContext.Provider value={{ appointment, setAppointment }}>
           {bookingStep ? (
-            <Typography variant='h1'>
-              <Patients />
-            </Typography>
+            <Stack style={{ alignItems: 'center' }}>
+              <h1 style={{ margin: 0 }}>Select Patient</h1>
+              <Typography variant='h1'>
+                <Patients />
+              </Typography>
+              {appointmentInfo}
+            </Stack>
           ) : (
-            <TimetablesContainer tableTitle='Select Physician and Time' />
+            <TimetablesContainer
+              tableTitle={
+                (type === 'physician' && 'Select Time') ||
+                'Select Physician and Time'
+              }
+            />
           )}
         </AppointmentContext.Provider>
         <Box
           display='flex'
           justifyContent='center'
+          padding={3}
           sx={{
             width: '95%',
           }}

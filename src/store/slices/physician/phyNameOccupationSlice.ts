@@ -69,4 +69,15 @@ export const selectPhysicianById = (state: RootState, physicianId: string) => {
   return physicians.find((physician) => physician.physicianId === physicianId);
 };
 
+export const selectPhysicianNameById = (state: RootState) => {
+  const physicianId = selectPhysicianId(state);
+
+  if (!physicianId) {
+    return null;
+  }
+
+  const physician = selectPhysicianById(state, physicianId);
+  return physician ? physician.name : null;
+};
+
 export default phyNameOccupationSlice.reducer;

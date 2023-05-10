@@ -12,11 +12,14 @@ import {
   fetchAdminAmount,
   fetchPatientAmount,
   fetchPhysicianAmount,
+  fetchPatientsByPhysicianAmount,
 } from '../../store/slices/userSize/userSizeSlice';
 import {
   deletePatient,
   fetchMorePatients,
+  fetchMorePatientsByPhysicianId,
   fetchPatients,
+  fetchPatientsByPhysicianId,
 } from '../../store/slices/patient/patientSlice';
 import {
   deleteAdmin,
@@ -40,23 +43,22 @@ interface Props {
   setMore: React.Dispatch<React.SetStateAction<boolean>>;
   type: string;
   rowClick?: (id: string) => void;
+  renderDelAndEditCells?: boolean;
 }
 
 const TableBodyComponent: FC<Props> = ({
   user,
-  refresh,
-  setRefresh,
-  more,
-  setMore,
   type,
   rowClick = () => undefined,
+  renderDelAndEditCells = true,
 }) => {
-  const UserSize = useSelector(selectUserSize);
+  const userSize = useSelector(selectUserSize);
   const dispatch = useDispatch<AppDispatch>();
-  const [currentRender, setCurrentRender] = useState(7);
   const [selectedId, setSelectedId] = useState('');
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState([]);
+  const loggedInUserId = sessionStorage.getItem('userId');
+  const loggedInUserType = sessionStorage.getItem('type');
 
   const handleOpen = () => {
     setOpen(true);
@@ -75,49 +77,62 @@ const TableBodyComponent: FC<Props> = ({
     setUsers(users.filter((user) => user != id));
   };
 
-  const getSize = () => {
-    if (type === 'patient') {
-      dispatch(fetchPatientAmount());
-    }
-    if (type === 'admin') {
-      dispatch(fetchAdminAmount());
-    }
-    if (type === 'physician') {
-      dispatch(fetchPhysicianAmount());
-    }
-  };
-
   const getMoreData = async () => {
-    if (UserSize > currentRender) {
-      if (type === 'patient') {
-        dispatch(fetchMorePatients(currentRender));
-      } else if (type === 'admin') {
-        dispatch(fetchMoreAdmins(currentRender));
-      } else if (type === 'physician') {
-        dispatch(fetchMorePhysicians(currentRender));
-      }
+    if (loggedInUserType === 'physician') {
+      dispatch(
+        fetchMorePatientsByPhysicianId({
+          id: loggedInUserId,
+          offset: user.length,
+        }),
+      );
     } else {
-      setMore(false);
+      switch (type) {
+        case 'patient':
+          dispatch(fetchMorePatients(user.length));
+          break;
+        case 'admin':
+          dispatch(fetchMoreAdmins(user.length));
+          break;
+        case 'physician':
+          dispatch(fetchMorePhysicians(user.length));
+          break;
+      }
     }
-    setCurrentRender((prevRender) => prevRender + 5);
   };
 
   useEffect(() => {
-    setRefresh(false);
-    getSize();
-    setMore(true);
-    setCurrentRender(7);
-  }, [refresh]);
+    if (loggedInUserType === 'physician') {
+      dispatch(fetchPatientsByPhysicianAmount({ id: loggedInUserId }));
+    } else {
+      switch (type) {
+        case 'patient':
+          dispatch(fetchPatientAmount());
+          break;
+        case 'admin':
+          dispatch(fetchAdminAmount());
+          break;
+        case 'physician':
+          dispatch(fetchPhysicianAmount());
+          break;
+      }
+    }
+  }, []);
 
   useEffect(() => {
-    if (type === 'patient') {
-      dispatch(fetchPatients());
-    }
-    if (type === 'physician') {
-      dispatch(fetchPhysicians());
-    }
-    if (type === 'admin') {
-      dispatch(fetchAdmins());
+    if (loggedInUserType === 'physician') {
+      dispatch(fetchPatientsByPhysicianId({ id: loggedInUserId }));
+    } else {
+      switch (type) {
+        case 'patient':
+          dispatch(fetchPatients());
+          break;
+        case 'physician':
+          dispatch(fetchPhysicians());
+          break;
+        case 'admin':
+          dispatch(fetchAdmins());
+          break;
+      }
     }
   }, [open, users]);
 
@@ -137,7 +152,7 @@ const TableBodyComponent: FC<Props> = ({
             scrollableTarget='scrollBox'
             dataLength={user.length}
             next={getMoreData}
-            hasMore={more}
+            hasMore={userSize > user.length}
             loader={
               <Typography variant='h5' sx={{ textAlign: 'center' }}>
                 loading...
@@ -162,27 +177,35 @@ const TableBodyComponent: FC<Props> = ({
                     >
                       {name}
                     </TableCell>
-                    <TableCell align='center' sx={{ width: '200px' }}>
+                    <TableCell
+                      align='center'
+                      sx={{ width: '200px' }}
+                      onClick={() => rowClick(id)}
+                    >
                       {type === 'physician' ? occupation?.name : email}
                     </TableCell>
-                    <TableCell
-                      sx={{ m: 0, p: 0 }}
-                      onClick={() => {
-                        setSelectedId(id);
-                      }}
-                    >
-                      <IconButton color='primary' onClick={handleOpen}>
-                        <EditIcon />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        color='primary'
-                        onClick={() => handleDelete(id)}
-                      >
-                        <DeleteIcon sx={{ color: 'orange' }} />
-                      </IconButton>
-                    </TableCell>
+                    {renderDelAndEditCells && (
+                      <>
+                        <TableCell
+                          sx={{ m: 0, p: 0 }}
+                          onClick={() => {
+                            setSelectedId(id);
+                          }}
+                        >
+                          <IconButton color='primary' onClick={handleOpen}>
+                            <EditIcon />
+                          </IconButton>
+                        </TableCell>
+                        <TableCell>
+                          <IconButton
+                            color='primary'
+                            onClick={() => handleDelete(id)}
+                          >
+                            <DeleteIcon sx={{ color: 'orange' }} />
+                          </IconButton>
+                        </TableCell>
+                      </>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>

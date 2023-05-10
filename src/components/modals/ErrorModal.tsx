@@ -1,16 +1,14 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
 
-interface ErrorModalProps {
+interface Props {
   isOpen: boolean;
   onYesClick: () => void;
   onClose?: () => void;
   message: string;
 }
 
-const ErrorModal: React.FC<ErrorModalProps> = (props) => {
-  const { isOpen, onYesClick, onClose, message } = props;
-
+const ErrorModal = ({ isOpen, onYesClick, onClose, message }: Props) => {
   return (
     <Dialog open={isOpen} onClose={onClose}>
       <DialogContent sx={{ textAlign: 'center' }}>

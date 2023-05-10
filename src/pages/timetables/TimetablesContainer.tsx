@@ -15,12 +15,15 @@ import {
   fetchPhysicians,
   searchPhysician,
 } from '../../store/slices/physician/physicianSlice';
+import { selectId, selectType } from '../../store/slices/auth/authSlice';
 
 type props = {
   tableTitle?: string;
 };
 
 const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
+  const type = useSelector(selectType);
+  const loggedInPhysicianId = useSelector(selectId);
   const physicianId: string | null = useSelector(selectPhysicianId);
   const physicians = useSelector(selectPhysicians);
   const dispatch = useDispatch<AppDispatch>();
@@ -47,7 +50,7 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
   }, []);
 
   return (
-    <Container maxWidth='lg'>
+    <Container maxWidth={type === 'physician' ? 'md' : 'lg'}>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container>
           <Grid
@@ -59,20 +62,32 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
           >
             <h1>{tableTitle}</h1>
           </Grid>
-          <Grid item lg={4} sx={{ pr: 2 }}>
-            <PhysicianSearchBar onSearch={handleSearch} />
+          {type !== 'physician' && (
+            <Grid item lg={4} sx={{ pr: 2 }}>
+              <PhysicianSearchBar onSearch={handleSearch} />
             <PhysicianTable
-              physicians={physicians}
-              selectedId={physicianId}
-              rowClick={handleClick}
-              refresh={refresh}
+                physicians={physicians}
+                selectedId={physicianId}
+                rowClick={handleClick}
+                refresh={refresh}
               setRefresh={setRefresh}
               isSearch={isSearch}
             />
-          </Grid>
-          <Grid item lg={8}>
-            {physicianId ? <TimetableList physicianId={physicianId} /> : <></>}
-          </Grid>
+            </Grid>
+          )}
+          {type === 'physician' ? (
+            <Grid item lg={12}>
+              <TimetableList physicianId={loggedInPhysicianId || ''} />
+            </Grid>
+          ) : (
+            <Grid item lg={8}>
+              {physicianId ? (
+                <TimetableList physicianId={physicianId} />
+              ) : (
+                <></>
+              )}
+            </Grid>
+          )}
         </Grid>
       </Box>
     </Container>

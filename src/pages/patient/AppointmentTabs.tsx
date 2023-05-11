@@ -15,7 +15,7 @@ import {
 import { AppDispatch } from '../../store/types';
 import PastAppointments from './PastAppointmets';
 import UpcomingAppointments from './UpcomingApppointments';
-
+import { TabPanel } from '../users/Tabs';
 const AppointmentTabs = () => {
   const userId = sessionStorage.getItem('userId');
   const dispatch = useDispatch<AppDispatch>();
@@ -45,6 +45,7 @@ const AppointmentTabs = () => {
   }
 
   const handleTabs = (event: React.SyntheticEvent, newValue: number) => {
+    event.preventDefault();
     setValue(newValue);
   };
 

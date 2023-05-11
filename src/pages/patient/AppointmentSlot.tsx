@@ -4,10 +4,7 @@ import React, { FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import AlertModal from '../../components/modals/AlertModal';
 import { PatientAppointments } from '../../model/Model';
-import {
-  deleteAppointment,
-  fetchPatientAppointments,
-} from '../../store/slices/patient/patientSlice';
+import { fetchPatientAppointments } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
 import { deletePatientFromUpcomingTimeslot } from '../../store/slices/timeslot/timeslotActions';
 interface Props {

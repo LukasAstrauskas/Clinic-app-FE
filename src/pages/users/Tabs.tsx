@@ -21,7 +21,16 @@ type TabPanelProps = {
   children?: JSX.Element;
 };
 
-export function TabPanel({ children, value, index }: TabPanelProps) {
+// export function TabPanel({ children, value, index }: TabPanelProps) {
+//   return (
+//     <div>
+//       {value === index && <Typography variant='h1'>{children} </Typography>}
+//     </div>
+//   );
+// }
+
+export function TabPanel(props: TabPanelProps) {
+  const { children, value, index } = props;
   return (
     <div>
       {value === index && <Typography variant='h1'>{children} </Typography>}

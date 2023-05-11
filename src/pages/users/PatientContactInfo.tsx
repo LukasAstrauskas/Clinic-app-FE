@@ -1,19 +1,23 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import {
   updatePatientInfo,
   selectPatientAdditionalInfo,
+  fetchPatientInfo,
 } from '../../store/slices/patient/patientSlice';
 import { selectId } from '../../store/slices/auth/authSlice';
+import { PatientInfo } from '../../model/Model';
+import Styles from '../../components/styles/UserManagmentStyles';
 
 const PatientContactInfo = () => {
   const dispatch = useDispatch<AppDispatch>();
   const patientInfo = useSelector(selectPatientAdditionalInfo);
   const userId = useSelector(selectId);
+  const [refresh, setRefresh] = useState(false);
   const [gender, setGender] = useState(
     patientInfo !== null ? patientInfo.gender : '',
   );
@@ -47,6 +51,23 @@ const PatientContactInfo = () => {
   const [emergencyRelation, setEmergencyRelation] = useState(
     patientInfo !== null ? patientInfo.emergencyRelation : '',
   );
+
+  // const handleFetchUserById = async () => {
+  //   if (!userId) {
+  //     return 'no id';
+  //   }
+  //   const user = await dispatch(fetchPatientInfo(userId));
+  //   const userData = user.payload as PatientInfo;
+  //   setGender(userData.gender);
+  // };
+
+  // useEffect(() => {
+  //   if (gender == null) {
+  //     setRefresh(true);
+  //     handleFetchUserById();
+  //   }
+  // }, [refresh]);
+
   const handleUpdatePatientInfo = () => {
     dispatch(
       updatePatientInfo({
@@ -98,9 +119,9 @@ const PatientContactInfo = () => {
       component='form'
       sx={{
         margin: 'auto',
-        marginBottom: '5%',
-        width: '50%',
-        '& .MuiTextField-root': { m: 1, width: '25ch' },
+        marginBottom: '2%',
+        width: '60%',
+        '& .MuiTextField-root': { m: 1, width: '47%' },
       }}
       noValidate
       autoComplete='off'
@@ -193,10 +214,11 @@ const PatientContactInfo = () => {
         />
       </div>
       <div>
-        <Box textAlign='right' sx={{ marginRight: '9%' }}>
+        <Box textAlign='center' marginTop={2}>
           <Button
             variant='contained'
             onClick={handleUpdatePatientInfo}
+            sx={Styles.createNewUserBtn}
             disabled={
               handlePhoneError(phone) ||
               handlePhoneError(emergencyPhone) ||

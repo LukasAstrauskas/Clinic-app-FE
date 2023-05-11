@@ -1,5 +1,5 @@
 import LockIcon from '@mui/icons-material/Lock';
-import { TextField } from '@mui/material';
+import { TextField, styled } from '@mui/material';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { login } from '../../store/slices/auth/authActions';
 import { fetchPatientInfo } from '../../store/slices/patient/patientSlice';
+import Styles from '../../components/styles/UserManagmentStyles';
 
 const Login = () => {
   const [errorAlertOpen, setSignInError] = useState(false);
@@ -72,7 +73,12 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             <div className={styles.buttonContainer}>
-              <Button variant='contained' type='submit' size='large'>
+              <Button
+                variant='contained'
+                type='submit'
+                size='large'
+                sx={Styles.loginButton}
+              >
                 SIGN IN
               </Button>
             </div>

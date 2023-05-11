@@ -7,18 +7,14 @@ import { AppDispatch } from '../../store/types';
 import {
   updatePatientInfo,
   selectPatientAdditionalInfo,
-  fetchPatientInfo,
 } from '../../store/slices/patient/patientSlice';
 import { selectId } from '../../store/slices/auth/authSlice';
-import { PatientInfo } from '../../model/Model';
 import Styles from '../../components/styles/UserManagmentStyles';
 
 const PatientContactInfo = () => {
-  const [patient, setPatient] = useState();
   const dispatch = useDispatch<AppDispatch>();
   const patientInfo = useSelector(selectPatientAdditionalInfo);
   const userId = useSelector(selectId);
-  const [refresh, setRefresh] = useState(false);
   const [gender, setGender] = useState(
     patientInfo !== null ? patientInfo.gender : '',
   );

@@ -60,6 +60,7 @@ const TimeslotModal = ({
       loadData();
       closeModal();
     }
+    setTimeError(true);
   };
 
   const onModalSubmit = (e: MouseEvent) => {

@@ -215,11 +215,7 @@ const TimetableList = ({ physicianId }: Props) => {
                       ></Chip>
                     </TableCell>
                     <TableCell align='left'>
-                      <Stack
-                        direction='row'
-                        spacing={'0.4%'}
-                        style={{ flexWrap: 'wrap' }}
-                      >
+                      <Stack direction='row' style={{ flexWrap: 'wrap' }}>
                         {timePatientList.map(({ time, patientId }) => {
                           return (
                             <>

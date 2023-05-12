@@ -90,7 +90,6 @@ const TimeslotModal = ({
             value={time}
             onChange={(newValue) => setTime(newValue)}
             format='HH:mm'
-            disablePast
           />
         </LocalizationProvider>
         {timeError && <h5 style={{ color: 'red' }}>Wrong time selected!</h5>}

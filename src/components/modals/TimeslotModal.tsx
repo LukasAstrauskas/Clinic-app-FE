@@ -36,6 +36,7 @@ const TimeslotModal = ({
 }: Props) => {
   const [time, setTime] = useState<Dayjs | null>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const [timeError, setTimeError] = useState(false);
 
   useEffect(() => {
     setTime(dayjs(date).startOf('day'));
@@ -43,7 +44,7 @@ const TimeslotModal = ({
 
   const onModalSubmit = (e: MouseEvent) => {
     e.preventDefault();
-    if (time !== null) {
+    if (time !== null && dayjs(time).hour() > 8 && dayjs(time).hour() < 20) {
       dispatch(
         postTimeslot({
           physicianId: id,
@@ -54,6 +55,8 @@ const TimeslotModal = ({
       setTime(null);
       loadData();
       closeModal();
+    } else {
+      setTimeError(true);
     }
   };
 
@@ -66,7 +69,7 @@ const TimeslotModal = ({
     <Modal open={openModal} onClose={onModalClose}>
       <Box sx={style}>
         <Typography variant='h6' component='h2' sx={{ mb: 2 }}>
-          Choose time
+          Choose time between 08:00 and 20:00
         </Typography>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <TimeField
@@ -77,6 +80,7 @@ const TimeslotModal = ({
             disablePast
           />
         </LocalizationProvider>
+        {timeError && <h5 style={{ color: 'red' }}>Wrong time selected!</h5>}
         <Stack direction='row' spacing={2} sx={{ marginTop: 2 }}>
           <Button variant='contained' onClick={onModalSubmit}>
             Add timeslot

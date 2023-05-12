@@ -6,6 +6,7 @@ import { postTimeslot } from '../../store/slices/timeslot/timeslotActions';
 import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider, TimeField } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Styles from '../styles/UserManagmentStyles';
 
 const style = {
   position: 'absolute' as const,
@@ -94,10 +95,18 @@ const TimeslotModal = ({
         </LocalizationProvider>
         {timeError && <h5 style={{ color: 'red' }}>Wrong time selected!</h5>}
         <Stack direction='row' spacing={2} sx={{ marginTop: 2 }}>
-          <Button variant='contained' onClick={onModalSubmit}>
+          <Button
+            variant='contained'
+            onClick={onModalSubmit}
+            sx={Styles.createButton}
+          >
             Add timeslot
           </Button>
-          <Button variant='contained' onClick={onModalClose}>
+          <Button
+            variant='contained'
+            onClick={onModalClose}
+            sx={Styles.createButton}
+          >
             Cancel
           </Button>
         </Stack>

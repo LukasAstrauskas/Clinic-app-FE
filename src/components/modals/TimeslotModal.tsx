@@ -38,15 +38,16 @@ const TimeslotModal = ({
   const dispatch = useDispatch<AppDispatch>();
   const [timeError, setTimeError] = useState(false);
   const currentHour = dayjs().hour();
+  const currentDay = dayjs().day();
   const selectedHour = dayjs(time).hour();
+  const selectedDay = dayjs(time).day();
 
   useEffect(() => {
     setTime(dayjs(date).startOf('day'));
   }, [date]);
 
-  const onModalSubmit = (e: MouseEvent) => {
-    e.preventDefault();
-    if (time !== null && selectedHour > currentHour && selectedHour < 20) {
+  const saveTimeSlot = () => {
+    if (time !== null && selectedHour >= 8 && selectedHour < 20) {
       dispatch(
         postTimeslot({
           physicianId: id,
@@ -57,6 +58,15 @@ const TimeslotModal = ({
       setTime(null);
       loadData();
       closeModal();
+    }
+  };
+
+  const onModalSubmit = (e: MouseEvent) => {
+    e.preventDefault();
+    if (selectedDay !== currentDay) {
+      saveTimeSlot();
+    } else if (selectedDay === currentDay && selectedHour > currentHour) {
+      saveTimeSlot();
     } else {
       setTimeError(true);
     }

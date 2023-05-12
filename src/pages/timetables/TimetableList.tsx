@@ -150,7 +150,7 @@ const TimetableList = ({ physicianId }: Props) => {
       dayjs(date).endOf('day').isAfter(dayjs()) ? (
       <Chip
         label='+ NEW'
-        sx={{ backgroundColor: teal['A400'] }}
+        sx={{ backgroundColor: teal['A400'], mt: 0.5 }}
         onClick={() => handleOpenModal(date)}
       />
     ) : (

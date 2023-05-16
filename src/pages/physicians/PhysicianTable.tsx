@@ -6,8 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import ModeIcon from '@mui/icons-material/Mode';
-import { Button, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { UniversalUser } from '../../model/Model';
 import { grey } from '@mui/material/colors';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -18,7 +17,6 @@ import {
   fetchPhysicianAmount,
   selectUserSize,
 } from '../../store/slices/userSize/userSizeSlice';
-import EditUserModal from '../../components/modals/EditUserModal';
 
 type Props = {
   physicians: UniversalUser[];
@@ -45,11 +43,8 @@ const PhysicianTable = ({
   rowClick,
   isSearch,
 }: Props) => {
-  const [open, setOpen] = useState(false);
   const userSize = useSelector(selectUserSize);
   const dispatch = useDispatch<AppDispatch>();
-  const [selectedIdForEdit, setSelectedIdForEdit] = useState('');
-
   const getMoreData = async () => {
     if (!isSearch) {
       await dispatch(fetchMorePhysicians(physicians.length));
@@ -61,12 +56,7 @@ const PhysicianTable = ({
   }, []);
 
   return (
-    <div id='scrollBox' style={{ maxHeight: 300, overflowY: 'scroll' }}>
-      <EditUserModal
-        setOpen={setOpen}
-        open={open}
-        selectedId={selectedIdForEdit}
-      />
+    <div id='scrollBox' style={{ maxHeight: 250, overflowY: 'scroll' }}>
       <TableContainer component={Paper}>
         <InfiniteScroll
           scrollableTarget='scrollBox'
@@ -97,7 +87,7 @@ const PhysicianTable = ({
                 <TableCell sx={{ fontWeight: 'bold' }}>Occupation</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody style={{ maxHeight: ' 300px' }}>
               {physicians.map(({ id, name, occupation }) => (
                 <TableRow key={id} hover sx={tableRowSX(selectedId === id)}>
                   <TableCell
@@ -113,17 +103,6 @@ const PhysicianTable = ({
                     }}
                   >
                     {occupation?.name}
-                  </TableCell>
-                  <TableCell sx={{ m: 0, p: 0 }}>
-                    <Button
-                      variant='text'
-                      onClick={() => {
-                        setOpen(true);
-                        setSelectedIdForEdit(id);
-                      }}
-                    >
-                      <ModeIcon />
-                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

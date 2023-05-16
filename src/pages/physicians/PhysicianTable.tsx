@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -18,6 +18,7 @@ import {
   fetchPhysicianAmount,
   selectUserSize,
 } from '../../store/slices/userSize/userSizeSlice';
+import EditUserModal from '../../components/modals/EditUserModal';
 
 type Props = {
   physicians: UniversalUser[];
@@ -44,8 +45,10 @@ const PhysicianTable = ({
   rowClick,
   isSearch,
 }: Props) => {
+  const [open, setOpen] = useState(false);
   const userSize = useSelector(selectUserSize);
   const dispatch = useDispatch<AppDispatch>();
+  const [selectedIdForEdit, setSelectedIdForEdit] = useState('');
 
   const getMoreData = async () => {
     if (!isSearch) {
@@ -59,6 +62,11 @@ const PhysicianTable = ({
 
   return (
     <div id='scrollBox' style={{ maxHeight: 300, overflowY: 'scroll' }}>
+      <EditUserModal
+        setOpen={setOpen}
+        open={open}
+        selectedId={selectedIdForEdit}
+      />
       <TableContainer component={Paper}>
         <InfiniteScroll
           scrollableTarget='scrollBox'
@@ -109,9 +117,9 @@ const PhysicianTable = ({
                   <TableCell sx={{ m: 0, p: 0 }}>
                     <Button
                       variant='text'
-                      onClick={(event) => {
-                        event.preventDefault();
-                        console.log(`Id: ${id} edit.`);
+                      onClick={() => {
+                        setOpen(true);
+                        setSelectedIdForEdit(id);
                       }}
                     >
                       <ModeIcon />

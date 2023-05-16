@@ -87,7 +87,7 @@ const PhysicianTable = ({
                 <TableCell sx={{ fontWeight: 'bold' }}>Occupation</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody style={{ maxHeight: ' 300px' }}>
+            <TableBody>
               {physicians.map(({ id, name, occupation }) => (
                 <TableRow key={id} hover sx={tableRowSX(selectedId === id)}>
                   <TableCell

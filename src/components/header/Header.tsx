@@ -154,16 +154,16 @@ const Header = () => {
                           aria-labelledby='composition-button'
                           onKeyDown={handleListKeyDown}
                         >
-                          <NavLink
-                            to={
-                              sessionStorage.getItem('type') === 'patient'
-                                ? ROUTES.PATIENTPROFILE
-                                : 'not-existing-page' // TODO: implement profile for physician/administrators
-                            }
-                            className={resolveLinkClass}
-                          >
-                            <MenuItem onClick={handleClose}>Profile</MenuItem>
-                          </NavLink>
+                          {sessionStorage.getItem('type') === 'patient' ? (
+                            <NavLink
+                              to={ROUTES.PATIENTPROFILE}
+                              className={resolveLinkClass}
+                            >
+                              <MenuItem onClick={handleClose}>Profile</MenuItem>
+                            </NavLink>
+                          ) : (
+                            <></>
+                          )}
                           <NavLink
                             to={ROUTES.LOGIN}
                             className={resolveLinkClass}

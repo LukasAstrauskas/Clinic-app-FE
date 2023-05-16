@@ -21,7 +21,11 @@ export const PATIENT_SIZE_URL = 'http://localhost:8080/user/patientSize';
 export const PATIENT_SEARCH_URL = 'http://localhost:8080/user/patientSearch/';
 export const PATIENTS_ADDITIONAL_INFO_URL =
   'http://localhost:8080/patientInfo/';
-
+export const PATIENT_APPOINTMENTS =
+  'http://localhost:8080/user/patientUpcomingAppointments/';
+export const PATIENT_PAST_APPOINTMENTS =
+  'http://localhost:8080/user/patientPastAppointments/';
+export const PATIENT_REMOVE_APPOINTMENT = 'http://localhost:8080/timeslot/';
 //Physicians
 export const PHYSICIANS_FULL_URL = 'http://localhost:8080/physicianInfo';
 export const BASE_PHYSICIANS_FULL_URL = 'http://localhost:8080/physicianInfo/';
@@ -41,3 +45,4 @@ export const PHYNAMEOCCUPATION_URL =
 export const OCCUPATIONS_URL = 'http://localhost:8080/occupations';
 //Timeslots
 export const TIMESLOTS_URL = 'http://localhost:8080/timeslot/getPhyTimeslots';
+export const DELETE_TIMESLOT = 'http://localhost:8080/timeslot/';

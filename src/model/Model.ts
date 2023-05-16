@@ -52,6 +52,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  password: string;
   type: string;
 }
 
@@ -109,7 +110,6 @@ export type Physician = {
   id: string;
   name: string;
   email: string;
-  password: string;
   type: string;
   occupation: {
     id: string;

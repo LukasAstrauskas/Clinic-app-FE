@@ -6,6 +6,7 @@ import { postTimeslot } from '../../store/slices/timeslot/timeslotActions';
 import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider, TimeField } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Styles from '../styles/UserManagmentStyles';
 
 const style = {
   position: 'absolute' as const,
@@ -37,14 +38,17 @@ const TimeslotModal = ({
   const [time, setTime] = useState<Dayjs | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const [timeError, setTimeError] = useState(false);
+  const currentHour = dayjs().hour();
+  const currentDay = dayjs().day();
+  const selectedHour = dayjs(time).hour();
+  const selectedDay = dayjs(time).day();
 
   useEffect(() => {
     setTime(dayjs(date).startOf('day'));
   }, [date]);
 
-  const onModalSubmit = (e: MouseEvent) => {
-    e.preventDefault();
-    if (time !== null && dayjs(time).hour() > 8 && dayjs(time).hour() < 20) {
+  const saveTimeSlot = () => {
+    if (time !== null && selectedHour >= 8 && selectedHour < 20) {
       dispatch(
         postTimeslot({
           physicianId: id,
@@ -55,6 +59,16 @@ const TimeslotModal = ({
       setTime(null);
       loadData();
       closeModal();
+    }
+    setTimeError(true);
+  };
+
+  const onModalSubmit = (e: MouseEvent) => {
+    e.preventDefault();
+    if (selectedDay > currentDay) {
+      saveTimeSlot();
+    } else if (selectedDay === currentDay && selectedHour > currentHour) {
+      saveTimeSlot();
     } else {
       setTimeError(true);
     }
@@ -77,15 +91,22 @@ const TimeslotModal = ({
             value={time}
             onChange={(newValue) => setTime(newValue)}
             format='HH:mm'
-            disablePast
           />
         </LocalizationProvider>
         {timeError && <h5 style={{ color: 'red' }}>Wrong time selected!</h5>}
         <Stack direction='row' spacing={2} sx={{ marginTop: 2 }}>
-          <Button variant='contained' onClick={onModalSubmit}>
+          <Button
+            variant='contained'
+            onClick={onModalSubmit}
+            sx={Styles.createButton}
+          >
             Add timeslot
           </Button>
-          <Button variant='contained' onClick={onModalClose}>
+          <Button
+            variant='contained'
+            onClick={onModalClose}
+            sx={Styles.createButton}
+          >
             Cancel
           </Button>
         </Stack>

@@ -22,7 +22,6 @@ export const Patients = () => {
   const patients = useSelector(selectPatients);
   const [open, setOpen] = useState(false);
   const [more, setMore] = useState<boolean>(true);
-  const [refresh, setRefresh] = useState<boolean>(false);
   const { appointment, setAppointment } = useContext(AppointmentContext);
   const choosePatient = (patientId: string): void => {
     setAppointment({ ...appointment, patientId: patientId });
@@ -41,7 +40,6 @@ export const Patients = () => {
       setIsSearch(true);
     } else {
       dispatch(fetchPatients());
-      setRefresh(true);
       setIsSearch(false);
     }
   };
@@ -92,8 +90,6 @@ export const Patients = () => {
               type='patient'
               more={more}
               setMore={setMore}
-              setRefresh={setRefresh}
-              refresh={refresh}
               user={patients}
               rowClick={choosePatient}
               renderDelAndEditCells={!appointment.physicianId}

@@ -58,7 +58,7 @@ const Styles = {
   createNewUserBtn: {
     p: 1,
     ml: 4.2,
-    mb: 1,
+    mt: 0.3,
     scale: '110%',
     bgcolor: '#25ced1',
     '&:hover': {

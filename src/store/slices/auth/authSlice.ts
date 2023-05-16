@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { authFetchUserById, login, logout } from './authActions';
-import { RootState } from '../../types';
 import { User } from '../../../model/Model';
+import { RootState } from '../../types';
+import { authFetchUserById, login, logout } from './authActions';
 
 const initialState: AuthState = {
   type: null,

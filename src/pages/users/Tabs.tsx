@@ -4,8 +4,8 @@ import { Patients } from './Patients';
 import { Physicians } from './Physicians';
 import { Admins } from './Admins';
 import { Tabs, Tab, createTheme } from '@mui/material';
-import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@emotion/react';
+import TabPanel from './TabPanel';
 
 const theme = createTheme({
   palette: {
@@ -14,20 +14,6 @@ const theme = createTheme({
     },
   },
 });
-
-type TabPanelProps = {
-  value?: number;
-  index?: number;
-  children?: JSX.Element;
-};
-
-export function TabPanel({ children, value, index }: TabPanelProps) {
-  return (
-    <div>
-      {value === index && <Typography variant='h1'>{children} </Typography>}
-    </div>
-  );
-}
 
 const UserTabs = () => {
   const [value, setValue] = useState(0);

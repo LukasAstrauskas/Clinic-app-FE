@@ -65,7 +65,7 @@ const TimeslotModal = ({
 
   const onModalSubmit = (e: MouseEvent) => {
     e.preventDefault();
-    if (selectedDay !== currentDay) {
+    if (selectedDay > currentDay) {
       saveTimeSlot();
     } else if (selectedDay === currentDay && selectedHour > currentHour) {
       saveTimeSlot();

@@ -17,6 +17,27 @@ import TableHeadComponent from '../../components/tableComponents/HeadComponent';
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableBodyComponent from '../../components/tableComponents/BodyComponent';
 import AppointmentContext from '../../hooks/AppointmentContext';
+
+export const searchBaraSx = (isSelected: string) => {
+  return {
+    width: 600,
+    m: 'auto',
+    display: isSelected ? 'flex' : '',
+    justifyContent: isSelected ? 'center' : '',
+    alignItems: isSelected ? 'center' : '',
+    pb: isSelected ? 2 : 0,
+  };
+};
+
+export const searchIconSx = (isSelected: string) => {
+  return {
+    scale: '170%',
+    ml: 2,
+    mb: 1,
+    pt: isSelected ? 2.7 : 0,
+  };
+};
+
 export const Patients = () => {
   const dispatch = useDispatch<AppDispatch>();
   const patients = useSelector(selectPatients);
@@ -45,13 +66,8 @@ export const Patients = () => {
   };
   return (
     <>
-      <Box
-        sx={{
-          width: 600,
-          m: 'auto',
-        }}
-      >
-        <SearchIcon sx={Styles.searchIcon} />
+      <Box sx={searchBaraSx(appointment.physicianId)}>
+        <SearchIcon sx={searchIconSx(appointment.physicianId)} />
         <TextField
           onChange={handleSearch}
           onBlur={() => handleSearch}
@@ -82,7 +98,10 @@ export const Patients = () => {
       >
         <TableContainer component={Paper} sx={{ maxHeight: '500px' }}>
           <Table stickyHeader>
-            <TableHeadComponent collumName='Email' />
+            <TableHeadComponent
+              collumName='Email'
+              renderTableHeadCells={!appointment.physicianId}
+            />
           </Table>
 
           <Table>

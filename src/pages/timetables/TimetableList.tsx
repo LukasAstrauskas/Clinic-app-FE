@@ -150,7 +150,7 @@ const TimetableList = ({ physicianId }: Props) => {
       dayjs(date).endOf('day').isAfter(dayjs()) ? (
       <Chip
         label='+ NEW'
-        sx={{ backgroundColor: teal['A400'] }}
+        sx={{ backgroundColor: teal['A400'], mt: 0.5 }}
         onClick={() => handleOpenModal(date)}
       />
     ) : (
@@ -215,7 +215,7 @@ const TimetableList = ({ physicianId }: Props) => {
                       ></Chip>
                     </TableCell>
                     <TableCell align='left'>
-                      <Stack direction='row' spacing={'0.4%'}>
+                      <Stack direction='row' style={{ flexWrap: 'wrap' }}>
                         {timePatientList.map(({ time, patientId }) => {
                           return (
                             <>

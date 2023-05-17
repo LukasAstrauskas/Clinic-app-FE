@@ -37,8 +37,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { tableRowSX } from '../../pages/physicians/PhysicianTable';
 interface Props {
   user: UniversalUser[];
-  refresh: boolean;
-  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   more: boolean;
   setMore: React.Dispatch<React.SetStateAction<boolean>>;
   type: string;
@@ -46,6 +44,12 @@ interface Props {
   rowClick?: (id: string) => void;
   renderDelAndEditCells?: boolean;
 }
+
+export const tableRowSx = (isSelected: boolean) => {
+  return {
+    width: isSelected ? '200px' : '300px',
+  };
+};
 
 const TableBodyComponent: FC<Props> = ({
   user,
@@ -176,11 +180,11 @@ const TableBodyComponent: FC<Props> = ({
                 {user.map(({ id, name, email, occupation }) => (
                   <TableRow key={id} hover sx={tableRowSX(selectedId === id)}>
                     <TableCell
+                      sx={tableRowSx(renderDelAndEditCells)}
                       onClick={() => {
                         rowClick(id);
                         setSelectedId(id);
                       }}
-                      sx={{ width: '200px' }}
                     >
                       {name}
                     </TableCell>

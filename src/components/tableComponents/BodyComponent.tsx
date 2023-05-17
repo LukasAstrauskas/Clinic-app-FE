@@ -65,6 +65,7 @@ const TableBodyComponent: FC<Props> = ({
   const [users, setUsers] = useState([]);
   const loggedInUserId = sessionStorage.getItem('userId');
   const loggedInUserType = sessionStorage.getItem('type');
+  const [refresh, setRefresh] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -143,7 +144,7 @@ const TableBodyComponent: FC<Props> = ({
           break;
       }
     }
-  }, [open, users]);
+  }, [users, refresh]);
 
   return (
     <TableBody
@@ -174,6 +175,8 @@ const TableBodyComponent: FC<Props> = ({
               setOpen={setOpen}
               open={open}
               selectedId={selectedId}
+              refresh={refresh}
+              setRefresh={setRefresh}
             />
             <Table>
               <TableBody>

@@ -2,23 +2,23 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { Occupation } from '../../../model/Model';
 import { OCCUPATIONS_URL } from '../../../utils/httpConstants';
-import { RootState } from '../../types';
 import axios from 'axios';
+import { RootState } from '../../types';
 
-interface OccupationState {
-  occupation: Occupation[];
+interface OccupationsState {
+  occupations: Occupation[];
   isLoading: boolean;
   error: string | null;
 }
 
-const initialState: OccupationState = {
-  occupation: [],
+const initialState: OccupationsState = {
+  occupations: [],
   isLoading: false,
   error: null,
 };
 
 export const fetchOccupations = createAsyncThunk(
-  'occupations/fetchOccupations',
+  'occupation/fetchOccupations',
   async () => {
     const response = await axios.get(OCCUPATIONS_URL);
     return response.data;
@@ -39,7 +39,7 @@ export const occupationSlice = createSlice({
         fetchOccupations.fulfilled,
         (state, action: PayloadAction<Occupation[]>) => {
           state.isLoading = false;
-          state.occupation = action.payload;
+          state.occupations = action.payload;
         },
       )
       .addCase(fetchOccupations.rejected, (state, action) => {
@@ -50,6 +50,6 @@ export const occupationSlice = createSlice({
 });
 
 export const selectOccupations = (state: RootState) =>
-  state.occupation.occupation;
+  state.occupation.occupations;
 
 export default occupationSlice.reducer;

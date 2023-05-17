@@ -6,4 +6,5 @@ export enum ROUTES {
   TIMETABLE = '/timetable',
   BOOKAPPOINTMENT = '/book-appointment',
   PATIENTPROFILE = '/patient-profile',
+  MANAGEAPPOINTMENTS = '/manage-appointments',
 }

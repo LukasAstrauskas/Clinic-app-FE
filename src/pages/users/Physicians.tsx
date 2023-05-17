@@ -10,32 +10,35 @@ import Styles from '../../components/styles/UserManagmentStyles';
 import TableHeadComponent from '../../components/tableComponents/HeadComponent';
 import TableBodyComponent from '../../components/tableComponents/BodyComponent';
 import {
-  PhysicianState,
+  selectPhysicians,
   fetchPhysicians,
   searchPhysician,
 } from '../../store/slices/physician/physicianSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
+import { fetchOccupations } from '../../store/slices/occupation/occupationSlice';
 
 export const Physicians = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const physicians = useSelector(PhysicianState);
+  const physicians = useSelector(selectPhysicians);
   const [more, setMore] = useState<boolean>(true);
   const [open, setOpen] = useState(false);
-  const [refresh, setRefresh] = useState<boolean>(false);
+  const [isSearch, setIsSearch] = useState<boolean>(false);
 
   const handleOpen = () => {
     setOpen(true);
+    dispatch(fetchOccupations());
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const search = e.target.value;
     if (search.length != 0) {
-      dispatch(searchPhysician(search));
+      dispatch(searchPhysician({ search }));
       setMore(false);
+      setIsSearch(true);
     } else {
+      setIsSearch(false);
       dispatch(fetchPhysicians());
-      setRefresh(true);
     }
   };
 
@@ -83,9 +86,8 @@ export const Physicians = () => {
               type='physician'
               more={more}
               setMore={setMore}
-              setRefresh={setRefresh}
-              refresh={refresh}
               user={physicians}
+              isSearch={isSearch}
             />
           </Table>
         </TableContainer>

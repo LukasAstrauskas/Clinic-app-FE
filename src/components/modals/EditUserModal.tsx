@@ -17,7 +17,7 @@ import {
 import {
   fetchOccupations,
   selectOccupations,
-} from '../../store/slices/occupations/occupationsSlice';
+} from '../../store/slices/occupation/occupationSlice';
 import {
   fetchPhysicianById,
   updatePhysician,

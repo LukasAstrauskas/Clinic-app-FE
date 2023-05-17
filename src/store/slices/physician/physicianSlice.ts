@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import {
+  CreateUserDto,
   Physician,
   PhysicianDto,
   UniversalUser,
@@ -30,6 +31,14 @@ const initialState: PhysicianState = {
   isLoading: false,
   error: null,
 };
+
+export const createPhysician = createAsyncThunk(
+  'physician/createPhysician',
+  async (requestData: CreateUserDto) => {
+    const response = await axios.post(`${PHYSICIANS_FULL_URL}`, requestData);
+    return response.data;
+  },
+);
 
 export const fetchPhysicianById = createAsyncThunk<Physician, string>(
   'physician/fetchPhysicianById',
@@ -80,8 +89,17 @@ export const deletePhysician = createAsyncThunk(
 
 export const searchPhysician = createAsyncThunk(
   'user/searchPhysician',
-  async (search: string) => {
-    const response = await axios.get(PHYSICIAN_SEARCH_URL + search);
+  async ({ search, occupation }: { search: string; occupation?: string }) => {
+    const params = new URLSearchParams();
+    if (search) {
+      params.append('search', search);
+    }
+    if (occupation) {
+      params.append('occupation', occupation);
+    }
+
+    const response = await axios.get(`${PHYSICIAN_SEARCH_URL}?${params}`);
+
     return response.data;
   },
 );
@@ -92,6 +110,14 @@ export const physicianSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(createPhysician.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(createPhysician.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Something went wrong';
+      })
       .addCase(fetchPhysicianById.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -157,6 +183,7 @@ export const physicianSlice = createSlice({
 
 export const selectPhysician = (state: RootState) =>
   state.physician.selectedPhysician;
-export const PhysicianState = (state: RootState) => state.physician.physicians;
+export const selectPhysicians = (state: RootState) =>
+  state.physician.physicians;
 
 export default physicianSlice.reducer;

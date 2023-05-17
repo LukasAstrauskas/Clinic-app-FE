@@ -8,6 +8,40 @@ export interface Timeslots {
   timePatientList: TimePatient[];
 }
 
+export interface PatientPastAppointments {
+  data: {
+    physicianId: string;
+    physicianName: string;
+    physicianEmail: string;
+    occupation: {
+      id: string;
+      name: string;
+    };
+    timeslot: {
+      physicianId: string;
+      date: string;
+      patientId: string;
+    };
+  };
+  offset: number;
+  total: number;
+}
+
+export interface PatientAppointments {
+  physicianId: string;
+  physicianName: string;
+  physicianEmail: string;
+  occupation: {
+    id: string;
+    name: string;
+  };
+  timeslot: {
+    physicianId: string;
+    date: string;
+    patientId: string;
+  };
+}
+
 export interface PhyNameOccupation {
   physicianId: string;
   name: string;
@@ -89,6 +123,13 @@ export type PhysicianDto = {
   email: string;
   password: string;
   occupationId: string;
+};
+
+export type CreateUserDto = {
+  name: string;
+  email: string;
+  password: string;
+  occupationId?: string;
 };
 
 export interface Appointment {

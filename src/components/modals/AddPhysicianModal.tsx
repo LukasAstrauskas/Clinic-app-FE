@@ -8,15 +8,23 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useState, FC, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, FC } from 'react';
 import Styles from '../styles/UserManagmentStyles';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../store/types';
+import { selectOccupations } from '../../store/slices/occupation/occupationSlice';
+import {
+  createPhysician,
+  fetchPhysicians,
+} from '../../store/slices/physician/physicianSlice';
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
 }
 
 const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
+  const occupations = useSelector(selectOccupations);
+  const dispatch = useDispatch<AppDispatch>();
   const [name, setName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -27,8 +35,7 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [occupationError, setOccupationError] = useState(false);
-  const [duplicationError, setduplicationError] = useState(false);
-  const [occupations, setOccupations] = useState<OccupationType[]>([]);
+  const [duplicationError, setDuplicationError] = useState(false);
   const [occupationId, setOccupationId] = useState<string>('');
 
   const handleClose = () => {
@@ -42,35 +49,8 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
     setEmailError(false);
     setPasswordError(false);
     setOccupationError(false);
+    setDuplicationError(false);
   };
-
-  type OccupationType = {
-    id: string;
-    name: string;
-  };
-
-  useEffect(() => {
-    const GetOccupationsRequestURL = 'http://localhost:8080/occupations';
-
-    const GetOccupationsRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    };
-
-    axios
-      .get(GetOccupationsRequestURL, {
-        headers: GetOccupationsRequestHeaders,
-      })
-      .then((res) => {
-        setOccupations(res.data);
-      });
-  }, [open]);
-
-  const postRequestHeaders = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  };
-  const postRequestUrl = 'http://localhost:8080/physicianInfo';
 
   const handleCreate = async () => {
     setNameError(name === '');
@@ -83,35 +63,30 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
       lastName != '' &&
       /\S+@\S+\.\S+/.test(email) &&
       password != '' &&
-      !nameError &&
-      !LastNameError &&
-      !emailError &&
-      !passwordError
+      !occupationError
     ) {
-      await axios.post(
-        postRequestUrl,
-        {
-          name: (name || '') + ' ' + (lastName || ''),
-          email: email || '',
-          password: password || '',
+      await dispatch(
+        createPhysician({
+          name: name + ' ' + lastName,
+          email: email,
+          password: password,
           occupationId: occupationId,
-        },
-        {
-          headers: postRequestHeaders,
-        },
-      );
-      setOpen(false);
-      setName('');
-      setLastName('');
-      setEmail('');
-      setPassword('');
-      setOccupationId('');
+        }),
+      )
+        .unwrap()
+        .then(() => {
+          dispatch(fetchPhysicians());
+          setOpen(false);
+        })
+        .catch(() => {
+          setDuplicationError(true);
+        });
     }
   };
 
-  const fixDuplicationError = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    setduplicationError(false);
+  const handleEmailErrors = (event: string) => {
+    setEmailError(!/\S+@\S+\.\S+/.test(event));
+    setDuplicationError(false);
   };
 
   return (
@@ -148,10 +123,8 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
               sx={Styles.textField}
               label='Email'
               id='new-patient-email-field'
-              onChange={fixDuplicationError}
-              onBlur={(e) =>
-                setEmailError(!/\S+@\S+\.\S+/.test(e.target.value))
-              }
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={(e) => handleEmailErrors(e.target.value)}
               error={emailError || duplicationError}
               helperText={
                 (emailError && <>Incorrect email format</>) ||

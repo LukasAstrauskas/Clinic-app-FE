@@ -10,6 +10,7 @@ import TimetablesContainer from '../../pages/timetables/TimetablesContainer';
 import BookAppointment from '../../pages/admin/BookAppointment';
 import PrivateRoutes from '../../routes/PrivateRoutes';
 import PatientContactInfo from '../../pages/users/PatientContactInfo';
+import AppointmentTabs from '../../pages/patient/AppointmentTabs';
 
 const Main = () => {
   return (
@@ -22,6 +23,7 @@ const Main = () => {
         <Route path={ROUTES.PATIENTS} element={<UserTabs />} />
         <Route path={ROUTES.TIMETABLE} element={<TimetablesContainer />} />
         <Route path={ROUTES.BOOKAPPOINTMENT} element={<BookAppointment />} />
+        <Route path={ROUTES.MANAGEAPPOINTMENTS} element={<AppointmentTabs />} />
         <Route path={ROUTES.PATIENTPROFILE} element={<PatientContactInfo />} />
       </Route>
     </Routes>

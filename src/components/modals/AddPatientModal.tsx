@@ -13,6 +13,8 @@ import {
 } from '../../store/slices/patient/patientSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
+import { isValidName, isValidLastName, isValidPassword } from '../utils';
+
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
@@ -26,7 +28,7 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState(false);
   const [nameError, setNameError] = useState(false);
-  const [LastNameError, setLastNameError] = useState(false);
+  const [lastNameError, setLastNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [duplicationError, setDuplicationError] = useState(false);
@@ -45,16 +47,13 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
   };
 
   const handleCreate = async () => {
-    setNameError(name === '');
-    setLastNameError(lastName === '');
     setEmailError(!/\S+@\S+\.\S+/.test(email));
-    setPasswordError(password === '');
 
     if (
-      name != '' &&
-      lastName != '' &&
+      !nameError &&
+      !lastNameError &&
       /\S+@\S+\.\S+/.test(email) &&
-      password != ''
+      !passwordError
     ) {
       await dispatch(
         createPatient({
@@ -74,9 +73,21 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
     }
   };
 
+  const handleNameErrors = (name: string) => {
+    !isValidName(name) ? setNameError(true) : setNameError(false);
+  };
+
+  const handleLastNameErrors = (name: string) => {
+    !isValidLastName(name) ? setLastNameError(true) : setLastNameError(false);
+  };
+
   const handleEmailErrors = (event: string) => {
     setEmailError(!/\S+@\S+\.\S+/.test(event));
     setDuplicationError(false);
+  };
+
+  const handlePasswordErrors = (name: string) => {
+    !isValidPassword(name) ? setPasswordError(true) : setPasswordError(false);
   };
 
   return (
@@ -88,19 +99,23 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
         <Box sx={Styles.box}>
           <TextField
             sx={Styles.textField}
-            onBlur={(e) => setNameError(e.target.value === '')}
+            onBlur={(e) => handleNameErrors(e.target.value)}
             onChange={(e) => setName(e.target.value)}
             label='First name'
             id='new-patient-name-field'
-            helperText={nameError && <>Name cannot be empty</>}
+            helperText={
+              nameError && <>First name length between 3 and 20 symbols</>
+            }
             error={nameError}
           />
           <TextField
             sx={Styles.textField}
-            onBlur={(e) => setLastNameError(e.target.value === '')}
+            onBlur={(e) => handleLastNameErrors(e.target.value)}
             onChange={(e) => setLastName(e.target.value)}
-            error={LastNameError}
-            helperText={LastNameError && <>Last name cannot be empty</>}
+            error={lastNameError}
+            helperText={
+              lastNameError && <>Last name length between 3 and 20 symbols</>
+            }
             id='new-patient-LastName-field'
             label='Last name'
             style={{ marginLeft: '20px' }}
@@ -122,10 +137,12 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
           />
           <TextField
             onChange={(e) => setPassword(e.target.value)}
-            onBlur={(e) => setPasswordError(e.target.value === '')}
+            onBlur={(e) => handlePasswordErrors(e.target.value)}
             id='new-patient-password-field'
             type={showPassword ? 'text' : 'password'}
-            helperText={passwordError && <>password cannot be empty</>}
+            helperText={
+              passwordError && <>Password length between 8 and 20 symbols</>
+            }
             error={passwordError}
             label='Temporary password'
             sx={Styles.textField}

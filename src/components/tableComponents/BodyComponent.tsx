@@ -37,8 +37,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { tableRowSX } from '../../pages/physicians/PhysicianTable';
 interface Props {
   user: UniversalUser[];
-  refresh: boolean;
-  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   more: boolean;
   setMore: React.Dispatch<React.SetStateAction<boolean>>;
   type: string;

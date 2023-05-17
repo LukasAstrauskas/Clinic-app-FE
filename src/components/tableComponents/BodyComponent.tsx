@@ -1,40 +1,43 @@
 import React, { FC, useState, useEffect, useRef } from 'react';
-import { TableBody, TableRow, TableCell, Table } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { Table, TableBody, TableCell, TableRow } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import Typography from '@mui/material/Typography';
+import { grey } from '@mui/material/colors';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../../store/types';
 import { UniversalUser } from '../../model/Model';
+import { tableRowSX } from '../../pages/physicians/PhysicianTable';
 import {
-  selectUserSize,
-  fetchAdminAmount,
-  fetchPatientAmount,
-  fetchPhysicianAmount,
-  fetchPatientsByPhysicianAmount,
-} from '../../store/slices/userSize/userSizeSlice';
+  deleteAdmin,
+  fetchAdmins,
+  fetchMoreAdmins,
+  resetAdminData,
+} from '../../store/slices/admin/adminSlice';
 import {
   deletePatient,
   fetchMorePatients,
   fetchMorePatientsByPhysicianId,
   fetchPatients,
   fetchPatientsByPhysicianId,
+  resetPatientData,
 } from '../../store/slices/patient/patientSlice';
-import {
-  deleteAdmin,
-  fetchAdmins,
-  fetchMoreAdmins,
-} from '../../store/slices/admin/adminSlice';
 import {
   deletePhysician,
   fetchMorePhysicians,
   fetchPhysicians,
+  resetPhysicianData,
 } from '../../store/slices/physician/physicianSlice';
+import {
+  fetchAdminAmount,
+  fetchPatientAmount,
+  fetchPatientsByPhysicianAmount,
+  fetchPhysicianAmount,
+  selectUserSize,
+} from '../../store/slices/userSize/userSizeSlice';
+import { AppDispatch } from '../../store/types';
 import EditUserModal from '../modals/EditUserModal';
-import { grey } from '@mui/material/colors';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { tableRowSX } from '../../pages/physicians/PhysicianTable';
 interface Props {
   user: UniversalUser[];
   more: boolean;
@@ -72,15 +75,21 @@ const TableBodyComponent: FC<Props> = ({
     setOpen(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (type === 'patient') {
       dispatch(deletePatient(id));
+      await dispatch(resetPatientData());
+      dispatch(fetchPatientAmount());
     }
     if (type === 'physician') {
       dispatch(deletePhysician(id));
+      await dispatch(resetPhysicianData());
+      dispatch(fetchPhysicianAmount());
     }
     if (type === 'admin') {
       dispatch(deleteAdmin(id));
+      await dispatch(resetAdminData());
+      dispatch(fetchAdminAmount());
     }
     setUsers(users.filter((user) => user != id));
   };
@@ -110,8 +119,7 @@ const TableBodyComponent: FC<Props> = ({
       }
     }
   };
-
-  useEffect(() => {
+  const getSize = () => {
     if (loggedInUserType === 'physician') {
       dispatch(fetchPatientsByPhysicianAmount({ id: loggedInUserId }));
     } else {
@@ -127,6 +135,10 @@ const TableBodyComponent: FC<Props> = ({
           break;
       }
     }
+  };
+
+  useEffect(() => {
+    getSize();
   }, []);
 
   useEffect(() => {

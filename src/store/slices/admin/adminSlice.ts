@@ -37,6 +37,13 @@ export const fetchAdmins = createAsyncThunk<User[]>(
   },
 );
 
+export const resetAdminData = createAsyncThunk(
+  'user/reset-admins',
+  async () => {
+    return [];
+  },
+);
+
 export const fetchMoreAdmins = createAsyncThunk(
   'user/fetchMoreAdmins',
   async (offset: number) => {
@@ -125,6 +132,9 @@ export const adminSlice = createSlice({
       .addCase(searchAdmin.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
+      })
+      .addCase(resetAdminData.fulfilled, (state, action) => {
+        state.admins = action.payload;
       });
   },
 });

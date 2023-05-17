@@ -7,13 +7,19 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { Visibility } from '@mui/icons-material';
 import Styles from '../styles/UserManagmentStyles';
-import axios from 'axios';
+import {
+  createPatient,
+  fetchPatients,
+} from '../../store/slices/patient/patientSlice';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/types';
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
 }
 
 const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [name, setName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -23,13 +29,7 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
   const [LastNameError, setLastNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [duplicationError, setduplicationError] = useState(false);
-
-  const postRequestHeaders = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  };
-  const postRequestUrl = 'http://localhost:8080/user/patients';
+  const [duplicationError, setDuplicationError] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -41,11 +41,7 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
     setLastNameError(false);
     setEmailError(false);
     setPasswordError(false);
-  };
-
-  const fixDuplicationError = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    setduplicationError(false);
+    setDuplicationError(false);
   };
 
   const handleCreate = async () => {
@@ -53,41 +49,41 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
     setLastNameError(lastName === '');
     setEmailError(!/\S+@\S+\.\S+/.test(email));
     setPasswordError(password === '');
+
     if (
       name != '' &&
       lastName != '' &&
       /\S+@\S+\.\S+/.test(email) &&
-      password != '' &&
-      !nameError &&
-      !LastNameError &&
-      !emailError &&
-      !passwordError
+      password != ''
     ) {
-      await axios.post(
-        postRequestUrl,
-        {
-          name: (name || '') + ' ' + (lastName || ''),
-          email: email || '',
-          password: password || '',
-        },
-        {
-          headers: postRequestHeaders,
-        },
-      );
-
-      setOpen(false);
-      setName('');
-      setLastName('');
-      setEmail('');
-      setPassword('');
+      await dispatch(
+        createPatient({
+          name: name + ' ' + lastName,
+          email: email,
+          password: password,
+        }),
+      )
+        .unwrap()
+        .then(() => {
+          dispatch(fetchPatients());
+          setOpen(false);
+        })
+        .catch(() => {
+          setDuplicationError(true);
+        });
     }
+  };
+
+  const handleEmailErrors = (event: string) => {
+    setEmailError(!/\S+@\S+\.\S+/.test(event));
+    setDuplicationError(false);
   };
 
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={Styles.modal}>
         <Typography variant='h5' align='center' sx={Styles.typography}>
-          Add new patients
+          Add new patient
         </Typography>
         <Box sx={Styles.box}>
           <TextField
@@ -116,8 +112,8 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
             sx={Styles.textField}
             label='Email'
             id='new-patient-email-field'
-            onChange={fixDuplicationError}
-            onBlur={(e) => setEmailError(!/\S+@\S+\.\S+/.test(e.target.value))}
+            onChange={(e) => setEmail(e.target.value)}
+            onBlur={(e) => handleEmailErrors(e.target.value)}
             error={emailError || duplicationError}
             helperText={
               (emailError && <>Incorrect email format</>) ||

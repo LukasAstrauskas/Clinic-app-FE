@@ -7,13 +7,16 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { Visibility } from '@mui/icons-material';
 import Styles from '../styles/UserManagmentStyles';
-import axios from 'axios';
+import { AppDispatch } from '../../store/types';
+import { useDispatch } from 'react-redux';
+import { createAdmin, fetchAdmins } from '../../store/slices/admin/adminSlice';
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
 }
 
 const AddAdminModal: FC<Props> = ({ setOpen, open }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [name, setName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -23,13 +26,7 @@ const AddAdminModal: FC<Props> = ({ setOpen, open }) => {
   const [LastNameError, setLastNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [duplicationError, setduplicationError] = useState(false);
-
-  const postRequestHeaders = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  };
-  const postRequestUrl = 'http://localhost:8080/user/admins';
+  const [duplicationError, setDuplicationError] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -41,11 +38,7 @@ const AddAdminModal: FC<Props> = ({ setOpen, open }) => {
     setLastNameError(false);
     setEmailError(false);
     setPasswordError(false);
-  };
-
-  const fixDuplicationError = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    setduplicationError(false);
+    setDuplicationError(false);
   };
 
   const handleCreate = async () => {
@@ -57,37 +50,36 @@ const AddAdminModal: FC<Props> = ({ setOpen, open }) => {
       name != '' &&
       lastName != '' &&
       /\S+@\S+\.\S+/.test(email) &&
-      password != '' &&
-      !nameError &&
-      !LastNameError &&
-      !emailError &&
-      !passwordError
+      password != ''
     ) {
-      await axios.post(
-        postRequestUrl,
-        {
-          name: (name || '') + ' ' + (lastName || ''),
-          email: email || '',
-          password: password || '',
-        },
-        {
-          headers: postRequestHeaders,
-        },
-      );
-
-      setOpen(false);
-      setName('');
-      setLastName('');
-      setEmail('');
-      setPassword('');
+      await dispatch(
+        createAdmin({
+          name: name + ' ' + lastName,
+          email: email,
+          password: password,
+        }),
+      )
+        .unwrap()
+        .then(() => {
+          dispatch(fetchAdmins());
+          setOpen(false);
+        })
+        .catch(() => {
+          setDuplicationError(true);
+        });
     }
+  };
+
+  const handleEmailErrors = (event: string) => {
+    setEmailError(!/\S+@\S+\.\S+/.test(event));
+    setDuplicationError(false);
   };
 
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={Styles.modal}>
         <Typography sx={Styles.typography} variant='h5' align='center'>
-          Add new admins
+          Add new admin
         </Typography>
         <Box sx={Styles.box}>
           <TextField
@@ -116,8 +108,8 @@ const AddAdminModal: FC<Props> = ({ setOpen, open }) => {
             sx={Styles.textField}
             label='Email'
             id='new-admin-email-field'
-            onChange={fixDuplicationError}
-            onBlur={(e) => setEmailError(!/\S+@\S+\.\S+/.test(e.target.value))}
+            onChange={(e) => setEmail(e.target.value)}
+            onBlur={(e) => handleEmailErrors(e.target.value)}
             error={emailError || duplicationError}
             helperText={
               (emailError && <>Incorrect email format</>) ||

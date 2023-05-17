@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { UniversalUser, User } from '../../../model/Model';
+import { CreateUserDto, UniversalUser, User } from '../../../model/Model';
 import {
   ADMINS_URL,
   ADMIN_SEARCH_URL,
@@ -21,11 +21,26 @@ const initialState: AdminState = {
   error: null,
 };
 
+export const createAdmin = createAsyncThunk(
+  'user/createAdmin',
+  async (requestData: CreateUserDto) => {
+    const response = await axios.post(`${ADMINS_URL}`, requestData);
+    return response.data;
+  },
+);
+
 export const fetchAdmins = createAsyncThunk<User[]>(
   'user/fetchAdmins',
   async () => {
     const response = await axios.get<User[]>(ADMINS_URL);
     return response.data;
+  },
+);
+
+export const resetAdminData = createAsyncThunk(
+  'user/reset-admins',
+  async () => {
+    return [];
   },
 );
 
@@ -61,6 +76,18 @@ export const adminSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(createAdmin.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(createAdmin.fulfilled, (state, action: PayloadAction<User>) => {
+        state.isLoading = false;
+        state.admins.push(action.payload);
+      })
+      .addCase(createAdmin.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Something went wrong';
+      })
       .addCase(fetchAdmins.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -105,6 +132,9 @@ export const adminSlice = createSlice({
       .addCase(searchAdmin.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
+      })
+      .addCase(resetAdminData.fulfilled, (state, action) => {
+        state.admins = action.payload;
       });
   },
 });

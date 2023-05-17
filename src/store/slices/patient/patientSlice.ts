@@ -6,6 +6,7 @@ import {
   UniversalUser,
   User,
   PatientInfo,
+  CreateUserDto,
 } from '../../../model/Model';
 import {
   BASE_PATIENTS_URL,
@@ -39,6 +40,14 @@ const initialState: PatientsState = {
   isLoading: false,
   error: null,
 };
+
+export const createPatient = createAsyncThunk(
+  'patients/createPatient',
+  async (requestData: CreateUserDto) => {
+    const response = await axios.post(`${PATIENTS_URL}`, requestData);
+    return response.data;
+  },
+);
 
 export const deleteAppointment = createAsyncThunk(
   'patients/patient-cancel-appointment',
@@ -88,6 +97,13 @@ export const fetchPatients = createAsyncThunk<User[]>(
     const response = await axios.get<User[]>(PATIENTS_URL);
 
     return response.data;
+  },
+);
+
+export const resetPatientData = createAsyncThunk(
+  'patient/reset-store',
+  async () => {
+    return [];
   },
 );
 
@@ -186,6 +202,21 @@ export const patientSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(createPatient.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(
+        createPatient.fulfilled,
+        (state, action: PayloadAction<User>) => {
+          state.isLoading = false;
+          state.patients.push(action.payload);
+        },
+      )
+      .addCase(createPatient.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Something went wrong';
+      })
       .addCase(fetchPatients.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -321,6 +352,9 @@ export const patientSlice = createSlice({
       .addCase(updatePatientInfo.fulfilled, (state, action) => {
         state.isLoading = false;
         state.additionalInfo = action.payload;
+      })
+      .addCase(resetPatientData.fulfilled, (state, action) => {
+        state.patients = action.payload;
       });
   },
 });

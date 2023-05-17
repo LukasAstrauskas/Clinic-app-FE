@@ -22,7 +22,6 @@ export const Admins = () => {
   const admins = useSelector(selectAdmin);
   const [open, setOpen] = useState<boolean>(false);
   const [more, setMore] = useState<boolean>(true);
-  const [refresh, setRefresh] = useState<boolean>(false);
   const [isSearch, setIsSearch] = useState(false);
 
   const handleOpen = () => {
@@ -39,7 +38,6 @@ export const Admins = () => {
     } else {
       setIsSearch(false);
       dispatch(fetchAdmins());
-      setRefresh(true);
     }
   };
 
@@ -88,8 +86,6 @@ export const Admins = () => {
               type='admin'
               more={more}
               setMore={setMore}
-              setRefresh={setRefresh}
-              refresh={refresh}
               user={admins}
               isSearch={isSearch}
             />

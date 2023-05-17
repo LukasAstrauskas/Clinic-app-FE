@@ -3,6 +3,7 @@ import { Box, Button, Modal, Stack } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import AlertModal from './AlertModal';
 import useToggle from '../../hooks/useToggle';
+import Styles from '../styles/UserManagmentStyles';
 
 const style = {
   position: 'absolute' as const,
@@ -72,10 +73,18 @@ const TimeslotSetDateModal = ({ openModal, closeModal, setDate }: Props) => {
             }}
           />
           <Stack direction='row' spacing={2} sx={{ marginTop: 2 }}>
-            <Button variant='contained' onClick={handleDateSubmit}>
+            <Button
+              variant='contained'
+              onClick={handleDateSubmit}
+              sx={Styles.createButton}
+            >
               Choose time
             </Button>
-            <Button variant='contained' onClick={handleCloseModal}>
+            <Button
+              variant='contained'
+              onClick={handleDateSubmit}
+              sx={Styles.createButton}
+            >
               Cancel
             </Button>
           </Stack>

@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useRef } from 'react';
 import { TableBody, TableRow, TableCell, Table } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
@@ -66,6 +66,7 @@ const TableBodyComponent: FC<Props> = ({
   const loggedInUserId = sessionStorage.getItem('userId');
   const loggedInUserType = sessionStorage.getItem('type');
   const [refresh, setRefresh] = useState(false);
+  const scrollContainerRef = useRef<any>(null);
 
   const handleOpen = () => {
     setOpen(true);
@@ -129,6 +130,7 @@ const TableBodyComponent: FC<Props> = ({
   }, []);
 
   useEffect(() => {
+    scrollContainerRef.current.scrollTo(0, 0);
     if (loggedInUserType === 'physician') {
       dispatch(fetchPatientsByPhysicianId({ id: loggedInUserId }));
     } else {
@@ -148,6 +150,7 @@ const TableBodyComponent: FC<Props> = ({
 
   return (
     <TableBody
+      ref={scrollContainerRef}
       id='scrollBox'
       style={{
         maxHeight: 400,

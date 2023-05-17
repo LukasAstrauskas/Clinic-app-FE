@@ -51,6 +51,7 @@ export interface PhyNameOccupation {
 export interface User {
   id: string;
   name: string;
+  password: string;
   email: string;
   type: string;
 }
@@ -109,7 +110,6 @@ export type Physician = {
   id: string;
   name: string;
   email: string;
-  password: string;
   type: string;
   occupation: {
     id: string;

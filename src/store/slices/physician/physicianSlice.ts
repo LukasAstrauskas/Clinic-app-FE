@@ -67,6 +67,13 @@ export const fetchPhysicians = createAsyncThunk(
   },
 );
 
+export const resetPhysicianData = createAsyncThunk(
+  'user/reset-physcians',
+  async () => {
+    return [];
+  },
+);
+
 export const fetchMorePhysicians = createAsyncThunk(
   'user/fetchMorePhysicians',
   async (offset: number) => {
@@ -177,6 +184,9 @@ export const physicianSlice = createSlice({
       .addCase(searchPhysician.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
+      })
+      .addCase(resetPhysicianData.fulfilled, (state, action) => {
+        state.physicians = action.payload;
       });
   },
 });

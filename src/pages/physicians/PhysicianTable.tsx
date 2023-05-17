@@ -30,9 +30,9 @@ type Props = {
 
 export const tableRowSX = (isSelected: boolean) => {
   return {
-    backgroundColor: isSelected ? '#ff9e80 !important' : 'none',
+    backgroundColor: isSelected ? '#f5cec2 !important' : 'none',
     '&:hover': {
-      backgroundColor: '#ff9e80 !important',
+      backgroundColor: '#f5cec2 !important',
     },
     cursor: 'pointer',
   };

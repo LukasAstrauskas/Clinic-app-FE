@@ -100,6 +100,13 @@ export const fetchPatients = createAsyncThunk<User[]>(
   },
 );
 
+export const resetPatientData = createAsyncThunk(
+  'patient/reset-store',
+  async () => {
+    return [];
+  },
+);
+
 export const fetchMorePatients = createAsyncThunk(
   'patients/fetchMorePatients',
   async (offset: number) => {
@@ -345,6 +352,9 @@ export const patientSlice = createSlice({
       .addCase(updatePatientInfo.fulfilled, (state, action) => {
         state.isLoading = false;
         state.additionalInfo = action.payload;
+      })
+      .addCase(resetPatientData.fulfilled, (state, action) => {
+        state.patients = action.payload;
       });
   },
 });

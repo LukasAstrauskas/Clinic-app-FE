@@ -125,6 +125,13 @@ export type PhysicianDto = {
   occupationId: string;
 };
 
+export type CreateUserDto = {
+  name: string;
+  email: string;
+  password: string;
+  occupationId?: string;
+};
+
 export interface Appointment {
   physicianId: string;
   date: string;

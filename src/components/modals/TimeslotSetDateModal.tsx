@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Button, Modal } from '@mui/material';
+import { Box, Button, Modal, Stack } from '@mui/material';
 import TextField from '@mui/material/TextField';
+import AlertModal from './AlertModal';
+import useToggle from '../../hooks/useToggle';
 
 const style = {
   position: 'absolute' as const,
@@ -21,28 +23,39 @@ type Props = {
 };
 
 const TimeslotSetDateModal = ({ openModal, closeModal, setDate }: Props) => {
-  const onModalClose = () => {
-    closeModal();
-  };
-
   const [selectedDate, setSelectedDate] = useState('');
+  const [openAlert, toggleAlert] = useToggle();
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value >= Date()) {
-      setSelectedDate(event.target.value);
-    }
+    setSelectedDate(event.target.value);
   };
 
   const handleDateSubmit = () => {
-    setDate(selectedDate);
+    const currentDate = new Date();
+    const maxDate = new Date();
+    const selectedDateObj = new Date(selectedDate);
+    maxDate.setMonth(currentDate.getMonth() + 6);
+
+    if (selectedDateObj >= currentDate && selectedDateObj <= maxDate) {
+      setDate(selectedDate);
+      closeModal();
+    } else {
+      toggleAlert();
+    }
+    setSelectedDate('');
+  };
+
+  const handleCloseModal = () => {
     closeModal();
+    setDate('');
+    setSelectedDate('');
   };
 
   return (
     <>
       <Modal
         open={openModal}
-        onClose={onModalClose}
+        onClose={handleCloseModal}
         aria-labelledby='modal-title'
         aria-describedby='modal-description'
       >
@@ -52,19 +65,28 @@ const TimeslotSetDateModal = ({ openModal, closeModal, setDate }: Props) => {
             id='date-picker'
             label='Date'
             type='date'
-            value={selectedDate}
             onChange={handleDateChange}
             sx={{ width: '100%' }}
             InputLabelProps={{
               shrink: true,
             }}
           />
-          <Button variant='contained' onClick={handleDateSubmit}>
-            Submit
-          </Button>
+          <Stack direction='row' spacing={2} sx={{ marginTop: 2 }}>
+            <Button variant='contained' onClick={handleDateSubmit}>
+              Choose time
+            </Button>
+            <Button variant='contained' onClick={handleCloseModal}>
+              Cancel
+            </Button>
+          </Stack>
         </Box>
       </Modal>
-      ;
+      <AlertModal
+        open={openAlert}
+        onClose={toggleAlert}
+        message='Please choose a date within the next 6 months.'
+        closeMsg='Ok, close.'
+      />
     </>
   );
 };

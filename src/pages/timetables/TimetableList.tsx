@@ -35,11 +35,11 @@ type Props = {
 const TimetableList = ({ physicianId }: Props) => {
   const deleteMessage = 'Are you sure you want to delete this timeslot?';
   const [openModal, setOpenModal] = useToggle();
-  const [openModalNewDate, setOpenModalNewDate] = useToggle();
-  const [openSetDateModal, setOpenSetDateModal] = useToggle();
+  const [openNewDateTimeModal, setOpenNewDateTimeModal] = useToggle();
+  const [openNewDateModal, setOpenNewDateModal] = useToggle();
   const [openConfirm, setOpenConfirm] = useToggle();
   const [openAlert, toggleAlert] = useToggle();
-  const [loadData, setloadData] = useToggle();
+  const [loadData, setLoadData] = useToggle();
   const type = useSelector(selectType);
   const dispatch = useDispatch<AppDispatch>();
   const loggedInUserId = useSelector(selectId);
@@ -62,8 +62,8 @@ const TimetableList = ({ physicianId }: Props) => {
   };
 
   const handleNewDateButton = () => {
-    setOpenSetDateModal();
-    setOpenModalNewDate();
+    setOpenNewDateModal();
+    if (!openNewDateTimeModal) setOpenNewDateTimeModal();
   };
 
   const deleteButtonAction = (
@@ -81,7 +81,7 @@ const TimetableList = ({ physicianId }: Props) => {
 
   const handleDeleteTimeslot = (): void => {
     dispatch(deleteTimeslot(timeslot));
-    setloadData();
+    setLoadData();
     setOpenConfirm();
   };
 
@@ -98,7 +98,7 @@ const TimetableList = ({ physicianId }: Props) => {
       patientId: patientId,
     };
     dispatch(deletePatientFromTimeslot(timeslot));
-    setloadData();
+    setLoadData();
   };
 
   const handleChipClick = (
@@ -298,21 +298,21 @@ const TimetableList = ({ physicianId }: Props) => {
         </Table>
       </TableContainer>
       <TimeslotSetDateModal
-        openModal={openSetDateModal}
-        closeModal={setOpenSetDateModal}
+        openModal={openNewDateModal}
+        closeModal={setOpenNewDateModal}
         setDate={setDate}
       />
       <TimeslotModal
         openModal={openModal}
         closeModal={setOpenModal}
-        loadData={setloadData}
+        loadData={setLoadData}
         id={physicianId}
         date={timeslot.date}
       />
       <TimeslotModal
-        openModal={openModalNewDate && !openSetDateModal}
-        closeModal={setOpenModalNewDate}
-        loadData={setloadData}
+        openModal={openNewDateTimeModal && !openNewDateModal && date !== ''}
+        closeModal={setOpenNewDateTimeModal}
+        loadData={setLoadData}
         id={physicianId}
         date={date}
       />

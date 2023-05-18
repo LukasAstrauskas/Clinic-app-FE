@@ -1,10 +1,10 @@
+import React, { FC, useState, useEffect, useRef } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Table, TableBody, TableCell, TableRow } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { grey } from '@mui/material/colors';
-import React, { FC, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { UniversalUser } from '../../model/Model';
@@ -68,6 +68,8 @@ const TableBodyComponent: FC<Props> = ({
   const [users, setUsers] = useState([]);
   const loggedInUserId = sessionStorage.getItem('userId');
   const loggedInUserType = sessionStorage.getItem('type');
+  const [refresh, setRefresh] = useState(false);
+  const scrollContainerRef = useRef<any>(null);
 
   const handleOpen = () => {
     setOpen(true);
@@ -140,6 +142,7 @@ const TableBodyComponent: FC<Props> = ({
   }, []);
 
   useEffect(() => {
+    scrollContainerRef.current.scrollTo(0, 0);
     if (loggedInUserType === 'physician') {
       dispatch(fetchPatientsByPhysicianId({ id: loggedInUserId }));
     } else {
@@ -155,10 +158,11 @@ const TableBodyComponent: FC<Props> = ({
           break;
       }
     }
-  }, [open, users]);
+  }, [users, refresh]);
 
   return (
     <TableBody
+      ref={scrollContainerRef}
       id='scrollBox'
       style={{
         maxHeight: 400,
@@ -186,6 +190,8 @@ const TableBodyComponent: FC<Props> = ({
               setOpen={setOpen}
               open={open}
               selectedId={selectedId}
+              refresh={refresh}
+              setRefresh={setRefresh}
             />
             <Table>
               <TableBody>

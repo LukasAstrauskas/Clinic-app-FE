@@ -68,11 +68,8 @@ const TimeslotModal = ({
     e.preventDefault();
     if (selectedDay > currentDay) {
       saveTimeSlot();
-    } else if (selectedDay === currentDay && selectedHour > currentHour) {
-      saveTimeSlot();
-    } else {
-      setTimeError(true);
     }
+    setTimeError(true);
   };
 
   const onModalClose = () => {

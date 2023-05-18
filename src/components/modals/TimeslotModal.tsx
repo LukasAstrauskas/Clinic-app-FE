@@ -46,7 +46,7 @@ const TimeslotModal = ({
   useEffect(() => {
     setTime(dayjs(date).startOf('day'));
     setTimeError(false);
-  }, [date, openModal]);
+  }, [openModal]);
 
   const saveTimeSlot = () => {
     if (time !== null && selectedHour >= 8 && selectedHour < 20) {

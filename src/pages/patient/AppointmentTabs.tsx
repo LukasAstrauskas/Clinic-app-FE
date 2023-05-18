@@ -17,7 +17,7 @@ const AppointmentTabs = () => {
   const theme = createTheme({
     palette: {
       secondary: {
-        main: '#000000',
+        main: '#25ced1',
       },
     },
   });
@@ -51,8 +51,8 @@ const AppointmentTabs = () => {
               '& button:focus': { backgroundColor: 'white' },
             }}
           >
-            <Tab label='Upcoming' sx={{ fontWeight: '600' }} />
-            <Tab label='Past' sx={{ fontWeight: '600' }} />
+            <Tab label='Upcoming' sx={{ fontWeight: '400' }} />
+            <Tab label='Past' sx={{ fontWeight: '400' }} />
           </Tabs>
         </Box>
 

@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import Timechip from './Timechip';
 import { Chip, Stack } from '@mui/material';
 import TimeslotModal from '../../components/modals/TimeslotModal';
+import TimeslotSetDateModal from '../../components/modals/TimeslotSetDateModal';
 import { Timeslot, Timeslots } from '../../model/Model';
 import { getWeekDay } from '../../components/utils';
 import AlertModal from '../../components/modals/AlertModal';
@@ -34,12 +35,15 @@ type Props = {
 const TimetableList = ({ physicianId }: Props) => {
   const deleteMessage = 'Are you sure you want to delete this timeslot?';
   const [openModal, setOpenModal] = useToggle();
+  const [openNewDateTimeModal, setOpenNewDateTimeModal] = useToggle();
+  const [openNewDateModal, setOpenNewDateModal] = useToggle();
   const [openConfirm, setOpenConfirm] = useToggle();
   const [openAlert, toggleAlert] = useToggle();
-  const [loadData, setloadData] = useToggle();
+  const [loadData, setLoadData] = useToggle();
   const type = useSelector(selectType);
   const dispatch = useDispatch<AppDispatch>();
   const loggedInUserId = useSelector(selectId);
+  const [date, setDate] = useState<string>('');
 
   const [timeslot, setTimeslot] = useState<Timeslot>({
     physicianId: '',
@@ -54,6 +58,12 @@ const TimetableList = ({ physicianId }: Props) => {
   const handleOpenModal = (date: string): void => {
     setOpenModal();
     setTimeslot({ ...timeslot, date: date, time: '' });
+    setDate('');
+  };
+
+  const handleNewDateButton = () => {
+    setOpenNewDateModal();
+    if (!openNewDateTimeModal) setOpenNewDateTimeModal();
   };
 
   const deleteButtonAction = (
@@ -71,7 +81,7 @@ const TimetableList = ({ physicianId }: Props) => {
 
   const handleDeleteTimeslot = (): void => {
     dispatch(deleteTimeslot(timeslot));
-    setloadData();
+    setLoadData();
     setOpenConfirm();
   };
 
@@ -88,7 +98,7 @@ const TimetableList = ({ physicianId }: Props) => {
       patientId: patientId,
     };
     dispatch(deletePatientFromTimeslot(timeslot));
-    setloadData();
+    setLoadData();
   };
 
   const handleChipClick = (
@@ -158,6 +168,18 @@ const TimetableList = ({ physicianId }: Props) => {
     );
   };
 
+  const renderAddNewDateButton = () => {
+    return (
+      <Chip
+        label='+ New Date'
+        sx={{ fontWeight: 'normal', backgroundColor: teal['A400'] }}
+        onClick={() => {
+          handleNewDateButton();
+        }}
+      />
+    );
+  };
+
   return (
     <>
       <TableContainer component={Paper} sx={{ marginBottom: 5 }}>
@@ -191,7 +213,16 @@ const TimetableList = ({ physicianId }: Props) => {
                 sx={{ fontWeight: 'bold', backgroundColor: grey[200] }}
                 align='left'
               >
-                Time
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  Time
+                  {renderAddNewDateButton()}
+                </div>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -266,12 +297,24 @@ const TimetableList = ({ physicianId }: Props) => {
           </TableBody>
         </Table>
       </TableContainer>
+      <TimeslotSetDateModal
+        openModal={openNewDateModal}
+        closeModal={setOpenNewDateModal}
+        setDate={setDate}
+      />
       <TimeslotModal
         openModal={openModal}
         closeModal={setOpenModal}
-        loadData={setloadData}
+        loadData={setLoadData}
         id={physicianId}
         date={timeslot.date}
+      />
+      <TimeslotModal
+        openModal={openNewDateTimeModal && !openNewDateModal && date !== ''}
+        closeModal={setOpenNewDateTimeModal}
+        loadData={setLoadData}
+        id={physicianId}
+        date={date}
       />
       <AlertModal
         open={openConfirm}

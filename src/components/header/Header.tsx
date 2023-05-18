@@ -106,7 +106,7 @@ const Header = () => {
             alt='clinic-logo'
             className={styles.clinicLogo}
           />
-          <h1>The Clinic</h1>
+          <h1>G-Unit Clinic</h1>
         </div>
       </Link>
 

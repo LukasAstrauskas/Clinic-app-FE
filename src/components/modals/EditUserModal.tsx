@@ -6,7 +6,6 @@ import { Modal } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { isValidName, isValidEmail, isValidPassword } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
-import { EditUser } from '../../model/Model';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import {
@@ -24,7 +23,21 @@ import {
 } from '../../store/slices/physician/editedPhysicianSlice';
 import { selectPhysician } from '../../store/slices/physician/physicianSlice';
 
-const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
+interface Props {
+  setOpen: (open: boolean) => void;
+  open: boolean;
+  selectedId: string;
+  refresh: boolean;
+  setRefresh: (refresh: boolean) => void;
+}
+
+const EditUserModal = ({
+  open,
+  setOpen,
+  selectedId: id,
+  setRefresh,
+  refresh,
+}: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const selectedUser = useSelector(selectUser);
   const selectedPhysician = useSelector(selectPhysician);
@@ -86,6 +99,7 @@ const EditUserModal: FC<EditUser> = ({ open, setOpen, selectedId: id }) => {
         };
         dispatch(updatePhysician(updatedPhysician));
       }
+      setRefresh(!refresh);
       setOpen(false);
     }
   };

@@ -47,6 +47,12 @@ const Styles = {
       bgcolor: '#25ced1',
     },
   },
+  loginButton: {
+    bgcolor: '#25ced1',
+    '&:hover': {
+      bgcolor: '#25ced1',
+    },
+  },
   searchField: {
     width: '340px',
     marginLeft: 3,

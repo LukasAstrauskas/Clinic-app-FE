@@ -1,12 +1,11 @@
 import LockIcon from '@mui/icons-material/Lock';
-import { TextField, styled } from '@mui/material';
+import { TextField } from '@mui/material';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 
 import React, { useState } from 'react';
 import styles from './Login.module.css';
-import { isValidEmail } from '../../components/utils';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
 import { useDispatch } from 'react-redux';
@@ -16,9 +15,8 @@ import { fetchPatientInfo } from '../../store/slices/patient/patientSlice';
 import Styles from '../../components/styles/UserManagmentStyles';
 
 const Login = () => {
-  const [errorAlertOpen, setSignInError] = useState(false);
+  const [errorAlertOpen, seterrorAlertOpen] = useState(false);
   const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
@@ -26,22 +24,18 @@ const Login = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      const response = await dispatch(login({ email, password }));
-      const userId = sessionStorage.getItem('userId');
-      if (response.payload && response.payload.type) {
-        navigate(ROUTES.HOME);
-        if (sessionStorage.getItem('type') === 'patient' && userId !== null) {
-          await dispatch(fetchPatientInfo(userId));
-        }
+
+    const response = await dispatch(login({ email, password }));
+    const userId = sessionStorage.getItem('userId');
+
+    seterrorAlertOpen(true);
+    if (response.payload && response.payload.type) {
+      navigate(ROUTES.HOME);
+      if (sessionStorage.getItem('type') === 'patient' && userId !== null) {
+        await dispatch(fetchPatientInfo(userId));
       }
-    } catch (error) {
-      setSignInError(true);
     }
   };
-
-  const handleEmailCheck = () =>
-    setEmailError(!isValidEmail(email) ? 'Email is invalid' : '');
 
   return (
     <div className={styles.login}>
@@ -57,9 +51,6 @@ const Login = () => {
               placeholder='Enter email'
               fullWidth
               margin='normal'
-              helperText={emailError === '' ? '' : emailError}
-              error={emailError !== ''}
-              onBlur={handleEmailCheck}
               value={email || null}
               onChange={(e) => setEmail(e.target.value)}
               sx={{ marginBottom: '15px' }}
@@ -72,6 +63,15 @@ const Login = () => {
               value={password || null}
               onChange={(e) => setPassword(e.target.value)}
             />
+            {errorAlertOpen && (
+              <Alert
+                severity='error'
+                sx={{ marginTop: 1 }}
+                onClose={() => seterrorAlertOpen(false)}
+              >
+                Wrong email or password.
+              </Alert>
+            )}
             <div className={styles.buttonContainer}>
               <Button
                 variant='contained'
@@ -84,11 +84,6 @@ const Login = () => {
             </div>
           </>
         </form>
-        {errorAlertOpen && (
-          <Alert severity='error' onClose={() => setSignInError(false)}>
-            Wrong email or password.
-          </Alert>
-        )}
       </Container>
     </div>
   );

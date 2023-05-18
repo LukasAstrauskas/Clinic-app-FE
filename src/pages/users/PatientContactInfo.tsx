@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import {
@@ -127,7 +127,6 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          // value={phone === '0' ? '' : phone}
           defaultValue={sessionStorage.getItem('phone')}
           helperText='Phone Number'
           onChange={(e) => setPhone(e.target.value)}

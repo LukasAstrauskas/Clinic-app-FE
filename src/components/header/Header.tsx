@@ -154,15 +154,13 @@ const Header = () => {
                           aria-labelledby='composition-button'
                           onKeyDown={handleListKeyDown}
                         >
-                          {sessionStorage.getItem('type') === 'patient' ? (
+                          {sessionStorage.getItem('type') === 'patient' && (
                             <NavLink
                               to={ROUTES.PATIENTPROFILE}
                               className={resolveLinkClass}
                             >
                               <MenuItem onClick={handleClose}>Profile</MenuItem>
                             </NavLink>
-                          ) : (
-                            <></>
                           )}
                           <NavLink
                             to={ROUTES.LOGIN}

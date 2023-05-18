@@ -6,17 +6,18 @@ import Alert from '@mui/material/Alert';
 
 import React, { useState } from 'react';
 import styles from './Login.module.css';
+import { isValidEmail } from '../../components/utils';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { login } from '../../store/slices/auth/authActions';
 import { fetchPatientInfo } from '../../store/slices/patient/patientSlice';
-import Styles from '../../components/styles/UserManagmentStyles';
 
 const Login = () => {
-  const [errorAlertOpen, seterrorAlertOpen] = useState(false);
+  const [errorAlertOpen, setSignInError] = useState(false);
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
@@ -24,18 +25,22 @@ const Login = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const response = await dispatch(login({ email, password }));
-    const userId = sessionStorage.getItem('userId');
-
-    seterrorAlertOpen(true);
-    if (response.payload && response.payload.type) {
-      navigate(ROUTES.HOME);
-      if (sessionStorage.getItem('type') === 'patient' && userId !== null) {
-        await dispatch(fetchPatientInfo(userId));
+    try {
+      const response = await dispatch(login({ email, password }));
+      const userId = sessionStorage.getItem('userId');
+      if (response.payload && response.payload.type) {
+        navigate(ROUTES.HOME);
+        if (sessionStorage.getItem('type') === 'patient' && userId !== null) {
+          await dispatch(fetchPatientInfo(userId));
+        }
       }
+    } catch (error) {
+      setSignInError(true);
     }
   };
+
+  const handleEmailCheck = () =>
+    setEmailError(!isValidEmail(email) ? 'Email is invalid' : '');
 
   return (
     <div className={styles.login}>
@@ -51,7 +56,11 @@ const Login = () => {
               placeholder='Enter email'
               fullWidth
               margin='normal'
-              value={email || null}
+              helperText={emailError === '' ? '' : emailError}
+              error={emailError !== ''}
+              onBlur={handleEmailCheck}
+              value={email}
+              autoComplete='off'
               onChange={(e) => setEmail(e.target.value)}
               sx={{ marginBottom: '15px' }}
             />
@@ -60,30 +69,22 @@ const Login = () => {
               placeholder='Enter password'
               fullWidth
               type='password'
-              value={password || null}
+              value={password}
+              autoComplete='off'
               onChange={(e) => setPassword(e.target.value)}
             />
-            {errorAlertOpen && (
-              <Alert
-                severity='error'
-                sx={{ marginTop: 1 }}
-                onClose={() => seterrorAlertOpen(false)}
-              >
-                Wrong email or password.
-              </Alert>
-            )}
             <div className={styles.buttonContainer}>
-              <Button
-                variant='contained'
-                type='submit'
-                size='large'
-                sx={Styles.loginButton}
-              >
+              <Button variant='contained' type='submit' size='large'>
                 SIGN IN
               </Button>
             </div>
           </>
         </form>
+        {errorAlertOpen && (
+          <Alert severity='error' onClose={() => setSignInError(false)}>
+            Wrong email or password.
+          </Alert>
+        )}
       </Container>
     </div>
   );

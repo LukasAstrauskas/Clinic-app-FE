@@ -46,9 +46,9 @@ export function isValidPassword(password: string) {
   );
 }
 
-export const timeInputIsValid = (time: string): boolean => {
-  return /^(0[6-9]|(1\d{1}))(:)([0-5]\d{1})$/.test(time);
-};
+export function isValidPasswordOrEmpty(password: string) {
+  return isValidPassword(password) || password.length === 0;
+}
 
 export const getWeekDay = (date: string): string => {
   const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

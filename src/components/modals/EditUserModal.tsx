@@ -1,10 +1,10 @@
-import React, { useState, useEffect, FC } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { Box } from '@mui/system';
 import { Modal } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { isValidName, isValidEmail, isValidPassword } from '../utils';
+import { isValidName, isValidEmail, isValidPasswordOrEmpty } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
@@ -49,7 +49,8 @@ const EditUserModal = ({
   const [password, setPassword] = useState('');
   const [type, setType] = useState('');
   const [emailError, setEmailError] = useState('');
-  const [nameError, setNameError] = useState('');
+  const [firstNameError, setFirstNameError] = useState('');
+  const [lastNameError, setLastNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [selectedOccupationId, setSelectedOccupationId] = useState('');
 
@@ -75,10 +76,18 @@ const EditUserModal = ({
     }
   };
 
-  const handleUpdateUserById = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
-
-    if (selectedUser) {
+  const handleUpdateUserById = () => {
+    if (selectedPhysician && type === 'physician') {
+      const updatedPhysician = {
+        id: selectedPhysician.id,
+        name: firstName + ' ' + lastName,
+        email,
+        type,
+        password,
+        occupationId: selectedOccupationId,
+      };
+      dispatch(updatePhysician(updatedPhysician));
+    } else if (selectedUser) {
       const updatedUser = {
         id: selectedUser.id,
         name: firstName + ' ' + lastName,
@@ -87,24 +96,22 @@ const EditUserModal = ({
         type,
       };
       dispatch(updateUser(updatedUser));
-
-      if (type === 'physician') {
-        const updatedPhysician = {
-          id: selectedUser.id,
-          name: firstName + ' ' + lastName,
-          email,
-          type,
-          password,
-          occupationId: selectedOccupationId,
-        };
-        dispatch(updatePhysician(updatedPhysician));
-      }
-      setRefresh(!refresh);
-      setOpen(false);
     }
+    setRefresh(!refresh);
+    handleClose();
   };
 
   const handleClose = () => {
+    setFirstName('');
+    setLastName('');
+    setEmail('');
+    setPassword('');
+
+    setFirstNameError('');
+    setLastNameError('');
+    setEmailError('');
+    setPasswordError('');
+
     setOpen(false);
   };
 
@@ -134,24 +141,37 @@ const EditUserModal = ({
     dispatch(fetchUserById(id));
   }, [type, open, dispatch]);
 
-  const handleEmailCheck = () => {
-    !isValidEmail(email)
-      ? setEmailError('Email is invalid')
-      : setEmailError('');
+  const handleEmailCheck = (email: string) => {
+    isValidEmail(email) ? setEmailError('') : setEmailError('Email is invalid');
   };
 
-  const handleNameCheck = (name: string) => {
-    !isValidName(name)
-      ? setNameError('Field can not be empty')
-      : setNameError('');
+  const handleFirstNameCheck = (name: string) => {
+    isValidName(name)
+      ? setFirstNameError('')
+      : setFirstNameError('Field can not be empty');
   };
 
-  const handlePasswordCheck = () => {
-    !isValidPassword(password)
-      ? setPasswordError(
+  const handleLastNameCheck = (name: string) => {
+    isValidName(name)
+      ? setLastNameError('')
+      : setLastNameError('Field can not be empty');
+  };
+
+  const handlePasswordCheck = (password: string) => {
+    isValidPasswordOrEmpty(password)
+      ? setPasswordError('')
+      : setPasswordError(
           'Password requires 1 letter, 1 number, and must be at least 8 characters long',
-        )
-      : setPasswordError('');
+        );
+  };
+
+  const isInputsValid = () => {
+    return (
+      firstNameError === '' &&
+      lastNameError === '' &&
+      emailError === '' &&
+      passwordError === ''
+    );
   };
 
   return (
@@ -180,19 +200,23 @@ const EditUserModal = ({
               sx={Styles.textField}
               id='firstName'
               value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              onBlur={() => handleNameCheck(firstName)}
-              helperText={nameError === '' ? 'First Name' : nameError}
-              error={nameError !== ''}
+              onChange={(e) => {
+                setFirstName(e.target.value.trim());
+                handleFirstNameCheck(e.target.value);
+              }}
+              helperText={firstNameError === '' ? 'First Name' : firstNameError}
+              error={firstNameError !== ''}
             />
             <TextField
               sx={Styles.textField}
               id='lastName'
               value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              onBlur={() => handleNameCheck(lastName)}
-              helperText={nameError === '' ? 'Last Name' : nameError}
-              error={nameError !== ''}
+              onChange={(e) => {
+                setLastName(e.target.value.trim());
+                handleLastNameCheck(e.target.value);
+              }}
+              helperText={lastNameError === '' ? 'Last Name' : lastNameError}
+              error={lastNameError !== ''}
               style={{ marginLeft: '20px' }}
             />
 
@@ -200,8 +224,10 @@ const EditUserModal = ({
               sx={Styles.textField}
               id='email'
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onBlur={handleEmailCheck}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                handleEmailCheck(e.target.value);
+              }}
               helperText={emailError === '' ? 'Email' : emailError}
               error={emailError !== ''}
             />
@@ -210,8 +236,10 @@ const EditUserModal = ({
               id='password'
               type='password'
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onBlur={handlePasswordCheck}
+              onChange={(e) => {
+                setPassword(e.target.value.trim());
+                handlePasswordCheck(e.target.value);
+              }}
               style={{ marginLeft: '20px' }}
               helperText={passwordError === '' ? 'Password' : passwordError}
               error={passwordError !== ''}
@@ -264,6 +292,7 @@ const EditUserModal = ({
                   bgcolor: '#25ced1',
                 },
               }}
+              disabled={!isInputsValid()}
               onClick={handleUpdateUserById}
             >
               Modify

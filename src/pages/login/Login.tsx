@@ -6,18 +6,17 @@ import Alert from '@mui/material/Alert';
 
 import React, { useState } from 'react';
 import styles from './Login.module.css';
-import { isValidEmail } from '../../components/utils';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { login } from '../../store/slices/auth/authActions';
 import { fetchPatientInfo } from '../../store/slices/patient/patientSlice';
+import Styles from '../../components/styles/UserManagmentStyles';
 
 const Login = () => {
-  const [errorAlertOpen, setSignInError] = useState(false);
+  const [errorAlertOpen, setErrorAlertOpen] = useState(false);
   const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
@@ -25,22 +24,18 @@ const Login = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      const response = await dispatch(login({ email, password }));
-      const userId = sessionStorage.getItem('userId');
-      if (response.payload && response.payload.type) {
-        navigate(ROUTES.HOME);
-        if (sessionStorage.getItem('type') === 'patient' && userId !== null) {
-          await dispatch(fetchPatientInfo(userId));
-        }
+
+    const response = await dispatch(login({ email, password }));
+    const userId = sessionStorage.getItem('userId');
+
+    setErrorAlertOpen(true);
+    if (response.payload && response.payload.type) {
+      navigate(ROUTES.HOME);
+      if (sessionStorage.getItem('type') === 'patient' && userId !== null) {
+        dispatch(fetchPatientInfo(userId));
       }
-    } catch (error) {
-      setSignInError(true);
     }
   };
-
-  const handleEmailCheck = () =>
-    setEmailError(!isValidEmail(email) ? 'Email is invalid' : '');
 
   return (
     <div className={styles.login}>
@@ -56,9 +51,6 @@ const Login = () => {
               placeholder='Enter email'
               fullWidth
               margin='normal'
-              helperText={emailError === '' ? '' : emailError}
-              error={emailError !== ''}
-              onBlur={handleEmailCheck}
               value={email}
               autoComplete='off'
               onChange={(e) => setEmail(e.target.value)}
@@ -73,18 +65,27 @@ const Login = () => {
               autoComplete='off'
               onChange={(e) => setPassword(e.target.value)}
             />
+            {errorAlertOpen && (
+              <Alert
+                severity='error'
+                sx={{ marginTop: 1 }}
+                onClose={() => setErrorAlertOpen(false)}
+              >
+                Wrong email or password.
+              </Alert>
+            )}
             <div className={styles.buttonContainer}>
-              <Button variant='contained' type='submit' size='large'>
+              <Button
+                variant='contained'
+                type='submit'
+                size='large'
+                sx={Styles.loginButton}
+              >
                 SIGN IN
               </Button>
             </div>
           </>
         </form>
-        {errorAlertOpen && (
-          <Alert severity='error' onClose={() => setSignInError(false)}>
-            Wrong email or password.
-          </Alert>
-        )}
       </Container>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState, MouseEvent, useEffect } from 'react';
-import { Box, Button, Modal, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, Modal, Stack, Typography } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { postTimeslot } from '../../store/slices/timeslot/timeslotActions';
@@ -39,13 +39,14 @@ const TimeslotModal = ({
   const dispatch = useDispatch<AppDispatch>();
   const [timeError, setTimeError] = useState(false);
   const currentHour = dayjs().hour();
-  const currentDay = dayjs().day();
+  const currentDay = dayjs();
   const selectedHour = dayjs(time).hour();
-  const selectedDay = dayjs(time).day();
+  const selectedDay = dayjs(time);
 
   useEffect(() => {
     setTime(dayjs(date).startOf('day'));
-  }, [date]);
+    setTimeError(false);
+  }, [openModal]);
 
   const saveTimeSlot = () => {
     if (time !== null && selectedHour >= 8 && selectedHour < 20) {
@@ -67,11 +68,8 @@ const TimeslotModal = ({
     e.preventDefault();
     if (selectedDay > currentDay) {
       saveTimeSlot();
-    } else if (selectedDay === currentDay && selectedHour > currentHour) {
-      saveTimeSlot();
-    } else {
-      setTimeError(true);
     }
+    setTimeError(true);
   };
 
   const onModalClose = () => {
@@ -91,9 +89,14 @@ const TimeslotModal = ({
             value={time}
             onChange={(newValue) => setTime(newValue)}
             format='HH:mm'
+            sx={{ width: '100%' }}
           />
         </LocalizationProvider>
-        {timeError && <h5 style={{ color: 'red' }}>Wrong time selected!</h5>}
+        {timeError && (
+          <Alert severity='error' sx={{ marginTop: 1, padding: 0 }}>
+            Wrong time selected!
+          </Alert>
+        )}
         <Stack direction='row' spacing={2} sx={{ marginTop: 2 }}>
           <Button
             variant='contained'

@@ -15,7 +15,7 @@ import { fetchPatientInfo } from '../../store/slices/patient/patientSlice';
 import Styles from '../../components/styles/UserManagmentStyles';
 
 const Login = () => {
-  const [errorAlertOpen, seterrorAlertOpen] = useState(false);
+  const [errorAlertOpen, setErrorAlertOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -28,11 +28,11 @@ const Login = () => {
     const response = await dispatch(login({ email, password }));
     const userId = sessionStorage.getItem('userId');
 
-    seterrorAlertOpen(true);
+    setErrorAlertOpen(true);
     if (response.payload && response.payload.type) {
       navigate(ROUTES.HOME);
       if (sessionStorage.getItem('type') === 'patient' && userId !== null) {
-        await dispatch(fetchPatientInfo(userId));
+        dispatch(fetchPatientInfo(userId));
       }
     }
   };
@@ -69,7 +69,7 @@ const Login = () => {
               <Alert
                 severity='error'
                 sx={{ marginTop: 1 }}
-                onClose={() => seterrorAlertOpen(false)}
+                onClose={() => setErrorAlertOpen(false)}
               >
                 Wrong email or password.
               </Alert>

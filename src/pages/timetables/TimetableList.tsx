@@ -170,13 +170,16 @@ const TimetableList = ({ physicianId }: Props) => {
 
   const renderAddNewDateButton = () => {
     return (
-      <Chip
-        label='+ New Date'
-        sx={{ fontWeight: 'normal', backgroundColor: teal['A400'] }}
-        onClick={() => {
-          handleNewDateButton();
-        }}
-      />
+      !appointment.physicianId &&
+      type === 'admin' && (
+        <Chip
+          label='+ New Date'
+          sx={{ fontWeight: 'normal', backgroundColor: teal['A400'] }}
+          onClick={() => {
+            handleNewDateButton();
+          }}
+        />
+      )
     );
   };
 

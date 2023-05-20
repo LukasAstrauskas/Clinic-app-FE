@@ -38,7 +38,6 @@ const TimeslotModal = ({
   const [time, setTime] = useState<Dayjs | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const [timeError, setTimeError] = useState(false);
-  const currentHour = dayjs().hour();
   const currentDay = dayjs();
   const selectedHour = dayjs(time).hour();
   const selectedDay = dayjs(time);

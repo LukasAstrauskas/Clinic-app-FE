@@ -82,7 +82,7 @@ const TimeslotSetDateModal = ({ openModal, closeModal, setDate }: Props) => {
             </Button>
             <Button
               variant='contained'
-              onClick={handleDateSubmit}
+              onClick={handleCloseModal}
               sx={Styles.createButton}
             >
               Cancel

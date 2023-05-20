@@ -175,9 +175,7 @@ const TimetableList = ({ physicianId }: Props) => {
         <Chip
           label='+ New Date'
           sx={{ fontWeight: 'normal', backgroundColor: teal['A400'] }}
-          onClick={() => {
-            handleNewDateButton();
-          }}
+          onClick={handleNewDateButton}
         />
       )
     );

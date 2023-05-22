@@ -45,10 +45,10 @@ const TimetableList = ({ physicianId }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const loggedInUserId = useSelector(selectId);
   const [date, setDate] = useState<string>('');
-  const ViewerType = sessionStorage.getItem('type');
+  const viewerType = sessionStorage.getItem('type');
   const selectedTimeslots: Timeslots[] = useSelector(selectTimeslots);
   let formatedTimeslot;
-  if (ViewerType === 'patient') {
+  if (viewerType === 'patient') {
     formatedTimeslot = selectedTimeslots.filter(({ date }) =>
       dayjs(date).isAfter(dayjs()),
     );

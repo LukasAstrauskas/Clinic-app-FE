@@ -209,7 +209,6 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
                   <>Select physician Occupation</>
                 )
               }
-              // onBlur={(e) => setOccupationError(e.target.value === '')}
               error={occupationError}
               onChange={(e) => {
                 setOccupationId(e.target.value);

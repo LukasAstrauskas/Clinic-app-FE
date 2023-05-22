@@ -61,13 +61,14 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
   };
 
   const handleCreate = async () => {
-    // setOccupationError(occupationId === '');
+    setOccupationError(occupationId === '');
     if (
       !nameError &&
       !lastNameError &&
       !emailError &&
       !passwordError &&
-      !occupationError
+      !occupationError &&
+      occupationId
     ) {
       await dispatch(
         createPhysician({

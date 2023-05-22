@@ -13,7 +13,12 @@ import {
 } from '../../store/slices/patient/patientSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
-import { isValidName, isValidLastName, isValidPassword } from '../utils';
+import {
+  isValidName,
+  isValidLastName,
+  isValidPassword,
+  isValidEmail,
+} from '../utils';
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -47,14 +52,7 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
   };
 
   const handleCreate = async () => {
-    setEmailError(!/\S+@\S+\.\S+/.test(email));
-
-    if (
-      !nameError &&
-      !lastNameError &&
-      /\S+@\S+\.\S+/.test(email) &&
-      !passwordError
-    ) {
+    if (!nameError && !lastNameError && !emailError && !passwordError) {
       await dispatch(
         createPatient({
           name: name + ' ' + lastName,
@@ -81,13 +79,17 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
     !isValidLastName(name) ? setLastNameError(true) : setLastNameError(false);
   };
 
-  const handleEmailErrors = (event: string) => {
-    setEmailError(!/\S+@\S+\.\S+/.test(event));
+  const handleEmailErrors = (email: string) => {
+    !isValidEmail(email) ? setEmailError(true) : setEmailError(false);
     setDuplicationError(false);
   };
 
   const handlePasswordErrors = (name: string) => {
     !isValidPassword(name) ? setPasswordError(true) : setPasswordError(false);
+  };
+
+  const isInputsValid = () => {
+    return !nameError && !lastNameError && !emailError && !passwordError;
   };
 
   return (
@@ -99,22 +101,30 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
         <Box sx={Styles.box}>
           <TextField
             sx={Styles.textField}
-            onBlur={(e) => handleNameErrors(e.target.value)}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              handleNameErrors(e.target.value);
+            }}
             label='First name'
             id='new-patient-name-field'
             helperText={
-              nameError && <>First name length between 3 and 20 symbols</>
+              nameError && (
+                <>First name length between 3 and 20 symbols, letters only</>
+              )
             }
             error={nameError}
           />
           <TextField
             sx={Styles.textField}
-            onBlur={(e) => handleLastNameErrors(e.target.value)}
-            onChange={(e) => setLastName(e.target.value)}
+            onChange={(e) => {
+              setLastName(e.target.value);
+              handleLastNameErrors(e.target.value);
+            }}
             error={lastNameError}
             helperText={
-              lastNameError && <>Last name length between 3 and 20 symbols</>
+              lastNameError && (
+                <>Last name length between 3 and 20 symbols, letters only</>
+              )
             }
             id='new-patient-LastName-field'
             label='Last name'
@@ -127,8 +137,10 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
             sx={Styles.textField}
             label='Email'
             id='new-patient-email-field'
-            onChange={(e) => setEmail(e.target.value)}
-            onBlur={(e) => handleEmailErrors(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              handleEmailErrors(e.target.value);
+            }}
             error={emailError || duplicationError}
             helperText={
               (emailError && <>Incorrect email format</>) ||
@@ -136,8 +148,10 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
             }
           />
           <TextField
-            onChange={(e) => setPassword(e.target.value)}
-            onBlur={(e) => handlePasswordErrors(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              handlePasswordErrors(e.target.value);
+            }}
             id='new-patient-password-field'
             type={showPassword ? 'text' : 'password'}
             helperText={
@@ -171,6 +185,7 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
             variant='contained'
             sx={Styles.createButton}
             onClick={handleCreate}
+            disabled={!isInputsValid()}
           >
             Create
           </Button>

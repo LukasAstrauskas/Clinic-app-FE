@@ -22,6 +22,7 @@ import {
   isValidLastName,
   isValidPassword,
   isValidEmail,
+  isValidOccupation,
 } from '../utils';
 
 interface Props {
@@ -60,7 +61,7 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
   };
 
   const handleCreate = async () => {
-    setOccupationError(occupationId === '');
+    // setOccupationError(occupationId === '');
     if (
       !nameError &&
       !lastNameError &&
@@ -102,6 +103,12 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
   const handleEmailErrors = (email: string) => {
     !isValidEmail(email) ? setEmailError(true) : setEmailError(false);
     setDuplicationError(false);
+  };
+
+  const handleOccupationErrors = (occupation: string) => {
+    !isValidOccupation(occupation)
+      ? setOccupationError(true)
+      : setOccupationError(false);
   };
 
   const isInputsValid = () => {
@@ -201,9 +208,12 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
                   <>Select physician Occupation</>
                 )
               }
-              onBlur={(e) => setOccupationError(e.target.value === '')}
+              // onBlur={(e) => setOccupationError(e.target.value === '')}
               error={occupationError}
-              onChange={(e) => setOccupationId(e.target.value)}
+              onChange={(e) => {
+                setOccupationId(e.target.value);
+                handleOccupationErrors(e.target.value);
+              }}
               sx={Styles.textField}
               id='occupation'
               select

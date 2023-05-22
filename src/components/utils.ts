@@ -57,6 +57,13 @@ export function isValidPassword(password: string) {
   );
 }
 
+export function isValidOccupation(occupation: string) {
+  const MIN_LENGTH = 3;
+  const MAX_LENGTH = 50;
+
+  return occupation.length >= MIN_LENGTH && occupation.length <= MAX_LENGTH;
+}
+
 export function isValidPasswordOrEmpty(password: string) {
   return isValidPassword(password) || password.length === 0;
 }

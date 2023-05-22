@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { selectTimeslots } from '../../store/slices/timeslot/timeslotSlice';
 import MonthPicker from './MonthPicker';
+
 import {
   deletePatientFromTimeslot,
   deleteTimeslot,
@@ -44,6 +45,16 @@ const TimetableList = ({ physicianId }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const loggedInUserId = useSelector(selectId);
   const [date, setDate] = useState<string>('');
+  const viewerType = sessionStorage.getItem('type');
+  const selectedTimeslots: Timeslots[] = useSelector(selectTimeslots);
+  let formatedTimeslot;
+  if (viewerType === 'patient') {
+    formatedTimeslot = selectedTimeslots.filter(({ date }) =>
+      dayjs(date).isAfter(dayjs()),
+    );
+  } else {
+    formatedTimeslot = selectedTimeslots;
+  }
 
   const [timeslot, setTimeslot] = useState<Timeslot>({
     physicianId: '',
@@ -140,8 +151,6 @@ const TimetableList = ({ physicianId }: Props) => {
     setTimeslot({ physicianId: physicianId, date: '', time: '' });
   }, [physicianId]);
 
-  const selectedTimeslots: Timeslots[] = useSelector(selectTimeslots);
-
   useEffect(() => {
     dispatch(
       getTimeslot({
@@ -228,12 +237,14 @@ const TimetableList = ({ physicianId }: Props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {selectedTimeslots.length !== 0 ? (
+            {formatedTimeslot.length !== 0 ? (
               <>
-                {selectedTimeslots.map(({ date, timePatientList }) => (
+                {formatedTimeslot.map(({ date, timePatientList }) => (
                   <TableRow
                     key={`${date}${physicianId}`}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    sx={{
+                      '&:last-child td, &:last-child th': { border: 0 },
+                    }}
                   >
                     <TableCell
                       component='th'
@@ -246,6 +257,7 @@ const TimetableList = ({ physicianId }: Props) => {
                         label={`${date} ${getWeekDay(date)}`}
                       ></Chip>
                     </TableCell>
+
                     <TableCell align='left'>
                       <Stack direction='row' style={{ flexWrap: 'wrap' }}>
                         {timePatientList.map(({ time, patientId }) => {

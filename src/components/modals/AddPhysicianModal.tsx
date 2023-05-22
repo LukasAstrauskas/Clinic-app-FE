@@ -8,27 +8,36 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useState, FC, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, FC } from 'react';
 import Styles from '../styles/UserManagmentStyles';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../store/types';
+import { selectOccupations } from '../../store/slices/occupation/occupationSlice';
+import {
+  createPhysician,
+  fetchPhysicians,
+} from '../../store/slices/physician/physicianSlice';
+import { isValidName, isValidLastName, isValidPassword } from '../utils';
+
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
 }
 
 const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
+  const occupations = useSelector(selectOccupations);
+  const dispatch = useDispatch<AppDispatch>();
   const [name, setName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState(false);
   const [nameError, setNameError] = useState(false);
-  const [LastNameError, setLastNameError] = useState(false);
+  const [lastNameError, setLastNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [occupationError, setOccupationError] = useState(false);
-  const [duplicationError, setduplicationError] = useState(false);
-  const [occupations, setOccupations] = useState<OccupationType[]>([]);
+  const [duplicationError, setDuplicationError] = useState(false);
   const [occupationId, setOccupationId] = useState<string>('');
 
   const handleClose = () => {
@@ -42,76 +51,53 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
     setEmailError(false);
     setPasswordError(false);
     setOccupationError(false);
+    setDuplicationError(false);
   };
-
-  type OccupationType = {
-    id: string;
-    name: string;
-  };
-
-  useEffect(() => {
-    const GetOccupationsRequestURL = 'http://localhost:8080/occupations';
-
-    const GetOccupationsRequestHeaders = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    };
-
-    axios
-      .get(GetOccupationsRequestURL, {
-        headers: GetOccupationsRequestHeaders,
-      })
-      .then((res) => {
-        setOccupations(res.data);
-      });
-  }, [open]);
-
-  const postRequestHeaders = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  };
-  const postRequestUrl = 'http://localhost:8080/physicianInfo';
 
   const handleCreate = async () => {
-    setNameError(name === '');
-    setLastNameError(lastName === '');
     setEmailError(!/\S+@\S+\.\S+/.test(email));
-    setPasswordError(password === '');
     setOccupationError(occupationId === '');
     if (
-      name != '' &&
-      lastName != '' &&
-      /\S+@\S+\.\S+/.test(email) &&
-      password != '' &&
       !nameError &&
-      !LastNameError &&
-      !emailError &&
-      !passwordError
+      !lastNameError &&
+      /\S+@\S+\.\S+/.test(email) &&
+      !passwordError &&
+      !occupationError
     ) {
-      await axios.post(
-        postRequestUrl,
-        {
-          name: (name || '') + ' ' + (lastName || ''),
-          email: email || '',
-          password: password || '',
+      await dispatch(
+        createPhysician({
+          name: name + ' ' + lastName,
+          email: email,
+          password: password,
           occupationId: occupationId,
-        },
-        {
-          headers: postRequestHeaders,
-        },
-      );
-      setOpen(false);
-      setName('');
-      setLastName('');
-      setEmail('');
-      setPassword('');
-      setOccupationId('');
+        }),
+      )
+        .unwrap()
+        .then(() => {
+          dispatch(fetchPhysicians());
+          setOpen(false);
+        })
+        .catch(() => {
+          setDuplicationError(true);
+        });
     }
   };
 
-  const fixDuplicationError = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    setduplicationError(false);
+  const handleNameErrors = (name: string) => {
+    !isValidName(name) ? setNameError(true) : setNameError(false);
+  };
+
+  const handleLastNameErrors = (name: string) => {
+    !isValidLastName(name) ? setLastNameError(true) : setLastNameError(false);
+  };
+
+  const handlePasswordErrors = (name: string) => {
+    !isValidPassword(name) ? setPasswordError(true) : setPasswordError(false);
+  };
+
+  const handleEmailErrors = (event: string) => {
+    setEmailError(!/\S+@\S+\.\S+/.test(event));
+    setDuplicationError(false);
   };
 
   return (
@@ -124,19 +110,23 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
           <Box sx={Styles.box}>
             <TextField
               sx={Styles.textField}
-              onBlur={(e) => setNameError(e.target.value === '')}
+              onBlur={(e) => handleNameErrors(e.target.value)}
               onChange={(e) => setName(e.target.value)}
               label='First name'
               id='new-patient-name-field'
-              helperText={nameError && <>Name cannot be empty</>}
+              helperText={
+                nameError && <>First name length between 3 and 20 symbols</>
+              }
               error={nameError}
             />
             <TextField
               sx={Styles.textField}
-              onBlur={(e) => setLastNameError(e.target.value === '')}
+              onBlur={(e) => handleLastNameErrors(e.target.value)}
               onChange={(e) => setLastName(e.target.value)}
-              error={LastNameError}
-              helperText={LastNameError && <>Last name cannot be empty</>}
+              error={lastNameError}
+              helperText={
+                lastNameError && <>Last name length between 3 and 20 symbols</>
+              }
               id='new-patient-LastName-field'
               label='Last name'
               style={{ marginLeft: '20px' }}
@@ -148,10 +138,8 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
               sx={Styles.textField}
               label='Email'
               id='new-patient-email-field'
-              onChange={fixDuplicationError}
-              onBlur={(e) =>
-                setEmailError(!/\S+@\S+\.\S+/.test(e.target.value))
-              }
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={(e) => handleEmailErrors(e.target.value)}
               error={emailError || duplicationError}
               helperText={
                 (emailError && <>Incorrect email format</>) ||
@@ -160,10 +148,12 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
             />
             <TextField
               onChange={(e) => setPassword(e.target.value)}
-              onBlur={(e) => setPasswordError(e.target.value === '')}
+              onBlur={(e) => handlePasswordErrors(e.target.value)}
               id='new-patient-password-field'
               type={showPassword ? 'text' : 'password'}
-              helperText={passwordError && <>password cannot be empty</>}
+              helperText={
+                passwordError && <>Password length between 8 and 20 symbols</>
+              }
               error={passwordError}
               label='Temporary password'
               sx={Styles.textField}

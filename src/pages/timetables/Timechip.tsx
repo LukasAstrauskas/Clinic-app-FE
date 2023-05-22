@@ -20,6 +20,8 @@ interface Props {
 const freeTimeSX = (selected: boolean) => {
   return {
     backgroundColor: selected ? teal['A400'] : 'none',
+    mt: 0.5,
+    mr: 0.5,
     '&:hover': {
       backgroundColor: '#1de9b6 !important',
     },
@@ -33,6 +35,8 @@ const freeTimeSX = (selected: boolean) => {
 };
 const bookedTimeSX = {
   backgroundColor: red[300],
+  mt: 0.5,
+  mr: 0.5,
   '&:hover': {
     backgroundColor: '#e57373 !important',
   },

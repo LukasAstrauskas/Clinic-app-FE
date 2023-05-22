@@ -1,44 +1,45 @@
-import React, { FC, useState, useEffect } from 'react';
-import { TableBody, TableRow, TableCell, Table } from '@mui/material';
+import React, { FC, useState, useEffect, useRef } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { Table, TableBody, TableCell, TableRow } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import Typography from '@mui/material/Typography';
+import { grey } from '@mui/material/colors';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../../store/types';
 import { UniversalUser } from '../../model/Model';
+import { tableRowSX } from '../../pages/physicians/PhysicianTable';
 import {
-  selectUserSize,
-  fetchAdminAmount,
-  fetchPatientAmount,
-  fetchPhysicianAmount,
-  fetchPatientsByPhysicianAmount,
-} from '../../store/slices/userSize/userSizeSlice';
+  deleteAdmin,
+  fetchAdmins,
+  fetchMoreAdmins,
+  resetAdminData,
+} from '../../store/slices/admin/adminSlice';
 import {
   deletePatient,
   fetchMorePatients,
   fetchMorePatientsByPhysicianId,
   fetchPatients,
   fetchPatientsByPhysicianId,
+  resetPatientData,
 } from '../../store/slices/patient/patientSlice';
-import {
-  deleteAdmin,
-  fetchAdmins,
-  fetchMoreAdmins,
-} from '../../store/slices/admin/adminSlice';
 import {
   deletePhysician,
   fetchMorePhysicians,
   fetchPhysicians,
+  resetPhysicianData,
 } from '../../store/slices/physician/physicianSlice';
+import {
+  fetchAdminAmount,
+  fetchPatientAmount,
+  fetchPatientsByPhysicianAmount,
+  fetchPhysicianAmount,
+  selectUserSize,
+} from '../../store/slices/userSize/userSizeSlice';
+import { AppDispatch } from '../../store/types';
 import EditUserModal from '../modals/EditUserModal';
-import { grey } from '@mui/material/colors';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { tableRowSX } from '../../pages/physicians/PhysicianTable';
 interface Props {
   user: UniversalUser[];
-  refresh: boolean;
-  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   more: boolean;
   setMore: React.Dispatch<React.SetStateAction<boolean>>;
   type: string;
@@ -46,6 +47,12 @@ interface Props {
   rowClick?: (id: string) => void;
   renderDelAndEditCells?: boolean;
 }
+
+export const tableRowSx = (isSelected: boolean) => {
+  return {
+    width: isSelected ? '200px' : '300px',
+  };
+};
 
 const TableBodyComponent: FC<Props> = ({
   user,
@@ -61,20 +68,28 @@ const TableBodyComponent: FC<Props> = ({
   const [users, setUsers] = useState([]);
   const loggedInUserId = sessionStorage.getItem('userId');
   const loggedInUserType = sessionStorage.getItem('type');
+  const [refresh, setRefresh] = useState(false);
+  const scrollContainerRef = useRef<any>(null);
 
   const handleOpen = () => {
     setOpen(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (type === 'patient') {
       dispatch(deletePatient(id));
+      await dispatch(resetPatientData());
+      dispatch(fetchPatientAmount());
     }
     if (type === 'physician') {
       dispatch(deletePhysician(id));
+      await dispatch(resetPhysicianData());
+      dispatch(fetchPhysicianAmount());
     }
     if (type === 'admin') {
       dispatch(deleteAdmin(id));
+      await dispatch(resetAdminData());
+      dispatch(fetchAdminAmount());
     }
     setUsers(users.filter((user) => user != id));
   };
@@ -104,8 +119,7 @@ const TableBodyComponent: FC<Props> = ({
       }
     }
   };
-
-  useEffect(() => {
+  const getSize = () => {
     if (loggedInUserType === 'physician') {
       dispatch(fetchPatientsByPhysicianAmount({ id: loggedInUserId }));
     } else {
@@ -121,9 +135,14 @@ const TableBodyComponent: FC<Props> = ({
           break;
       }
     }
+  };
+
+  useEffect(() => {
+    getSize();
   }, []);
 
   useEffect(() => {
+    scrollContainerRef.current.scrollTo(0, 0);
     if (loggedInUserType === 'physician') {
       dispatch(fetchPatientsByPhysicianId({ id: loggedInUserId }));
     } else {
@@ -139,10 +158,11 @@ const TableBodyComponent: FC<Props> = ({
           break;
       }
     }
-  }, [open, users]);
+  }, [users, refresh]);
 
   return (
     <TableBody
+      ref={scrollContainerRef}
       id='scrollBox'
       style={{
         maxHeight: 400,
@@ -170,17 +190,19 @@ const TableBodyComponent: FC<Props> = ({
               setOpen={setOpen}
               open={open}
               selectedId={selectedId}
+              refresh={refresh}
+              setRefresh={setRefresh}
             />
             <Table>
               <TableBody>
                 {user.map(({ id, name, email, occupation }) => (
                   <TableRow key={id} hover sx={tableRowSX(selectedId === id)}>
                     <TableCell
+                      sx={tableRowSx(renderDelAndEditCells)}
                       onClick={() => {
                         rowClick(id);
                         setSelectedId(id);
                       }}
-                      sx={{ width: '200px' }}
                     >
                       {name}
                     </TableCell>

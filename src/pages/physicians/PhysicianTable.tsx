@@ -6,8 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import ModeIcon from '@mui/icons-material/Mode';
-import { Button, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { UniversalUser } from '../../model/Model';
 import { grey } from '@mui/material/colors';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -30,9 +29,9 @@ type Props = {
 
 export const tableRowSX = (isSelected: boolean) => {
   return {
-    backgroundColor: isSelected ? '#ff9e80 !important' : 'none',
+    backgroundColor: isSelected ? '#f5cec2 !important' : 'none',
     '&:hover': {
-      backgroundColor: '#ff9e80 !important',
+      backgroundColor: '#f5cec2 !important',
     },
     cursor: 'pointer',
   };
@@ -46,7 +45,6 @@ const PhysicianTable = ({
 }: Props) => {
   const userSize = useSelector(selectUserSize);
   const dispatch = useDispatch<AppDispatch>();
-
   const getMoreData = async () => {
     if (!isSearch) {
       await dispatch(fetchMorePhysicians(physicians.length));
@@ -58,7 +56,7 @@ const PhysicianTable = ({
   }, []);
 
   return (
-    <div id='scrollBox' style={{ maxHeight: 300, overflowY: 'scroll' }}>
+    <div id='scrollBox' style={{ maxHeight: 250, overflowY: 'scroll' }}>
       <TableContainer component={Paper}>
         <InfiniteScroll
           scrollableTarget='scrollBox'
@@ -105,17 +103,6 @@ const PhysicianTable = ({
                     }}
                   >
                     {occupation?.name}
-                  </TableCell>
-                  <TableCell sx={{ m: 0, p: 0 }}>
-                    <Button
-                      variant='text'
-                      onClick={(event) => {
-                        event.preventDefault();
-                        console.log(`Id: ${id} edit.`);
-                      }}
-                    >
-                      <ModeIcon />
-                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

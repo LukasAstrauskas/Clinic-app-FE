@@ -51,7 +51,7 @@ const AppointmentSlot: FC<Props> = ({ appointment }) => {
         sx={{
           marginTop: '40px',
           borderRadius: '20px',
-          border: '1px solid black',
+          border: '1px solid lightgrey',
           height: '130px',
         }}
       >
@@ -96,7 +96,7 @@ const AppointmentSlot: FC<Props> = ({ appointment }) => {
                   marginLeft: '300px',
                   color: 'orange',
                   border: '1px solid orange !important',
-                  fontWeight: '600',
+                  fontWeight: '400',
                 }}
               >
                 CANCEL APPOINTMENT

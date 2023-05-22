@@ -47,6 +47,12 @@ const Styles = {
       bgcolor: '#25ced1',
     },
   },
+  loginButton: {
+    bgcolor: '#25ced1',
+    '&:hover': {
+      bgcolor: '#25ced1',
+    },
+  },
   searchField: {
     width: '340px',
     marginLeft: 3,
@@ -58,7 +64,7 @@ const Styles = {
   createNewUserBtn: {
     p: 1,
     ml: 4.2,
-    mb: 1,
+    mt: 0.3,
     scale: '110%',
     bgcolor: '#25ced1',
     '&:hover': {

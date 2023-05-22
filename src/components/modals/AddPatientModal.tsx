@@ -7,29 +7,31 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { Visibility } from '@mui/icons-material';
 import Styles from '../styles/UserManagmentStyles';
-import axios from 'axios';
+import {
+  createPatient,
+  fetchPatients,
+} from '../../store/slices/patient/patientSlice';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/types';
+import { isValidName, isValidLastName, isValidPassword } from '../utils';
+
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
 }
 
 const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [name, setName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState(false);
   const [nameError, setNameError] = useState(false);
-  const [LastNameError, setLastNameError] = useState(false);
+  const [lastNameError, setLastNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [duplicationError, setduplicationError] = useState(false);
-
-  const postRequestHeaders = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  };
-  const postRequestUrl = 'http://localhost:8080/user/patients';
+  const [duplicationError, setDuplicationError] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -41,70 +43,79 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
     setLastNameError(false);
     setEmailError(false);
     setPasswordError(false);
-  };
-
-  const fixDuplicationError = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    setduplicationError(false);
+    setDuplicationError(false);
   };
 
   const handleCreate = async () => {
-    setNameError(name === '');
-    setLastNameError(lastName === '');
     setEmailError(!/\S+@\S+\.\S+/.test(email));
-    setPasswordError(password === '');
+
     if (
-      name != '' &&
-      lastName != '' &&
-      /\S+@\S+\.\S+/.test(email) &&
-      password != '' &&
       !nameError &&
-      !LastNameError &&
-      !emailError &&
+      !lastNameError &&
+      /\S+@\S+\.\S+/.test(email) &&
       !passwordError
     ) {
-      await axios.post(
-        postRequestUrl,
-        {
-          name: (name || '') + ' ' + (lastName || ''),
-          email: email || '',
-          password: password || '',
-        },
-        {
-          headers: postRequestHeaders,
-        },
-      );
-
-      setOpen(false);
-      setName('');
-      setLastName('');
-      setEmail('');
-      setPassword('');
+      await dispatch(
+        createPatient({
+          name: name + ' ' + lastName,
+          email: email,
+          password: password,
+        }),
+      )
+        .unwrap()
+        .then(() => {
+          dispatch(fetchPatients());
+          setOpen(false);
+        })
+        .catch(() => {
+          setDuplicationError(true);
+        });
     }
+  };
+
+  const handleNameErrors = (name: string) => {
+    !isValidName(name) ? setNameError(true) : setNameError(false);
+  };
+
+  const handleLastNameErrors = (name: string) => {
+    !isValidLastName(name) ? setLastNameError(true) : setLastNameError(false);
+  };
+
+  const handleEmailErrors = (event: string) => {
+    setEmailError(!/\S+@\S+\.\S+/.test(event));
+    setDuplicationError(false);
+  };
+
+  const handlePasswordErrors = (name: string) => {
+    !isValidPassword(name) ? setPasswordError(true) : setPasswordError(false);
   };
 
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={Styles.modal}>
         <Typography variant='h5' align='center' sx={Styles.typography}>
-          Add new patients
+          Add new patient
         </Typography>
         <Box sx={Styles.box}>
           <TextField
             sx={Styles.textField}
-            onBlur={(e) => setNameError(e.target.value === '')}
+            onBlur={(e) => handleNameErrors(e.target.value)}
             onChange={(e) => setName(e.target.value)}
             label='First name'
             id='new-patient-name-field'
-            helperText={nameError && <>Name cannot be empty</>}
+            helperText={
+              nameError && <>First name length between 3 and 20 symbols</>
+            }
             error={nameError}
           />
           <TextField
             sx={Styles.textField}
-            onBlur={(e) => setLastNameError(e.target.value === '')}
+            onBlur={(e) => handleLastNameErrors(e.target.value)}
             onChange={(e) => setLastName(e.target.value)}
-            error={LastNameError}
-            helperText={LastNameError && <>Last name cannot be empty</>}
+            error={lastNameError}
+            helperText={
+              lastNameError && <>Last name length between 3 and 20 symbols</>
+            }
             id='new-patient-LastName-field'
             label='Last name'
             style={{ marginLeft: '20px' }}
@@ -116,8 +127,8 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
             sx={Styles.textField}
             label='Email'
             id='new-patient-email-field'
-            onChange={fixDuplicationError}
-            onBlur={(e) => setEmailError(!/\S+@\S+\.\S+/.test(e.target.value))}
+            onChange={(e) => setEmail(e.target.value)}
+            onBlur={(e) => handleEmailErrors(e.target.value)}
             error={emailError || duplicationError}
             helperText={
               (emailError && <>Incorrect email format</>) ||
@@ -126,10 +137,12 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
           />
           <TextField
             onChange={(e) => setPassword(e.target.value)}
-            onBlur={(e) => setPasswordError(e.target.value === '')}
+            onBlur={(e) => handlePasswordErrors(e.target.value)}
             id='new-patient-password-field'
             type={showPassword ? 'text' : 'password'}
-            helperText={passwordError && <>password cannot be empty</>}
+            helperText={
+              passwordError && <>Password length between 8 and 20 symbols</>
+            }
             error={passwordError}
             label='Temporary password'
             sx={Styles.textField}

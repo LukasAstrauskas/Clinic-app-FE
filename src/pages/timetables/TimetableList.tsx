@@ -192,13 +192,14 @@ const TimetableList = ({ physicianId }: Props) => {
 
   return (
     <>
-      <TableContainer component={Paper} sx={{ marginBottom: 5 }}>
-        <Table
-          size='small'
-          sx={{
-            backgroundColor: grey[200],
-          }}
-        >
+      <TableContainer
+        component={Paper}
+        sx={{
+          backgroundColor: grey[200],
+          maxHeight: 420,
+        }}
+      >
+        <Table size='small'>
           <TableHead>
             <TableRow>
               <TableCell

@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Alert, Box, Button, Modal, Stack, Typography } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
@@ -35,44 +35,37 @@ const TimeslotModal = ({
   id,
   date,
 }: Props) => {
-  const [time, setTime] = useState<Dayjs | null>(null);
+  const dayStart = dayjs(date).startOf('day');
+  const [time, setTime] = useState<Dayjs>(dayStart);
   const dispatch = useDispatch<AppDispatch>();
   const [timeError, setTimeError] = useState(false);
-  const currentDay = dayjs();
-  const selectedHour = dayjs(time).hour();
-  const selectedDay = dayjs(time);
 
   useEffect(() => {
-    setTime(dayjs(date).startOf('day'));
-    setTimeError(false);
+    setTime(dayStart);
   }, [openModal]);
 
   const saveTimeSlot = () => {
-    if (time !== null && selectedHour >= 8 && selectedHour < 20) {
-      dispatch(
-        postTimeslot({
-          physicianId: id,
-          date: date,
-          time: time.format('HH:mm'),
-        }),
-      );
-      setTime(null);
-      loadData();
-      closeModal();
-    }
-    setTimeError(true);
+    dispatch(
+      postTimeslot({
+        physicianId: id,
+        date: date,
+        time: time.format('HH:mm'),
+      }),
+    );
+    loadData();
+    closeModal();
   };
 
-  const onModalSubmit = (e: MouseEvent) => {
-    e.preventDefault();
-    if (selectedDay > currentDay) {
-      saveTimeSlot();
-    }
-    setTimeError(true);
+  const validateTimeInput = (timeVal: Dayjs) => {
+    const isTimeAfterNow = timeVal.isAfter(dayjs());
+    const isFromDuskTillDawn = timeVal.hour() >= 20 || timeVal.hour() < 8;
+    isTimeAfterNow && !isFromDuskTillDawn
+      ? setTimeError(false)
+      : setTimeError(true);
   };
 
   const onModalClose = () => {
-    setTime(null);
+    setTimeError(false);
     closeModal();
   };
 
@@ -84,9 +77,14 @@ const TimeslotModal = ({
         </Typography>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <TimeField
-            label={`For date: ${time?.format('YYYY-MM-DD')}`}
+            label={`For date: ${time.format('YYYY-MM-DD')}`}
             value={time}
-            onChange={(newValue) => setTime(newValue)}
+            onChange={(newValue) => {
+              if (newValue !== null) {
+                setTime(newValue);
+                validateTimeInput(newValue);
+              }
+            }}
             format='HH:mm'
             sx={{ width: '100%' }}
           />
@@ -99,7 +97,8 @@ const TimeslotModal = ({
         <Stack direction='row' spacing={2} sx={{ marginTop: 2 }}>
           <Button
             variant='contained'
-            onClick={onModalSubmit}
+            disabled={timeError}
+            onClick={saveTimeSlot}
             sx={Styles.createButton}
           >
             Add timeslot

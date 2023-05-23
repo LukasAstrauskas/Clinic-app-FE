@@ -83,7 +83,7 @@ const AppointmentSlot: FC<Props> = ({ appointment }) => {
                 sx={{ marginTop: '20px', marginLeft: '10px' }}
                 fontWeight={'600'}
               >
-                {dayjs(appointment.timeslot.date).format('hh:mm')}
+                {dayjs(appointment.timeslot.date).format('HH:mm')}
               </Typography>
             </Box>
           </Box>

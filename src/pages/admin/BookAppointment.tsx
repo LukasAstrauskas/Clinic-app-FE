@@ -41,8 +41,8 @@ const BookAppointment = () => {
     navigate(ROUTES.HOME);
   };
 
-  const bookAppointment = () => {
-    dispatch(bookTimeslot(appointment))
+  const bookAppointment = async () => {
+    await dispatch(bookTimeslot(appointment))
       .then((resultAction) => {
         unwrapResult(resultAction);
         setConfirmationMessage('Appointment booked successfully!');
@@ -56,8 +56,13 @@ const BookAppointment = () => {
   const handleRemovePatientFromTimeslot = async () => {
     const { physicianId, patientId } = appointment;
     if (typeof patientId === 'string') {
-      dispatch(deletePatientFromUpcomingTimeslot({ physicianId, patientId }));
-      setConfirmationMessage('Appointment canceled successfully!');
+      await dispatch(
+        deletePatientFromUpcomingTimeslot({ physicianId, patientId }),
+      );
+      await bookAppointment();
+      setConfirmationMessage(
+        'Appointment canceled and a new one booked successfully!',
+      );
       setIsErrorModalOpen(false);
       setIsConfirmationOpen(true);
     }

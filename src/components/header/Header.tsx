@@ -31,16 +31,15 @@ const Header = () => {
 
   const loggedUserId = useSelector(selectId);
   const isLoggedIn = sessionStorage.getItem('isLogged') || '';
-  const loggedUserName = sessionStorage.getItem('name') || '';
 
   const handleLoggedInUserInitials = () => {
-    if (loggedUserName.length > 0) {
-      const countOfWords = loggedUserName.split(' ');
+    if (name.length > 0) {
+      const countOfWords = name.split(' ');
 
       if (countOfWords.length === 2) {
         return countOfWords[0].charAt(0) + countOfWords[1].charAt(0);
       }
-      return loggedUserName.substring(0, 2);
+      return name.substring(0, 2);
     }
   };
   const handleFetchUserById = async () => {
@@ -51,6 +50,7 @@ const Header = () => {
     const userData = user.payload as User;
     setName(userData.name);
   };
+
   useEffect(() => {
     handleFetchUserById();
   }, [name, loggedUserId]);

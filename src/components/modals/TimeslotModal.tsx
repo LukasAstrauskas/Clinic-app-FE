@@ -97,7 +97,7 @@ const TimeslotModal = ({
         <Stack direction='row' spacing={2} sx={{ marginTop: 2 }}>
           <Button
             variant='contained'
-            disabled={timeError}
+            disabled={timeError || time.isSame(dayStart)}
             onClick={saveTimeSlot}
             sx={Styles.createButton}
           >

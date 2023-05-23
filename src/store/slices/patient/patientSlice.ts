@@ -20,6 +20,7 @@ import {
   PATIENT_SEARCH_URL,
 } from '../../../utils/httpConstants';
 import { RootState } from '../../types';
+import authHeader from '../../../authentication/authHeader';
 
 interface PatientsState {
   patients: UniversalUser[];
@@ -44,7 +45,9 @@ const initialState: PatientsState = {
 export const createPatient = createAsyncThunk(
   'patients/createPatient',
   async (requestData: CreateUserDto) => {
-    const response = await axios.post(`${PATIENTS_URL}`, requestData);
+    const response = await axios.post(`${PATIENTS_URL}`, requestData, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );
@@ -58,9 +61,13 @@ export const deleteAppointment = createAsyncThunk(
     PhysicianId: string | undefined;
     PatientId: string | null;
   }) => {
-    const response = await axios.patch(
-      PATIENT_REMOVE_APPOINTMENT + PhysicianId + '/' + PatientId,
-    );
+    const response = await axios.delete(PATIENT_REMOVE_APPOINTMENT, {
+      headers: authHeader(),
+      data: {
+        PhysicianId,
+        PatientId,
+      },
+    });
     return response.data;
   },
 );
@@ -68,7 +75,9 @@ export const deleteAppointment = createAsyncThunk(
 export const fetchPatientAppointments = createAsyncThunk(
   'patients/patient-appointments',
   async (id: string | null) => {
-    const response = await axios.get(PATIENT_APPOINTMENTS + id);
+    const response = await axios.get(PATIENT_APPOINTMENTS + id, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );
@@ -78,6 +87,9 @@ export const fetchMorePastPatientAppointments = createAsyncThunk(
   async ({ id, offset }: { id: string | null; offset: number | undefined }) => {
     const response = await axios.get(
       `${PATIENT_PAST_APPOINTMENTS}${id}/${offset}`,
+      {
+        headers: authHeader(),
+      },
     );
     return response.data;
   },
@@ -86,7 +98,9 @@ export const fetchMorePastPatientAppointments = createAsyncThunk(
 export const fetchPastPatientAppointments = createAsyncThunk(
   'patients/patient-more-past-appointments',
   async (id: string | null) => {
-    const response = await axios.get(PATIENT_PAST_APPOINTMENTS + id + '/' + 0);
+    const response = await axios.get(PATIENT_PAST_APPOINTMENTS + id + '/' + 0, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );
@@ -94,7 +108,9 @@ export const fetchPastPatientAppointments = createAsyncThunk(
 export const fetchPatients = createAsyncThunk<User[]>(
   'patients/fetchPatients',
   async () => {
-    const response = await axios.get<User[]>(PATIENTS_URL);
+    const response = await axios.get<User[]>(PATIENTS_URL, {
+      headers: authHeader(),
+    });
 
     return response.data;
   },
@@ -112,6 +128,9 @@ export const fetchMorePatients = createAsyncThunk(
   async (offset: number) => {
     const response = await axios.get<UniversalUser[]>(
       INCOMING_PATIENTS_TO_BE_RENDERED_URL + offset,
+      {
+        headers: authHeader(),
+      },
     );
     return response.data;
   },
@@ -120,7 +139,9 @@ export const fetchMorePatients = createAsyncThunk(
 export const fetchPatientsByPhysicianId = createAsyncThunk(
   'patients/fetchPatientsByPhysicianId',
   async ({ id }: { id: string | null }) => {
-    const response = await axios.get<User[]>(BASE_PATIENTS_URL + id + '/' + 0);
+    const response = await axios.get<User[]>(BASE_PATIENTS_URL + id + '/' + 0, {
+      headers: authHeader(),
+    });
 
     return response.data;
   },
@@ -131,6 +152,9 @@ export const fetchMorePatientsByPhysicianId = createAsyncThunk(
   async ({ id, offset }: { id: string | null; offset: number | undefined }) => {
     const response = await axios.get<User[]>(
       BASE_PATIENTS_URL + id + '/' + offset,
+      {
+        headers: authHeader(),
+      },
     );
 
     return response.data;
@@ -140,7 +164,9 @@ export const fetchMorePatientsByPhysicianId = createAsyncThunk(
 export const deletePatient = createAsyncThunk(
   'patients/deletePatient',
   async (id: string) => {
-    const response = await axios.delete<UniversalUser[]>(BASE_USER_URL + id);
+    const response = await axios.delete<UniversalUser[]>(BASE_USER_URL + id, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );
@@ -148,7 +174,9 @@ export const deletePatient = createAsyncThunk(
 export const searchPatient = createAsyncThunk(
   'patients/searchPatient',
   async (search: string) => {
-    const response = await axios.get(PATIENT_SEARCH_URL + search);
+    const response = await axios.get(PATIENT_SEARCH_URL + search, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );
@@ -156,7 +184,9 @@ export const searchPatient = createAsyncThunk(
 export const fetchPatientInfo = createAsyncThunk(
   'patientInfo/fetchPatientInfo',
   async (id: string) => {
-    const response = await axios.get(`${PATIENTS_ADDITIONAL_INFO_URL}${id}`);
+    const response = await axios.get(`${PATIENTS_ADDITIONAL_INFO_URL}${id}`, {
+      headers: authHeader(),
+    });
     sessionStorage.setItem('gender', response.data.gender);
     sessionStorage.setItem('birthDate', response.data.birthDate);
     sessionStorage.setItem('phone', response.data.phone);
@@ -186,6 +216,9 @@ export const updatePatientInfo = createAsyncThunk(
       const response = await axios.put(
         `${PATIENTS_ADDITIONAL_INFO_URL}${updatedPatientInfo.userId}`,
         updatedPatientInfo,
+        {
+          headers: authHeader(),
+        },
       );
       return response.data as PatientInfo;
     } catch (err: unknown) {
@@ -195,6 +228,9 @@ export const updatePatientInfo = createAsyncThunk(
         const response = await axios.post(
           `${PATIENTS_ADDITIONAL_INFO_URL}`,
           updatedPatientInfo,
+          {
+            headers: authHeader(),
+          },
         );
         return response.data as PatientInfo;
       }
@@ -209,6 +245,9 @@ export const createPatientInfo = createAsyncThunk(
     const response = await axios.post(
       `${PATIENTS_ADDITIONAL_INFO_URL}`,
       newPatientInfo,
+      {
+        headers: authHeader(),
+      },
     );
     return response.data as PatientInfo;
   },

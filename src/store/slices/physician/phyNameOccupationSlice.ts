@@ -4,6 +4,7 @@ import axios from 'axios';
 import { PhyNameOccupation } from '../../../model/Model';
 import { RootState } from '../../types';
 import { PHYNAMEOCCUPATION_URL } from '../../../utils/httpConstants';
+import authHeader from '../../../authentication/authHeader';
 
 interface PhyNameOccupationState {
   physicians: PhyNameOccupation[];
@@ -23,6 +24,9 @@ export const fetchPhyNameOccupation = createAsyncThunk<PhyNameOccupation[]>(
   async () => {
     const response = await axios.get<PhyNameOccupation[]>(
       PHYNAMEOCCUPATION_URL,
+      {
+        headers: authHeader(),
+      },
     );
     return response.data;
   },

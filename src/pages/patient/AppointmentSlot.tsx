@@ -23,8 +23,8 @@ const AppointmentSlot: FC<Props> = ({ appointment }) => {
         patientId,
       }),
     );
-    dispatch(fetchPatientAppointments(patientId));
-    setOpen(true);
+    await dispatch(fetchPatientAppointments(patientId));
+    setOpen(false);
   };
 
   const closeAlert = () => {

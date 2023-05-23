@@ -77,19 +77,19 @@ const TableBodyComponent: FC<Props> = ({
 
   const handleDelete = async (id: string) => {
     if (type === 'patient') {
-      dispatch(deletePatient(id));
+      await dispatch(deletePatient(id));
       await dispatch(resetPatientData());
-      dispatch(fetchPatientAmount());
+      await dispatch(fetchPatientAmount());
     }
     if (type === 'physician') {
-      dispatch(deletePhysician(id));
+      await dispatch(deletePhysician(id));
       await dispatch(resetPhysicianData());
-      dispatch(fetchPhysicianAmount());
+      await dispatch(fetchPhysicianAmount());
     }
     if (type === 'admin') {
-      dispatch(deleteAdmin(id));
+      await dispatch(deleteAdmin(id));
       await dispatch(resetAdminData());
-      dispatch(fetchAdminAmount());
+      await dispatch(fetchAdminAmount());
     }
     setUsers(users.filter((user) => user != id));
   };

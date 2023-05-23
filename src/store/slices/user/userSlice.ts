@@ -3,6 +3,7 @@ import axios from 'axios';
 import { RootState } from '../../types';
 import { User } from '../../../model/Model';
 import { BASE_USER_URL } from '../../../utils/httpConstants';
+import authHeader from '../../../authentication/authHeader';
 
 interface UserState {
   user: User | null;
@@ -19,7 +20,9 @@ const initialState: UserState = {
 export const fetchUserById = createAsyncThunk<User, string>(
   'user/fetchById',
   async (id) => {
-    const response = await axios.get(`${BASE_USER_URL}${id}`);
+    const response = await axios.get(`${BASE_USER_URL}${id}`, {
+      headers: authHeader(),
+    });
     return response.data as User;
   },
 );
@@ -27,7 +30,9 @@ export const fetchUserById = createAsyncThunk<User, string>(
 export const updateUser = createAsyncThunk<User, User>(
   'user/update',
   async (user) => {
-    const response = await axios.put(`${BASE_USER_URL}${user.id}`, user);
+    const response = await axios.put(`${BASE_USER_URL}${user.id}`, user, {
+      headers: authHeader(),
+    });
     return response.data as User;
   },
 );

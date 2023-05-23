@@ -76,7 +76,7 @@ const EditUserModal = ({
     }
   };
 
-  const handleUpdateUserById = () => {
+  const handleUpdateUserById = async () => {
     if (selectedPhysician && type === 'physician') {
       const updatedPhysician = {
         id: selectedPhysician.id,
@@ -86,7 +86,7 @@ const EditUserModal = ({
         password,
         occupationId: selectedOccupationId,
       };
-      dispatch(updatePhysician(updatedPhysician));
+      await dispatch(updatePhysician(updatedPhysician));
     } else if (selectedUser) {
       const updatedUser = {
         id: selectedUser.id,

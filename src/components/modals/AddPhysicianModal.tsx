@@ -17,7 +17,13 @@ import {
   createPhysician,
   fetchPhysicians,
 } from '../../store/slices/physician/physicianSlice';
-import { isValidName, isValidLastName, isValidPassword } from '../utils';
+import {
+  isValidName,
+  isValidLastName,
+  isValidPassword,
+  isValidEmail,
+  isValidOccupation,
+} from '../utils';
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -55,14 +61,14 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
   };
 
   const handleCreate = async () => {
-    setEmailError(!/\S+@\S+\.\S+/.test(email));
     setOccupationError(occupationId === '');
     if (
       !nameError &&
       !lastNameError &&
-      /\S+@\S+\.\S+/.test(email) &&
+      !emailError &&
       !passwordError &&
-      !occupationError
+      !occupationError &&
+      occupationId
     ) {
       await dispatch(
         createPhysician({
@@ -95,9 +101,25 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
     !isValidPassword(name) ? setPasswordError(true) : setPasswordError(false);
   };
 
-  const handleEmailErrors = (event: string) => {
-    setEmailError(!/\S+@\S+\.\S+/.test(event));
+  const handleEmailErrors = (email: string) => {
+    !isValidEmail(email) ? setEmailError(true) : setEmailError(false);
     setDuplicationError(false);
+  };
+
+  const handleOccupationErrors = (occupation: string) => {
+    !isValidOccupation(occupation)
+      ? setOccupationError(true)
+      : setOccupationError(false);
+  };
+
+  const isInputsValid = () => {
+    return (
+      !nameError &&
+      !lastNameError &&
+      !emailError &&
+      !passwordError &&
+      !occupationError
+    );
   };
 
   return (
@@ -110,8 +132,10 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
           <Box sx={Styles.box}>
             <TextField
               sx={Styles.textField}
-              onBlur={(e) => handleNameErrors(e.target.value)}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                handleNameErrors(e.target.value);
+              }}
               label='First name'
               id='new-patient-name-field'
               helperText={
@@ -121,8 +145,10 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
             />
             <TextField
               sx={Styles.textField}
-              onBlur={(e) => handleLastNameErrors(e.target.value)}
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={(e) => {
+                setLastName(e.target.value);
+                handleLastNameErrors(e.target.value);
+              }}
               error={lastNameError}
               helperText={
                 lastNameError && <>Last name length between 3 and 20 symbols</>
@@ -138,8 +164,10 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
               sx={Styles.textField}
               label='Email'
               id='new-patient-email-field'
-              onChange={(e) => setEmail(e.target.value)}
-              onBlur={(e) => handleEmailErrors(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                handleEmailErrors(e.target.value);
+              }}
               error={emailError || duplicationError}
               helperText={
                 (emailError && <>Incorrect email format</>) ||
@@ -147,8 +175,10 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
               }
             />
             <TextField
-              onChange={(e) => setPassword(e.target.value)}
-              onBlur={(e) => handlePasswordErrors(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                handlePasswordErrors(e.target.value);
+              }}
               id='new-patient-password-field'
               type={showPassword ? 'text' : 'password'}
               helperText={
@@ -179,9 +209,11 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
                   <>Select physician Occupation</>
                 )
               }
-              onBlur={(e) => setOccupationError(e.target.value === '')}
               error={occupationError}
-              onChange={(e) => setOccupationId(e.target.value)}
+              onChange={(e) => {
+                setOccupationId(e.target.value);
+                handleOccupationErrors(e.target.value);
+              }}
               sx={Styles.textField}
               id='occupation'
               select
@@ -212,6 +244,7 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
               variant='contained'
               type='submit'
               onClick={handleCreate}
+              disabled={!isInputsValid()}
             >
               Create
             </Button>

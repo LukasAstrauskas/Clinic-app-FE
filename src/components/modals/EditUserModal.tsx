@@ -148,13 +148,17 @@ const EditUserModal = ({
   const handleFirstNameCheck = (name: string) => {
     isValidName(name)
       ? setFirstNameError('')
-      : setFirstNameError('Field can not be empty');
+      : setFirstNameError(
+          'First name length between 3 and 20 symbols, letters only',
+        );
   };
 
   const handleLastNameCheck = (name: string) => {
     isValidName(name)
       ? setLastNameError('')
-      : setLastNameError('Field can not be empty');
+      : setLastNameError(
+          'First name length between 3 and 20 symbols, letters only',
+        );
   };
 
   const handlePasswordCheck = (password: string) => {

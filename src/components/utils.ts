@@ -1,26 +1,37 @@
 export function isValidFirstName(firstName: string) {
   const MIN_LENGTH = 2;
   const MAX_LENGTH = 21;
+  const LETTERS_ONLY = /^[a-zA-Z]+[a-zA-Z]+$/;
 
   return (
-    firstName.trim().length > MIN_LENGTH && firstName.trim().length < MAX_LENGTH
+    firstName.trim().length > MIN_LENGTH &&
+    firstName.trim().length < MAX_LENGTH &&
+    LETTERS_ONLY.test(firstName)
   );
 }
 
 export function isValidLastName(lastName: string) {
   const MIN_LENGTH = 2;
   const MAX_LENGTH = 21;
+  const LETTERS_ONLY = /^[a-zA-Z]+[a-zA-Z]+$/;
 
   return (
-    lastName.trim().length > MIN_LENGTH && lastName.trim().length < MAX_LENGTH
+    lastName.trim().length > MIN_LENGTH &&
+    lastName.trim().length < MAX_LENGTH &&
+    LETTERS_ONLY.test(lastName)
   );
 }
 
 export function isValidName(name: string) {
   const MIN_LENGTH = 2;
   const MAX_LENGTH = 21;
+  const LETTERS_ONLY = /^[a-zA-Z]+[a-zA-Z]+$/;
 
-  return name.trim().length > MIN_LENGTH && name.trim().length < MAX_LENGTH;
+  return (
+    name.trim().length > MIN_LENGTH &&
+    name.trim().length < MAX_LENGTH &&
+    LETTERS_ONLY.test(name)
+  );
 }
 
 export function isValidEmail(email: string) {
@@ -44,6 +55,13 @@ export function isValidPassword(password: string) {
     /[a-z]/i.test(password) &&
     /[0-9]/.test(password)
   );
+}
+
+export function isValidOccupation(occupation: string) {
+  const MIN_LENGTH = 3;
+  const MAX_LENGTH = 50;
+
+  return occupation.length >= MIN_LENGTH && occupation.length <= MAX_LENGTH;
 }
 
 export function isValidPasswordOrEmpty(password: string) {

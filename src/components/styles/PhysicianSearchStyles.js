@@ -61,7 +61,7 @@ export const physicianSearchStyles = {
 };
 
 export const SearchSelectItem = styled(MenuItem)((props) => ({
-  ...physicianSearchStyles.searchSelectItem,
+  ...physicianSearchStyles.searchSelect.searchSelectItem,
   ...props,
 }));
 export default physicianSearchStyles;

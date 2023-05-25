@@ -89,7 +89,16 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
   };
 
   const isInputsValid = () => {
-    return !nameError && !lastNameError && !emailError && !passwordError;
+    return (
+      !nameError &&
+      !lastNameError &&
+      !emailError &&
+      !passwordError &&
+      name &&
+      lastName &&
+      email &&
+      password
+    );
   };
 
   return (

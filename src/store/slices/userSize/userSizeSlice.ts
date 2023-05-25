@@ -8,6 +8,7 @@ import {
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../types';
+import authHeader from '../../../authentication/authHeader';
 
 interface UserSize {
   size: number;
@@ -24,7 +25,9 @@ const initialState: UserSize = {
 export const fetchPatientAmount = createAsyncThunk<number>(
   'patients/fetchPatientAmount',
   async () => {
-    const response = await axios.get<number>(PATIENT_SIZE_URL);
+    const response = await axios.get<number>(PATIENT_SIZE_URL, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );
@@ -32,7 +35,9 @@ export const fetchPatientAmount = createAsyncThunk<number>(
 export const fetchAdminAmount = createAsyncThunk<number>(
   'patients/fetchAdminAmount',
   async () => {
-    const response = await axios.get<number>(ADMIN_SIZE_URL);
+    const response = await axios.get<number>(ADMIN_SIZE_URL, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );
@@ -40,7 +45,9 @@ export const fetchAdminAmount = createAsyncThunk<number>(
 export const fetchPhysicianAmount = createAsyncThunk<number>(
   'patients/fetchPhysicianAmount',
   async () => {
-    const response = await axios.get<number>(PHYSICIAN_SIZE_URL);
+    const response = await axios.get<number>(PHYSICIAN_SIZE_URL, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );
@@ -50,6 +57,9 @@ export const fetchPatientsByPhysicianAmount = createAsyncThunk(
   async ({ id }: { id: string | null }) => {
     const response = await axios.get<number>(
       PATIENTS_BY_PHYSICIANS_ID_SIZE_URL + id,
+      {
+        headers: authHeader(),
+      },
     );
     return response.data;
   },

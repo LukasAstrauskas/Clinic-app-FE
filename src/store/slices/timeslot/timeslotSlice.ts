@@ -10,6 +10,7 @@ import {
   deletePatientFromTimeslot,
   deletePatientFromUpcomingTimeslot,
 } from './timeslotActions';
+import authHeader from '../../../authentication/authHeader';
 
 interface TimeslotState {
   timeslots: Timeslots[];
@@ -27,7 +28,9 @@ export const bookTimeslot = createAsyncThunk(
   'timeslot/bookTimeslot',
   async (appointment: Appointment) => {
     await axios
-      .patch('http://localhost:8080/timeslot', appointment)
+      .patch('http://localhost:8080/timeslot', appointment, {
+        headers: authHeader(),
+      })
       .catch((error) => {
         throw new Error(
           `You already have an appointment with this physician: ${error.message}`,

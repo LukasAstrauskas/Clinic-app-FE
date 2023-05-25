@@ -4,6 +4,7 @@ import { Occupation } from '../../../model/Model';
 import { OCCUPATIONS_URL } from '../../../utils/httpConstants';
 import axios from 'axios';
 import { RootState } from '../../types';
+import authHeader from '../../../authentication/authHeader';
 
 interface OccupationsState {
   occupations: Occupation[];
@@ -20,7 +21,9 @@ const initialState: OccupationsState = {
 export const fetchOccupations = createAsyncThunk(
   'occupation/fetchOccupations',
   async () => {
-    const response = await axios.get(OCCUPATIONS_URL);
+    const response = await axios.get(OCCUPATIONS_URL, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );

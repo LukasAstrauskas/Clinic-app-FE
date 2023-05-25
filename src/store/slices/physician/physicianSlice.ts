@@ -17,6 +17,7 @@ import {
 } from '../../../utils/httpConstants';
 import axios from 'axios';
 import { RootState } from '../../types';
+import authHeader from '../../../authentication/authHeader';
 
 interface PhysicianState {
   physicians: UniversalUser[];
@@ -35,7 +36,9 @@ const initialState: PhysicianState = {
 export const createPhysician = createAsyncThunk(
   'physician/createPhysician',
   async (requestData: CreateUserDto) => {
-    const response = await axios.post(`${PHYSICIANS_FULL_URL}`, requestData);
+    const response = await axios.post(`${PHYSICIANS_FULL_URL}`, requestData, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );
@@ -43,7 +46,9 @@ export const createPhysician = createAsyncThunk(
 export const fetchPhysicianById = createAsyncThunk<Physician, string>(
   'physician/fetchPhysicianById',
   async (id) => {
-    const response = await axios.get(`${BASE_PHYSICIANS_URL}${id}`);
+    const response = await axios.get(`${BASE_PHYSICIANS_URL}${id}`, {
+      headers: authHeader(),
+    });
     return response.data as Physician;
   },
 );
@@ -54,6 +59,9 @@ export const updatePhysician = createAsyncThunk<PhysicianDto, PhysicianDto>(
     const response = await axios.put(
       `${BASE_PHYSICIANS_FULL_URL}${physician.id}`,
       physician,
+      {
+        headers: authHeader(),
+      },
     );
     return response.data as PhysicianDto;
   },
@@ -62,7 +70,9 @@ export const updatePhysician = createAsyncThunk<PhysicianDto, PhysicianDto>(
 export const fetchPhysicians = createAsyncThunk(
   'user/fetchPhysicians',
   async () => {
-    const response = await axios.get<User[]>(PHYSICIANS_FULL_URL);
+    const response = await axios.get<User[]>(PHYSICIANS_FULL_URL, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );
@@ -79,6 +89,9 @@ export const fetchMorePhysicians = createAsyncThunk(
   async (offset: number) => {
     const response = await axios.get<UniversalUser[]>(
       INCOMING_PHYSICIANS_TO_BE_RENDERED_URL + offset,
+      {
+        headers: authHeader(),
+      },
     );
     return response.data;
   },
@@ -89,6 +102,9 @@ export const deletePhysician = createAsyncThunk(
   async (id: string) => {
     const response = await axios.delete<UniversalUser[]>(
       PHYSICIANS_URL_FOR_DELETE + id,
+      {
+        headers: authHeader(),
+      },
     );
     return response.data;
   },
@@ -105,7 +121,9 @@ export const searchPhysician = createAsyncThunk(
       params.append('occupation', occupation);
     }
 
-    const response = await axios.get(`${PHYSICIAN_SEARCH_URL}?${params}`);
+    const response = await axios.get(`${PHYSICIAN_SEARCH_URL}?${params}`, {
+      headers: authHeader(),
+    });
 
     return response.data;
   },

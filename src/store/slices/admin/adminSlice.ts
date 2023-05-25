@@ -14,6 +14,7 @@ interface AdminState {
   isLoading: boolean;
   error: string | null;
 }
+import authHeader from '../../../authentication/authHeader';
 
 const initialState: AdminState = {
   admins: [],
@@ -24,7 +25,9 @@ const initialState: AdminState = {
 export const createAdmin = createAsyncThunk(
   'user/createAdmin',
   async (requestData: CreateUserDto) => {
-    const response = await axios.post(`${ADMINS_URL}`, requestData);
+    const response = await axios.post(`${ADMINS_URL}`, requestData, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );
@@ -32,7 +35,9 @@ export const createAdmin = createAsyncThunk(
 export const fetchAdmins = createAsyncThunk<User[]>(
   'user/fetchAdmins',
   async () => {
-    const response = await axios.get<User[]>(ADMINS_URL);
+    const response = await axios.get<User[]>(ADMINS_URL, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );
@@ -49,6 +54,9 @@ export const fetchMoreAdmins = createAsyncThunk(
   async (offset: number) => {
     const response = await axios.get<UniversalUser[]>(
       INCOMING_ADMINS_TO_BE_RENDERED_URL + offset,
+      {
+        headers: authHeader(),
+      },
     );
     return response.data;
   },
@@ -57,7 +65,9 @@ export const fetchMoreAdmins = createAsyncThunk(
 export const deleteAdmin = createAsyncThunk(
   'user/deleteAdmin',
   async (id: string) => {
-    const response = await axios.delete<UniversalUser[]>(BASE_ADMINS_URL + id);
+    const response = await axios.delete<UniversalUser[]>(BASE_ADMINS_URL + id, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );
@@ -65,7 +75,9 @@ export const deleteAdmin = createAsyncThunk(
 export const searchAdmin = createAsyncThunk(
   'user/searchAdmin',
   async (search: string) => {
-    const response = await axios.get(ADMIN_SEARCH_URL + search);
+    const response = await axios.get(ADMIN_SEARCH_URL + search, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );

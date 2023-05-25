@@ -118,7 +118,11 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
       !lastNameError &&
       !emailError &&
       !passwordError &&
-      !occupationError
+      !occupationError &&
+      name &&
+      lastName &&
+      email &&
+      password
     );
   };
 
@@ -139,7 +143,9 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
               label='First name'
               id='new-patient-name-field'
               helperText={
-                nameError && <>First name length between 3 and 20 symbols</>
+                nameError && (
+                  <>First name length between 3 and 20 symbols, letters only</>
+                )
               }
               error={nameError}
             />
@@ -151,7 +157,9 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
               }}
               error={lastNameError}
               helperText={
-                lastNameError && <>Last name length between 3 and 20 symbols</>
+                lastNameError && (
+                  <>Last name length between 3 and 20 symbols, letters onl</>
+                )
               }
               id='new-patient-LastName-field'
               label='Last name'

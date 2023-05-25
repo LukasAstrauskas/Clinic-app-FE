@@ -46,9 +46,7 @@ export const physicianSearchStyles = {
         border: 'none',
       },
     },
-    searchSelectItem: {
-      height: '2rem',
-    },
+
     '& .MuiInputLabel-root': {
       top: '-9px',
       color: 'black !important',
@@ -58,10 +56,13 @@ export const physicianSearchStyles = {
       opacity: 0,
     },
   },
+  searchSelectItem: {
+    height: '2rem',
+  },
 };
 
 export const SearchSelectItem = styled(MenuItem)((props) => ({
-  ...physicianSearchStyles.searchSelect.searchSelectItem,
+  ...physicianSearchStyles.searchSelectItem,
   ...props,
 }));
 export default physicianSearchStyles;

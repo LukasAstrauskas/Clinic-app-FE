@@ -220,6 +220,23 @@ export const updatePatientInfo = createAsyncThunk(
           headers: authHeader(),
         },
       );
+      sessionStorage.setItem('gender', response.data.gender);
+      sessionStorage.setItem('birthDate', response.data.birthDate);
+      sessionStorage.setItem('phone', response.data.phone);
+      sessionStorage.setItem('street', response.data.street);
+      sessionStorage.setItem('city', response.data.city);
+      sessionStorage.setItem('postalCode', response.data.postalCode);
+      sessionStorage.setItem('country', response.data.country);
+      sessionStorage.setItem('emergencyName', response.data.emergencyName);
+      sessionStorage.setItem(
+        'emergencyLastName',
+        response.data.emergencyLastName,
+      );
+      sessionStorage.setItem('emergencyPhone', response.data.emergencyPhone);
+      sessionStorage.setItem(
+        'emergencyRelation',
+        response.data.emergencyRelation,
+      );
       return response.data as PatientInfo;
     } catch (err: unknown) {
       const error = err as AxiosError;

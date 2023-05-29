@@ -4,7 +4,6 @@ import { CreateUserDto, UniversalUser, User } from '../../../model/Model';
 import {
   ADMINS_URL,
   ADMIN_SEARCH_URL,
-  BASE_ADMINS_URL,
   INCOMING_ADMINS_TO_BE_RENDERED_URL,
 } from '../../../utils/httpConstants';
 import axios from 'axios';
@@ -62,16 +61,6 @@ export const fetchMoreAdmins = createAsyncThunk(
   },
 );
 
-export const deleteAdmin = createAsyncThunk(
-  'user/deleteAdmin',
-  async (id: string) => {
-    const response = await axios.delete<UniversalUser[]>(BASE_ADMINS_URL + id, {
-      headers: authHeader(),
-    });
-    return response.data;
-  },
-);
-
 export const searchAdmin = createAsyncThunk(
   'user/searchAdmin',
   async (search: string) => {
@@ -114,9 +103,6 @@ export const adminSlice = createSlice({
       .addCase(fetchAdmins.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
-      })
-      .addCase(deleteAdmin.fulfilled, (state) => {
-        state.isLoading = false;
       })
       .addCase(fetchMoreAdmins.pending, (state) => {
         state.isLoading = false;

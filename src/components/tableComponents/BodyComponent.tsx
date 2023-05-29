@@ -10,13 +10,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { UniversalUser } from '../../model/Model';
 import { tableRowSX } from '../../pages/physicians/PhysicianTable';
 import {
-  deleteAdmin,
   fetchAdmins,
   fetchMoreAdmins,
   resetAdminData,
 } from '../../store/slices/admin/adminSlice';
 import {
-  deletePatient,
   fetchMorePatients,
   fetchMorePatientsByPhysicianId,
   fetchPatients,
@@ -24,7 +22,6 @@ import {
   resetPatientData,
 } from '../../store/slices/patient/patientSlice';
 import {
-  deletePhysician,
   fetchMorePhysicians,
   fetchPhysicians,
   resetPhysicianData,
@@ -38,6 +35,7 @@ import {
 } from '../../store/slices/userSize/userSizeSlice';
 import { AppDispatch } from '../../store/types';
 import EditUserModal from '../modals/EditUserModal';
+import { deleteUser } from '../../store/slices/user/userSlice';
 interface Props {
   user: UniversalUser[];
   more: boolean;
@@ -76,18 +74,16 @@ const TableBodyComponent: FC<Props> = ({
   };
 
   const handleDelete = async (id: string) => {
+    await dispatch(deleteUser(id));
     if (type === 'patient') {
-      await dispatch(deletePatient(id));
       await dispatch(resetPatientData());
       await dispatch(fetchPatientAmount());
     }
     if (type === 'physician') {
-      await dispatch(deletePhysician(id));
       await dispatch(resetPhysicianData());
       await dispatch(fetchPhysicianAmount());
     }
     if (type === 'admin') {
-      await dispatch(deleteAdmin(id));
       await dispatch(resetAdminData());
       await dispatch(fetchAdminAmount());
     }

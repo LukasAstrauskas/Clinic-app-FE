@@ -1,8 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../../types';
-import { User } from '../../../model/Model';
-import { BASE_USER_URL } from '../../../utils/httpConstants';
+import { UniversalUser, User } from '../../../model/Model';
+import {
+  ADMINS_URL,
+  ADMIN_ACTION,
+  BASE_USER_URL,
+} from '../../../utils/httpConstants';
 import authHeader from '../../../authentication/authHeader';
 
 interface UserState {
@@ -37,6 +41,16 @@ export const updateUser = createAsyncThunk<User, User>(
   },
 );
 
+export const deleteUser = createAsyncThunk(
+  'user/deleteAdmin',
+  async (id: string) => {
+    const response = await axios.delete(`${ADMIN_ACTION}/${id}`, {
+      headers: authHeader(),
+    });
+    return response.data;
+  },
+);
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -68,6 +82,19 @@ export const userSlice = createSlice({
       .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? 'Failed to update user';
+      })
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteUser.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+        state.user = null;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? 'Failed to delete user';
       });
   },
 });

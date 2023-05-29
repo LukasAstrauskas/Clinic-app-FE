@@ -43,6 +43,7 @@ export const createPhysician = createAsyncThunk(
   },
 );
 
+// not used
 export const fetchPhysicianById = createAsyncThunk<Physician, string>(
   'physician/fetchPhysicianById',
   async (id) => {
@@ -89,19 +90,6 @@ export const fetchMorePhysicians = createAsyncThunk(
   async (offset: number) => {
     const response = await axios.get<UniversalUser[]>(
       INCOMING_PHYSICIANS_TO_BE_RENDERED_URL + offset,
-      {
-        headers: authHeader(),
-      },
-    );
-    return response.data;
-  },
-);
-
-export const deletePhysician = createAsyncThunk(
-  'user/deletePhysician',
-  async (id: string) => {
-    const response = await axios.delete<UniversalUser[]>(
-      PHYSICIANS_URL_FOR_DELETE + id,
       {
         headers: authHeader(),
       },
@@ -183,13 +171,6 @@ export const physicianSlice = createSlice({
       .addCase(fetchMorePhysicians.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
-      })
-      .addCase(deletePhysician.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(deletePhysician.fulfilled, (state) => {
-        state.isLoading = false;
       })
       .addCase(searchPhysician.pending, (state) => {
         state.isLoading = true;

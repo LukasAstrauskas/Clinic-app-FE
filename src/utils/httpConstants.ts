@@ -2,9 +2,10 @@
 export const LOGIN_URL = 'http://localhost:8080/login';
 export const USERS_URL = 'http://localhost:8080/user';
 export const BASE_USER_URL = 'http://localhost:8080/user/';
+//Admin actions
+export const ADMIN_ACTION = 'http://localhost:8080/user/admin';
 //Admins
 export const ADMINS_URL = 'http://localhost:8080/user/admins';
-export const BASE_ADMINS_URL = 'http://localhost:8080/user/admins/';
 export const INCOMING_ADMINS_TO_BE_RENDERED_URL =
   'http://localhost:8080/user/admins/offset/';
 export const ADMIN_SEARCH_URL = 'http://localhost:8080/user/adminSearch/';

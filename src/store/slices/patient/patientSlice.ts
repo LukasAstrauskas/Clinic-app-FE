@@ -161,16 +161,6 @@ export const fetchMorePatientsByPhysicianId = createAsyncThunk(
   },
 );
 
-export const deletePatient = createAsyncThunk(
-  'patients/deletePatient',
-  async (id: string) => {
-    const response = await axios.delete<UniversalUser[]>(BASE_USER_URL + id, {
-      headers: authHeader(),
-    });
-    return response.data;
-  },
-);
-
 export const searchPatient = createAsyncThunk(
   'patients/searchPatient',
   async (search: string) => {
@@ -350,9 +340,6 @@ export const patientSlice = createSlice({
       .addCase(fetchMorePatientsByPhysicianId.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
-      })
-      .addCase(deletePatient.fulfilled, (state) => {
-        state.isLoading = false;
       })
       .addCase(searchPatient.pending, (state) => {
         state.isLoading = true;

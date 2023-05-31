@@ -12,7 +12,6 @@ import {
   BASE_PHYSICIANS_URL,
   PHYSICIANS_FULL_URL,
   INCOMING_PHYSICIANS_TO_BE_RENDERED_URL,
-  PHYSICIANS_URL_FOR_DELETE,
   PHYSICIAN_SEARCH_URL,
 } from '../../../utils/httpConstants';
 import axios from 'axios';

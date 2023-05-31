@@ -13,10 +13,7 @@ import Styles from '../styles/UserManagmentStyles';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import { selectOccupations } from '../../store/slices/occupation/occupationSlice';
-import {
-  createPhysician,
-  fetchPhysicians,
-} from '../../store/slices/physician/physicianSlice';
+import { fetchPhysicians } from '../../store/slices/physician/physicianSlice';
 import {
   isValidName,
   isValidLastName,
@@ -24,6 +21,8 @@ import {
   isValidEmail,
   isValidOccupation,
 } from '../utils';
+import { CreateUserDTO } from '../../model/Model';
+import { createUser } from '../../store/slices/user/userSlice';
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -70,14 +69,15 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
       !occupationError &&
       occupationId
     ) {
-      await dispatch(
-        createPhysician({
-          name: name + ' ' + lastName,
-          email: email,
-          password: password,
-          occupationId: occupationId,
-        }),
-      )
+      const createUserDTO: CreateUserDTO = {
+        name: name,
+        surname: lastName,
+        email: email,
+        password: password,
+        type: 'physician',
+        infoID: occupationId,
+      };
+      await dispatch(createUser(createUserDTO))
         .unwrap()
         .then(() => {
           dispatch(fetchPhysicians());
@@ -87,29 +87,34 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
           setDuplicationError(true);
         });
     }
+    handleClose();
   };
 
   const handleNameErrors = (name: string) => {
-    !isValidName(name) ? setNameError(true) : setNameError(false);
+    isValidName(name) ? setNameError(false) : setNameError(true);
   };
 
-  const handleLastNameErrors = (name: string) => {
-    !isValidLastName(name) ? setLastNameError(true) : setLastNameError(false);
+  const handleLastNameErrors = (lastName: string) => {
+    isValidLastName(lastName)
+      ? setLastNameError(false)
+      : setLastNameError(true);
   };
 
-  const handlePasswordErrors = (name: string) => {
-    !isValidPassword(name) ? setPasswordError(true) : setPasswordError(false);
+  const handlePasswordErrors = (password: string) => {
+    isValidPassword(password)
+      ? setPasswordError(false)
+      : setPasswordError(true);
   };
 
   const handleEmailErrors = (email: string) => {
-    !isValidEmail(email) ? setEmailError(true) : setEmailError(false);
+    isValidEmail(email) ? setEmailError(false) : setEmailError(true);
     setDuplicationError(false);
   };
 
   const handleOccupationErrors = (occupation: string) => {
-    !isValidOccupation(occupation)
-      ? setOccupationError(true)
-      : setOccupationError(false);
+    isValidOccupation(occupation)
+      ? setOccupationError(false)
+      : setOccupationError(true);
   };
 
   const isInputsValid = () => {
@@ -119,10 +124,10 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
       !emailError &&
       !passwordError &&
       !occupationError &&
-      name &&
-      lastName &&
-      email &&
-      password
+      name !== '' &&
+      lastName !== '' &&
+      email !== '' &&
+      password !== ''
     );
   };
 

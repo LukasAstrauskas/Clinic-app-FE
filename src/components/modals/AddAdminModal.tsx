@@ -9,13 +9,15 @@ import { Visibility } from '@mui/icons-material';
 import Styles from '../styles/UserManagmentStyles';
 import { AppDispatch } from '../../store/types';
 import { useDispatch } from 'react-redux';
-import { createAdmin, fetchAdmins } from '../../store/slices/admin/adminSlice';
+import { fetchAdmins } from '../../store/slices/admin/adminSlice';
 import {
   isValidName,
   isValidLastName,
   isValidPassword,
   isValidEmail,
 } from '../utils';
+import { CreateUserDTO } from '../../model/Model';
+import { createUser } from '../../store/slices/user/userSlice';
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -50,13 +52,14 @@ const AddAdminModal: FC<Props> = ({ setOpen, open }) => {
 
   const handleCreate = async () => {
     if (!nameError && !lastNameError && !emailError && !passwordError) {
-      await dispatch(
-        createAdmin({
-          name: name + ' ' + lastName,
-          email: email,
-          password: password,
-        }),
-      )
+      const createUserDTO: CreateUserDTO = {
+        name: name,
+        surname: lastName,
+        email: email,
+        password: password,
+        type: 'admin',
+      };
+      await dispatch(createUser(createUserDTO))
         .unwrap()
         .then(() => {
           dispatch(fetchAdmins());
@@ -66,22 +69,27 @@ const AddAdminModal: FC<Props> = ({ setOpen, open }) => {
           setDuplicationError(true);
         });
     }
+    handleClose();
   };
 
   const handleNameErrors = (name: string) => {
-    !isValidName(name) ? setNameError(true) : setNameError(false);
+    isValidName(name) ? setNameError(false) : setNameError(true);
   };
 
-  const handleLastNameErrors = (name: string) => {
-    !isValidLastName(name) ? setLastNameError(true) : setLastNameError(false);
+  const handleLastNameErrors = (lastName: string) => {
+    isValidLastName(lastName)
+      ? setLastNameError(false)
+      : setLastNameError(true);
   };
 
-  const handlePasswordErrors = (name: string) => {
-    !isValidPassword(name) ? setPasswordError(true) : setPasswordError(false);
+  const handlePasswordErrors = (password: string) => {
+    isValidPassword(password)
+      ? setPasswordError(false)
+      : setPasswordError(true);
   };
 
   const handleEmailErrors = (email: string) => {
-    !isValidEmail(email) ? setEmailError(true) : setEmailError(false);
+    isValidEmail(email) ? setEmailError(false) : setEmailError(true);
     setDuplicationError(false);
   };
 
@@ -91,10 +99,10 @@ const AddAdminModal: FC<Props> = ({ setOpen, open }) => {
       !lastNameError &&
       !emailError &&
       !passwordError &&
-      name &&
-      lastName &&
-      email &&
-      password
+      name !== '' &&
+      lastName !== '' &&
+      email !== '' &&
+      password !== ''
     );
   };
 

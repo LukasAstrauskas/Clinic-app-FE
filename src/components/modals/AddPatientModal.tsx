@@ -7,10 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { Visibility } from '@mui/icons-material';
 import Styles from '../styles/UserManagmentStyles';
-import {
-  createPatient,
-  fetchPatients,
-} from '../../store/slices/patient/patientSlice';
+import { fetchPatients } from '../../store/slices/patient/patientSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import {
@@ -19,6 +16,8 @@ import {
   isValidPassword,
   isValidEmail,
 } from '../utils';
+import { createUser } from '../../store/slices/user/userSlice';
+import { CreateUserDTO } from '../../model/Model';
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -53,13 +52,14 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
 
   const handleCreate = async () => {
     if (!nameError && !lastNameError && !emailError && !passwordError) {
-      await dispatch(
-        createPatient({
-          name: name + ' ' + lastName,
-          email: email,
-          password: password,
-        }),
-      )
+      const createUserDTO: CreateUserDTO = {
+        name: name,
+        surname: lastName,
+        email: email,
+        password: password,
+        type: 'patient',
+      };
+      await dispatch(createUser(createUserDTO))
         .unwrap()
         .then(() => {
           dispatch(fetchPatients());
@@ -69,23 +69,24 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
           setDuplicationError(true);
         });
     }
+    handleClose();
   };
 
   const handleNameErrors = (name: string) => {
-    !isValidName(name) ? setNameError(true) : setNameError(false);
+    isValidName(name) ? setNameError(false) : setNameError(true);
   };
 
-  const handleLastNameErrors = (name: string) => {
-    !isValidLastName(name) ? setLastNameError(true) : setLastNameError(false);
+  const handleLastNameErrors = (surname: string) => {
+    isValidLastName(surname) ? setLastNameError(false) : setLastNameError(true);
   };
 
   const handleEmailErrors = (email: string) => {
-    !isValidEmail(email) ? setEmailError(true) : setEmailError(false);
+    isValidEmail(email) ? setEmailError(false) : setEmailError(true);
     setDuplicationError(false);
   };
 
-  const handlePasswordErrors = (name: string) => {
-    !isValidPassword(name) ? setPasswordError(true) : setPasswordError(false);
+  const handlePasswordErrors = (pass: string) => {
+    isValidPassword(pass) ? setPasswordError(false) : setPasswordError(true);
   };
 
   const isInputsValid = () => {
@@ -94,10 +95,10 @@ const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
       !lastNameError &&
       !emailError &&
       !passwordError &&
-      name &&
-      lastName &&
-      email &&
-      password
+      name !== '' &&
+      lastName !== '' &&
+      email !== '' &&
+      password !== ''
     );
   };
 

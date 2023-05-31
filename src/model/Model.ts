@@ -132,6 +132,15 @@ export type CreateUserDto = {
   occupationId?: string;
 };
 
+export type CreateUserDTO = {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+  type: string;
+  infoID?: string;
+};
+
 export interface Appointment {
   physicianId: string;
   date: string;

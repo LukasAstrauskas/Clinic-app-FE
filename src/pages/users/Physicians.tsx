@@ -86,7 +86,7 @@ export const Physicians = () => {
               type='physician'
               more={more}
               setMore={setMore}
-              user={physicians}
+              userList={physicians}
               isSearch={isSearch}
             />
           </Table>

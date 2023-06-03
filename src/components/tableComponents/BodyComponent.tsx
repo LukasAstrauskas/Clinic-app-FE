@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { grey } from '@mui/material/colors';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { UniversalUser } from '../../model/Model';
+import { CreateUserDTO, Occupation, UniversalUser } from '../../model/Model';
 import { tableRowSX } from '../../pages/physicians/PhysicianTable';
 import {
   fetchAdmins,
@@ -36,8 +36,9 @@ import {
 import { AppDispatch } from '../../store/types';
 import EditUserModal from '../modals/EditUserModal';
 import { deleteUser } from '../../store/slices/user/userSlice';
+
 interface Props {
-  user: UniversalUser[];
+  userList: UniversalUser[];
   more: boolean;
   setMore: React.Dispatch<React.SetStateAction<boolean>>;
   type: string;
@@ -53,7 +54,7 @@ export const tableRowSx = (isSelected: boolean) => {
 };
 
 const TableBodyComponent: FC<Props> = ({
-  user,
+  userList,
   type,
   rowClick = () => undefined,
   isSearch,
@@ -68,9 +69,33 @@ const TableBodyComponent: FC<Props> = ({
   const loggedInUserType = sessionStorage.getItem('type');
   const [refresh, setRefresh] = useState(false);
   const scrollContainerRef = useRef<any>(null);
+  const [userToUpdate, setUserToUpdate] = useState<CreateUserDTO>({
+    name: '',
+    surname: '',
+    email: '',
+    password: '',
+    type: '',
+    infoID: undefined,
+  });
 
   const handleOpen = () => {
     setOpen(true);
+  };
+
+  const setSelectedUser = (
+    name: string,
+    email: string,
+    occupation?: Occupation,
+  ) => {
+    const userDTO: CreateUserDTO = {
+      name: name.split(' ')[0],
+      surname: name.split(' ')[1],
+      email: email,
+      password: '',
+      type: type,
+      infoID: occupation?.id,
+    };
+    setUserToUpdate(userDTO);
   };
 
   const handleDelete = async (id: string) => {
@@ -98,19 +123,19 @@ const TableBodyComponent: FC<Props> = ({
       dispatch(
         fetchMorePatientsByPhysicianId({
           id: loggedInUserId,
-          offset: user.length,
+          offset: userList.length,
         }),
       );
     } else {
       switch (type) {
         case 'patient':
-          dispatch(fetchMorePatients(user.length));
+          dispatch(fetchMorePatients(userList.length));
           break;
         case 'admin':
-          dispatch(fetchMoreAdmins(user.length));
+          dispatch(fetchMoreAdmins(userList.length));
           break;
         case 'physician':
-          dispatch(fetchMorePhysicians(user.length));
+          dispatch(fetchMorePhysicians(userList.length));
           break;
       }
     }
@@ -157,89 +182,95 @@ const TableBodyComponent: FC<Props> = ({
   }, [users, refresh]);
 
   return (
-    <TableBody
-      ref={scrollContainerRef}
-      id='scrollBox'
-      style={{
-        maxHeight: 400,
-        overflow: 'auto',
-        display: 'flex',
-      }}
-      sx={{ backgroundColor: grey[200] }}
-    >
-      <TableRow>
-        <TableCell>
-          <InfiniteScroll
-            scrollableTarget='scrollBox'
-            dataLength={user.length}
-            next={getMoreData}
-            hasMore={userSize > user.length}
-            loader={
-              !isSearch && (
-                <Typography variant='h5' sx={{ textAlign: 'center' }}>
-                  loading...
-                </Typography>
-              )
-            }
-          >
-            <EditUserModal
-              setOpen={setOpen}
-              open={open}
-              selectedId={selectedId}
-              refresh={refresh}
-              setRefresh={setRefresh}
-            />
-            <Table>
-              <TableBody>
-                {user.map(({ id, name, email, occupation }) => (
-                  <TableRow key={id} hover sx={tableRowSX(selectedId === id)}>
-                    <TableCell
-                      sx={tableRowSx(renderDelAndEditCells)}
+    <>
+      <TableBody
+        ref={scrollContainerRef}
+        id='scrollBox'
+        style={{
+          maxHeight: 400,
+          overflow: 'auto',
+          display: 'flex',
+        }}
+        sx={{ backgroundColor: grey[200] }}
+      >
+        <TableRow>
+          <TableCell>
+            <InfiniteScroll
+              scrollableTarget='scrollBox'
+              dataLength={userList.length}
+              next={getMoreData}
+              hasMore={userSize > userList.length}
+              loader={
+                !isSearch && (
+                  <Typography variant='h5' sx={{ textAlign: 'center' }}>
+                    loading...
+                  </Typography>
+                )
+              }
+            >
+              <Table>
+                ID: {selectedId}, Type: {type}
+                <TableBody>
+                  {userList.map(({ id, name, email, occupation }) => (
+                    <TableRow
+                      key={id}
+                      hover
+                      sx={tableRowSX(selectedId === id)}
                       onClick={() => {
-                        rowClick(id);
+                        setSelectedUser(name, email, occupation);
                         setSelectedId(id);
                       }}
                     >
-                      {name}
-                      {/* {user.length} */}
-                    </TableCell>
-                    <TableCell
-                      align='center'
-                      sx={{ width: '200px' }}
-                      onClick={() => rowClick(id)}
-                    >
-                      {type === 'physician' ? occupation?.name : email}
-                    </TableCell>
-                    {renderDelAndEditCells && (
-                      <>
-                        <TableCell
-                          sx={{ m: 0, p: 0 }}
-                          onClick={() => {
-                            setSelectedId(id);
-                          }}
-                        >
-                          <IconButton color='primary' onClick={handleOpen}>
-                            <EditIcon />
-                          </IconButton>
-                        </TableCell>
-                        <TableCell>
-                          <IconButton
-                            color='primary'
-                            onClick={() => handleDelete(id)}
-                          >
-                            <DeleteIcon sx={{ color: 'orange' }} />
-                          </IconButton>
-                        </TableCell>
-                      </>
-                    )}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </InfiniteScroll>
-        </TableCell>
-      </TableRow>
-    </TableBody>
+                      <TableCell
+                        sx={tableRowSx(renderDelAndEditCells)}
+                        onClick={() => rowClick(id)}
+                      >
+                        {name}
+                      </TableCell>
+                      <TableCell
+                        align='center'
+                        sx={{ width: '200px' }}
+                        onClick={() => rowClick(id)}
+                      >
+                        {type === 'physician' ? occupation?.name : email}
+                      </TableCell>
+                      {renderDelAndEditCells && (
+                        <>
+                          <TableCell sx={{ m: 0, p: 0 }}>
+                            <IconButton
+                              color='primary'
+                              onClick={() => handleOpen()}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                          </TableCell>
+                          <TableCell>
+                            <IconButton
+                              color='primary'
+                              onClick={() => handleDelete(id)}
+                            >
+                              <DeleteIcon sx={{ color: 'orange' }} />
+                            </IconButton>
+                          </TableCell>
+                        </>
+                      )}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </InfiniteScroll>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+      <EditUserModal
+        setOpen={setOpen}
+        open={open}
+        id={selectedId}
+        userToUpdate={userToUpdate}
+        refresh={refresh}
+        setRefresh={setRefresh}
+      />
+    </>
   );
 };
 

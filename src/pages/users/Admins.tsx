@@ -86,7 +86,7 @@ export const Admins = () => {
               type='admin'
               more={more}
               setMore={setMore}
-              user={admins}
+              userList={admins}
               isSearch={isSearch}
             />
           </Table>

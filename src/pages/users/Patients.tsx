@@ -109,7 +109,7 @@ export const Patients = () => {
               type='patient'
               more={more}
               setMore={setMore}
-              user={patients}
+              userList={patients}
               rowClick={choosePatient}
               renderDelAndEditCells={!appointment.physicianId}
               isSearch={isSearch}

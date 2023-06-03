@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../../types';
-import { CreateUserDTO, User } from '../../../model/Model';
+import { CreateUserDTO, UpdateUserDTO, User } from '../../../model/Model';
 import { ADMIN_ACTION, BASE_USER_URL } from '../../../utils/httpConstants';
 import authHeader from '../../../authentication/authHeader';
 
@@ -36,13 +36,17 @@ export const createUser = createAsyncThunk(
   },
 );
 
-export const updateUser = createAsyncThunk<User, User>(
+export const updateUser = createAsyncThunk(
   'user/update',
-  async (user) => {
-    const response = await axios.put(`${BASE_USER_URL}${user.id}`, user, {
-      headers: authHeader(),
-    });
-    return response.data as User;
+  async (updateUser: UpdateUserDTO) => {
+    const response = await axios.put(
+      `${ADMIN_ACTION}/${updateUser.id}`,
+      updateUser.userDTO,
+      {
+        headers: authHeader(),
+      },
+    );
+    return response.data;
   },
 );
 
@@ -75,6 +79,19 @@ export const userSlice = createSlice({
         state.loading = false;
         state.error = action.error.message ?? 'Failed to fetch user';
       })
+      .addCase(createUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        // state.user = action.payload;
+      })
+      .addCase(createUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? 'Failed to create user';
+      })
       .addCase(updateUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -82,7 +99,7 @@ export const userSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.user = action.payload;
+        // state.user = action.payload;
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;

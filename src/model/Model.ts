@@ -94,11 +94,8 @@ export interface EditUser {
 export type UniversalUser = {
   id: string;
   name: string;
-  email: string | number;
-  occupation?: {
-    id?: string;
-    name?: string;
-  };
+  email: string;
+  occupation?: Occupation;
 };
 
 export type Occupation = {
@@ -111,10 +108,11 @@ export type Physician = {
   name: string;
   email: string;
   type: string;
-  occupation: {
-    id: string;
-    name: string;
-  };
+  occupation: Occupation;
+  //  {
+  //   id: string;
+  //   name: string;
+  // };
 };
 
 export type PhysicianDto = {
@@ -139,6 +137,11 @@ export type CreateUserDTO = {
   password: string;
   type: string;
   infoID?: string;
+};
+
+export type UpdateUserDTO = {
+  id: string;
+  userDTO: CreateUserDTO;
 };
 
 export interface Appointment {

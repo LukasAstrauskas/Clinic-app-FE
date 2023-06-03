@@ -8,25 +8,18 @@ import { isValidName, isValidEmail, isValidPasswordOrEmpty } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
-import {
-  selectUser,
-  updateUser,
-  fetchUserById,
-} from '../../store/slices/user/userSlice';
+import { updateUser } from '../../store/slices/user/userSlice';
 import {
   fetchOccupations,
   selectOccupations,
 } from '../../store/slices/occupation/occupationSlice';
-import {
-  fetchPhysicianById,
-  updatePhysician,
-} from '../../store/slices/physician/editedPhysicianSlice';
-import { selectPhysician } from '../../store/slices/physician/physicianSlice';
+import { CreateUserDTO, UpdateUserDTO } from '../../model/Model';
 
 interface Props {
   setOpen: (open: boolean) => void;
   open: boolean;
-  selectedId: string;
+  id: string;
+  userToUpdate: CreateUserDTO;
   refresh: boolean;
   setRefresh: (refresh: boolean) => void;
 }
@@ -34,112 +27,61 @@ interface Props {
 const EditUserModal = ({
   open,
   setOpen,
-  selectedId: id,
+  id,
+  userToUpdate,
   setRefresh,
   refresh,
 }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
-  const selectedUser = useSelector(selectUser);
-  const selectedPhysician = useSelector(selectPhysician);
   const occupations = useSelector(selectOccupations);
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [type, setType] = useState('');
+  const initialState: CreateUserDTO = {
+    name: '',
+    surname: '',
+    email: '',
+    password: '',
+    type: '',
+    infoID: undefined,
+  };
+  const [userDTO, setUserDTO] = useState<CreateUserDTO>(initialState);
+
   const [emailError, setEmailError] = useState('');
   const [firstNameError, setFirstNameError] = useState('');
   const [lastNameError, setLastNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [selectedOccupationId, setSelectedOccupationId] = useState('');
-
-  const handleFetchUserById = () => {
-    if (selectedUser) {
-      const fullUserName = selectedUser.name.split(' ');
-
-      setFirstName(fullUserName[0]);
-      setLastName(fullUserName[1]);
-      setEmail(selectedUser.email);
-      setType(selectedUser.type);
-    }
-  };
-
-  const handleFetchPhysicianById = () => {
-    if (selectedPhysician) {
-      const fullPhysicianName = selectedPhysician.name.split(' ');
-
-      setFirstName(fullPhysicianName[0]);
-      setLastName(fullPhysicianName[1]);
-      setEmail(selectedPhysician.email);
-      setSelectedOccupationId(selectedPhysician.occupation.id);
-    }
-  };
 
   const handleUpdateUserById = async () => {
-    if (selectedPhysician && type === 'physician') {
-      const updatedPhysician = {
-        id: selectedPhysician.id,
-        name: firstName + ' ' + lastName,
-        email,
-        type,
-        password,
-        occupationId: selectedOccupationId,
-      };
-      await dispatch(updatePhysician(updatedPhysician));
-    } else if (selectedUser) {
-      const updatedUser = {
-        id: selectedUser.id,
-        name: firstName + ' ' + lastName,
-        email,
-        password,
-        type,
-      };
-      dispatch(updateUser(updatedUser));
-    }
+    const updatedUserDTO: UpdateUserDTO = {
+      id: id,
+      userDTO: userDTO,
+    };
+
+    await dispatch(updateUser(updatedUserDTO));
+
     setRefresh(!refresh);
     handleClose();
   };
 
   const handleClose = () => {
-    setFirstName('');
-    setLastName('');
-    setEmail('');
-    setPassword('');
-
     setFirstNameError('');
     setLastNameError('');
     setEmailError('');
     setPasswordError('');
 
+    setUserDTO(initialState);
+
     setOpen(false);
   };
 
   useEffect(() => {
-    if (!open) {
-      return;
+    if (open) {
+      if (userToUpdate.type === 'physician' && occupations.length === 0) {
+        alert(`Get occupations`);
+        dispatch(fetchOccupations());
+      }
+      setUserDTO(userToUpdate);
     }
-    handleFetchPhysicianById();
-  }, [selectedPhysician]);
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-    handleFetchUserById();
-  }, [selectedUser]);
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    if (type === 'physician') {
-      dispatch(fetchOccupations());
-      dispatch(fetchPhysicianById(id));
-    }
-    dispatch(fetchUserById(id));
-  }, [type, open, dispatch]);
+  }, [open, dispatch]);
 
   const handleEmailCheck = (email: string) => {
     isValidEmail(email) ? setEmailError('') : setEmailError('Email is invalid');
@@ -190,7 +132,13 @@ const EditUserModal = ({
               fontWeight: '700',
             }}
           >
-            {type === 'physician' ? 'Modify Physician' : 'Modify User'}
+            {userToUpdate.type === 'physician'
+              ? 'Modify Physician'
+              : 'Modify User'}
+            <p>Name: {userDTO.name}.</p>
+            <p>Surname: {userDTO.surname}.</p>
+            <p>Type: {userDTO.type}.</p>
+            <p>InfoID: {userDTO.infoID}.</p>
           </Typography>
           <Box
             sx={{
@@ -203,9 +151,12 @@ const EditUserModal = ({
             <TextField
               sx={Styles.textField}
               id='firstName'
-              value={firstName}
+              value={userDTO.name}
               onChange={(e) => {
-                setFirstName(e.target.value.trim());
+                setUserDTO({
+                  ...userDTO,
+                  name: e.target.value.trim(),
+                });
                 handleFirstNameCheck(e.target.value);
               }}
               helperText={firstNameError === '' ? 'First Name' : firstNameError}
@@ -214,9 +165,12 @@ const EditUserModal = ({
             <TextField
               sx={Styles.textField}
               id='lastName'
-              value={lastName}
+              value={userDTO.surname}
               onChange={(e) => {
-                setLastName(e.target.value.trim());
+                setUserDTO({
+                  ...userDTO,
+                  surname: e.target.value.trim(),
+                });
                 handleLastNameCheck(e.target.value);
               }}
               helperText={lastNameError === '' ? 'Last Name' : lastNameError}
@@ -227,9 +181,12 @@ const EditUserModal = ({
             <TextField
               sx={Styles.textField}
               id='email'
-              value={email}
+              value={userDTO.email}
               onChange={(e) => {
-                setEmail(e.target.value);
+                setUserDTO({
+                  ...userDTO,
+                  email: e.target.value.trim(),
+                });
                 handleEmailCheck(e.target.value);
               }}
               helperText={emailError === '' ? 'Email' : emailError}
@@ -239,24 +196,32 @@ const EditUserModal = ({
               sx={Styles.textField}
               id='password'
               type='password'
-              value={password}
+              value={userDTO.password}
               onChange={(e) => {
-                setPassword(e.target.value.trim());
+                setUserDTO({
+                  ...userDTO,
+                  password: e.target.value.trim(),
+                });
                 handlePasswordCheck(e.target.value);
               }}
               style={{ marginLeft: '20px' }}
               helperText={passwordError === '' ? 'Password' : passwordError}
               error={passwordError !== ''}
             ></TextField>
-            {type === 'physician' && (
+            {userToUpdate.type === 'physician' && (
               <TextField
                 sx={Styles.textField}
                 id='occupation'
-                value={selectedOccupationId}
+                value={userDTO.infoID}
                 select
                 variant='outlined'
                 helperText='Occupation'
-                onChange={(e) => setSelectedOccupationId(e.target.value)}
+                onChange={(e) =>
+                  setUserDTO({
+                    ...userDTO,
+                    infoID: e.target.value,
+                  })
+                }
                 SelectProps={{ native: true }}
                 InputLabelProps={{ shrink: true }}
               >

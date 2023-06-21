@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/types';
-import { login } from '../../store/slices/auth/authActions';
+import { authFetchUserById, login } from '../../store/slices/auth/authActions';
 import { fetchPatientInfo } from '../../store/slices/patient/patientSlice';
 import Styles from '../../components/styles/UserManagmentStyles';
 
@@ -27,7 +27,9 @@ const Login = () => {
 
     const response = await dispatch(login({ email, password }));
     const userId = sessionStorage.getItem('userId');
-
+    if (userId) {
+      await dispatch(authFetchUserById(userId));
+    }
     setErrorAlertOpen(true);
     if (response.payload && response.payload.type) {
       navigate(ROUTES.HOME);

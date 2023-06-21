@@ -6,7 +6,6 @@ import {
   UniversalUser,
   User,
   PatientInfo,
-  CreateUserDto,
 } from '../../../model/Model';
 import {
   BASE_PATIENTS_URL,
@@ -15,6 +14,7 @@ import {
   PATIENTS_URL,
   PATIENT_APPOINTMENTS,
   PATIENT_PAST_APPOINTMENTS,
+  PATIENT_PAST_APPOINTMENTS_AMOUNT,
   PATIENT_REMOVE_APPOINTMENT,
   PATIENT_SEARCH_URL,
 } from '../../../utils/httpConstants';
@@ -27,7 +27,7 @@ interface PatientsState {
   isLoading: boolean;
   upcomingAppointments: PatientAppointments[];
   pastAppointments: PatientAppointments[];
-  patientPastAppointmentAmount: number;
+  totalPastAppointmentAmount: number;
   error: string | null;
 }
 
@@ -36,42 +36,12 @@ const initialState: PatientsState = {
   additionalInfo: null,
   upcomingAppointments: [],
   pastAppointments: [],
-  patientPastAppointmentAmount: 0,
+  totalPastAppointmentAmount: 0,
   isLoading: false,
   error: null,
 };
 
-export const createPatient = createAsyncThunk(
-  'patients/createPatient',
-  async (requestData: CreateUserDto) => {
-    const response = await axios.post(`${PATIENTS_URL}`, requestData, {
-      headers: authHeader(),
-    });
-    return response.data;
-  },
-);
-
-export const deleteAppointment = createAsyncThunk(
-  'patients/patient-cancel-appointment',
-  async ({
-    PhysicianId,
-    PatientId,
-  }: {
-    PhysicianId: string | undefined;
-    PatientId: string | null;
-  }) => {
-    const response = await axios.delete(PATIENT_REMOVE_APPOINTMENT, {
-      headers: authHeader(),
-      data: {
-        PhysicianId,
-        PatientId,
-      },
-    });
-    return response.data;
-  },
-);
-
-export const fetchPatientAppointments = createAsyncThunk(
+export const fetchUpcomingPatientAppointments = createAsyncThunk(
   'patients/patient-appointments',
   async (id: string | null) => {
     const response = await axios.get(PATIENT_APPOINTMENTS + id, {
@@ -81,9 +51,9 @@ export const fetchPatientAppointments = createAsyncThunk(
   },
 );
 
-export const fetchMorePastPatientAppointments = createAsyncThunk(
+export const fetchPatientPastAppointments = createAsyncThunk(
   'patients/patient-past-appointments',
-  async ({ id, offset }: { id: string | null; offset: number | undefined }) => {
+  async ({ id, offset }: { id: string; offset: number }) => {
     const response = await axios.get(
       `${PATIENT_PAST_APPOINTMENTS}${id}/${offset}`,
       {
@@ -94,12 +64,16 @@ export const fetchMorePastPatientAppointments = createAsyncThunk(
   },
 );
 
-export const fetchPastPatientAppointments = createAsyncThunk(
+export const fetchPatientPastAppointmentAmount = createAsyncThunk(
   'patients/patient-more-past-appointments',
-  async (id: string | null) => {
-    const response = await axios.get(PATIENT_PAST_APPOINTMENTS + id + '/' + 0, {
-      headers: authHeader(),
-    });
+  async (id: string) => {
+    const response = await axios.get(
+      PATIENT_PAST_APPOINTMENTS_AMOUNT.concat(`/${id}`),
+      {
+        headers: authHeader(),
+      },
+    );
+    console.log(response.data);
     return response.data;
   },
 );
@@ -265,21 +239,6 @@ export const patientSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(createPatient.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(
-        createPatient.fulfilled,
-        (state, action: PayloadAction<User>) => {
-          state.isLoading = false;
-          state.patients.push(action.payload);
-        },
-      )
-      .addCase(createPatient.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message || 'Something went wrong';
-      })
       .addCase(fetchPatients.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -352,46 +311,40 @@ export const patientSlice = createSlice({
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
       })
-      .addCase(fetchPatientAppointments.pending, (state) => {
+      .addCase(fetchUpcomingPatientAppointments.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchPatientAppointments.fulfilled, (state, action) => {
+      .addCase(fetchUpcomingPatientAppointments.fulfilled, (state, action) => {
         state.isLoading = false;
         state.upcomingAppointments = action.payload;
       })
-      .addCase(fetchPatientAppointments.rejected, (state, action) => {
+      .addCase(fetchUpcomingPatientAppointments.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
       })
-      .addCase(deleteAppointment.fulfilled, (state) => {
-        state.isLoading = false;
-      })
-      .addCase(fetchPastPatientAppointments.pending, (state) => {
+      .addCase(fetchPatientPastAppointmentAmount.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchPastPatientAppointments.fulfilled, (state, action) => {
+      .addCase(fetchPatientPastAppointmentAmount.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.pastAppointments = action.payload.data;
-        state.patientPastAppointmentAmount = action.payload.total;
+        // state.pastAppointments = action.payload.data;
+        state.totalPastAppointmentAmount = action.payload;
       })
-      .addCase(fetchPastPatientAppointments.rejected, (state, action) => {
+      .addCase(fetchPatientPastAppointmentAmount.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
       })
-      .addCase(fetchMorePastPatientAppointments.pending, (state) => {
+      .addCase(fetchPatientPastAppointments.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchMorePastPatientAppointments.fulfilled, (state, action) => {
+      .addCase(fetchPatientPastAppointments.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.pastAppointments = [
-          ...state.pastAppointments,
-          ...action.payload.data,
-        ];
+        state.pastAppointments = [...state.pastAppointments, ...action.payload];
       })
-      .addCase(fetchMorePastPatientAppointments.rejected, (state, action) => {
+      .addCase(fetchPatientPastAppointments.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
       })
@@ -422,11 +375,11 @@ export const patientSlice = createSlice({
 export const selectPatients = (state: RootState) => state.patient.patients;
 export const selectPatientAdditionalInfo = (state: RootState) =>
   state.patient.additionalInfo;
-export const selectAppointments = (state: RootState) =>
+export const selectUpcomingAppointments = (state: RootState) =>
   state.patient.upcomingAppointments;
 export const selectPastAppointments = (state: RootState) =>
   state.patient.pastAppointments;
-export const selectPatientPastAppointmentAmount = (state: RootState) =>
-  state.patient.patientPastAppointmentAmount;
+export const selectTotalPastAppointmentAmount = (state: RootState) =>
+  state.patient.totalPastAppointmentAmount;
 
 export default patientSlice.reducer;

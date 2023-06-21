@@ -8,38 +8,11 @@ export interface Timeslots {
   timePatientList: TimePatient[];
 }
 
-export interface PatientPastAppointments {
-  data: {
-    physicianId: string;
-    physicianName: string;
-    physicianEmail: string;
-    occupation: {
-      id: string;
-      name: string;
-    };
-    timeslot: {
-      physicianId: string;
-      date: string;
-      patientId: string;
-    };
-  };
-  offset: number;
-  total: number;
-}
-
 export interface PatientAppointments {
-  physicianId: string;
-  physicianName: string;
-  physicianEmail: string;
-  occupation: {
-    id: string;
-    name: string;
-  };
-  timeslot: {
-    physicianId: string;
-    date: string;
-    patientId: string;
-  };
+  id: string;
+  name: string;
+  date: string;
+  occupation: string | null;
 }
 
 export interface PhyNameOccupation {
@@ -54,11 +27,6 @@ export interface User {
   password: string;
   email: string;
   type: string;
-}
-
-export interface endPoint {
-  endPoint: string;
-  offset: number;
 }
 
 export interface PatientInfo {
@@ -81,16 +49,7 @@ export interface Timeslot {
   date: string;
   time: string;
 }
-export interface TimeslotWithPhysicianAndPatient {
-  physicianId: string;
-  patientId?: string | null;
-}
 
-export interface EditUser {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  open: boolean;
-  selectedId: string;
-}
 export type UniversalUser = {
   id: string;
   name: string;
@@ -109,10 +68,6 @@ export type Physician = {
   email: string;
   type: string;
   occupation: Occupation;
-  //  {
-  //   id: string;
-  //   name: string;
-  // };
 };
 
 export type PhysicianDto = {

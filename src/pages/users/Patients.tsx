@@ -13,9 +13,9 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
 import AddPatientModal from '../../components/modals/AddPatientModal';
-import TableHeadComponent from '../../components/tableComponents/HeadComponent';
+import TableHeadComponent from '../../components/tableComponents/TableHeadComponent';
 import Styles from '../../components/styles/UserManagmentStyles';
-import TableBodyComponent from '../../components/tableComponents/BodyComponent';
+import TableBodyComponent from '../../components/tableComponents/TableBodyComponent';
 import AppointmentContext from '../../hooks/AppointmentContext';
 
 export const searchBaraSx = (isSelected: string) => {

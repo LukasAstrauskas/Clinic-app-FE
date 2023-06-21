@@ -64,6 +64,7 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
           </Grid>
           {type !== 'physician' && (
             <Grid item lg={4} sx={{ pr: 2 }}>
+              <p>Size: {physicians.length}</p>
               <PhysicianSearchBar onSearch={handleSearch} />
               <PhysicianTable
                 physicians={physicians}

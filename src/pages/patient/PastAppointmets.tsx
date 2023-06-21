@@ -1,11 +1,11 @@
 import { Box, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  fetchMorePastPatientAppointments,
+  fetchPatientPastAppointments,
   selectPastAppointments,
-  selectPatientPastAppointmentAmount,
+  selectTotalPastAppointmentAmount,
 } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
 import AppointmentSlot from './AppointmentSlot';
@@ -13,30 +13,33 @@ import { PatientAppointments } from '../../model/Model';
 
 const PastAppointments = () => {
   const appointments = useSelector(selectPastAppointments);
-  const appointmentAmount = useSelector(selectPatientPastAppointmentAmount);
-  const [more, setMore] = useState(false);
-  const userId = sessionStorage.getItem('userId');
+  const appointmentAmount = useSelector(selectTotalPastAppointmentAmount);
+  // const [hasMore, setHasMore] = useState(false);
+  const userId = sessionStorage.getItem('userId') || '';
   const dispatch = useDispatch<AppDispatch>();
 
-  const fetchMoreAppointments = async () => {
-    if (appointmentAmount > appointments.length) {
-      await dispatch(
-        fetchMorePastPatientAppointments({
-          id: userId,
-          offset: appointments.length,
-        }),
-      );
-      setMore(true);
-    } else {
-      setMore(false);
-    }
-  };
-
   useEffect(() => {
-    if (appointmentAmount > 0) {
-      setMore(true);
+    if (appointments.length === 0) {
+      fetchInitialData();
     }
   }, []);
+
+  const fetchInitialData = async () => {
+    console.log('fetch PAST appointments');
+    await dispatch(fetchPatientPastAppointments({ id: userId, offset: 0 }));
+  };
+
+  const fetchMoreAppointments = async () => {
+    console.log('fetch more apponits');
+    await dispatch(
+      fetchPatientPastAppointments({
+        id: userId,
+        offset: appointments.length,
+      }),
+    );
+  };
+
+  const hasMore = () => appointmentAmount > appointments.length;
 
   return (
     <>
@@ -52,10 +55,15 @@ const PastAppointments = () => {
           scrollableTarget='scrollBox'
           dataLength={appointments.length}
           next={fetchMoreAppointments}
-          hasMore={more}
+          hasMore={hasMore()}
           loader={
             <Typography variant='h5' sx={{ textAlign: 'center' }}>
               loading...
+            </Typography>
+          }
+          endMessage={
+            <Typography variant='h5' sx={{ textAlign: 'center' }}>
+              No more data to loaaad...
             </Typography>
           }
         >
@@ -63,7 +71,7 @@ const PastAppointments = () => {
             <>
               {appointments.map((appointment: PatientAppointments) => (
                 <AppointmentSlot
-                  key={appointment.physicianId}
+                  key={appointment.date}
                   appointment={appointment}
                 />
               ))}

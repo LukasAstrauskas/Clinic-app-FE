@@ -7,8 +7,8 @@ import { TableContainer, Table, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import PhysicianModalContent from '../../components/modals/AddPhysicianModal';
 import Styles from '../../components/styles/UserManagmentStyles';
-import TableHeadComponent from '../../components/tableComponents/HeadComponent';
-import TableBodyComponent from '../../components/tableComponents/BodyComponent';
+import TableHeadComponent from '../../components/tableComponents/TableHeadComponent';
+import TableBodyComponent from '../../components/tableComponents/TableBodyComponent';
 import {
   selectPhysicians,
   fetchPhysicians,

@@ -16,44 +16,18 @@ import {
 import { grey } from '@mui/material/colors';
 import { NavLink, Link } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
-import { authFetchUserById, logout } from '../../store/slices/auth/authActions';
+import { logout } from '../../store/slices/auth/authActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
-import { User } from '../../model/Model';
-import { selectId } from '../../store/slices/auth/authSlice';
+import { selectInitials } from '../../store/slices/auth/authSlice';
 import { resetStore } from '../../store/reducers';
 
 const Header = () => {
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
   const anchorRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch<AppDispatch>();
 
-  const loggedUserId = useSelector(selectId);
-  const isLoggedIn = sessionStorage.getItem('isLogged') || '';
-
-  const handleLoggedInUserInitials = () => {
-    if (name.length > 0) {
-      const countOfWords = name.split(' ');
-
-      if (countOfWords.length === 2) {
-        return countOfWords[0].charAt(0) + countOfWords[1].charAt(0);
-      }
-      return name.substring(0, 2);
-    }
-  };
-  const handleFetchUserById = async () => {
-    if (!loggedUserId) {
-      return 'no id';
-    }
-    const user = await dispatch(authFetchUserById(loggedUserId));
-    const userData = user.payload as User;
-    setName(userData.name);
-  };
-
-  useEffect(() => {
-    handleFetchUserById();
-  }, [name, loggedUserId]);
+  const initials = useSelector(selectInitials);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -88,12 +62,11 @@ const Header = () => {
   }
 
   // return focus to the button when we transitioned from !open -> open
-  const prevOpen = React.useRef(open);
-  React.useEffect(() => {
+  const prevOpen = useRef(open);
+  useEffect(() => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current?.focus();
     }
-
     prevOpen.current = open;
   }, [open]);
 
@@ -109,10 +82,9 @@ const Header = () => {
           <h1>G-Unit Clinic</h1>
         </div>
       </Link>
-
       <Stack direction='row' spacing={2}>
         <div>
-          {!isLoggedIn ? null : (
+          {initials && (
             <>
               <Button
                 ref={anchorRef}
@@ -123,9 +95,7 @@ const Header = () => {
                 onClick={handleToggle}
               >
                 <Avatar className={styles.avatar} sx={{ bgcolor: grey[100] }}>
-                  <div className={styles.avatarLogo}>
-                    {handleLoggedInUserInitials()}
-                  </div>
+                  <div className={styles.avatarLogo}>{initials}</div>
                 </Avatar>
               </Button>
               <Popper

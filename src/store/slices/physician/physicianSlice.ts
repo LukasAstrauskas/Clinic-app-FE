@@ -1,15 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import { Physician, UniversalUser, User } from '../../../model/Model';
 import {
-  CreateUserDto,
-  Physician,
-  PhysicianDto,
-  UniversalUser,
-  User,
-} from '../../../model/Model';
-import {
-  BASE_PHYSICIANS_FULL_URL,
-  BASE_PHYSICIANS_URL,
   PHYSICIANS_FULL_URL,
   INCOMING_PHYSICIANS_TO_BE_RENDERED_URL,
   PHYSICIAN_SEARCH_URL,
@@ -31,41 +23,6 @@ const initialState: PhysicianState = {
   isLoading: false,
   error: null,
 };
-
-export const createPhysician = createAsyncThunk(
-  'physician/createPhysician',
-  async (requestData: CreateUserDto) => {
-    const response = await axios.post(`${PHYSICIANS_FULL_URL}`, requestData, {
-      headers: authHeader(),
-    });
-    return response.data;
-  },
-);
-
-// not used
-export const fetchPhysicianById = createAsyncThunk<Physician, string>(
-  'physician/fetchPhysicianById',
-  async (id) => {
-    const response = await axios.get(`${BASE_PHYSICIANS_URL}${id}`, {
-      headers: authHeader(),
-    });
-    return response.data as Physician;
-  },
-);
-
-export const updatePhysician = createAsyncThunk<PhysicianDto, PhysicianDto>(
-  'physician/updatePhysician',
-  async (physician) => {
-    const response = await axios.put(
-      `${BASE_PHYSICIANS_FULL_URL}${physician.id}`,
-      physician,
-      {
-        headers: authHeader(),
-      },
-    );
-    return response.data as PhysicianDto;
-  },
-);
 
 export const fetchPhysicians = createAsyncThunk(
   'user/fetchPhysicians',
@@ -122,27 +79,6 @@ export const physicianSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(createPhysician.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(createPhysician.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message || 'Something went wrong';
-      })
-      .addCase(fetchPhysicianById.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(fetchPhysicianById.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.selectedPhysician = action.payload;
-      })
-      .addCase(fetchPhysicianById.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message || 'Something went wrong';
-      })
-
       .addCase(fetchPhysicians.pending, (state) => {
         state.isLoading = true;
         state.error = null;

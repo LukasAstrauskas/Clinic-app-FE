@@ -21,16 +21,6 @@ const initialState: AdminState = {
   error: null,
 };
 
-export const createAdmin = createAsyncThunk(
-  'user/createAdmin',
-  async (requestData: CreateUserDto) => {
-    const response = await axios.post(`${ADMINS_URL}`, requestData, {
-      headers: authHeader(),
-    });
-    return response.data;
-  },
-);
-
 export const fetchAdmins = createAsyncThunk<User[]>(
   'user/fetchAdmins',
   async () => {
@@ -77,18 +67,6 @@ export const adminSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(createAdmin.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(createAdmin.fulfilled, (state, action: PayloadAction<User>) => {
-        state.isLoading = false;
-        state.admins.push(action.payload);
-      })
-      .addCase(createAdmin.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message || 'Something went wrong';
-      })
       .addCase(fetchAdmins.pending, (state) => {
         state.isLoading = true;
         state.error = null;

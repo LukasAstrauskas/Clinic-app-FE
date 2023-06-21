@@ -77,7 +77,7 @@ const BookAppointment = () => {
   );
 
   return (
-    <Box sx={{ width: '100%', marginTop: '30px' }}>
+    <Box sx={{ width: '100%', marginTop: '0px' }}>
       <Stack
         display='flex'
         justifyContent='center'
@@ -106,7 +106,6 @@ const BookAppointment = () => {
         <Box
           display='flex'
           justifyContent='center'
-          padding={3}
           sx={{
             width: '95%',
           }}

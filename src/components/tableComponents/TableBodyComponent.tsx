@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Table, TableBody, TableCell, TableRow } from '@mui/material';
@@ -53,13 +53,13 @@ export const tableRowSx = (isSelected: boolean) => {
   };
 };
 
-const TableBodyComponent: FC<Props> = ({
+const TableBodyComponent = ({
   userList,
   type,
   rowClick = () => undefined,
   isSearch,
   renderDelAndEditCells = true,
-}) => {
+}: Props) => {
   const userSize = useSelector(selectUserSize);
   const dispatch = useDispatch<AppDispatch>();
   const [selectedId, setSelectedId] = useState('');
@@ -209,7 +209,6 @@ const TableBodyComponent: FC<Props> = ({
               }
             >
               <Table>
-                ID: {selectedId}, Type: {type}
                 <TableBody>
                   {userList.map(({ id, name, email, occupation }) => (
                     <TableRow

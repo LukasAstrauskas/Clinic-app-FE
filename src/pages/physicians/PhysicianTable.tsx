@@ -56,7 +56,7 @@ const PhysicianTable = ({
   }, []);
 
   return (
-    <div id='scrollBox' style={{ maxHeight: 250, overflowY: 'scroll' }}>
+    <div id='scrollBox' style={{ maxHeight: 375, overflowY: 'scroll' }}>
       <TableContainer component={Paper}>
         <InfiniteScroll
           scrollableTarget='scrollBox'

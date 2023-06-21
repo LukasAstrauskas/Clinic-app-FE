@@ -2,10 +2,10 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { PatientAppointments } from '../../model/Model';
-import { selectAppointments } from '../../store/slices/patient/patientSlice';
+import { selectUpcomingAppointments } from '../../store/slices/patient/patientSlice';
 import AppointmentSlot from './AppointmentSlot';
 const UpcomingAppointments = () => {
-  const appointments = useSelector(selectAppointments);
+  const appointments = useSelector(selectUpcomingAppointments);
 
   return (
     <>
@@ -15,11 +15,11 @@ const UpcomingAppointments = () => {
           overflow: 'auto',
         }}
       >
-        {appointments.length != 0 ? (
+        {appointments.length > 0 ? (
           <>
             {appointments.map((appointment: PatientAppointments) => (
               <AppointmentSlot
-                key={appointment.physicianId}
+                key={appointment.date}
                 appointment={appointment}
               ></AppointmentSlot>
             ))}

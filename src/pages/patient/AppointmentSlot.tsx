@@ -1,17 +1,17 @@
 import { Box, Button, Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import AlertModal from '../../components/modals/AlertModal';
 import { PatientAppointments } from '../../model/Model';
-import { fetchPatientAppointments } from '../../store/slices/patient/patientSlice';
+import { fetchUpcomingPatientAppointments } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
 import { deletePatientFromUpcomingTimeslot } from '../../store/slices/timeslot/timeslotActions';
 interface Props {
   appointment: PatientAppointments;
 }
 
-const AppointmentSlot: FC<Props> = ({ appointment }) => {
+const AppointmentSlot = ({ appointment }: Props) => {
   const patientId = sessionStorage.getItem('userId') || '';
   const dispatch = useDispatch<AppDispatch>();
   const [open, setOpen] = useState(false);
@@ -23,7 +23,7 @@ const AppointmentSlot: FC<Props> = ({ appointment }) => {
         patientId,
       }),
     );
-    await dispatch(fetchPatientAppointments(patientId));
+    await dispatch(fetchUpcomingPatientAppointments(patientId));
     setOpen(false);
   };
 
@@ -68,7 +68,7 @@ const AppointmentSlot: FC<Props> = ({ appointment }) => {
               Physician
             </Typography>
             <Typography sx={{ marginTop: '20px' }} fontWeight={'500'}>
-              {appointment.physicianName}, {appointment.occupation?.name || ''}
+              {appointment.name}, {appointment?.occupation || 'No Occup'}
             </Typography>
           </Box>
           <Box sx={{ marginLeft: '40px', width: '160px' }}>
@@ -77,20 +77,14 @@ const AppointmentSlot: FC<Props> = ({ appointment }) => {
             </Typography>
             <Box sx={{ display: 'flex' }}>
               <Typography sx={{ marginTop: '20px' }} fontWeight={'600'}>
-                {dayjs(appointment.timeslot.date).format('YYYY-MM-DD')}
-              </Typography>
-              <Typography
-                sx={{ marginTop: '20px', marginLeft: '10px' }}
-                fontWeight={'600'}
-              >
-                {dayjs(appointment.timeslot.date).format('HH:mm')}
+                {dayjs(appointment.date).format('YYYY-MM-DD HH:mm')}
               </Typography>
             </Box>
           </Box>
           <Box>
-            {!dayjs().isAfter(appointment.timeslot.date) && (
+            {dayjs().isBefore(appointment.date) && (
               <Button
-                onClick={() => handleAlertOpen(appointment.physicianId)}
+                onClick={() => handleAlertOpen(appointment.id)}
                 variant='outlined'
                 sx={{
                   marginLeft: '300px',

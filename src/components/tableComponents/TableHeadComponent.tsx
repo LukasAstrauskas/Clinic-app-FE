@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { TableHead, TableRow, TableCell } from '@mui/material';
 import { grey } from '@mui/material/colors';
 interface Props {
@@ -15,10 +15,10 @@ export const tableHeadSx = (isSelected: boolean) => {
   };
 };
 
-const TableHeadComponent: FC<Props> = ({
+const TableHeadComponent = ({
   collumName,
   renderTableHeadCells = true,
-}) => {
+}: Props) => {
   const tableHeadName =
     collumName.charAt(0).toUpperCase() +
     collumName.substring(1, collumName.length);

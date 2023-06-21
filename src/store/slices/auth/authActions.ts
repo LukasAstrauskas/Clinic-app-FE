@@ -8,11 +8,13 @@ import authHeader from '../../../authentication/authHeader';
 export const login = createAsyncThunk(
   'auth/login',
   async (payload: { email: string; password: string }) => {
-    const response = await axios.post(LOGIN_URL, payload);
-    localStorage.setItem('token', JSON.stringify(response.data.token));
-    sessionStorage.setItem('isLogged', 'true');
-    sessionStorage.setItem('type', response.data.type);
-    sessionStorage.setItem('userId', response.data.id);
+    const response = await axios.post(LOGIN_URL, payload).then((response) => {
+      localStorage.setItem('token', response.data.token);
+      sessionStorage.setItem('isLogged', 'true');
+      sessionStorage.setItem('userId', response.data.id);
+      sessionStorage.setItem('type', response.data.type);
+      return response;
+    });
 
     return response.data;
   },
@@ -24,16 +26,21 @@ export const logout = createAsyncThunk('auth/logout', async () => {
   sessionStorage.removeItem('type');
   sessionStorage.removeItem('name');
   sessionStorage.removeItem('userId');
+  sessionStorage.removeItem('user');
 });
 
 export const authFetchUserById = createAsyncThunk<User, string>(
   'auth/authFetchUserById',
   async (id) => {
-    const response = await axios.get(`${BASE_USER_URL}${id}`, {
-      headers: authHeader(),
-    });
-    sessionStorage.setItem('name', response.data.name);
-
-    return response.data as User;
+    const user: User = await axios
+      .get(`${BASE_USER_URL}${id}`, {
+        headers: authHeader(),
+      })
+      .then((response) => {
+        sessionStorage.setItem('name', response.data.name);
+        sessionStorage.setItem('user', JSON.stringify(response.data));
+        return response.data;
+      });
+    return user;
   },
 );

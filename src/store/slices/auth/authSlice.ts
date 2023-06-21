@@ -64,6 +64,28 @@ export const authSlice = createSlice({
 });
 
 export const selectUser = (state: RootState) => state.auth.user;
+export const selectInitials = (state: RootState): string | null => {
+  const user = state.auth.user;
+  const sessionName = sessionStorage.getItem('name');
+  let name: string | null = null;
+  if (user) {
+    name = user.name;
+  } else if (sessionName) {
+    name = sessionName;
+  }
+  const setInitials = (fullName: string | null): string | null => {
+    if (fullName) {
+      const nameArr = fullName.split(' ');
+      if (nameArr.length === 2) {
+        return nameArr[0].charAt(0) + nameArr[1].charAt(0);
+      }
+      return fullName.substring(0, 2);
+    }
+    return null;
+  };
+
+  return setInitials(name);
+};
 export const selectType = (state: RootState) => state.auth.type;
 export const selectId = (state: RootState) => state.auth.id;
 export const selectLoading = (state: RootState) => state.auth.loading;

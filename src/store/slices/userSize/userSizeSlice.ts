@@ -12,12 +12,18 @@ import authHeader from '../../../authentication/authHeader';
 
 interface UserSize {
   size: number;
+  patientCount: number;
+  physicianCount: number;
+  adminCount: number;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: UserSize = {
   size: 0,
+  patientCount: 0,
+  physicianCount: 0,
+  adminCount: 0,
   isLoading: false,
   error: null,
 };
@@ -135,5 +141,9 @@ export const userSizeSlice = createSlice({
 });
 
 export const selectUserSize = (state: RootState) => state.size.size;
+export const selectPatientCount = (state: RootState) => state.size.patientCount;
+export const selectPhysicianCount = (state: RootState) =>
+  state.size.physicianCount;
+export const selectAdminCount = (state: RootState) => state.size.adminCount;
 
 export default userSizeSlice.reducer;

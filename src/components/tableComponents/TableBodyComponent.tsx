@@ -183,6 +183,9 @@ const TableBodyComponent = ({
 
   return (
     <>
+      <Typography variant='h5' sx={{ textAlign: 'center' }}>
+        Count: {userSize}, Rendered: {userList.length}
+      </Typography>
       <TableBody
         ref={scrollContainerRef}
         id='scrollBox'

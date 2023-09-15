@@ -15,7 +15,6 @@ import {
   PATIENT_APPOINTMENTS,
   PATIENT_PAST_APPOINTMENTS,
   PATIENT_PAST_APPOINTMENTS_AMOUNT,
-  PATIENT_REMOVE_APPOINTMENT,
   PATIENT_SEARCH_URL,
 } from '../../../utils/httpConstants';
 import { RootState } from '../../types';

@@ -1,9 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { PhysicianDto } from '../../../model/Model';
-import { BASE_PHYSICIANS_FULL_URL } from '../../../utils/httpConstants';
-import axios from 'axios';
 import { RootState } from '../../types';
-import authHeader from '../../../authentication/authHeader';
 
 interface PhysicianDtoState {
   physicians: PhysicianDto[];

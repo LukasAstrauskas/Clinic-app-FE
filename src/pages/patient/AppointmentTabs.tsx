@@ -2,7 +2,6 @@ import { Box, Tab, Tabs, ThemeProvider, createTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  fetchPatientPastAppointments,
   fetchPatientPastAppointmentAmount,
   fetchUpcomingPatientAppointments,
   selectPastAppointments,

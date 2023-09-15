@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { CreateUserDto, UniversalUser, User } from '../../../model/Model';
+import { UniversalUser, User } from '../../../model/Model';
 import {
   ADMINS_URL,
   ADMIN_SEARCH_URL,
@@ -8,6 +8,7 @@ import {
 } from '../../../utils/httpConstants';
 import axios from 'axios';
 import { RootState } from '../../reducers';
+
 interface AdminState {
   admins: UniversalUser[];
   isLoading: boolean;

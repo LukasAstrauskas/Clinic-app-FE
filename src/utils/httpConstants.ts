@@ -1,6 +1,5 @@
 //General
 export const LOGIN_URL = 'http://localhost:8080/login';
-export const USERS_URL = 'http://localhost:8080/user';
 export const BASE_USER_URL = 'http://localhost:8080/user/';
 //Admin actions
 export const ADMIN_ACTION = 'http://localhost:8080/user/admin';
@@ -30,11 +29,8 @@ export const PATIENT_REMOVE_APPOINTMENT = 'http://localhost:8080/timeslot/';
 //Physicians
 export const PHYSICIANS_FULL_URL = 'http://localhost:8080/physicianInfo';
 export const BASE_PHYSICIANS_FULL_URL = 'http://localhost:8080/physicianInfo/';
-export const PHYSICIANS_URL_FOR_DELETE =
-  'http://localhost:8080/physicianInfo/physician/';
 export const PHYSICIAN_SEARCH_URL =
   'http://localhost:8080/user/physicianSearch/';
-export const PHYSICIANS_URL = 'http://localhost:8080/user/physicians';
 export const BASE_PHYSICIANS_URL = 'http://localhost:8080/user/physicians/';
 export const PHYSICIAN_SIZE_URL = 'http://localhost:8080/user/physicianSize';
 export const INCOMING_PHYSICIANS_TO_BE_RENDERED_URL =

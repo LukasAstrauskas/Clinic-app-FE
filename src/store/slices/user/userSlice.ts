@@ -1,12 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../../types';
-import { UniversalUser, User } from '../../../model/Model';
-import {
-  ADMINS_URL,
-  ADMIN_ACTION,
-  BASE_USER_URL,
-} from '../../../utils/httpConstants';
+import { CreateUserDTO, User } from '../../../model/Model';
+import { ADMIN_ACTION, BASE_USER_URL } from '../../../utils/httpConstants';
 import authHeader from '../../../authentication/authHeader';
 
 interface UserState {
@@ -28,6 +24,15 @@ export const fetchUserById = createAsyncThunk<User, string>(
       headers: authHeader(),
     });
     return response.data as User;
+  },
+);
+export const createUser = createAsyncThunk(
+  'patients/createPatient',
+  async (createUserDTO: CreateUserDTO) => {
+    const response = await axios.post(`${ADMIN_ACTION}`, createUserDTO, {
+      headers: authHeader(),
+    });
+    return response.data;
   },
 );
 

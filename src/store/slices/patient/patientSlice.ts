@@ -10,7 +10,6 @@ import {
 } from '../../../model/Model';
 import {
   BASE_PATIENTS_URL,
-  BASE_USER_URL,
   INCOMING_PATIENTS_TO_BE_RENDERED_URL,
   PATIENTS_ADDITIONAL_INFO_URL,
   PATIENTS_URL,

@@ -10,20 +10,22 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../types';
 import authHeader from '../../../authentication/authHeader';
 
+/* This slice holds data only about size/amount of total users(patients, physicians).  */
+
 interface UserSize {
   size: number;
-  patientCount: number;
-  physicianCount: number;
-  adminCount: number;
+  // patientCount: number;
+  // physicianCount: number;
+  // adminCount: number;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: UserSize = {
   size: 0,
-  patientCount: 0,
-  physicianCount: 0,
-  adminCount: 0,
+  // patientCount: 0,
+  // physicianCount: 0,
+  // adminCount: 0,
   isLoading: false,
   error: null,
 };
@@ -141,9 +143,9 @@ export const userSizeSlice = createSlice({
 });
 
 export const selectUserSize = (state: RootState) => state.size.size;
-export const selectPatientCount = (state: RootState) => state.size.patientCount;
-export const selectPhysicianCount = (state: RootState) =>
-  state.size.physicianCount;
-export const selectAdminCount = (state: RootState) => state.size.adminCount;
+// export const selectPatientCount = (state: RootState) => state.size.patientCount;
+// export const selectPhysicianCount = (state: RootState) =>
+//   state.size.physicianCount;
+// export const selectAdminCount = (state: RootState) => state.size.adminCount;
 
 export default userSizeSlice.reducer;

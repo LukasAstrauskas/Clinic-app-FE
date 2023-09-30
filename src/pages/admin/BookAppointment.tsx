@@ -11,7 +11,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectType } from '../../store/slices/auth/authSlice';
+import { selectLoggedUserType } from '../../store/slices/auth/authSlice';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import ErrorModal from '../../components/modals/ErrorModal';
 import { AppDispatch } from '../../store/types';
@@ -21,7 +21,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { selectPhysicianNameById } from '../../store/slices/physician/phyNameOccupationSlice';
 
 const BookAppointment = () => {
-  const type = useSelector(selectType);
+  const type = useSelector(selectLoggedUserType);
   const dispatch = useDispatch<AppDispatch>();
   const [bookingStep, setBookingStep] = useToggle();
   const selectedPhysicianName = useSelector(selectPhysicianNameById);

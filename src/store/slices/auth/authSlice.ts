@@ -1,24 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { User } from '../../../model/Model';
+import { LoggedUser, User } from '../../../model/Model';
 import { RootState } from '../../types';
 import { authFetchUserById, login, logout } from './authActions';
 
 const initialState: AuthState = {
+  loggedUser: null,
   type: null,
   id: null,
-  loading: false,
-  error: null,
   isLoggedIn: false,
   user: null,
+  loading: false,
+  error: null,
 };
 
 export interface AuthState {
+  loggedUser: LoggedUser | null;
   type: string | null;
   id: string | null;
-  loading: boolean;
-  error: string | null;
   isLoggedIn: boolean;
   user: User | null;
+  loading: boolean;
+  error: string | null;
 }
 
 export const authSlice = createSlice({
@@ -34,9 +36,9 @@ export const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.type = action.payload.type;
-        state.id = action.payload.id;
+        state.loggedUser = action.payload.loggedUser;
         state.isLoggedIn = true;
+        console.log(state.loggedUser);
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -63,6 +65,14 @@ export const authSlice = createSlice({
   },
 });
 
+export const selectLoggedUser = (state: RootState) => state.auth.loggedUser;
+export const selectLoggedUserType = (state: RootState) =>
+  state.auth.loggedUser?.type || '';
+export const selectPastAppointments = (state: RootState) =>
+  state.auth.loggedUser?.pastAppointment || [];
+export const selectPatientInfo = (state: RootState) =>
+  state.auth.loggedUser?.patientInfo || null;
+
 export const selectUser = (state: RootState) => state.auth.user;
 export const selectInitials = (state: RootState): string | null => {
   const user = state.auth.user;
@@ -88,6 +98,7 @@ export const selectInitials = (state: RootState): string | null => {
 };
 export const selectType = (state: RootState) => state.auth.type;
 export const selectId = (state: RootState) => state.auth.id;
-export const selectLoading = (state: RootState) => state.auth.loading;
-export const selectError = (state: RootState) => state.auth.error;
 export const selectisLoggedIn = (state: RootState) => state.auth.isLoggedIn;
+
+export const authLoading = (state: RootState) => state.auth.loading;
+export const selectError = (state: RootState) => state.auth.error;

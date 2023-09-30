@@ -19,7 +19,7 @@ import { ROUTES } from '../../routes/routes';
 import { logout } from '../../store/slices/auth/authActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/types';
-import { selectInitials } from '../../store/slices/auth/authSlice';
+import { selectLoggedUser } from '../../store/slices/auth/authSlice';
 import { resetStore } from '../../store/reducers';
 
 const Header = () => {
@@ -27,7 +27,7 @@ const Header = () => {
   const anchorRef = useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch<AppDispatch>();
 
-  const initials = useSelector(selectInitials);
+  const loggedUser = useSelector(selectLoggedUser);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -84,7 +84,7 @@ const Header = () => {
       </Link>
       <Stack direction='row' spacing={2}>
         <div>
-          {initials && (
+          {loggedUser && (
             <>
               <Button
                 ref={anchorRef}
@@ -95,7 +95,7 @@ const Header = () => {
                 onClick={handleToggle}
               >
                 <Avatar className={styles.avatar} sx={{ bgcolor: grey[100] }}>
-                  <div className={styles.avatarLogo}>{initials}</div>
+                  <div className={styles.avatarLogo}>{loggedUser.initials}</div>
                 </Avatar>
               </Button>
               <Popper
@@ -124,7 +124,7 @@ const Header = () => {
                           aria-labelledby='composition-button'
                           onKeyDown={handleListKeyDown}
                         >
-                          {sessionStorage.getItem('type') === 'patient' && (
+                          {loggedUser.type === 'patient' && (
                             <NavLink
                               to={ROUTES.PATIENTPROFILE}
                               className={resolveLinkClass}

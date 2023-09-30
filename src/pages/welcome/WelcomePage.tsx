@@ -8,9 +8,11 @@ import manageUsersIcon from '../../assets/manage-users-icon.svg';
 import managePhysiciansIcon from '../../assets/manage-physicians-icon.svg';
 import newAppointmentIcon from '../../assets/new-appointment-icon.svg';
 import { ROUTES } from '../../routes/routes';
+import { useSelector } from 'react-redux';
+import { selectLoggedUserType } from '../../store/slices/auth/authSlice';
 
 const WelcomePage = () => {
-  const type = sessionStorage.getItem('type') || '';
+  const type = useSelector(selectLoggedUserType);
 
   return (
     <Grid
@@ -36,23 +38,19 @@ const WelcomePage = () => {
         </>
       )}
 
-      {type == 'patient' && (
-        <>
-          <Item
-            title='New appointment'
-            icon1={newAppointmentIcon}
-            linkTo={ROUTES.BOOKAPPOINTMENT}
-          ></Item>
-        </>
-      )}
-
       <Item
-        title='Manage appointments'
+        title='Book appointment'
         icon1={mannageApointmentIcon}
-        linkTo={
-          type != 'patient' ? ROUTES.BOOKAPPOINTMENT : ROUTES.MANAGEAPPOINTMENTS
-        }
+        linkTo={ROUTES.BOOKAPPOINTMENT}
       ></Item>
+
+      {type == 'patient' && (
+        <Item
+          title='Manage appointments'
+          icon1={newAppointmentIcon}
+          linkTo={ROUTES.MANAGEAPPOINTMENTS}
+        ></Item>
+      )}
     </Grid>
   );
 };

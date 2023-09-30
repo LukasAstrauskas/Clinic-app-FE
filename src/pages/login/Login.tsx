@@ -8,11 +8,11 @@ import React, { useState } from 'react';
 import styles from './Login.module.css';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store/types';
-import { authFetchUserById, login } from '../../store/slices/auth/authActions';
-import { fetchPatientInfo } from '../../store/slices/patient/patientSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/types';
+import { login } from '../../store/slices/auth/authActions';
 import Styles from '../../components/styles/UserManagmentStyles';
+import { authLoading } from '../../store/slices/auth/authSlice';
 
 const Login = () => {
   const [errorAlertOpen, setErrorAlertOpen] = useState(false);
@@ -21,22 +21,28 @@ const Login = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-
+  const loading = useSelector(authLoading);
+  const stateLoading = useSelector((state: RootState) => state.auth.loading);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const response = await dispatch(login({ email, password }));
-    const userId = sessionStorage.getItem('userId');
-    if (userId) {
-      await dispatch(authFetchUserById(userId));
-    }
-    setErrorAlertOpen(true);
-    if (response.payload && response.payload.type) {
+    // const userId = sessionStorage.getItem('userId');
+    // if (userId) {
+    //   await dispatch(authFetchUserById(userId));
+    // }
+
+    if (response.payload.loggedUser) {
       navigate(ROUTES.HOME);
-      if (sessionStorage.getItem('type') === 'patient' && userId !== null) {
-        dispatch(fetchPatientInfo(userId));
-      }
+    } else {
+      setErrorAlertOpen(true);
     }
+    // if (response.payload && response.payload.type) {
+    // navigate(ROUTES.HOME);
+    // if (sessionStorage.getItem('type') === 'patient' && userId !== null) {
+    // dispatch(fetchPatientInfo(userId));
+    // }
+    // }
   };
 
   return (

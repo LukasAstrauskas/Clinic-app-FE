@@ -2,7 +2,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import {
-  PatientAppointments,
+  PatientAppointment,
   UniversalUser,
   User,
   PatientInfo,
@@ -24,8 +24,8 @@ interface PatientsState {
   patients: UniversalUser[];
   additionalInfo: PatientInfo | null;
   isLoading: boolean;
-  upcomingAppointments: PatientAppointments[];
-  pastAppointments: PatientAppointments[];
+  upcomingAppointments: PatientAppointment[];
+  pastAppointments: PatientAppointment[];
   totalPastAppointmentAmount: number;
   error: string | null;
 }

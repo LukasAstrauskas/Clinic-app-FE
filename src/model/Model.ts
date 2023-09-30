@@ -8,11 +8,12 @@ export interface Timeslots {
   timePatientList: TimePatient[];
 }
 
-export interface PatientAppointments {
+export interface PatientAppointment {
   id: string;
   name: string;
+  surname: string;
   date: string;
-  occupation: string | null;
+  occupation: string;
 }
 
 export interface PhyNameOccupation {
@@ -27,6 +28,19 @@ export interface User {
   password: string;
   email: string;
   type: string;
+}
+
+export interface LoggedUser {
+  id: string;
+  name: string;
+  surname: string;
+  initials: string;
+  email: string;
+  type: string;
+  occupation: Occupation | null;
+  patientInfo: PatientInfo | null;
+  upcomingAppointment: PatientAppointment[];
+  pastAppointment: PatientAppointment[];
 }
 
 export interface PatientInfo {

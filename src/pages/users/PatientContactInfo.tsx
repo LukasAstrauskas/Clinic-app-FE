@@ -8,12 +8,12 @@ import {
   updatePatientInfo,
   selectPatientAdditionalInfo,
 } from '../../store/slices/patient/patientSlice';
-import { selectId } from '../../store/slices/auth/authSlice';
+import { selectId, selectPatientInfo } from '../../store/slices/auth/authSlice';
 import Styles from '../../components/styles/UserManagmentStyles';
 
 const PatientContactInfo = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const patientInfo = useSelector(selectPatientAdditionalInfo);
+  const patientInfo = useSelector(selectPatientInfo);
   const userId = useSelector(selectId);
   const [gender, setGender] = useState(
     patientInfo !== null ? patientInfo.gender : '',
@@ -112,13 +112,14 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={sessionStorage.getItem('gender')}
+          value={gender}
           helperText='Gender'
           onChange={(e) => setGender(e.target.value)}
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={sessionStorage.getItem('birthDate')}
+          // defaultValue={birthDate}
+          value={birthDate}
           helperText='Birth Date'
           onChange={(e) => setBirthDate(new Date(e.target.value))}
           error={handleBirthDate(birthDate)}
@@ -127,7 +128,7 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={sessionStorage.getItem('phone')}
+          value={phone}
           helperText='Phone Number'
           onChange={(e) => setPhone(e.target.value)}
           error={handlePhoneError(phone)}
@@ -138,13 +139,13 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={sessionStorage.getItem('street')}
+          value={street}
           helperText='Street'
           onChange={(e) => setStreet(e.target.value)}
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={sessionStorage.getItem('city')}
+          value={city}
           helperText='City'
           onChange={(e) => setCity(e.target.value)}
         />
@@ -152,13 +153,13 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={sessionStorage.getItem('postalCode')}
+          value={postalCode}
           helperText='Postal Code'
           onChange={(e) => setPostalCode(e.target.value)}
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={sessionStorage.getItem('country')}
+          value={country}
           helperText='Country'
           onChange={(e) => setCountry(e.target.value)}
         />
@@ -167,13 +168,13 @@ const PatientContactInfo = () => {
       <div>
         <TextField
           id='outlined-helper-text'
-          defaultValue={sessionStorage.getItem('emergencyName')}
+          value={emergencyName}
           helperText='First Name'
           onChange={(e) => setEmergencyName(e.target.value)}
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={sessionStorage.getItem('emergencyLastName')}
+          value={emergencySurname}
           helperText='Last Name'
           onChange={(e) => setEmergencySurname(e.target.value)}
         />
@@ -182,7 +183,7 @@ const PatientContactInfo = () => {
         <TextField
           id='outlined-helper-text'
           // value={emergencyPhone === '0' ? '' : emergencyPhone}
-          defaultValue={sessionStorage.getItem('emergencyPhone')}
+          value={emergencyPhone}
           helperText='Phone Number'
           onChange={(e) => setEmergencyPhone(e.target.value)}
           error={handlePhoneError(emergencyPhone)}
@@ -190,7 +191,7 @@ const PatientContactInfo = () => {
         />
         <TextField
           id='outlined-helper-text'
-          defaultValue={sessionStorage.getItem('emergencyRelation')}
+          value={emergencyRelation}
           helperText='Relation'
           onChange={(e) => setEmergencyRelation(e.target.value)}
         />

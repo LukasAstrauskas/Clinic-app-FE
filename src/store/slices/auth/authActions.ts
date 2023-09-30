@@ -11,8 +11,9 @@ export const login = createAsyncThunk(
     const response = await axios.post(LOGIN_URL, payload).then((response) => {
       localStorage.setItem('token', response.data.token);
       sessionStorage.setItem('isLogged', 'true');
-      sessionStorage.setItem('userId', response.data.id);
-      sessionStorage.setItem('type', response.data.type);
+      // console.log(response.data.loggedUser);
+      // sessionStorage.setItem('userId', response.data.id);
+      // sessionStorage.setItem('type', response.data.type);
       return response;
     });
 

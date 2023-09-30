@@ -9,25 +9,22 @@ import {
 } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
 import AppointmentSlot from './AppointmentSlot';
-import { PatientAppointments } from '../../model/Model';
+import { PatientAppointment } from '../../model/Model';
+import { selectLoggedUser } from '../../store/slices/auth/authSlice';
 
 const PastAppointments = () => {
   const appointments = useSelector(selectPastAppointments);
   const appointmentAmount = useSelector(selectTotalPastAppointmentAmount);
   // const [hasMore, setHasMore] = useState(false);
-  const userId = sessionStorage.getItem('userId') || '';
+  const userId = useSelector(selectLoggedUser)?.id || '';
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if (appointments.length === 0) {
-      fetchInitialData();
+      console.log('fetch PAST appointments');
+      dispatch(fetchPatientPastAppointments({ id: userId, offset: 0 }));
     }
   }, []);
-
-  const fetchInitialData = async () => {
-    console.log('fetch PAST appointments');
-    await dispatch(fetchPatientPastAppointments({ id: userId, offset: 0 }));
-  };
 
   const fetchMoreAppointments = async () => {
     console.log('fetch more apponits');
@@ -69,7 +66,7 @@ const PastAppointments = () => {
         >
           {appointments.length != 0 ? (
             <>
-              {appointments.map((appointment: PatientAppointments) => (
+              {appointments.map((appointment: PatientAppointment) => (
                 <AppointmentSlot
                   key={appointment.date}
                   appointment={appointment}

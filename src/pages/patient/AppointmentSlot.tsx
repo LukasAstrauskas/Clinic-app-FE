@@ -3,12 +3,12 @@ import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import AlertModal from '../../components/modals/AlertModal';
-import { PatientAppointments } from '../../model/Model';
+import { PatientAppointment } from '../../model/Model';
 import { fetchUpcomingPatientAppointments } from '../../store/slices/patient/patientSlice';
 import { AppDispatch } from '../../store/types';
 import { deletePatientFromUpcomingTimeslot } from '../../store/slices/timeslot/timeslotActions';
 interface Props {
-  appointment: PatientAppointments;
+  appointment: PatientAppointment;
 }
 
 const AppointmentSlot = ({ appointment }: Props) => {
@@ -68,7 +68,7 @@ const AppointmentSlot = ({ appointment }: Props) => {
               Physician
             </Typography>
             <Typography sx={{ marginTop: '20px' }} fontWeight={'500'}>
-              {appointment.name}, {appointment?.occupation || 'No Occup'}
+              {appointment.name} {appointment.surname}, {appointment.occupation}
             </Typography>
           </Box>
           <Box sx={{ marginLeft: '40px', width: '160px' }}>

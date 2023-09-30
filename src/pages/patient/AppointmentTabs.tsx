@@ -31,11 +31,11 @@ const AppointmentTabs = () => {
     setValue(newValue);
   };
 
-  useEffect(() => {
-    console.log('fetch appointments');
-    dispatch(fetchUpcomingPatientAppointments(userId));
-    dispatch(fetchPatientPastAppointmentAmount(userId));
-  }, []);
+  // useEffect(() => {
+  //   console.log('fetch appointments');
+  //   dispatch(fetchUpcomingPatientAppointments(userId));
+  //   dispatch(fetchPatientPastAppointmentAmount(userId));
+  // }, []);
 
   return (
     <>

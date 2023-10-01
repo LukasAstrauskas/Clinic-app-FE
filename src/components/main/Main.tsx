@@ -1,16 +1,16 @@
 import React from 'react';
-import WelcomePage from '../../pages/welcome/WelcomePage';
+import HomePage from '../../pages/home/HomePage';
 import '../../App.css';
 import { Route, Routes } from 'react-router-dom';
 import Login from '../../pages/login/Login';
 import { ROUTES } from '../../routes/routes';
 import NotFound from '../../pages/notFound/NotFound';
-import UserTabs from '../../pages/users/Tabs';
-import TimetablesContainer from '../../pages/timetables/TimetablesContainer';
-import BookAppointment from '../../pages/admin/BookAppointment';
+import ManageUsers from '../../pages/manage-users/ManageUsers';
+import TimetablesContainer from '../../pages/timetable/TimetablesContainer';
+import BookAppointment from '../../pages/timetable/BookAppointment';
 import PrivateRoutes from '../../routes/PrivateRoutes';
-import PatientContactInfo from '../../pages/users/PatientContactInfo';
-import AppointmentTabs from '../../pages/patient/AppointmentTabs';
+import PatientProfile from '../../pages/patient-profile/PatientProfile';
+import PatientAppointments from '../../pages/patient-appointments/PatientAppointments';
 import { Box } from '@mui/material';
 
 const Main = () => {
@@ -26,18 +26,15 @@ const Main = () => {
         <Route path={ROUTES.LOGIN} element={<Login />} />
         <Route path='*' element={<NotFound />} />
         <Route element={<PrivateRoutes />}>
-          <Route path={ROUTES.HOME} element={<WelcomePage />} />
-          <Route path={ROUTES.USERS} element={<UserTabs />} />
+          <Route path={ROUTES.HOMEPAGE} element={<HomePage />} />
+          <Route path={ROUTES.MANAGEUSERS} element={<ManageUsers />} />
           <Route path={ROUTES.TIMETABLE} element={<TimetablesContainer />} />
           <Route path={ROUTES.BOOKAPPOINTMENT} element={<BookAppointment />} />
           <Route
-            path={ROUTES.MANAGEAPPOINTMENTS}
-            element={<AppointmentTabs />}
+            path={ROUTES.PATIENTAPPOINTMENTS}
+            element={<PatientAppointments />}
           />
-          <Route
-            path={ROUTES.PATIENTPROFILE}
-            element={<PatientContactInfo />}
-          />
+          <Route path={ROUTES.PATIENTPROFILE} element={<PatientProfile />} />
         </Route>
       </Routes>
     </Box>

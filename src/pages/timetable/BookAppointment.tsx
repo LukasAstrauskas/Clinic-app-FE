@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import TimetablesContainer from '../timetables/TimetablesContainer';
+import TimetablesContainer from './TimetablesContainer';
 import { Box, Button, Stack, Typography } from '@mui/material';
-import Patients from '../users/Patients';
+import Patients from '../manage-users/Patients';
 import useToggle from '../../hooks/useToggle';
 import AppointmentContext from '../../hooks/AppointmentContext';
 import { Appointment } from '../../model/Model';
@@ -38,7 +38,7 @@ const BookAppointment = () => {
 
   const handleConfirmationClose = () => {
     setIsConfirmationOpen(false);
-    navigate(ROUTES.HOME);
+    navigate(ROUTES.HOMEPAGE);
   };
 
   const bookAppointment = async () => {

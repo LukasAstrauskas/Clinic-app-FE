@@ -44,7 +44,8 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
       setRefresh(true);
     }
   };
-
+  /* Not  fetchPhyNameOccupation(), but <PhysicianSearchBar/> component
+  provides physicians, search side effect*/
   useEffect(() => {
     dispatch(fetchPhyNameOccupation());
   }, []);

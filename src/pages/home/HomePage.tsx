@@ -11,7 +11,7 @@ import { ROUTES } from '../../routes/routes';
 import { useSelector } from 'react-redux';
 import { selectLoggedUserType } from '../../store/slices/auth/authSlice';
 
-const WelcomePage = () => {
+const HomePage = () => {
   const type = useSelector(selectLoggedUserType);
 
   return (
@@ -28,7 +28,7 @@ const WelcomePage = () => {
             title='Manage users'
             icon1={manageUsersIcon}
             icon2={managePhysiciansIcon}
-            linkTo={ROUTES.USERS}
+            linkTo={ROUTES.MANAGEUSERS}
           ></Item>
           <Item
             title='Physicians timetables'
@@ -46,13 +46,13 @@ const WelcomePage = () => {
 
       {type == 'patient' && (
         <Item
-          title='Manage appointments'
+          title='Your appointments'
           icon1={newAppointmentIcon}
-          linkTo={ROUTES.MANAGEAPPOINTMENTS}
+          linkTo={ROUTES.PATIENTAPPOINTMENTS}
         ></Item>
       )}
     </Grid>
   );
 };
 
-export default WelcomePage;
+export default HomePage;

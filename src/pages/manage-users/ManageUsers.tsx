@@ -15,7 +15,7 @@ const theme = createTheme({
   },
 });
 
-const UserTabs = () => {
+const ManageUsers = () => {
   const [value, setValue] = useState(0);
 
   const handleTabs = (event: React.SyntheticEvent, newValue: number) => {
@@ -62,4 +62,4 @@ const UserTabs = () => {
   );
 };
 
-export default UserTabs;
+export default ManageUsers;

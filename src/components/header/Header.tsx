@@ -72,7 +72,7 @@ const Header = () => {
 
   return (
     <div className={styles.header}>
-      <Link to={ROUTES.HOME} className={styles.headerLogoLink}>
+      <Link to={ROUTES.HOMEPAGE} className={styles.headerLogoLink}>
         <div className={styles.headerLogoSection}>
           <img
             src={clinicLogo}

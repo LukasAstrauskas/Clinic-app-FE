@@ -33,7 +33,7 @@ const Login = () => {
     // }
 
     if (response.payload.loggedUser) {
-      navigate(ROUTES.HOME);
+      navigate(ROUTES.HOMEPAGE);
     } else {
       setErrorAlertOpen(true);
     }

@@ -11,7 +11,7 @@ import {
 import { selectId, selectPatientInfo } from '../../store/slices/auth/authSlice';
 import Styles from '../../components/styles/UserManagmentStyles';
 
-const PatientContactInfo = () => {
+const PatientProfile = () => {
   const dispatch = useDispatch<AppDispatch>();
   const patientInfo = useSelector(selectPatientInfo);
   const userId = useSelector(selectId);
@@ -216,4 +216,4 @@ const PatientContactInfo = () => {
   );
 };
 
-export default PatientContactInfo;
+export default PatientProfile;

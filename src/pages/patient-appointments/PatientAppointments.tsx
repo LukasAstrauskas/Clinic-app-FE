@@ -10,8 +10,9 @@ import {
 import { AppDispatch } from '../../store/types';
 import PastAppointments from './PastAppointmets';
 import UpcomingAppointments from './UpcomingApppointments';
-import TabPanel from '../users/TabPanel';
-const AppointmentTabs = () => {
+import TabPanel from '../manage-users/TabPanel';
+
+const PatientAppointments = () => {
   const userId = sessionStorage.getItem('userId') || '';
   const dispatch = useDispatch<AppDispatch>();
   const [value, setValue] = useState(0);
@@ -75,4 +76,4 @@ const AppointmentTabs = () => {
   );
 };
 
-export default AppointmentTabs;
+export default PatientAppointments;

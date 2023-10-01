@@ -1,9 +1,9 @@
 export enum ROUTES {
-  HOME = '/',
+  HOMEPAGE = '/',
   LOGIN = '/login',
-  USERS = '/users',
+  MANAGEUSERS = '/manage-users',
   TIMETABLE = '/timetable',
   BOOKAPPOINTMENT = '/book-appointment',
   PATIENTPROFILE = '/patient-profile',
-  MANAGEAPPOINTMENTS = '/manage-appointments',
+  PATIENTAPPOINTMENTS = '/patient-appointments',
 }

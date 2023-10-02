@@ -31,9 +31,9 @@ const HomePage = () => {
             linkTo={ROUTES.MANAGEUSERS}
           ></Item>
           <Item
-            title='Physicians timetables'
+            title='Manage timeslots'
             icon1={physicianTimetablesIcon}
-            linkTo={ROUTES.TIMETABLE}
+            linkTo={ROUTES.MANAGETIMESLOTS}
           ></Item>
         </>
       )}

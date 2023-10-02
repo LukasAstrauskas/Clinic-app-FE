@@ -7,8 +7,8 @@ import { TableContainer, Table, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import AddAdminModal from '../../components/modals/AddAdminModal';
 import Styles from '../../components/styles/UserManagmentStyles';
-import TableHeadComponent from '../../components/tableComponents/TableHeadComponent';
-import TableBodyComponent from '../../components/tableComponents/TableBodyComponent';
+import TableHeadComponent from '../../components/manage-users-tables/TableHeadComponent';
+import TableBodyComponent from '../../components/manage-users-tables/TableBodyComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   selectAdmin,

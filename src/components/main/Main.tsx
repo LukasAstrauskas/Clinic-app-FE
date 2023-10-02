@@ -6,12 +6,13 @@ import Login from '../../pages/login/Login';
 import { ROUTES } from '../../routes/routes';
 import NotFound from '../../pages/notFound/NotFound';
 import ManageUsers from '../../pages/manage-users/ManageUsers';
-import TimetablesContainer from '../../pages/timetable/TimetablesContainer';
-import BookAppointment from '../../pages/timetable/BookAppointment';
+import TimetablesContainer from '../../pages/book-appointment/TimetablesContainer';
+import BookAppointment from '../../pages/book-appointment/BookAppointment';
 import PrivateRoutes from '../../routes/PrivateRoutes';
 import PatientProfile from '../../pages/patient-profile/PatientProfile';
 import PatientAppointments from '../../pages/patient-appointments/PatientAppointments';
 import { Box } from '@mui/material';
+import ManageTimeslots from '../../pages/manage-timeslots/ManageTimeslots';
 
 const Main = () => {
   return (
@@ -28,7 +29,7 @@ const Main = () => {
         <Route element={<PrivateRoutes />}>
           <Route path={ROUTES.HOMEPAGE} element={<HomePage />} />
           <Route path={ROUTES.MANAGEUSERS} element={<ManageUsers />} />
-          <Route path={ROUTES.TIMETABLE} element={<TimetablesContainer />} />
+          <Route path={ROUTES.MANAGETIMESLOTS} element={<ManageTimeslots />} />
           <Route path={ROUTES.BOOKAPPOINTMENT} element={<BookAppointment />} />
           <Route
             path={ROUTES.PATIENTAPPOINTMENTS}

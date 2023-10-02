@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Container, Grid } from '@mui/material';
-import TimetableList from './TimetableList';
-import PhysicianTable from '../physicians/PhysicianTable';
+import TimetableList from '../book-appointment/TimetableList';
+import PhysicianTable from '../../components/physician-table/PhysicianTable';
 import { AppDispatch } from '../../store/types';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -9,7 +9,7 @@ import {
   selectPhysicianId,
   setPhysicianId,
 } from '../../store/slices/physician/phyNameOccupationSlice';
-import PhysicianSearchBar from '../physicians/PhysicianSearchBar';
+import PhysicianSearchBar from '../../components/physician-table/PhysicianSearchBar';
 import {
   selectPhysicians,
   fetchPhysicians,
@@ -20,8 +20,8 @@ import { selectId, selectType } from '../../store/slices/auth/authSlice';
 type props = {
   tableTitle?: string;
 };
-
-const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
+// Dublicates TimetablesContainer
+const ManageTimeslots = ({ tableTitle = 'Physicians' }: props) => {
   const type = useSelector(selectType);
   const loggedInPhysicianId = useSelector(selectId);
   const physicianId: string | null = useSelector(selectPhysicianId);
@@ -45,13 +45,14 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
     }
   };
   /* Not  fetchPhyNameOccupation(), but <PhysicianSearchBar/> component
-  provides physicians, search side effect*/
+  provides physicians, search side effect.
+  Sets physicianId to first ID in physicians list */
   useEffect(() => {
     dispatch(fetchPhyNameOccupation());
   }, []);
 
   return (
-    <Container maxWidth={type === 'physician' ? 'md' : 'lg'}>
+    <Container maxWidth={'lg'}>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container>
           <Grid
@@ -63,37 +64,33 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
           >
             <h1>{tableTitle}</h1>
           </Grid>
-          {type !== 'physician' && (
-            <Grid item lg={4} sx={{ pr: 2 }}>
-              <p>Size: {physicians.length}</p>
-              <PhysicianSearchBar onSearch={handleSearch} />
-              <PhysicianTable
-                physicians={physicians}
-                selectedId={physicianId}
-                rowClick={handleClick}
-                refresh={refresh}
-                setRefresh={setRefresh}
-                isSearch={isSearch}
-              />
-            </Grid>
-          )}
-          {type === 'physician' ? (
+
+          <Grid item lg={4} sx={{ pr: 2 }}>
+            <p>Size: {physicians.length}</p>
+            <PhysicianSearchBar onSearch={handleSearch} />
+            <PhysicianTable
+              physicians={physicians}
+              selectedId={physicianId}
+              rowClick={handleClick}
+              refresh={refresh}
+              setRefresh={setRefresh}
+              isSearch={isSearch}
+            />
+          </Grid>
+
+          {/* {type === 'physician' ? (
             <Grid item lg={12}>
               <TimetableList physicianId={loggedInPhysicianId || ''} />
             </Grid>
-          ) : (
-            <Grid item lg={8}>
-              {physicianId ? (
-                <TimetableList physicianId={physicianId} />
-              ) : (
-                <></>
-              )}
-            </Grid>
-          )}
+          ) : ( */}
+          <Grid item lg={8}>
+            {physicianId ? <TimetableList physicianId={physicianId} /> : <></>}
+          </Grid>
+          {/* )} */}
         </Grid>
       </Box>
     </Container>
   );
 };
 
-export default TimetablesContainer;
+export default ManageTimeslots;

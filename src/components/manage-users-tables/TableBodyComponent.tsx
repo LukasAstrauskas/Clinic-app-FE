@@ -8,7 +8,7 @@ import { grey } from '@mui/material/colors';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { CreateUserDTO, Occupation, UniversalUser } from '../../model/Model';
-import { tableRowSX } from '../../pages/physicians/PhysicianTable';
+import { tableRowSX } from '../physician-table/PhysicianTable';
 import {
   fetchAdmins,
   fetchMoreAdmins,

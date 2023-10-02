@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import PhysicianSearchStyles, {
   SearchSelectItem,
-} from '../../components/styles/PhysicianSearchStyles';
+} from '../styles/PhysicianSearchStyles';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchOccupations,

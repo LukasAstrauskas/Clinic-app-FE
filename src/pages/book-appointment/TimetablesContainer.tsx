@@ -45,7 +45,9 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
     }
   };
   /* Not  fetchPhyNameOccupation(), but <PhysicianSearchBar/> component
-  provides physicians, search side effect*/
+  provides physicians, search side effect.
+  handleSearch() if no search param fetches physicians on component mount
+  */
   useEffect(() => {
     dispatch(fetchPhyNameOccupation());
   }, []);

@@ -5,7 +5,7 @@ import { Physicians } from './Physicians';
 import { Admins } from './Admins';
 import { Tabs, Tab, createTheme } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
-import TabPanel from './TabPanel';
+import TabPanel from '../../components/TabPanel';
 
 const theme = createTheme({
   palette: {

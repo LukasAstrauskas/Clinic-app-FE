@@ -10,7 +10,7 @@ import {
 import { AppDispatch } from '../../store/types';
 import PastAppointments from './PastAppointmets';
 import UpcomingAppointments from './UpcomingApppointments';
-import TabPanel from '../manage-users/TabPanel';
+import TabPanel from '../../components/TabPanel';
 
 const PatientAppointments = () => {
   const userId = sessionStorage.getItem('userId') || '';

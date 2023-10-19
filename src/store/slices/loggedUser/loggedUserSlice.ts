@@ -3,6 +3,7 @@ import React from 'react';
 import { LoggedUser } from '../../../model/Model';
 import axios from 'axios';
 import { BASE_URL, LOGIN, LOGIN_URL } from '../../../utils/httpConstants';
+import { RootState } from '../../reducers';
 
 interface LoggedUserState {
   loggedUser: LoggedUser | null;
@@ -16,20 +17,15 @@ const loggedUserState: LoggedUserState = {
   error: null,
 };
 
-export const login = createAsyncThunk(
+export const userLogin = createAsyncThunk(
   'loggedUser/login',
   async (payload: { email: string; password: string }) => {
     const response = await axios
       .post(BASE_URL.concat(LOGIN), payload)
       .then((response) => {
         localStorage.setItem('token', response.data.token);
-        // sessionStorage.setItem('isLogged', 'true');
-        // console.log(response.data.loggedUser);
-        // sessionStorage.setItem('userId', response.data.id);
-        // sessionStorage.setItem('type', response.data.type);
         return response;
       });
-
     return response.data;
   },
 );
@@ -39,18 +35,27 @@ const loggedUserSlice = createSlice({
   initialState: loggedUserState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(login.fulfilled, (state, action) => {
-      state.loggedUser = action.payload;
+    builder.addCase(userLogin.fulfilled, (state, action) => {
+      state.loggedUser = action.payload.loggedUser;
       state.status = 'succeeded';
     });
-    builder.addCase(login.pending, (state) => {
+    builder.addCase(userLogin.pending, (state) => {
       state.status = 'pending';
     });
-    builder.addCase(login.rejected, (state, action) => {
+    builder.addCase(userLogin.rejected, (state, action) => {
       state.error = action.error.message ?? 'Login failed';
       state.status = 'failed';
     });
   },
 });
 
+export const selectLoggedUser = (state: RootState) =>
+  state.loggedUser.loggedUser;
+export const initials = (state: RootState) =>
+  state.loggedUser.loggedUser?.initials;
+export const selectLoggedUserType = (state: RootState) =>
+  state.loggedUser.loggedUser?.type || '';
+
+export const selectIsLogged = (state: RootState) =>
+  !!state.loggedUser.loggedUser;
 export default loggedUserSlice.reducer;

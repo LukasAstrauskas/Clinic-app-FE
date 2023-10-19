@@ -18,16 +18,16 @@ import { NavLink, Link } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
 import { logout } from '../../store/slices/auth/authActions';
 import { useDispatch, useSelector } from 'react-redux';
-import { useAppDispatch } from '../../store/hooks';
-import { selectLoggedUser } from '../../store/slices/auth/authSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { resetStore } from '../../store/reducers';
+import { selectLoggedUser } from '../../store/slices/loggedUser/loggedUserSlice';
 
 const Header = () => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
   const dispatch = useAppDispatch();
 
-  const loggedUser = useSelector(selectLoggedUser);
+  const loggedUser = useAppSelector(selectLoggedUser);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);

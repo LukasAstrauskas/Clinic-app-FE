@@ -8,13 +8,9 @@ import React, { useState } from 'react';
 import styles from './Login.module.css';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { AppDispatch, RootState } from '../../store/types';
-import { login } from '../../store/slices/auth/authActions';
 import Styles from '../../components/styles/UserManagmentStyles';
-import { authLoading } from '../../store/slices/auth/authSlice';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../../store/hooks';
+import { userLogin } from '../../store/slices/loggedUser/loggedUserSlice';
 
 const Login = () => {
   const [errorAlertOpen, setErrorAlertOpen] = useState(false);
@@ -23,31 +19,12 @@ const Login = () => {
 
   const navigate = useNavigate();
   const dipatch = useAppDispatch();
-  // const id = useAppSelector((state) => state.loggedUser.loggedUser?.id);
-  // const dispatch = useDispatch<AppDispatch>();
-  // const loading = useSelector(authLoading);
-  // const stateLoading = useSelector((state: RootState) => state.auth.loading);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    // const response = await dispatch(login({ email, password }));
-    const response = await dipatch(login({ email, password }));
-    // const userId = sessionStorage.getItem('userId');
-    // if (userId) {
-    //   await dispatch(authFetchUserById(userId));
-    // }
-
-    if (response.payload.loggedUser) {
-      navigate(ROUTES.HOMEPAGE);
-    } else {
-      setErrorAlertOpen(true);
-    }
-    // if (response.payload && response.payload.type) {
-    // navigate(ROUTES.HOME);
-    // if (sessionStorage.getItem('type') === 'patient' && userId !== null) {
-    // dispatch(fetchPatientInfo(userId));
-    // }
-    // }
+    await dipatch(userLogin({ email, password })).unwrap();
+    // write fail login logic
+    navigate(ROUTES.HOMEPAGE);
   };
 
   return (
@@ -58,7 +35,6 @@ const Login = () => {
             <div className={styles.centerItems}>
               <LockIcon fontSize='large' />
               <h2>Sign in</h2>
-              <p>Test test 2</p>
             </div>
             <TextField
               label='Email'

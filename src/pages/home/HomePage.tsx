@@ -8,12 +8,11 @@ import manageUsersIcon from '../../assets/manage-users-icon.svg';
 import managePhysiciansIcon from '../../assets/manage-physicians-icon.svg';
 import newAppointmentIcon from '../../assets/new-appointment-icon.svg';
 import { ROUTES } from '../../routes/routes';
-import { useSelector } from 'react-redux';
-import { selectLoggedUserType } from '../../store/slices/auth/authSlice';
+import { useAppSelector } from '../../store/hooks';
+import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
 
 const HomePage = () => {
-  const type = useSelector(selectLoggedUserType);
-
+  const loggedUserType = useAppSelector(selectLoggedUserType);
   return (
     <Grid
       className={styles.main}
@@ -22,7 +21,7 @@ const HomePage = () => {
       justifyContent='center'
       alignItems='center'
     >
-      {type == 'admin' && (
+      {loggedUserType == 'admin' && (
         <>
           <Item
             title='Manage users'
@@ -44,7 +43,7 @@ const HomePage = () => {
         linkTo={ROUTES.BOOKAPPOINTMENT}
       ></Item>
 
-      {type == 'patient' && (
+      {loggedUserType == 'patient' && (
         <Item
           title='Your appointments'
           icon1={newAppointmentIcon}

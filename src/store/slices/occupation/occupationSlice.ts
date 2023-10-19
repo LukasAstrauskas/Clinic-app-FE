@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { Occupation } from '../../../model/Model';
 import { OCCUPATIONS_URL } from '../../../utils/httpConstants';
 import axios from 'axios';
-import { RootState } from '../../types';
+import { RootState } from '../../reducers';
 import authHeader from '../../../authentication/authHeader';
 
 interface OccupationsState {

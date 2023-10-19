@@ -1,19 +1,18 @@
 import { Box, Button, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import AlertModal from '../../components/modals/AlertModal';
 import { PatientAppointment } from '../../model/Model';
 import { fetchUpcomingPatientAppointments } from '../../store/slices/patient/patientSlice';
-import { AppDispatch } from '../../store/types';
 import { deletePatientFromUpcomingTimeslot } from '../../store/slices/timeslot/timeslotActions';
+import { useAppDispatch } from '../../store/hooks';
 interface Props {
   appointment: PatientAppointment;
 }
 
 const AppointmentSlot = ({ appointment }: Props) => {
   const patientId = sessionStorage.getItem('userId') || '';
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const [physicianId, setphysicianId] = useState<string>('');
   const handleCancel = async () => {

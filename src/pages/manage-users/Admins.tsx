@@ -15,10 +15,10 @@ import {
   fetchAdmins,
   searchAdmin,
 } from '../../store/slices/admin/adminSlice';
-import { AppDispatch } from '../../store/types';
+import { useAppDispatch } from '../../store/hooks';
 
 export const Admins = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const admins = useSelector(selectAdmin);
   const [open, setOpen] = useState<boolean>(false);
   const [more, setMore] = useState<boolean>(true);

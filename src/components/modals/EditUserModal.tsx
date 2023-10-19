@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { isValidName, isValidEmail, isValidPasswordOrEmpty } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../../store/types';
+import { useAppDispatch } from '../../store/hooks';
 import { updateUser } from '../../store/slices/user/userSlice';
 import {
   fetchOccupations,
@@ -32,7 +32,7 @@ const EditUserModal = ({
   setRefresh,
   refresh,
 }: Props) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const occupations = useSelector(selectOccupations);
 
   const initialState: CreateUserDTO = {

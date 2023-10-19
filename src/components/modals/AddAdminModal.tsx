@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { Visibility } from '@mui/icons-material';
 import Styles from '../styles/UserManagmentStyles';
-import { AppDispatch } from '../../store/types';
+import { useAppDispatch } from '../../store/hooks';
 import { useDispatch } from 'react-redux';
 import { fetchAdmins } from '../../store/slices/admin/adminSlice';
 import {
@@ -25,7 +25,7 @@ interface Props {
 }
 
 const AddAdminModal: FC<Props> = ({ setOpen, open }) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [name, setName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');

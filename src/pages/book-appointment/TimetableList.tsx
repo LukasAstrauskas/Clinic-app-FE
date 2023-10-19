@@ -19,7 +19,7 @@ import { grey, teal } from '@mui/material/colors';
 import { selectId, selectType } from '../../store/slices/auth/authSlice';
 import dayjs, { Dayjs } from 'dayjs';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../../store/types';
+import { useAppDispatch } from '../../store/hooks';
 import { selectTimeslots } from '../../store/slices/timeslot/timeslotSlice';
 import MonthPicker from './MonthPicker';
 
@@ -42,7 +42,7 @@ const TimetableList = ({ physicianId }: Props) => {
   const [openAlert, toggleAlert] = useToggle();
   const [loadData, setLoadData] = useToggle();
   const type = useSelector(selectType);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const loggedInUserId = useSelector(selectId);
   const [date, setDate] = useState<string>('');
   const viewerType = sessionStorage.getItem('type');

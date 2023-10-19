@@ -9,7 +9,7 @@ import { Visibility } from '@mui/icons-material';
 import Styles from '../styles/UserManagmentStyles';
 import { fetchPatients } from '../../store/slices/patient/patientSlice';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store/types';
+import { useAppDispatch } from '../../store/hooks';
 import {
   isValidName,
   isValidLastName,
@@ -25,7 +25,7 @@ interface Props {
 }
 
 const AddPatientModal: FC<Props> = ({ setOpen, open }) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [name, setName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');

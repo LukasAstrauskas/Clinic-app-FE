@@ -10,6 +10,8 @@ import { userSizeSlice } from './slices/userSize/userSizeSlice';
 import { occupationSlice } from './slices/occupation/occupationSlice';
 import { editedPhysicianSlice } from './slices/physician/editedPhysicianSlice';
 import { timeslotSlice } from './slices/timeslot/timeslotSlice';
+import loggedUserReducer from './slices/loggedUser/loggedUserSlice';
+// import loggedUserSlice from './slices/loggedUser/loggedUserSlice';
 
 export const resetStore = () => ({ type: 'RESET_STORE' });
 
@@ -24,9 +26,10 @@ const appReducer = combineReducers({
   occupation: occupationSlice.reducer,
   physicianDto: editedPhysicianSlice.reducer,
   timeslot: timeslotSlice.reducer,
+  loggedUser: loggedUserReducer,
 });
 
-const rootReducer: Reducer<
+export const rootReducer: Reducer<
   ReturnType<typeof appReducer>,
   ReturnType<typeof resetStore>
 > = (state, action) => {
@@ -37,5 +40,3 @@ const rootReducer: Reducer<
 };
 
 export type RootState = ReturnType<typeof rootReducer>;
-
-export default rootReducer;

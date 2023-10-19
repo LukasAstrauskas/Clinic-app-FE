@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../../store/types';
+import { useAppDispatch } from '../../store/hooks';
 import {
   updatePatientInfo,
   selectPatientAdditionalInfo,
@@ -12,7 +12,7 @@ import { selectId, selectPatientInfo } from '../../store/slices/auth/authSlice';
 import Styles from '../../components/styles/UserManagmentStyles';
 
 const PatientProfile = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const patientInfo = useSelector(selectPatientInfo);
   const userId = useSelector(selectId);
   const [gender, setGender] = useState(

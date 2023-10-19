@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { PhyNameOccupation } from '../../../model/Model';
-import { RootState } from '../../types';
+import { RootState } from '../../reducers';
 import { PHYNAMEOCCUPATION_URL } from '../../../utils/httpConstants';
 import authHeader from '../../../authentication/authHeader';
 

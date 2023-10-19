@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, Box, Button, Modal, Stack, Typography } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store/types';
+import { useAppDispatch } from '../../store/hooks';
 import { postTimeslot } from '../../store/slices/timeslot/timeslotActions';
 import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider, TimeField } from '@mui/x-date-pickers';
@@ -37,7 +37,7 @@ const TimeslotModal = ({
 }: Props) => {
   const dayStart = dayjs(date).startOf('day');
   const [time, setTime] = useState<Dayjs>(dayStart);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [timeError, setTimeError] = useState(false);
 
   useEffect(() => {

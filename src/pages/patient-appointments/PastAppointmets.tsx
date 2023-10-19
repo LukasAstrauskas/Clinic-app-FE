@@ -7,17 +7,17 @@ import {
   selectPastAppointments,
   selectTotalPastAppointmentAmount,
 } from '../../store/slices/patient/patientSlice';
-import { AppDispatch } from '../../store/types';
 import AppointmentSlot from './AppointmentSlot';
 import { PatientAppointment } from '../../model/Model';
 import { selectLoggedUser } from '../../store/slices/auth/authSlice';
+import { useAppDispatch } from '../../store/hooks';
 
 const PastAppointments = () => {
   const appointments = useSelector(selectPastAppointments);
   const appointmentAmount = useSelector(selectTotalPastAppointmentAmount);
   // const [hasMore, setHasMore] = useState(false);
   const userId = useSelector(selectLoggedUser)?.id || '';
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (appointments.length === 0) {

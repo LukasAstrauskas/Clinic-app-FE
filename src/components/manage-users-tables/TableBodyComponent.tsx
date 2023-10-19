@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { grey } from '@mui/material/colors';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { CreateUserDTO, Occupation, UniversalUser } from '../../model/Model';
 import { tableRowSX } from '../physician-table/PhysicianTable';
 import {
@@ -33,7 +33,6 @@ import {
   fetchPhysicianAmount,
   selectUserSize,
 } from '../../store/slices/userSize/userSizeSlice';
-import { AppDispatch } from '../../store/types';
 import EditUserModal from '../modals/EditUserModal';
 import { deleteUser } from '../../store/slices/user/userSlice';
 
@@ -60,8 +59,8 @@ const TableBodyComponent = ({
   isSearch,
   renderDelAndEditCells = true,
 }: Props) => {
-  const userSize = useSelector(selectUserSize);
-  const dispatch = useDispatch<AppDispatch>();
+  const userSize = useAppSelector(selectUserSize);
+  const dispatch = useAppDispatch();
   const [selectedId, setSelectedId] = useState('');
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState([]);

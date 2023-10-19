@@ -11,12 +11,12 @@ import {
   selectPatients,
 } from '../../store/slices/patient/patientSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../../store/types';
 import AddPatientModal from '../../components/modals/AddPatientModal';
 import TableHeadComponent from '../../components/manage-users-tables/TableHeadComponent';
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableBodyComponent from '../../components/manage-users-tables/TableBodyComponent';
 import AppointmentContext from '../../hooks/AppointmentContext';
+import { useAppDispatch } from '../../store/hooks';
 
 export const searchBaraSx = (isSelected: string) => {
   return {
@@ -39,7 +39,7 @@ export const searchIconSx = (isSelected: string) => {
 };
 
 export const Patients = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const patients = useSelector(selectPatients);
   const [open, setOpen] = useState(false);
   const [more, setMore] = useState<boolean>(true);

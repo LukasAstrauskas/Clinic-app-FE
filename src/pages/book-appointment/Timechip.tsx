@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppDispatch } from '../../store/types';
+import { useAppDispatch } from '../../store/hooks';
 import { Chip } from '@mui/material';
 import { red, teal } from '@mui/material/colors';
 import TimechipPopper from './TimechipPopper';
@@ -59,7 +59,7 @@ const Timechip = ({
   onClick,
   onCancelAppointment,
 }: Props) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const type = useSelector(selectType);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);

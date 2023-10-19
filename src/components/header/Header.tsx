@@ -18,14 +18,14 @@ import { NavLink, Link } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
 import { logout } from '../../store/slices/auth/authActions';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../../store/types';
+import { useAppDispatch } from '../../store/hooks';
 import { selectLoggedUser } from '../../store/slices/auth/authSlice';
 import { resetStore } from '../../store/reducers';
 
 const Header = () => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   const loggedUser = useSelector(selectLoggedUser);
 

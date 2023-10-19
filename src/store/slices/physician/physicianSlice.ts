@@ -7,7 +7,7 @@ import {
   PHYSICIAN_SEARCH_URL,
 } from '../../../utils/httpConstants';
 import axios from 'axios';
-import { RootState } from '../../types';
+import { RootState } from '../../reducers';
 import authHeader from '../../../authentication/authHeader';
 
 interface PhysicianState {

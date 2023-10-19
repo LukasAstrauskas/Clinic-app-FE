@@ -9,7 +9,7 @@ import {
   fetchOccupations,
   selectOccupations,
 } from '../../store/slices/occupation/occupationSlice';
-import { AppDispatch } from '../../store/types';
+import { useAppDispatch } from '../../store/hooks';
 import useDebouncedSearch from '../../hooks/useDebouncedSearch';
 
 interface SearchProps {
@@ -18,7 +18,7 @@ interface SearchProps {
 
 const Search: React.FC<SearchProps> = ({ onSearch }) => {
   const occupations = useSelector(selectOccupations);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [searchTerm, setSearchTerm] = useState('');
   const [searchBy, setSearchBy] = useState('');
   const debouncedSearchTerm = useDebouncedSearch(searchTerm, 300);

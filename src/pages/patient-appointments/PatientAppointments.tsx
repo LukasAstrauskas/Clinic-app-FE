@@ -7,14 +7,13 @@ import {
   selectPastAppointments,
   selectTotalPastAppointmentAmount,
 } from '../../store/slices/patient/patientSlice';
-import { AppDispatch } from '../../store/types';
 import PastAppointments from './PastAppointmets';
 import UpcomingAppointments from './UpcomingApppointments';
 import TabPanel from '../../components/TabPanel';
 
 const PatientAppointments = () => {
   const userId = sessionStorage.getItem('userId') || '';
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
   const [value, setValue] = useState(0);
   const pastAppointments = useSelector(selectPastAppointments);
   const appointmentAmount = useSelector(selectTotalPastAppointmentAmount);

@@ -17,7 +17,7 @@ import {
   PATIENT_PAST_APPOINTMENTS_AMOUNT,
   PATIENT_SEARCH_URL,
 } from '../../../utils/httpConstants';
-import { RootState } from '../../types';
+import { RootState } from '../../reducers';
 import authHeader from '../../../authentication/authHeader';
 
 interface PatientsState {

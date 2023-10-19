@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectLoggedUserType } from '../../store/slices/auth/authSlice';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import ErrorModal from '../../components/modals/ErrorModal';
-import { AppDispatch } from '../../store/types';
+import { useAppDispatch } from '../../store/hooks';
 import { bookTimeslot } from '../../store/slices/timeslot/timeslotSlice';
 import { deletePatientFromUpcomingTimeslot } from '../../store/slices/timeslot/timeslotActions';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -22,7 +22,7 @@ import { selectPhysicianNameById } from '../../store/slices/physician/phyNameOcc
 
 const BookAppointment = () => {
   const type = useSelector(selectLoggedUserType);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [bookingStep, setBookingStep] = useToggle();
   const selectedPhysicianName = useSelector(selectPhysicianNameById);
   const navigate = useNavigate();

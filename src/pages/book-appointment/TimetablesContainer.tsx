@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Container, Grid } from '@mui/material';
 import TimetableList from './TimetableList';
 import PhysicianTable from '../../components/physician-table/PhysicianTable';
-import { AppDispatch } from '../../store/types';
+import { useAppDispatch } from '../../store/hooks';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchPhyNameOccupation,
@@ -26,7 +26,7 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
   const loggedInPhysicianId = useSelector(selectId);
   const physicianId: string | null = useSelector(selectPhysicianId);
   const physicians = useSelector(selectPhysicians);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [refresh, setRefresh] = useState<boolean>(false);
   const [isSearch, setIsSearch] = useState(false);
 

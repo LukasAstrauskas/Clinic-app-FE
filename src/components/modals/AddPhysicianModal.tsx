@@ -11,7 +11,7 @@ import {
 import React, { useState, FC } from 'react';
 import Styles from '../styles/UserManagmentStyles';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../../store/types';
+import { useAppDispatch } from '../../store/hooks';
 import { selectOccupations } from '../../store/slices/occupation/occupationSlice';
 import { fetchPhysicians } from '../../store/slices/physician/physicianSlice';
 import {
@@ -31,7 +31,7 @@ interface Props {
 
 const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
   const occupations = useSelector(selectOccupations);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [name, setName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { RootState } from '../../types';
+import { RootState } from '../../reducers';
 import { CreateUserDTO, UpdateUserDTO, User } from '../../../model/Model';
 import { ADMIN_ACTION, BASE_USER_URL } from '../../../utils/httpConstants';
 import authHeader from '../../../authentication/authHeader';

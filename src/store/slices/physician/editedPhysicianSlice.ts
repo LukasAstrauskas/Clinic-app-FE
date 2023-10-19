@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { PhysicianDto } from '../../../model/Model';
-import { RootState } from '../../types';
+import { RootState } from '../../reducers';
 
 interface PhysicianDtoState {
   physicians: PhysicianDto[];

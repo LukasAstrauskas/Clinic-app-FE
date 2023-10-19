@@ -8,11 +8,13 @@ import React, { useState } from 'react';
 import styles from './Login.module.css';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store/types';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { AppDispatch, RootState } from '../../store/types';
 import { login } from '../../store/slices/auth/authActions';
 import Styles from '../../components/styles/UserManagmentStyles';
 import { authLoading } from '../../store/slices/auth/authSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useSelector } from 'react-redux';
 
 const Login = () => {
   const [errorAlertOpen, setErrorAlertOpen] = useState(false);
@@ -20,13 +22,16 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-  const loading = useSelector(authLoading);
-  const stateLoading = useSelector((state: RootState) => state.auth.loading);
+  const dipatch = useAppDispatch();
+  // const id = useAppSelector((state) => state.loggedUser.loggedUser?.id);
+  // const dispatch = useDispatch<AppDispatch>();
+  // const loading = useSelector(authLoading);
+  // const stateLoading = useSelector((state: RootState) => state.auth.loading);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const response = await dispatch(login({ email, password }));
+    // const response = await dispatch(login({ email, password }));
+    const response = await dipatch(login({ email, password }));
     // const userId = sessionStorage.getItem('userId');
     // if (userId) {
     //   await dispatch(authFetchUserById(userId));
@@ -53,6 +58,7 @@ const Login = () => {
             <div className={styles.centerItems}>
               <LockIcon fontSize='large' />
               <h2>Sign in</h2>
+              <p>Test test 2</p>
             </div>
             <TextField
               label='Email'

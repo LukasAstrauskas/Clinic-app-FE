@@ -15,11 +15,11 @@ import {
   searchPhysician,
 } from '../../store/slices/physician/physicianSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../../store/types';
 import { fetchOccupations } from '../../store/slices/occupation/occupationSlice';
+import { useAppDispatch } from '../../store/hooks';
 
 export const Physicians = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const physicians = useSelector(selectPhysicians);
   const [more, setMore] = useState<boolean>(true);
   const [open, setOpen] = useState(false);

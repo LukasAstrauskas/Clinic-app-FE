@@ -7,7 +7,7 @@ import {
 } from '../../../utils/httpConstants';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../../types';
+import { RootState } from '../../reducers';
 import authHeader from '../../../authentication/authHeader';
 
 /* This slice holds data only about size/amount of total users(patients, physicians).  */

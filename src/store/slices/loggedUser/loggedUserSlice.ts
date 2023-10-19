@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import React from 'react';
 import { LoggedUser } from '../../../model/Model';
 import axios from 'axios';
-import { BASE_URL, LOGIN, LOGIN_URL } from '../../../utils/httpConstants';
+import { BASE_URL, LOGIN } from '../../../utils/httpConstants';
 import { RootState } from '../../reducers';
 
 interface LoggedUserState {

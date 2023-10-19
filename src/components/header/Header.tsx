@@ -17,7 +17,6 @@ import { grey } from '@mui/material/colors';
 import { NavLink, Link } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
 import { logout } from '../../store/slices/auth/authActions';
-import { useDispatch, useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { resetStore } from '../../store/reducers';
 import { selectLoggedUser } from '../../store/slices/loggedUser/loggedUserSlice';

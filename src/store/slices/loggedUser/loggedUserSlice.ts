@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import React from 'react';
 import { LoggedUser } from '../../../model/Model';
 import axios from 'axios';
 import { BASE_URL, LOGIN } from '../../../utils/httpConstants';
@@ -55,6 +54,9 @@ export const initials = (state: RootState) =>
   state.loggedUser.loggedUser?.initials;
 export const selectLoggedUserType = (state: RootState) =>
   state.loggedUser.loggedUser?.type || '';
+
+export const selectPatientInfo = (state: RootState) =>
+  state.loggedUser.loggedUser?.patientInfo || null;
 
 export const selectIsLogged = (state: RootState) =>
   !!state.loggedUser.loggedUser;

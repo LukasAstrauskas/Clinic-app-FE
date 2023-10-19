@@ -3,18 +3,18 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   updatePatientInfo,
   selectPatientAdditionalInfo,
 } from '../../store/slices/patient/patientSlice';
-import { selectId, selectPatientInfo } from '../../store/slices/auth/authSlice';
+import { selectId } from '../../store/slices/auth/authSlice';
 import Styles from '../../components/styles/UserManagmentStyles';
+import { selectPatientInfo } from '../../store/slices/loggedUser/loggedUserSlice';
 
 const PatientProfile = () => {
   const dispatch = useAppDispatch();
-  const patientInfo = useSelector(selectPatientInfo);
-  const userId = useSelector(selectId);
+  const patientInfo = useAppSelector(selectPatientInfo);
   const [gender, setGender] = useState(
     patientInfo !== null ? patientInfo.gender : '',
   );
@@ -52,7 +52,7 @@ const PatientProfile = () => {
   const handleUpdatePatientInfo = () => {
     dispatch(
       updatePatientInfo({
-        userId: userId,
+        userId: patientInfo?.userId || '',
         gender: gender,
         birthDate: birthDate,
         phone: +phone,

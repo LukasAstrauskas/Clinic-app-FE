@@ -1,39 +1,30 @@
 import { Box, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  fetchPatientPastAppointments,
-  selectPastAppointments,
-  selectTotalPastAppointmentAmount,
-} from '../../store/slices/patient/patientSlice';
 import AppointmentSlot from './AppointmentSlot';
 import { PatientAppointment } from '../../model/Model';
-import { selectLoggedUser } from '../../store/slices/auth/authSlice';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import {
+  fetchPatientPastAppointmentAmount,
+  fetchPatientPastAppointments,
+  selectPastAppointments,
+  selectPastAppointmentsAmount,
+} from '../../store/slices/appointment/appointmentSlice';
 
 const PastAppointments = () => {
-  const appointments = useSelector(selectPastAppointments);
-  const appointmentAmount = useSelector(selectTotalPastAppointmentAmount);
-  // const [hasMore, setHasMore] = useState(false);
-  const userId = useSelector(selectLoggedUser)?.id || '';
+  const appointments = useAppSelector(selectPastAppointments);
+  const appointmentAmount = useAppSelector(selectPastAppointmentsAmount);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (appointments.length === 0) {
-      console.log('fetch PAST appointments');
-      dispatch(fetchPatientPastAppointments({ id: userId, offset: 0 }));
+      dispatch(fetchPatientPastAppointments(0));
+      dispatch(fetchPatientPastAppointmentAmount());
     }
   }, []);
 
   const fetchMoreAppointments = async () => {
-    console.log('fetch more apponits');
-    await dispatch(
-      fetchPatientPastAppointments({
-        id: userId,
-        offset: appointments.length,
-      }),
-    );
+    await dispatch(fetchPatientPastAppointments(appointments.length));
   };
 
   const hasMore = () => appointmentAmount > appointments.length;

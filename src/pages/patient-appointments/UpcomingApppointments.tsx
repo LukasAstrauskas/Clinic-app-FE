@@ -1,12 +1,11 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { PatientAppointment } from '../../model/Model';
 import AppointmentSlot from './AppointmentSlot';
-import { selectLoggedUser } from '../../store/slices/auth/authSlice';
+import { useAppSelector } from '../../store/hooks';
+import { selectUpcomingAppointments } from '../../store/slices/loggedUser/loggedUserSlice';
 const UpcomingAppointments = () => {
-  const loggedUser = useSelector(selectLoggedUser);
-  const appointments = loggedUser?.upcomingAppointment || [];
+  const appointments = useAppSelector(selectUpcomingAppointments);
 
   return (
     <>

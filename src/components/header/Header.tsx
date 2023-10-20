@@ -19,7 +19,10 @@ import { ROUTES } from '../../routes/routes';
 import { logout } from '../../store/slices/auth/authActions';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { resetStore } from '../../store/reducers';
-import { selectLoggedUser } from '../../store/slices/loggedUser/loggedUserSlice';
+import {
+  selectIsLogged,
+  selectLoggedUser,
+} from '../../store/slices/loggedUser/loggedUserSlice';
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -27,6 +30,7 @@ const Header = () => {
   const dispatch = useAppDispatch();
 
   const loggedUser = useAppSelector(selectLoggedUser);
+  const isLogged = useAppSelector(selectIsLogged);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -83,7 +87,7 @@ const Header = () => {
       </Link>
       <Stack direction='row' spacing={2}>
         <div>
-          {loggedUser && (
+          {isLogged && (
             <>
               <Button
                 ref={anchorRef}

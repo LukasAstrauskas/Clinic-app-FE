@@ -2,13 +2,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import {
-  updatePatientInfo,
-  selectPatientAdditionalInfo,
-} from '../../store/slices/patient/patientSlice';
-import { selectId } from '../../store/slices/auth/authSlice';
+import { updatePatientInfo } from '../../store/slices/patient/patientSlice';
 import Styles from '../../components/styles/UserManagmentStyles';
 import { selectPatientInfo } from '../../store/slices/loggedUser/loggedUserSlice';
 

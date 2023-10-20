@@ -1,22 +1,11 @@
 import { Box, Tab, Tabs, ThemeProvider, createTheme } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  fetchPatientPastAppointmentAmount,
-  fetchUpcomingPatientAppointments,
-  selectPastAppointments,
-  selectTotalPastAppointmentAmount,
-} from '../../store/slices/patient/patientSlice';
+import React, { useState } from 'react';
 import PastAppointments from './PastAppointmets';
 import UpcomingAppointments from './UpcomingApppointments';
 import TabPanel from '../../components/TabPanel';
 
 const PatientAppointments = () => {
-  const userId = sessionStorage.getItem('userId') || '';
-  const dispatch = useDispatch();
   const [value, setValue] = useState(0);
-  const pastAppointments = useSelector(selectPastAppointments);
-  const appointmentAmount = useSelector(selectTotalPastAppointmentAmount);
 
   const theme = createTheme({
     palette: {
@@ -31,18 +20,8 @@ const PatientAppointments = () => {
     setValue(newValue);
   };
 
-  // useEffect(() => {
-  //   console.log('fetch appointments');
-  //   dispatch(fetchUpcomingPatientAppointments(userId));
-  //   dispatch(fetchPatientPastAppointmentAmount(userId));
-  // }, []);
-
   return (
     <>
-      <h2 style={{ textAlign: 'center' }}>Appointments</h2>
-      <p>
-        All: {appointmentAmount}, feched: {pastAppointments.length}
-      </p>
       <ThemeProvider theme={theme}>
         <Box>
           <Tabs

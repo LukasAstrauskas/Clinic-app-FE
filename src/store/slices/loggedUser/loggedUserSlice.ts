@@ -1,17 +1,35 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { LoggedUser } from '../../../model/Model';
 import axios from 'axios';
-import { BASE_URL, LOGIN } from '../../../utils/httpConstants';
+import {
+  BASE_URL,
+  LOGIN,
+  PAST_APPOINTMENTS,
+  PATIENT_PAST_APPOINTMENTS,
+  TIMESLOT,
+} from '../../../utils/httpConstants';
 import { RootState } from '../../reducers';
+import { bearerToken } from '../../../authentication/authHeader';
 
 interface LoggedUserState {
-  loggedUser: LoggedUser | null;
+  loggedUser: LoggedUser;
   status: 'idle' | 'pending' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const loggedUserState: LoggedUserState = {
-  loggedUser: null,
+  loggedUser: {
+    id: '',
+    name: '',
+    surname: '',
+    initials: '',
+    email: '',
+    type: '',
+    occupation: null,
+    patientInfo: null,
+    upcomingAppointment: [],
+    pastAppointment: [],
+  },
   status: 'idle',
   error: null,
 };
@@ -34,30 +52,34 @@ const loggedUserSlice = createSlice({
   initialState: loggedUserState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(userLogin.fulfilled, (state, action) => {
-      state.loggedUser = action.payload.loggedUser;
-      state.status = 'succeeded';
-    });
-    builder.addCase(userLogin.pending, (state) => {
-      state.status = 'pending';
-    });
-    builder.addCase(userLogin.rejected, (state, action) => {
-      state.error = action.error.message ?? 'Login failed';
-      state.status = 'failed';
-    });
+    builder
+      .addCase(userLogin.fulfilled, (state, action) => {
+        state.loggedUser = action.payload.loggedUser;
+        state.status = 'succeeded';
+      })
+      .addCase(userLogin.pending, (state) => {
+        state.status = 'pending';
+      })
+      .addCase(userLogin.rejected, (state, action) => {
+        state.error = action.error.message ?? 'Login failed';
+        state.status = 'failed';
+      });
   },
 });
 
 export const selectLoggedUser = (state: RootState) =>
   state.loggedUser.loggedUser;
 export const initials = (state: RootState) =>
-  state.loggedUser.loggedUser?.initials;
+  state.loggedUser.loggedUser.initials;
 export const selectLoggedUserType = (state: RootState) =>
-  state.loggedUser.loggedUser?.type || '';
-
+  state.loggedUser.loggedUser.type;
+export const selectUpcomingAppointments = (state: RootState) =>
+  state.loggedUser.loggedUser.upcomingAppointment;
+export const selectPastAppointments = (state: RootState) =>
+  state.loggedUser.loggedUser.pastAppointment;
 export const selectPatientInfo = (state: RootState) =>
-  state.loggedUser.loggedUser?.patientInfo || null;
+  state.loggedUser.loggedUser.patientInfo;
 
 export const selectIsLogged = (state: RootState) =>
-  !!state.loggedUser.loggedUser;
+  !!state.loggedUser.loggedUser.id;
 export default loggedUserSlice.reducer;

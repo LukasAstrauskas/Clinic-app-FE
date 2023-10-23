@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid } from '@mui/material';
 import styles from './WelcomePage.module.css';
 import Item from './Item';
@@ -9,10 +9,17 @@ import managePhysiciansIcon from '../../assets/manage-physicians-icon.svg';
 import newAppointmentIcon from '../../assets/new-appointment-icon.svg';
 import { ROUTES } from '../../routes/routes';
 import { useAppSelector } from '../../store/hooks';
-import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
+import {
+  selectIsUserLoaded,
+  selectLoggedUserType,
+} from '../../store/slices/loggedUser/loggedUserSlice';
 
 const HomePage = () => {
   const loggedUserType = useAppSelector(selectLoggedUserType);
+  const isUserLoaded = useAppSelector(selectIsUserLoaded);
+
+  // useEffect()[]
+
   return (
     <Grid
       className={styles.main}

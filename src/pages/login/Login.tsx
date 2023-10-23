@@ -3,7 +3,6 @@ import { TextField } from '@mui/material';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
-
 import React, { useState } from 'react';
 import styles from './Login.module.css';
 import { useNavigate } from 'react-router-dom';
@@ -22,9 +21,12 @@ const Login = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await dipatch(userLogin({ email, password })).unwrap();
-    // write fail login logic
-    navigate(ROUTES.HOMEPAGE);
+    await dipatch(userLogin({ email, password }));
+    if (localStorage.getItem('token') !== null) {
+      navigate(ROUTES.HOMEPAGE);
+    } else {
+      setErrorAlertOpen(true);
+    }
   };
 
   return (

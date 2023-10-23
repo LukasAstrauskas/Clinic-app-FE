@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { PatientAppointment } from '../../../model/Model';
 import axios from 'axios';
-import { bearerToken } from '../../../authentication/authHeader';
+import { bearer, bearerToken } from '../../../authentication/authHeader';
 import {
   BASE_URL,
   TIMESLOT,
   PAST_APPOINTMENTS,
   PAST_APPOINTMENTS_AMOUNT,
+  PATIENT_CANCEL_APPOINTMENT,
 } from '../../../utils/httpConstants';
 import { RootState } from '../../reducers';
 
@@ -26,14 +27,34 @@ const initialState: AppointmentState = {
   error: null,
 };
 
+export const patientCancelAppointment = createAsyncThunk(
+  'timeslot/deletePatientFromUpcomingTimeslot',
+  async (timeslotId: string) => {
+    const config = {
+      headers: bearerToken(),
+    };
+    const response = await axios
+      .patch(
+        BASE_URL.concat(TIMESLOT).concat(PATIENT_CANCEL_APPOINTMENT),
+        { timeslotId },
+        config,
+      )
+      .then((response) => {
+        return response.data;
+      });
+    // .catch((error) => {
+    //   console.error('Error canceling appointment:', error);
+    // });
+    return response.data;
+  },
+);
+
 export const fetchPatientPastAppointments = createAsyncThunk(
-  'loggedUser/past-appointments',
+  'appointment/past-appointments',
   async (offset: number) => {
     const response = await axios.get(
       BASE_URL.concat(TIMESLOT).concat(PAST_APPOINTMENTS).concat(`/${offset}`),
-      {
-        headers: bearerToken(),
-      },
+      { headers: bearerToken() },
     );
     console.log(response.data);
     return response.data;
@@ -41,13 +62,11 @@ export const fetchPatientPastAppointments = createAsyncThunk(
 );
 
 export const fetchPatientPastAppointmentAmount = createAsyncThunk(
-  'patients/patient-more-past-appointments',
+  'appointment/past-appointments-amount',
   async () => {
     const response = await axios.get(
       BASE_URL.concat(TIMESLOT).concat(PAST_APPOINTMENTS_AMOUNT),
-      {
-        headers: bearerToken(),
-      },
+      { headers: bearerToken() },
     );
     return response.data;
   },
@@ -82,6 +101,7 @@ const appointmentSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message || 'Failed to load data';
       });
+    // .addCase(patientCancelAppointment.fulfilled)
   },
 });
 
@@ -90,4 +110,5 @@ export const selectPastAppointmentsAmount = (state: RootState) =>
   state.appointment.pastAppointmentAmount;
 export const selectPastAppointments = (state: RootState) =>
   state.appointment.pastAppointments;
+
 export default appointmentSlice.reducer;

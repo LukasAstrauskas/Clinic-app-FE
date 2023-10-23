@@ -6,6 +6,7 @@ import { PatientAppointment } from '../../model/Model';
 import { fetchUpcomingPatientAppointments } from '../../store/slices/patient/patientSlice';
 import { deletePatientFromUpcomingTimeslot } from '../../store/slices/timeslot/timeslotActions';
 import { useAppDispatch } from '../../store/hooks';
+import { patientCancelAppointment } from '../../store/slices/appointment/appointmentSlice';
 interface Props {
   appointment: PatientAppointment;
 }
@@ -16,13 +17,15 @@ const AppointmentSlot = ({ appointment }: Props) => {
   const [open, setOpen] = useState(false);
   const [physicianId, setphysicianId] = useState<string>('');
   const handleCancel = async () => {
-    await dispatch(
-      deletePatientFromUpcomingTimeslot({
-        physicianId,
-        patientId,
-      }),
-    );
-    await dispatch(fetchUpcomingPatientAppointments(patientId));
+    dispatch(patientCancelAppointment(appointment.id));
+    // await dispatch(
+
+    //   deletePatientFromUpcomingTimeslot({
+    //     physicianId,
+    //     patientId,
+    //   }),
+    // );
+    // await dispatch(fetchUpcomingPatientAppointments(patientId));
     setOpen(false);
   };
 
@@ -30,9 +33,9 @@ const AppointmentSlot = ({ appointment }: Props) => {
     setOpen(false);
   };
 
-  const handleAlertOpen = (id: string) => {
+  const handleAlertOpen = () => {
     setOpen(true);
-    setphysicianId(id);
+    // setphysicianId(id);
   };
 
   return (
@@ -83,7 +86,7 @@ const AppointmentSlot = ({ appointment }: Props) => {
           <Box>
             {dayjs().isBefore(appointment.date) && (
               <Button
-                onClick={() => handleAlertOpen(appointment.id)}
+                onClick={handleAlertOpen}
                 variant='outlined'
                 sx={{
                   marginLeft: '300px',

@@ -10,6 +10,7 @@ import {
 } from '../../../utils/httpConstants';
 import { RootState } from '../../reducers';
 import { bearerToken } from '../../../authentication/authHeader';
+import PatientAppointments from '../../../pages/patient-appointments/PatientAppointments';
 
 interface LoggedUserState {
   loggedUser: LoggedUser;
@@ -17,8 +18,8 @@ interface LoggedUserState {
   error: string | null;
 }
 
-const loggedUserState: LoggedUserState = {
-  loggedUser: {
+const appUser = () => {
+  let user: LoggedUser = {
     id: '',
     name: '',
     surname: '',
@@ -29,7 +30,32 @@ const loggedUserState: LoggedUserState = {
     patientInfo: null,
     upcomingAppointment: [],
     pastAppointment: [],
-  },
+  };
+  const userString: string | null = localStorage.getItem('loggedUser');
+  if (userString !== null) {
+    user = JSON.parse(userString);
+  }
+  return user;
+};
+
+const user: LoggedUser = JSON.parse(
+  localStorage.getItem('loggedUser') ||
+    `{
+  id: '',
+  name: '',
+  surname: '',
+  initials: '',
+  email: '',
+  type: '',
+  occupation: null,
+  patientInfo: null,
+  upcomingAppointment: [],
+  pastAppointment: [],
+}`,
+);
+
+const loggedUserState: LoggedUserState = {
+  loggedUser: user,
   status: 'idle',
   error: null,
 };
@@ -55,6 +81,12 @@ const loggedUserSlice = createSlice({
     builder
       .addCase(userLogin.fulfilled, (state, action) => {
         state.loggedUser = action.payload.loggedUser;
+        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem(
+          'loggedUser',
+          JSON.stringify(action.payload.loggedUser),
+        );
+        // state.loggedUser.pastAppointment = [...state.loggedUser.pastAppointment, ...action.payload];
         state.status = 'succeeded';
       })
       .addCase(userLogin.pending, (state) => {
@@ -80,6 +112,7 @@ export const selectPastAppointments = (state: RootState) =>
 export const selectPatientInfo = (state: RootState) =>
   state.loggedUser.loggedUser.patientInfo;
 
-export const selectIsLogged = (state: RootState) =>
+export const selectIsLogged = () => localStorage.getItem('token') !== null;
+export const selectIsUserLoaded = (state: RootState) =>
   !!state.loggedUser.loggedUser.id;
 export default loggedUserSlice.reducer;

@@ -6,6 +6,7 @@ export const LOGIN = '/login';
 export const TIMESLOT = '/timeslot';
 export const PAST_APPOINTMENTS = '/patientPastAppointments';
 export const PAST_APPOINTMENTS_AMOUNT = '/patientPastAppointmentsAmount';
+export const PATIENT_CANCEL_APPOINTMENT = '/patientCancelAppointment';
 
 export const LOGIN_URL = 'http://localhost:8080/login';
 export const BASE_USER_URL = 'http://localhost:8080/user/';

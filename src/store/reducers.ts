@@ -11,7 +11,7 @@ import { occupationSlice } from './slices/occupation/occupationSlice';
 import { editedPhysicianSlice } from './slices/physician/editedPhysicianSlice';
 import { timeslotSlice } from './slices/timeslot/timeslotSlice';
 import loggedUserReducer from './slices/loggedUser/loggedUserSlice';
-import appointmentSlice from './slices/appointment/appointmentSlice';
+import appointmentReducer from './slices/appointment/appointmentSlice';
 // import loggedUserSlice from './slices/loggedUser/loggedUserSlice';
 
 export const resetStore = () => ({ type: 'RESET_STORE' });
@@ -28,7 +28,7 @@ const appReducer = combineReducers({
   physicianDto: editedPhysicianSlice.reducer,
   timeslot: timeslotSlice.reducer,
   loggedUser: loggedUserReducer,
-  appointment: appointmentSlice,
+  appointment: appointmentReducer,
 });
 
 export const rootReducer: Reducer<

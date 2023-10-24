@@ -3,29 +3,17 @@ import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import AlertModal from '../../components/modals/AlertModal';
 import { PatientAppointment } from '../../model/Model';
-import { fetchUpcomingPatientAppointments } from '../../store/slices/patient/patientSlice';
-import { deletePatientFromUpcomingTimeslot } from '../../store/slices/timeslot/timeslotActions';
 import { useAppDispatch } from '../../store/hooks';
-import { patientCancelAppointment } from '../../store/slices/appointment/appointmentSlice';
+import { patientCancelAppointment } from '../../store/slices/loggedUser/loggedUserSlice';
 interface Props {
   appointment: PatientAppointment;
 }
 
 const AppointmentSlot = ({ appointment }: Props) => {
-  const patientId = sessionStorage.getItem('userId') || '';
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
-  const [physicianId, setphysicianId] = useState<string>('');
   const handleCancel = async () => {
     dispatch(patientCancelAppointment(appointment.id));
-    // await dispatch(
-
-    //   deletePatientFromUpcomingTimeslot({
-    //     physicianId,
-    //     patientId,
-    //   }),
-    // );
-    // await dispatch(fetchUpcomingPatientAppointments(patientId));
     setOpen(false);
   };
 
@@ -35,7 +23,6 @@ const AppointmentSlot = ({ appointment }: Props) => {
 
   const handleAlertOpen = () => {
     setOpen(true);
-    // setphysicianId(id);
   };
 
   return (

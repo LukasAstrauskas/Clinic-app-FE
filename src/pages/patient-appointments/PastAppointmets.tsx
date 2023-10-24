@@ -6,10 +6,12 @@ import { PatientAppointment } from '../../model/Model';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   fetchPatientPastAppointmentAmount,
-  fetchPatientPastAppointments,
-  selectPastAppointments,
   selectPastAppointmentsAmount,
 } from '../../store/slices/appointment/appointmentSlice';
+import {
+  fetchPatientPastAppointments,
+  selectPastAppointments,
+} from '../../store/slices/loggedUser/loggedUserSlice';
 
 const PastAppointments = () => {
   const appointments = useAppSelector(selectPastAppointments);

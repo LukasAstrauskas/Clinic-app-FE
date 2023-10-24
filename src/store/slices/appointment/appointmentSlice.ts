@@ -27,39 +27,36 @@ const initialState: AppointmentState = {
   error: null,
 };
 
-export const patientCancelAppointment = createAsyncThunk(
-  'timeslot/deletePatientFromUpcomingTimeslot',
-  async (timeslotId: string) => {
-    const config = {
-      headers: bearerToken(),
-    };
-    const response = await axios
-      .patch(
-        BASE_URL.concat(TIMESLOT).concat(PATIENT_CANCEL_APPOINTMENT),
-        { timeslotId },
-        config,
-      )
-      .then((response) => {
-        return response.data;
-      });
-    // .catch((error) => {
-    //   console.error('Error canceling appointment:', error);
-    // });
-    return response.data;
-  },
-);
-
-export const fetchPatientPastAppointments = createAsyncThunk(
-  'appointment/past-appointments',
-  async (offset: number) => {
-    const response = await axios.get(
-      BASE_URL.concat(TIMESLOT).concat(PAST_APPOINTMENTS).concat(`/${offset}`),
-      { headers: bearerToken() },
-    );
-    console.log(response.data);
-    return response.data;
-  },
-);
+// export const patientCancelAppointment = createAsyncThunk(
+//   'timeslot/deletePatientFromUpcomingTimeslot',
+//   async (timeslotId: string) => {
+//     const config = {
+//       headers: bearerToken(),
+//     };
+//     const response = await axios
+//       .patch(
+//         BASE_URL.concat(TIMESLOT).concat(PATIENT_CANCEL_APPOINTMENT),
+//         { timeslotId },
+//         config,
+//       )
+//       .then((response) => {
+//         return response.data;
+//       });
+//     return response.data;
+//   },
+// );
+// unused
+// export const fetchPatientPastAppointments = createAsyncThunk(
+//   'appointment/past-appointments',
+//   async (offset: number) => {
+//     const response = await axios.get(
+//       BASE_URL.concat(TIMESLOT).concat(PAST_APPOINTMENTS).concat(`/${offset}`),
+//       { headers: bearerToken() },
+//     );
+//     console.log(response.data);
+//     return response.data;
+//   },
+// );
 
 export const fetchPatientPastAppointmentAmount = createAsyncThunk(
   'appointment/past-appointments-amount',
@@ -78,17 +75,17 @@ const appointmentSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchPatientPastAppointments.fulfilled, (state, action) => {
-        state.pastAppointments = [...state.pastAppointments, ...action.payload];
-        state.status = 'succeeded';
-      })
-      .addCase(fetchPatientPastAppointments.pending, (state) => {
-        state.status = 'pending';
-      })
-      .addCase(fetchPatientPastAppointments.rejected, (state, action) => {
-        state.error = action.error.message ?? 'Failed to load data';
-        state.status = 'failed';
-      })
+      // .addCase(fetchPatientPastAppointments.fulfilled, (state, action) => {
+      //   state.pastAppointments = [...state.pastAppointments, ...action.payload];
+      //   state.status = 'succeeded';
+      // })
+      // .addCase(fetchPatientPastAppointments.pending, (state) => {
+      //   state.status = 'pending';
+      // })
+      // .addCase(fetchPatientPastAppointments.rejected, (state, action) => {
+      //   state.error = action.error.message ?? 'Failed to load data';
+      //   state.status = 'failed';
+      // })
       .addCase(fetchPatientPastAppointmentAmount.pending, (state) => {
         state.status = 'pending';
         state.error = null;

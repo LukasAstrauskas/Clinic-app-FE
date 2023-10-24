@@ -1,10 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { LoggedUser } from '../../../model/Model';
+import { LoggedUser, PatientInfo } from '../../../model/Model';
 import axios from 'axios';
 import {
   BASE_URL,
   LOGIN,
   PAST_APPOINTMENTS,
+  PATIENT_CANCEL_APPOINTMENT,
+  PATIENT_INFO,
   PATIENT_PAST_APPOINTMENTS,
   TIMESLOT,
 } from '../../../utils/httpConstants';
@@ -17,26 +19,6 @@ interface LoggedUserState {
   status: 'idle' | 'pending' | 'succeeded' | 'failed';
   error: string | null;
 }
-
-const appUser = () => {
-  let user: LoggedUser = {
-    id: '',
-    name: '',
-    surname: '',
-    initials: '',
-    email: '',
-    type: '',
-    occupation: null,
-    patientInfo: null,
-    upcomingAppointment: [],
-    pastAppointment: [],
-  };
-  const userString: string | null = localStorage.getItem('loggedUser');
-  if (userString !== null) {
-    user = JSON.parse(userString);
-  }
-  return user;
-};
 
 const user: LoggedUser = JSON.parse(
   localStorage.getItem('loggedUser') ||
@@ -73,6 +55,47 @@ export const userLogin = createAsyncThunk(
   },
 );
 
+export const updatePatientInfo = createAsyncThunk(
+  'patientInfo/updatePatientInfo',
+  async (updatedPatientInfo: PatientInfo) => {
+    const response = await axios.put(
+      BASE_URL.concat(PATIENT_INFO),
+      updatedPatientInfo,
+      {
+        headers: bearerToken(),
+      },
+    );
+    return response.data;
+  },
+);
+
+export const fetchPatientPastAppointments = createAsyncThunk(
+  'appointment/past-appointments',
+  async (offset: number) => {
+    const response = await axios.get(
+      BASE_URL.concat(TIMESLOT).concat(PAST_APPOINTMENTS).concat(`/${offset}`),
+      { headers: bearerToken() },
+    );
+    console.log(response.data);
+    return response.data;
+  },
+);
+
+export const patientCancelAppointment = createAsyncThunk(
+  'timeslot/deletePatientFromUpcomingTimeslot',
+  async (timeslotId: string) => {
+    const config = {
+      headers: bearerToken(),
+    };
+    const response = await axios.patch(
+      BASE_URL.concat(TIMESLOT).concat(PATIENT_CANCEL_APPOINTMENT),
+      { timeslotId },
+      config,
+    );
+    return response.data;
+  },
+);
+
 const loggedUserSlice = createSlice({
   name: 'loggedUser',
   initialState: loggedUserState,
@@ -94,6 +117,45 @@ const loggedUserSlice = createSlice({
       })
       .addCase(userLogin.rejected, (state, action) => {
         state.error = action.error.message ?? 'Login failed';
+        state.status = 'failed';
+      })
+      .addCase(fetchPatientPastAppointments.fulfilled, (state, action) => {
+        state.loggedUser.pastAppointment = [
+          ...state.loggedUser.pastAppointment,
+          ...action.payload,
+        ];
+        localStorage.setItem('loggedUser', JSON.stringify(state.loggedUser));
+        state.status = 'succeeded';
+      })
+      .addCase(fetchPatientPastAppointments.pending, (state) => {
+        state.status = 'pending';
+      })
+      .addCase(fetchPatientPastAppointments.rejected, (state, action) => {
+        state.error = action.error.message ?? 'Failed to load data';
+        state.status = 'failed';
+      })
+      .addCase(updatePatientInfo.fulfilled, (state, action) => {
+        state.loggedUser.patientInfo = action.payload;
+        localStorage.setItem('loggedUser', JSON.stringify(state.loggedUser));
+        state.status = 'succeeded';
+      })
+      .addCase(updatePatientInfo.pending, (state) => {
+        state.status = 'pending';
+      })
+      .addCase(updatePatientInfo.rejected, (state, action) => {
+        state.error = action.error.message ?? 'user info not updated.';
+        state.status = 'failed';
+      })
+      .addCase(patientCancelAppointment.fulfilled, (state, action) => {
+        state.loggedUser.upcomingAppointment = action.payload;
+        localStorage.setItem('loggedUser', JSON.stringify(state.loggedUser));
+        state.status = 'succeeded';
+      })
+      .addCase(patientCancelAppointment.pending, (state) => {
+        state.status = 'pending';
+      })
+      .addCase(patientCancelAppointment.rejected, (state, action) => {
+        state.error = action.error.message ?? 'Failed cancel appointment.';
         state.status = 'failed';
       });
   },

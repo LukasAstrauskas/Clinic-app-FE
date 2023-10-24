@@ -27,7 +27,7 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
   const physicianId: string | null = useSelector(selectPhysicianId);
   const physicians = useSelector(selectPhysicians);
   const dispatch = useAppDispatch();
-  const [refresh, setRefresh] = useState<boolean>(false);
+  // const [refresh, setRefresh] = useState<boolean>(false);
   const [isSearch, setIsSearch] = useState(false);
 
   const handleClick = (id: string) => {
@@ -41,7 +41,7 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
     } else {
       setIsSearch(false);
       dispatch(fetchPhysicians());
-      setRefresh(true);
+      // setRefresh(true);
     }
   };
   /* Not  fetchPhyNameOccupation(), but <PhysicianSearchBar/> component
@@ -73,8 +73,8 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
                 physicians={physicians}
                 selectedId={physicianId}
                 rowClick={handleClick}
-                refresh={refresh}
-                setRefresh={setRefresh}
+                // refresh={refresh}
+                // setRefresh={setRefresh}
                 isSearch={isSearch}
               />
             </Grid>

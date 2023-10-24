@@ -10,21 +10,20 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectLoggedUserType } from '../../store/slices/auth/authSlice';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import ErrorModal from '../../components/modals/ErrorModal';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { bookTimeslot } from '../../store/slices/timeslot/timeslotSlice';
 import { deletePatientFromUpcomingTimeslot } from '../../store/slices/timeslot/timeslotActions';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { selectPhysicianNameById } from '../../store/slices/physician/phyNameOccupationSlice';
 
 const BookAppointment = () => {
-  const type = useSelector(selectLoggedUserType);
+  const type = useAppSelector(selectLoggedUserType);
   const dispatch = useAppDispatch();
   const [bookingStep, setBookingStep] = useToggle();
-  const selectedPhysicianName = useSelector(selectPhysicianNameById);
+  const selectedPhysicianName = useAppSelector(selectPhysicianNameById);
   const navigate = useNavigate();
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);

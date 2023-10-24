@@ -3,7 +3,6 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-// import { updatePatientInfo } from '../../store/slices/patient/patientSlice';
 import {
   selectPatientInfo,
   updatePatientInfo,

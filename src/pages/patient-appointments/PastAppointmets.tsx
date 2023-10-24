@@ -15,6 +15,7 @@ import {
 
 const PastAppointments = () => {
   const appointments = useAppSelector(selectPastAppointments);
+  // appoint amount has no place
   const appointmentAmount = useAppSelector(selectPastAppointmentsAmount);
   const dispatch = useAppDispatch();
 

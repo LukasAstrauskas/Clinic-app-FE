@@ -16,7 +16,7 @@ interface SearchProps {
   onSearch: (value: string, searchBy: string) => void;
 }
 
-const Search: React.FC<SearchProps> = ({ onSearch }) => {
+const PhysicianSearchBar: React.FC<SearchProps> = ({ onSearch }) => {
   const occupations = useSelector(selectOccupations);
   const dispatch = useAppDispatch();
   const [searchTerm, setSearchTerm] = useState('');
@@ -56,6 +56,8 @@ const Search: React.FC<SearchProps> = ({ onSearch }) => {
             },
           }}
         />
+        {/* TODO */}
+        {/* Chanhe 'SearchSelectItem' to MUI component */}
         <TextField
           id='searchBy'
           select
@@ -80,4 +82,4 @@ const Search: React.FC<SearchProps> = ({ onSearch }) => {
   );
 };
 
-export default Search;
+export default PhysicianSearchBar;

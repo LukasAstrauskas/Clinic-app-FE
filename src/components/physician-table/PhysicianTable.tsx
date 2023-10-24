@@ -20,8 +20,8 @@ import {
 
 type Props = {
   physicians: UniversalUser[];
-  refresh: boolean;
-  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  // refresh: boolean;
+  // setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   selectedId: string | null;
   rowClick: (id: string) => void;
   isSearch: boolean;

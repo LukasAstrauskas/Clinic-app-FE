@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import { Visibility } from '@mui/icons-material';
 import Styles from '../styles/UserManagmentStyles';
 import { useAppDispatch } from '../../store/hooks';
-import { useDispatch } from 'react-redux';
 import { fetchAdmins } from '../../store/slices/admin/adminSlice';
 import {
   isValidName,

@@ -11,8 +11,7 @@ import { UniversalUser } from '../../model/Model';
 import { grey } from '@mui/material/colors';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { fetchMorePhysicians } from '../../store/slices/physician/physicianSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   fetchPhysicianAmount,
   selectUserSize,
@@ -43,7 +42,7 @@ const PhysicianTable = ({
   rowClick,
   isSearch,
 }: Props) => {
-  const userSize = useSelector(selectUserSize);
+  const userSize = useAppSelector(selectUserSize);
   const dispatch = useAppDispatch();
   const getMoreData = async () => {
     if (!isSearch) {

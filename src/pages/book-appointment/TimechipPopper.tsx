@@ -1,8 +1,7 @@
 import React from 'react';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Box, Popper, Button, Typography } from '@mui/material';
 import Styles from '../../components/styles/UserManagmentStyles';
-import { useDispatch, useSelector } from 'react-redux';
 import { fetchPatientInfo } from '../../store/slices/patient/patientSlice';
 import { selectUserName } from '../../store/slices/user/userSlice';
 import PatientInfoModal from '../../components/modals/PatientInfoModal';
@@ -23,7 +22,7 @@ const TimechipPopper = ({
   onCancelAppointment,
 }: Props) => {
   const dispatch = useAppDispatch();
-  const patientName = useSelector(selectUserName);
+  const patientName = useAppSelector(selectUserName);
   const [modalOpen, setModalOpen] = React.useState(false);
 
   const handleInfoClick = () => {

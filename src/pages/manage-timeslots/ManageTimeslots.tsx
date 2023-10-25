@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Container, Grid } from '@mui/material';
 import TimetableList from '../book-appointment/TimetableList';
 import PhysicianTable from '../../components/physician-table/PhysicianTable';
-import { useAppDispatch } from '../../store/hooks';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   fetchPhyNameOccupation,
   selectPhysicianId,
@@ -22,10 +21,10 @@ type props = {
 };
 // Dublicates TimetablesContainer
 const ManageTimeslots = ({ tableTitle = 'Physicians' }: props) => {
-  const type = useSelector(selectType);
-  const loggedInPhysicianId = useSelector(selectId);
-  const physicianId: string | null = useSelector(selectPhysicianId);
-  const physicians = useSelector(selectPhysicians);
+  // const type = useSelector(selectType);
+  // const loggedInPhysicianId = useSelector(selectId);
+  const physicianId: string | null = useAppSelector(selectPhysicianId);
+  const physicians = useAppSelector(selectPhysicians);
   const dispatch = useAppDispatch();
   // const [refresh, setRefresh] = useState<boolean>(false);
   const [isSearch, setIsSearch] = useState(false);

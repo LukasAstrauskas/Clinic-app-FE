@@ -6,8 +6,7 @@ import { Modal } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { isValidName, isValidEmail, isValidPasswordOrEmpty } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
-import { useDispatch, useSelector } from 'react-redux';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { updateUser } from '../../store/slices/user/userSlice';
 import {
   fetchOccupations,
@@ -33,7 +32,7 @@ const EditUserModal = ({
   refresh,
 }: Props) => {
   const dispatch = useAppDispatch();
-  const occupations = useSelector(selectOccupations);
+  const occupations = useAppSelector(selectOccupations);
 
   const initialState: CreateUserDTO = {
     name: '',

@@ -10,8 +10,7 @@ import {
 } from '@mui/material';
 import React, { useState, FC } from 'react';
 import Styles from '../styles/UserManagmentStyles';
-import { useDispatch, useSelector } from 'react-redux';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectOccupations } from '../../store/slices/occupation/occupationSlice';
 import { fetchPhysicians } from '../../store/slices/physician/physicianSlice';
 import {
@@ -30,7 +29,7 @@ interface Props {
 }
 
 const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
-  const occupations = useSelector(selectOccupations);
+  const occupations = useAppSelector(selectOccupations);
   const dispatch = useAppDispatch();
   const [name, setName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');

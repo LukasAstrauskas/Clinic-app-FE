@@ -4,12 +4,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import PhysicianSearchStyles, {
   SearchSelectItem,
 } from '../styles/PhysicianSearchStyles';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchOccupations,
   selectOccupations,
 } from '../../store/slices/occupation/occupationSlice';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import useDebouncedSearch from '../../hooks/useDebouncedSearch';
 
 interface SearchProps {
@@ -17,7 +16,7 @@ interface SearchProps {
 }
 
 const PhysicianSearchBar = ({ onSearch }: SearchProps) => {
-  const occupations = useSelector(selectOccupations);
+  const occupations = useAppSelector(selectOccupations);
   const dispatch = useAppDispatch();
   const [searchTerm, setSearchTerm] = useState('');
   const [searchBy, setSearchBy] = useState('');

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, Box, Button, Modal, Stack, Typography } from '@mui/material';
-import { useDispatch } from 'react-redux';
 import { useAppDispatch } from '../../store/hooks';
 import { postTimeslot } from '../../store/slices/timeslot/timeslotActions';
 import dayjs, { Dayjs } from 'dayjs';

@@ -16,7 +16,7 @@ interface SearchProps {
   onSearch: (value: string, searchBy: string) => void;
 }
 
-const PhysicianSearchBar: React.FC<SearchProps> = ({ onSearch }) => {
+const PhysicianSearchBar = ({ onSearch }: SearchProps) => {
   const occupations = useSelector(selectOccupations);
   const dispatch = useAppDispatch();
   const [searchTerm, setSearchTerm] = useState('');

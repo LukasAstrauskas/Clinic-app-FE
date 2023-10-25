@@ -38,7 +38,7 @@ export const fetchPatientPastAppointmentAmount = createAsyncThunk(
   },
 );
 
-const appointmentSlice = createSlice({
+export const appointmentSlice = createSlice({
   name: 'appoinment',
   initialState,
   reducers: {},
@@ -62,7 +62,5 @@ const appointmentSlice = createSlice({
 export const selectAppointments = (state: RootState) => state.appointment;
 export const selectPastAppointmentsAmount = (state: RootState) =>
   state.appointment.pastAppointmentAmount;
-export const selectPastAppointments = (state: RootState) =>
-  state.appointment.pastAppointments;
 
-export default appointmentSlice.reducer;
+// export default appointmentSlice.reducer;

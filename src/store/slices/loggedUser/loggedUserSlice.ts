@@ -43,13 +43,8 @@ const loggedUserState: LoggedUserState = {
 export const userLogin = createAsyncThunk(
   'loggedUser/login',
   async (payload: { email: string; password: string }) => {
-    const response = await axios
-      .post(BASE_URL.concat(LOGIN), payload)
-      .then((response) => {
-        localStorage.setItem('token', response.data.token);
-        return response;
-      });
-    return response.data;
+    const response = await axios.post(BASE_URL.concat(LOGIN), payload);
+    return response;
   },
 );
 
@@ -97,17 +92,19 @@ export const patientCancelAppointment = createAsyncThunk(
 const loggedUserSlice = createSlice({
   name: 'loggedUser',
   initialState: loggedUserState,
-  reducers: {},
+  reducers: {
+    logout(state) {
+      localStorage.removeItem('loggedUser');
+      localStorage.removeItem('token');
+      state.loggedUser = user;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(userLogin.fulfilled, (state, action) => {
-        state.loggedUser = action.payload.loggedUser;
-        localStorage.setItem('token', action.payload.token);
-        localStorage.setItem(
-          'loggedUser',
-          JSON.stringify(action.payload.loggedUser),
-        );
-        // state.loggedUser.pastAppointment = [...state.loggedUser.pastAppointment, ...action.payload];
+        state.loggedUser = action.payload.data.loggedUser;
+        localStorage.setItem('token', action.payload.data.token);
+        localStorage.setItem('loggedUser', JSON.stringify(state.loggedUser));
         state.status = 'succeeded';
       })
       .addCase(userLogin.pending, (state) => {
@@ -175,4 +172,6 @@ export const selectPatientInfo = (state: RootState) =>
 export const selectIsLogged = () => localStorage.getItem('token') !== null;
 export const selectIsUserLoaded = (state: RootState) =>
   !!state.loggedUser.loggedUser.id;
+
+export const { logout } = loggedUserSlice.actions;
 export default loggedUserSlice.reducer;

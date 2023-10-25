@@ -5,7 +5,7 @@ import { Avatar, IconButton, Menu, MenuItem, Stack } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
-import { logout } from '../../store/slices/auth/authActions';
+import { logout } from '../../store/slices/loggedUser/loggedUserSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { resetStore } from '../../store/reducers';
 import {

@@ -9,10 +9,7 @@ import managePhysiciansIcon from '../../assets/manage-physicians-icon.svg';
 import newAppointmentIcon from '../../assets/new-appointment-icon.svg';
 import { ROUTES } from '../../routes/routes';
 import { useAppSelector } from '../../store/hooks';
-import {
-  selectIsUserLoaded,
-  selectLoggedUserType,
-} from '../../store/slices/loggedUser/loggedUserSlice';
+import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
 
 const HomePage = () => {
   const loggedUserType = useAppSelector(selectLoggedUserType);

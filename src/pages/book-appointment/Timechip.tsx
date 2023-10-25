@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Chip } from '@mui/material';
 import { red, teal } from '@mui/material/colors';
 import TimechipPopper from './TimechipPopper';
 import { fetchUserById } from '../../store/slices/user/userSlice';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectType } from '../../store/slices/auth/authSlice';
 
 interface Props {
@@ -61,7 +60,7 @@ const Timechip = ({
 }: Props) => {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
-  const type = useSelector(selectType);
+  const type = useAppSelector(selectType);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const isInFuture = new Date() > new Date(`${date}T${time}`);
 

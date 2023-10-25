@@ -7,12 +7,10 @@ import {
   PAST_APPOINTMENTS,
   PATIENT_CANCEL_APPOINTMENT,
   PATIENT_INFO,
-  PATIENT_PAST_APPOINTMENTS,
   TIMESLOT,
 } from '../../../utils/httpConstants';
 import { RootState } from '../../reducers';
 import { bearerToken } from '../../../authentication/authHeader';
-import PatientAppointments from '../../../pages/patient-appointments/PatientAppointments';
 
 interface LoggedUserState {
   loggedUser: LoggedUser;

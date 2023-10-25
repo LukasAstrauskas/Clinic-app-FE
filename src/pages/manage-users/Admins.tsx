@@ -9,17 +9,16 @@ import AddAdminModal from '../../components/modals/AddAdminModal';
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableHeadComponent from '../../components/manage-users-tables/TableHeadComponent';
 import TableBodyComponent from '../../components/manage-users-tables/TableBodyComponent';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   selectAdmin,
   fetchAdmins,
   searchAdmin,
 } from '../../store/slices/admin/adminSlice';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 
 export const Admins = () => {
   const dispatch = useAppDispatch();
-  const admins = useSelector(selectAdmin);
+  const admins = useAppSelector(selectAdmin);
   const [open, setOpen] = useState<boolean>(false);
   const [more, setMore] = useState<boolean>(true);
   const [isSearch, setIsSearch] = useState(false);

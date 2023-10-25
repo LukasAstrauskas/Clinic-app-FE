@@ -14,7 +14,6 @@ import {
   fetchPhysicians,
   searchPhysician,
 } from '../../store/slices/physician/physicianSlice';
-import { selectId, selectType } from '../../store/slices/auth/authSlice';
 
 type props = {
   tableTitle?: string;

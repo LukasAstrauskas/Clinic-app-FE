@@ -18,8 +18,7 @@ import AppointmentContext from '../../hooks/AppointmentContext';
 import { grey, teal } from '@mui/material/colors';
 import { selectId, selectType } from '../../store/slices/auth/authSlice';
 import dayjs, { Dayjs } from 'dayjs';
-import { useDispatch, useSelector } from 'react-redux';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectTimeslots } from '../../store/slices/timeslot/timeslotSlice';
 import MonthPicker from './MonthPicker';
 
@@ -41,12 +40,12 @@ const TimetableList = ({ physicianId }: Props) => {
   const [openConfirm, setOpenConfirm] = useToggle();
   const [openAlert, toggleAlert] = useToggle();
   const [loadData, setLoadData] = useToggle();
-  const type = useSelector(selectType);
+  const type = useAppSelector(selectType);
   const dispatch = useAppDispatch();
-  const loggedInUserId = useSelector(selectId);
+  const loggedInUserId = useAppSelector(selectId);
   const [date, setDate] = useState<string>('');
   const viewerType = sessionStorage.getItem('type');
-  const selectedTimeslots: Timeslots[] = useSelector(selectTimeslots);
+  const selectedTimeslots: Timeslots[] = useAppSelector(selectTimeslots);
   let formatedTimeslot;
   if (viewerType === 'patient') {
     formatedTimeslot = selectedTimeslots.filter(({ date }) =>

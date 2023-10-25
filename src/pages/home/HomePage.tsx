@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Grid } from '@mui/material';
 import styles from './WelcomePage.module.css';
 import Item from './Item';
@@ -16,7 +16,7 @@ import {
 
 const HomePage = () => {
   const loggedUserType = useAppSelector(selectLoggedUserType);
-  const isUserLoaded = useAppSelector(selectIsUserLoaded);
+  // const isUserLoaded = useAppSelector(selectIsUserLoaded);
 
   // useEffect()[]
 

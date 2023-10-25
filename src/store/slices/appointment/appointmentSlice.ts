@@ -1,13 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { PatientAppointment } from '../../../model/Model';
 import axios from 'axios';
-import { bearer, bearerToken } from '../../../authentication/authHeader';
+import { bearerToken } from '../../../authentication/authHeader';
 import {
   BASE_URL,
   TIMESLOT,
-  PAST_APPOINTMENTS,
   PAST_APPOINTMENTS_AMOUNT,
-  PATIENT_CANCEL_APPOINTMENT,
 } from '../../../utils/httpConstants';
 import { RootState } from '../../reducers';
 

@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Container, Grid } from '@mui/material';
+import {
+  Badge,
+  Box,
+  Card,
+  CardContent,
+  Chip,
+  CircularProgress,
+  Container,
+  Grid,
+  Stack,
+  Typography,
+} from '@mui/material';
 import TimetableList from './TimetableList';
 import PhysicianTable from '../../components/physician-table/PhysicianTable';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -67,6 +78,7 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
           {type !== 'physician' && (
             <Grid item lg={4} sx={{ pr: 2 }}>
               <p>Size: {physicians.length}</p>
+              <p>Type: {type !== null ? type : 'Is null'}</p>
               <PhysicianSearchBar onSearch={handleSearch} />
               <PhysicianTable
                 physicians={physicians}
@@ -87,7 +99,16 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
               {physicianId ? (
                 <TimetableList physicianId={physicianId} />
               ) : (
-                <></>
+                <Box sx={{ display: 'flex' }}>
+                  <Card>
+                    <CardContent>
+                      <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+                        Select physician
+                      </Typography>
+                      <CircularProgress color='secondary' />
+                    </CardContent>
+                  </Card>
+                </Box>
               )}
             </Grid>
           )}

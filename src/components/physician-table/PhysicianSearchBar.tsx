@@ -1,4 +1,14 @@
-import { Box, TextField } from '@mui/material';
+import {
+  Box,
+  Chip,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  SelectChangeEvent,
+  TextField,
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import PhysicianSearchStyles, {
@@ -10,13 +20,21 @@ import {
 } from '../../store/slices/occupation/occupationSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import useDebouncedSearch from '../../hooks/useDebouncedSearch';
+import { Occupation } from '../../model/Model';
 
 interface SearchProps {
   onSearch: (value: string, searchBy: string) => void;
 }
 
 const PhysicianSearchBar = ({ onSearch }: SearchProps) => {
-  const occupations = useAppSelector(selectOccupations);
+  // const occupations = useAppSelector(selectOccupations);
+  const occupations: Occupation[] = [
+    { id: '1', name: 'Mentalist' },
+    { id: '2', name: 'Herbalist' },
+    { id: '3', name: 'Chiropractor' },
+    { id: '4', name: 'Clairvoyant' },
+  ];
+
   const dispatch = useAppDispatch();
   const [searchTerm, setSearchTerm] = useState('');
   const [searchBy, setSearchBy] = useState('');
@@ -38,8 +56,24 @@ const PhysicianSearchBar = ({ onSearch }: SearchProps) => {
     onSearch(debouncedSearchTerm, searchBy);
   }, [debouncedSearchTerm, searchBy]);
 
+  const [occupID, setOccupID] = useState('');
+
+  const handleOccupChange = (event: SelectChangeEvent) => {
+    setOccupID(event.target.value as string);
+  };
+
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: 150,
+        width: 150,
+      },
+    },
+  };
+
   return (
-    <form>
+    <>
+      <Paper>ID:{occupID}</Paper>
       <Box sx={PhysicianSearchStyles.searchWrapper}>
         <SearchIcon sx={PhysicianSearchStyles.searchIcon} />
         <TextField
@@ -55,9 +89,8 @@ const PhysicianSearchBar = ({ onSearch }: SearchProps) => {
             },
           }}
         />
-        {/* TODO */}
-        {/* Chanhe 'SearchSelectItem' to MUI component */}
-        <TextField
+
+        {/* <TextField
           id='searchBy'
           select
           label='Occupation'
@@ -75,9 +108,32 @@ const PhysicianSearchBar = ({ onSearch }: SearchProps) => {
               {occupation.name}
             </SearchSelectItem>
           ))}
-        </TextField>
+        </TextField> */}
+
+        <FormControl fullWidth size='small' sx={{ minWidth: 150 }}>
+          <Select
+            id='demo-simple-select'
+            value={occupID}
+            onChange={handleOccupChange}
+            displayEmpty
+            sx={{
+              backgroundColor: '#ededed',
+              // , height: 38
+            }}
+            MenuProps={MenuProps}
+          >
+            <MenuItem value=''>
+              <em>Occupation</em>
+            </MenuItem>
+            {occupations.map((occupation) => (
+              <MenuItem key={occupation.id} value={occupation.id}>
+                {occupation.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
-    </form>
+    </>
   );
 };
 

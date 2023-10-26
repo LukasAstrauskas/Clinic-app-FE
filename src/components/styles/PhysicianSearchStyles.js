@@ -5,16 +5,18 @@ export const physicianSearchStyles = {
   searchWrapper: {
     display: 'flex',
     alignItems: 'center',
-    width: 353,
+    width: 450,
     height: 30,
-    marginTop: '1.1rem',
+    // marginTop: '1.1rem',
+    border: 3,
+    marginBottom: '1.7rem',
   },
   searchIcon: {
     fontSize: '30px',
-    marginBottom: '1.5rem',
+    // marginBottom: '1.5rem',
   },
   searchInput: {
-    marginBottom: '1.7rem',
+    // marginBottom: '1.7rem',
     marginLeft: '0.3rem',
     minWidth: '100px',
     backgroundColor: '#ededed',
@@ -32,7 +34,7 @@ export const physicianSearchStyles = {
     },
   },
   searchSelect: {
-    marginBottom: '1.7rem',
+    // marginBottom: '1.7rem',
     marginLeft: '0.3rem',
     minWidth: '140px',
     backgroundColor: '#ededed',

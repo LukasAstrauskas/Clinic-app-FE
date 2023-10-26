@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import styles from './WelcomePage.module.css';
+import styles from './HomePage.module.css';
 import Item from './Item';
 import mannageApointmentIcon from '../../assets/manage-appointments-icon.svg';
 import physicianTimetablesIcon from '../../assets/physician-timetables-icon.svg';

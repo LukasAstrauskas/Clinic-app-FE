@@ -8,7 +8,7 @@ export const physicianSearchStyles = {
     width: 450,
     height: 30,
     // marginTop: '1.1rem',
-    border: 3,
+    // border: 3,
     marginBottom: '1.7rem',
   },
   searchIcon: {

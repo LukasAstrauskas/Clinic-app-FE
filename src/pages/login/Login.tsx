@@ -44,7 +44,7 @@ const Login = () => {
               fullWidth
               margin='normal'
               value={email}
-              autoComplete='off'
+              // autoComplete='off'
               onChange={(e) => setEmail(e.target.value)}
               sx={{ marginBottom: '15px' }}
             />

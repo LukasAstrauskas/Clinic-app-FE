@@ -10,6 +10,8 @@ export const PATIENT_CANCEL_APPOINTMENT = '/patientCancelAppointment';
 
 export const PATIENT_INFO = '/patientInfo';
 
+export const ALL_OCCUPATIONS = '/occupations/all';
+
 export const LOGIN_URL = 'http://localhost:8080/login';
 export const BASE_USER_URL = 'http://localhost:8080/user/';
 //Admin actions

@@ -2,18 +2,15 @@ import {
   Box,
   Chip,
   FormControl,
-  InputLabel,
+  InputAdornment,
   MenuItem,
-  Paper,
   Select,
   SelectChangeEvent,
+  Stack,
   TextField,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import PhysicianSearchStyles, {
-  SearchSelectItem,
-} from '../styles/PhysicianSearchStyles';
 import {
   fetchOccupations,
   selectOccupations,
@@ -44,6 +41,13 @@ const PhysicianSearchBar = ({ onSearch }: SearchProps) => {
     setSearchTerm(event.target.value);
   };
 
+  const [text, setText] = useState('');
+  const delayedText = useDebouncedSearch(text, 500);
+
+  const textChange = (text: string) => {
+    setText(text);
+  };
+
   const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSearchBy(event.target.value as string);
   };
@@ -59,7 +63,7 @@ const PhysicianSearchBar = ({ onSearch }: SearchProps) => {
   const [occupID, setOccupID] = useState('');
 
   const handleOccupChange = (event: SelectChangeEvent) => {
-    setOccupID(event.target.value as string);
+    setOccupID(event.target.value);
   };
 
   const MenuProps = {
@@ -73,53 +77,40 @@ const PhysicianSearchBar = ({ onSearch }: SearchProps) => {
 
   return (
     <>
-      <Paper>ID:{occupID}</Paper>
-      <Box sx={PhysicianSearchStyles.searchWrapper}>
-        <SearchIcon sx={PhysicianSearchStyles.searchIcon} />
+      {/* <Chip label={delayedText}></Chip>
+      <Chip label={`ID: ${occupID}`}></Chip> */}
+      <Stack direction='row' spacing={1} sx={{ marginBottom: 1 }}>
+        {/* <Box
+          sx={{
+            width: '50%',
+            backgroundColor: '#ededed',
+            borderRadius: 2,
+          }}
+        > */}
         <TextField
-          id='searchInput'
-          sx={PhysicianSearchStyles.searchInput}
-          variant='outlined'
-          value={searchTerm}
-          onChange={handleChange}
           placeholder='Search'
-          inputProps={{
-            style: {
-              height: '0.3rem',
-            },
+          size='small'
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <SearchIcon />
+              </InputAdornment>
+            ),
           }}
+          sx={{
+            backgroundColor: '#ededed',
+            width: '50%',
+          }}
+          onChange={(event) => textChange(event.target.value)}
         />
-
-        {/* <TextField
-          id='searchBy'
-          select
-          label='Occupation'
-          variant='outlined'
-          value={searchBy}
-          onChange={handleSelectChange}
-          InputLabelProps={{
-            shrink: searchBy !== '',
-          }}
-          sx={PhysicianSearchStyles.searchSelect}
-        >
-          <SearchSelectItem value=''>Occupation</SearchSelectItem>
-          {occupations.map((occupation) => (
-            <SearchSelectItem key={occupation.id} value={occupation.name}>
-              {occupation.name}
-            </SearchSelectItem>
-          ))}
-        </TextField> */}
-
-        <FormControl fullWidth size='small' sx={{ minWidth: 150 }}>
+        {/* </Box> */}
+        <FormControl size='small' sx={{ width: '50%' }}>
           <Select
             id='demo-simple-select'
             value={occupID}
             onChange={handleOccupChange}
             displayEmpty
-            sx={{
-              backgroundColor: '#ededed',
-              // , height: 38
-            }}
+            // sx={{ backgroundColor: '#ededed' }}
             MenuProps={MenuProps}
           >
             <MenuItem value=''>
@@ -132,7 +123,8 @@ const PhysicianSearchBar = ({ onSearch }: SearchProps) => {
             ))}
           </Select>
         </FormControl>
-      </Box>
+      </Stack>
+      {/* </Box> */}
     </>
   );
 };

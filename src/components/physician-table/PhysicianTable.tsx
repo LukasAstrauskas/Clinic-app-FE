@@ -7,18 +7,22 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Typography } from '@mui/material';
-import { UniversalUser } from '../../model/Model';
+import { UniversalUser, User } from '../../model/Model';
 import { grey } from '@mui/material/colors';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { fetchMorePhysicians } from '../../store/slices/physician/physicianSlice';
+import {
+  fetchMorePhysicians,
+  selectPhysicians,
+} from '../../store/slices/physician/physicianSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   fetchPhysicianAmount,
   selectUserSize,
 } from '../../store/slices/userSize/userSizeSlice';
+import { getUsers } from '../../store/slices/user/userActios';
 
 type Props = {
-  physicians: UniversalUser[];
+  physicians: User[];
   // refresh: boolean;
   // setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   selectedId: string | null;
@@ -43,6 +47,7 @@ const PhysicianTable = ({
   isSearch,
 }: Props) => {
   const userSize = useAppSelector(selectUserSize);
+  const myPhysicians = useAppSelector(selectPhysicians);
   const dispatch = useAppDispatch();
   const getMoreData = async () => {
     if (!isSearch) {
@@ -52,6 +57,7 @@ const PhysicianTable = ({
 
   useEffect(() => {
     dispatch(fetchPhysicianAmount());
+    dispatch(getUsers({}));
   }, []);
 
   return (
@@ -87,14 +93,14 @@ const PhysicianTable = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              {physicians.map(({ id, name, occupation }) => (
+              {myPhysicians.map(({ id, name, surname, occupation }) => (
                 <TableRow key={id} hover sx={tableRowSX(selectedId === id)}>
                   <TableCell
                     onClick={() => {
                       rowClick(id);
                     }}
                   >
-                    {name}
+                    {name} {surname}
                   </TableCell>
                   <TableCell
                     onClick={() => {

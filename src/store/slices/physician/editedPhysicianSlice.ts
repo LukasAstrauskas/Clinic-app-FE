@@ -47,7 +47,7 @@ export const editedPhysicianSlice = createSlice({
   },
 });
 
-export const selectPhysician = (state: RootState) =>
-  state.physicianDto.selectedPhysician;
+// export const selectPhysician = (state: RootState) =>
+//   state.physicianDto.selectedPhysician;
 
 export default editedPhysicianSlice.reducer;

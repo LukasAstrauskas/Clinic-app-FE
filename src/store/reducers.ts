@@ -26,7 +26,7 @@ const appReducer = combineReducers({
   admin: adminSlice.reducer,
   phyNameOccupation: phyNameOccupationSlice.reducer,
   occupation: occupationSlice.reducer,
-  physicianDto: editedPhysicianSlice.reducer,
+  // physicianDto: editedPhysicianSlice.reducer,
   timeslot: timeslotSlice.reducer,
   loggedUser: loggedUserReducer,
   // appointment: appointmentReducer,

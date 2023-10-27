@@ -9,9 +9,10 @@ import {
 import axios from 'axios';
 import { RootState } from '../../reducers';
 import authHeader from '../../../authentication/authHeader';
+import { getUsers } from '../user/userActios';
 
 interface PhysicianState {
-  physicians: UniversalUser[];
+  physicians: User[];
   selectedPhysician: Physician | null;
   isLoading: boolean;
   error: string | null;
@@ -44,7 +45,7 @@ export const resetPhysicianData = createAsyncThunk(
 export const fetchMorePhysicians = createAsyncThunk(
   'user/fetchMorePhysicians',
   async (offset: number) => {
-    const response = await axios.get<UniversalUser[]>(
+    const response = await axios.get<User[]>(
       INCOMING_PHYSICIANS_TO_BE_RENDERED_URL + offset,
       {
         headers: authHeader(),
@@ -96,13 +97,10 @@ export const physicianSlice = createSlice({
         state.isLoading = false;
         state.error = null;
       })
-      .addCase(
-        fetchMorePhysicians.fulfilled,
-        (state, action: PayloadAction<UniversalUser[]>) => {
-          state.isLoading = false;
-          state.physicians = [...state.physicians, ...action.payload];
-        },
-      )
+      .addCase(fetchMorePhysicians.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.physicians = [...state.physicians, ...action.payload];
+      })
       .addCase(fetchMorePhysicians.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
@@ -121,6 +119,10 @@ export const physicianSlice = createSlice({
       })
       .addCase(resetPhysicianData.fulfilled, (state, action) => {
         state.physicians = action.payload;
+      })
+      .addCase(getUsers.fulfilled, (state, action) => {
+        state.physicians = action.payload;
+        console.log(action.payload);
       });
   },
 });

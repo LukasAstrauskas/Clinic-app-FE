@@ -26,9 +26,10 @@ const initialState: OccupationsState = {
 export const fetchOccupations = createAsyncThunk(
   'occupation/fetchOccupations',
   async () => {
-    const response = await axios.get(BASE_URL.concat(ALL_OCCUPATIONS), {
-      headers: authHeader(),
-    });
+    const response = await axios.get(
+      BASE_URL.concat(ALL_OCCUPATIONS),
+      //  {headers: authHeader(),}
+    );
     return response.data;
   },
 );

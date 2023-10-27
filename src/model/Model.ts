@@ -25,9 +25,11 @@ export interface PhyNameOccupation {
 export interface User {
   id: string;
   name: string;
+  surname: string;
   password: string;
   email: string;
   type: string;
+  occupation: Occupation | null;
 }
 
 export interface LoggedUser {

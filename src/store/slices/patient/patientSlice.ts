@@ -21,7 +21,7 @@ import { RootState } from '../../reducers';
 import authHeader from '../../../authentication/authHeader';
 
 interface PatientsState {
-  patients: UniversalUser[];
+  patients: User[];
   additionalInfo: PatientInfo | null;
   isLoading: boolean;
   upcomingAppointments: PatientAppointment[];
@@ -77,10 +77,10 @@ export const fetchPatientPastAppointmentAmount = createAsyncThunk(
   },
 );
 
-export const fetchPatients = createAsyncThunk<User[]>(
+export const fetchPatients = createAsyncThunk(
   'patients/fetchPatients',
   async () => {
-    const response = await axios.get<User[]>(PATIENTS_URL, {
+    const response = await axios.get(PATIENTS_URL, {
       headers: authHeader(),
     });
 
@@ -98,7 +98,7 @@ export const resetPatientData = createAsyncThunk(
 export const fetchMorePatients = createAsyncThunk(
   'patients/fetchMorePatients',
   async (offset: number) => {
-    const response = await axios.get<UniversalUser[]>(
+    const response = await axios.get<User[]>(
       INCOMING_PATIENTS_TO_BE_RENDERED_URL + offset,
       {
         headers: authHeader(),
@@ -242,13 +242,10 @@ export const patientSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(
-        fetchPatients.fulfilled,
-        (state, action: PayloadAction<User[]>) => {
-          state.isLoading = false;
-          state.patients = action.payload;
-        },
-      )
+      .addCase(fetchPatients.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.patients = action.payload;
+      })
       .addCase(fetchPatients.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';

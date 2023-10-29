@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-import { UniversalUser, User } from '../../../model/Model';
+import { User } from '../../../model/Model';
 import {
   ADMINS_URL,
   ADMIN_SEARCH_URL,
@@ -10,7 +9,7 @@ import axios from 'axios';
 import { RootState } from '../../reducers';
 
 interface AdminState {
-  admins: UniversalUser[];
+  admins: User[];
   isLoading: boolean;
   error: string | null;
 }
@@ -22,15 +21,12 @@ const initialState: AdminState = {
   error: null,
 };
 
-export const fetchAdmins = createAsyncThunk<User[]>(
-  'user/fetchAdmins',
-  async () => {
-    const response = await axios.get<User[]>(ADMINS_URL, {
-      headers: authHeader(),
-    });
-    return response.data;
-  },
-);
+export const fetchAdmins = createAsyncThunk('user/fetchAdmins', async () => {
+  const response = await axios.get(ADMINS_URL, {
+    headers: authHeader(),
+  });
+  return response.data;
+});
 
 export const resetAdminData = createAsyncThunk(
   'user/reset-admins',
@@ -42,7 +38,7 @@ export const resetAdminData = createAsyncThunk(
 export const fetchMoreAdmins = createAsyncThunk(
   'user/fetchMoreAdmins',
   async (offset: number) => {
-    const response = await axios.get<UniversalUser[]>(
+    const response = await axios.get(
       INCOMING_ADMINS_TO_BE_RENDERED_URL + offset,
       {
         headers: authHeader(),
@@ -72,13 +68,10 @@ export const adminSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(
-        fetchAdmins.fulfilled,
-        (state, action: PayloadAction<User[]>) => {
-          state.isLoading = false;
-          state.admins = action.payload;
-        },
-      )
+      .addCase(fetchAdmins.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.admins = action.payload;
+      })
       .addCase(fetchAdmins.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
@@ -87,13 +80,10 @@ export const adminSlice = createSlice({
         state.isLoading = false;
         state.error = null;
       })
-      .addCase(
-        fetchMoreAdmins.fulfilled,
-        (state, action: PayloadAction<UniversalUser[]>) => {
-          state.isLoading = false;
-          state.admins = [...state.admins, ...action.payload];
-        },
-      )
+      .addCase(fetchMoreAdmins.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.admins = [...state.admins, ...action.payload];
+      })
       .addCase(fetchMoreAdmins.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';

@@ -1,13 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { PhyNameOccupation } from '../../../model/Model';
+import { User } from '../../../model/Model';
 import { RootState } from '../../reducers';
 import { PHYNAMEOCCUPATION_URL } from '../../../utils/httpConstants';
 import authHeader from '../../../authentication/authHeader';
 
 interface PhyNameOccupationState {
-  physicians: PhyNameOccupation[];
+  physicians: User[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
   physicianId: string | null;
@@ -19,15 +19,12 @@ const initialState: PhyNameOccupationState = {
   physicianId: null,
 };
 
-export const fetchPhyNameOccupation = createAsyncThunk<PhyNameOccupation[]>(
+export const fetchPhyNameOccupation = createAsyncThunk(
   'phyNameOccupation/fetchPhyNameOccupation',
   async () => {
-    const response = await axios.get<PhyNameOccupation[]>(
-      PHYNAMEOCCUPATION_URL,
-      {
-        headers: authHeader(),
-      },
-    );
+    const response = await axios.get(PHYNAMEOCCUPATION_URL, {
+      headers: authHeader(),
+    });
     return response.data;
   },
 );
@@ -36,7 +33,7 @@ export const phyNameOccupationSlice = createSlice({
   name: 'phyNameOccupation',
   initialState,
   reducers: {
-    setPhysicianId: (state, action: PayloadAction<string>) => {
+    setPhysicianId: (state, action) => {
       state.physicianId = action.payload;
     },
   },
@@ -70,7 +67,7 @@ export const selectPhysicianId = (state: RootState) =>
 
 export const selectPhysicianById = (state: RootState, physicianId: string) => {
   const physicians = selectPhysicians(state);
-  return physicians.find((physician) => physician.physicianId === physicianId);
+  return physicians.find((physician) => physician.id === physicianId);
 };
 
 export const selectPhysicianNameById = (state: RootState) => {

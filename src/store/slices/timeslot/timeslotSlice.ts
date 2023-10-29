@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Appointment, Timeslots } from '../../../model/Model';
+import { Appointment, GroupedTimeslots, Timeslots } from '../../../model/Model';
 import axios from 'axios';
 import { RootState } from '../../reducers';
 import {
@@ -14,12 +14,14 @@ import authHeader from '../../../authentication/authHeader';
 
 interface TimeslotState {
   timeslots: Timeslots[];
+  groupedTimeslots: GroupedTimeslots[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: TimeslotState = {
   timeslots: [],
+  groupedTimeslots: [],
   status: 'idle',
   error: null,
 };
@@ -49,13 +51,10 @@ export const timeslotSlice = createSlice({
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(
-        getTimeslot.fulfilled,
-        (state, action: PayloadAction<Timeslots[]>) => {
-          state.status = 'succeeded';
-          state.timeslots = action.payload;
-        },
-      )
+      .addCase(getTimeslot.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.groupedTimeslots = action.payload;
+      })
       .addCase(getTimeslot.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message ?? 'Something went wrong.';
@@ -125,7 +124,10 @@ export const timeslotSlice = createSlice({
 
 export const selectTimeslotState = (state: RootState) => state.timeslot;
 
+// export const selectTimeslots = (state: RootState) =>
+//   selectTimeslotState(state).timeslots;
+
 export const selectTimeslots = (state: RootState) =>
-  selectTimeslotState(state).timeslots;
+  selectTimeslotState(state).groupedTimeslots;
 
 export default timeslotSlice.reducer;

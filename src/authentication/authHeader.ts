@@ -5,6 +5,7 @@ export default function authHeader() {
 const token = localStorage.getItem('token');
 
 export const bearerToken = () => {
+  console.log(token);
   return { Authorization: `Bearer ${token}` };
 };
 

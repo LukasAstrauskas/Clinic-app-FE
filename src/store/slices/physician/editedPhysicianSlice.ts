@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { PhysicianDto } from '../../../model/Model';
+import { User } from '../../../model/Model';
 import { RootState } from '../../reducers';
 
 interface PhysicianDtoState {
-  physicians: PhysicianDto[];
-  selectedPhysician: PhysicianDto | null;
+  physicians: User[];
+  selectedPhysician: User | null;
   isLoading: boolean;
   error: string | null;
 }

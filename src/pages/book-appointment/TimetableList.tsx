@@ -21,7 +21,6 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectTimeslots } from '../../store/slices/timeslot/timeslotSlice';
 import MonthPicker from './MonthPicker';
-
 import {
   deletePatientFromTimeslot,
   deleteTimeslot,
@@ -45,7 +44,7 @@ const TimetableList = ({ physicianId }: Props) => {
   const loggedInUserId = useAppSelector(selectId);
   const [date, setDate] = useState<string>('');
   const viewerType = sessionStorage.getItem('type');
-  const selectedTimeslots: Timeslots[] = useAppSelector(selectTimeslots);
+  const selectedTimeslots = useAppSelector(selectTimeslots);
   let formatedTimeslot;
   if (viewerType === 'patient') {
     formatedTimeslot = selectedTimeslots.filter(({ date }) =>
@@ -239,7 +238,7 @@ const TimetableList = ({ physicianId }: Props) => {
           <TableBody>
             {formatedTimeslot.length !== 0 ? (
               <>
-                {formatedTimeslot.map(({ date, timePatientList }) => (
+                {formatedTimeslot.map(({ date, timeslots }) => (
                   <TableRow
                     key={`${date}${physicianId}`}
                     sx={{
@@ -260,23 +259,24 @@ const TimetableList = ({ physicianId }: Props) => {
 
                     <TableCell align='left'>
                       <Stack direction='row' style={{ flexWrap: 'wrap' }}>
-                        {timePatientList.map(({ time, patientId }) => {
+                        {timeslots.map((timeslot) => {
+                          const time = dayjs(timeslot.date).format('HH:mm');
                           return (
                             <>
                               {appointment.physicianId ? (
                                 <Timechip
                                   date={date}
                                   time={time}
-                                  patientId={patientId}
+                                  patientId={timeslot.patientId}
                                   onClick={handleChipClick}
-                                  key={`${date}${time}${physicianId}`}
+                                  // key={`${date}${time}${physicianId}`}
                                   selected={isSelected(physicianId, date, time)}
                                   onCancelAppointment={() =>
                                     handleRemovePatientFromTimeslot(
                                       physicianId,
                                       date,
                                       time,
-                                      patientId,
+                                      timeslot.patientId,
                                     )
                                   }
                                 />
@@ -284,10 +284,10 @@ const TimetableList = ({ physicianId }: Props) => {
                                 <Timechip
                                   date={date}
                                   time={time}
-                                  patientId={patientId}
+                                  patientId={timeslot.patientId}
                                   onDelete={deleteButtonAction}
                                   onClick={handleChipClick}
-                                  key={`${date}${time}${physicianId}`}
+                                  // key={`${date}${time}${physicianId}`}
                                   selected={isSelected(physicianId, date, time)}
                                 />
                               )}

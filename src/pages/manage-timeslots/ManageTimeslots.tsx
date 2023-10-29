@@ -22,7 +22,7 @@ type props = {
 const ManageTimeslots = ({ tableTitle = 'Physicians' }: props) => {
   // const type = useSelector(selectType);
   // const loggedInPhysicianId = useSelector(selectId);
-  const physicianId: string | null = useAppSelector(selectPhysicianId);
+  const physicianId = useAppSelector(selectPhysicianId);
   const physicians = useAppSelector(selectPhysicians);
   const dispatch = useAppDispatch();
   // const [refresh, setRefresh] = useState<boolean>(false);

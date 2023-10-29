@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { grey } from '@mui/material/colors';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { CreateUserDTO, Occupation, UniversalUser } from '../../model/Model';
+import { CreateUserDTO, Occupation, User } from '../../model/Model';
 import { tableRowSX } from '../physician-table/PhysicianTable';
 import {
   fetchAdmins,
@@ -37,7 +37,7 @@ import EditUserModal from '../modals/EditUserModal';
 import { deleteUser } from '../../store/slices/user/userSlice';
 
 interface Props {
-  userList: UniversalUser[];
+  userList: User[];
   more: boolean;
   setMore: React.Dispatch<React.SetStateAction<boolean>>;
   type: string;
@@ -84,7 +84,7 @@ const TableBodyComponent = ({
   const setSelectedUser = (
     name: string,
     email: string,
-    occupation?: Occupation,
+    occupation: Occupation | null,
   ) => {
     const userDTO: CreateUserDTO = {
       name: name.split(' ')[0],

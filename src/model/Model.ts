@@ -16,12 +16,6 @@ export interface PatientAppointment {
   occupation: string;
 }
 
-export interface PhyNameOccupation {
-  physicianId: string;
-  name: string;
-  occupation: string;
-}
-
 export interface User {
   id: string;
   name: string;
@@ -66,39 +60,21 @@ export interface Timeslot {
   time: string;
 }
 
-export type UniversalUser = {
+export interface NewTimeslot {
   id: string;
-  name: string;
-  email: string;
-  occupation?: Occupation;
-};
+  physicianId: string;
+  date: string;
+  patientId: string;
+}
+
+export interface GroupedTimeslots {
+  date: string;
+  timeslots: NewTimeslot[];
+}
 
 export type Occupation = {
   id: string;
   name: string;
-};
-
-export type Physician = {
-  id: string;
-  name: string;
-  email: string;
-  type: string;
-  occupation: Occupation;
-};
-
-export type PhysicianDto = {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  occupationId: string;
-};
-
-export type CreateUserDto = {
-  name: string;
-  email: string;
-  password: string;
-  occupationId?: string;
 };
 
 export type CreateUserDTO = {

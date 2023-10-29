@@ -1,12 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
-import {
-  PatientAppointment,
-  UniversalUser,
-  User,
-  PatientInfo,
-} from '../../../model/Model';
+import { PatientAppointment, User, PatientInfo } from '../../../model/Model';
 import {
   BASE_PATIENTS_URL,
   INCOMING_PATIENTS_TO_BE_RENDERED_URL,
@@ -254,13 +249,10 @@ export const patientSlice = createSlice({
         state.isLoading = false;
         state.error = null;
       })
-      .addCase(
-        fetchMorePatients.fulfilled,
-        (state, action: PayloadAction<UniversalUser[]>) => {
-          state.isLoading = false;
-          state.patients = [...state.patients, ...action.payload];
-        },
-      )
+      .addCase(fetchMorePatients.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.patients = [...state.patients, ...action.payload];
+      })
       .addCase(fetchMorePatients.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
@@ -269,13 +261,10 @@ export const patientSlice = createSlice({
         state.isLoading = false;
         state.error = null;
       })
-      .addCase(
-        fetchPatientsByPhysicianId.fulfilled,
-        (state, action: PayloadAction<UniversalUser[]>) => {
-          state.isLoading = false;
-          state.patients = action.payload;
-        },
-      )
+      .addCase(fetchPatientsByPhysicianId.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.patients = action.payload;
+      })
       .addCase(fetchPatientsByPhysicianId.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';
@@ -284,13 +273,10 @@ export const patientSlice = createSlice({
         state.isLoading = false;
         state.error = null;
       })
-      .addCase(
-        fetchMorePatientsByPhysicianId.fulfilled,
-        (state, action: PayloadAction<UniversalUser[]>) => {
-          state.isLoading = false;
-          state.patients = [...state.patients, ...action.payload];
-        },
-      )
+      .addCase(fetchMorePatientsByPhysicianId.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.patients = [...state.patients, ...action.payload];
+      })
       .addCase(fetchMorePatientsByPhysicianId.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Something went wrong';

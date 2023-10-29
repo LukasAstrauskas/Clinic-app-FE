@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-import { Physician, UniversalUser, User } from '../../../model/Model';
+import { User } from '../../../model/Model';
 import {
   PHYSICIANS_FULL_URL,
   INCOMING_PHYSICIANS_TO_BE_RENDERED_URL,
@@ -13,7 +12,7 @@ import { getUsers } from '../user/userActios';
 
 interface PhysicianState {
   physicians: User[];
-  selectedPhysician: Physician | null;
+  selectedPhysician: User | null;
   isLoading: boolean;
   error: string | null;
 }

@@ -1,8 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { Dayjs } from 'dayjs';
-import { Timeslot, Timeslots } from '../../../model/Model';
-import { TIMESLOTS_URL } from '../../../utils/httpConstants';
+import { GroupedTimeslots, Timeslot, Timeslots } from '../../../model/Model';
+import {
+  BASE_URL,
+  GET_TIMESLOTS,
+  TIMESLOT,
+  TIMESLOTS_URL,
+} from '../../../utils/httpConstants';
 import authHeader from '../../../authentication/authHeader';
 
 type GetProps = {
@@ -13,16 +18,19 @@ type GetProps = {
 export const getTimeslot = createAsyncThunk(
   'timeslot/getTimeslot',
   async ({ id, date }: GetProps) => {
-    let timeslots: Timeslots[] = [];
+    let timeslots: GroupedTimeslots[] = [];
     await axios
-      .get<Timeslots[]>(
-        `${TIMESLOTS_URL}/${id}?date=${date.format('YYYY-MM-DD')}`,
+      .get(
+        `${BASE_URL}${TIMESLOT}${GET_TIMESLOTS}/${id}?date=${date.format(
+          'YYYY-MM-DD',
+        )}`,
         {
           headers: authHeader(),
         },
       )
       .then((response) => {
         timeslots = response.data;
+        console.log(response.data);
       })
       .catch((err) => {
         console.log(err);

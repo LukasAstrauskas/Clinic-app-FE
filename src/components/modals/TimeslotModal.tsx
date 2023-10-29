@@ -46,9 +46,10 @@ const TimeslotModal = ({
   const saveTimeSlot = () => {
     dispatch(
       postTimeslot({
+        id: '',
         physicianId: id,
         date: date,
-        time: time.format('HH:mm'),
+        patientId: '',
       }),
     );
     loadData();

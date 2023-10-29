@@ -1,13 +1,3 @@
-export interface TimePatient {
-  time: string;
-  patientId: string;
-  patientName?: string;
-}
-export interface Timeslots {
-  date: string;
-  timePatientList: TimePatient[];
-}
-
 export interface PatientAppointment {
   id: string;
   name: string;
@@ -55,12 +45,6 @@ export interface PatientInfo {
 }
 
 export interface Timeslot {
-  physicianId: string;
-  date: string;
-  time: string;
-}
-
-export interface NewTimeslot {
   id: string;
   physicianId: string;
   date: string;
@@ -69,7 +53,7 @@ export interface NewTimeslot {
 
 export interface GroupedTimeslots {
   date: string;
-  timeslots: NewTimeslot[];
+  timeslots: Timeslot[];
 }
 
 export type Occupation = {

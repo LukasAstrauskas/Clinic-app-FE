@@ -1,12 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { Dayjs } from 'dayjs';
-import { GroupedTimeslots, Timeslot, Timeslots } from '../../../model/Model';
+import { GroupedTimeslots, Timeslot } from '../../../model/Model';
 import {
   BASE_URL,
   GET_TIMESLOTS,
   TIMESLOT,
-  TIMESLOTS_URL,
 } from '../../../utils/httpConstants';
 import authHeader from '../../../authentication/authHeader';
 

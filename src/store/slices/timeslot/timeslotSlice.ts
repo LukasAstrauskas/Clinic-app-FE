@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Appointment, GroupedTimeslots, Timeslots } from '../../../model/Model';
+import { Appointment, GroupedTimeslots } from '../../../model/Model';
 import axios from 'axios';
 import { RootState } from '../../reducers';
 import {
@@ -13,14 +13,12 @@ import {
 import authHeader from '../../../authentication/authHeader';
 
 interface TimeslotState {
-  timeslots: Timeslots[];
   groupedTimeslots: GroupedTimeslots[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: TimeslotState = {
-  timeslots: [],
   groupedTimeslots: [],
   status: 'idle',
   error: null,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Container, Grid } from '@mui/material';
-import TimetableList from '../book-appointment/TimetableList';
+import TimeslotList from './TimeslotList';
 import PhysicianTable from '../../components/physician-table/PhysicianTable';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
@@ -82,7 +82,7 @@ const ManageTimeslots = ({ tableTitle = 'Physicians' }: props) => {
             </Grid>
           ) : ( */}
           <Grid item lg={8}>
-            {physicianId ? <TimetableList physicianId={physicianId} /> : <></>}
+            {physicianId ? <TimeslotList physicianId={physicianId} /> : <></>}
           </Grid>
           {/* )} */}
         </Grid>

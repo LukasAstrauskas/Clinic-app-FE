@@ -4,15 +4,17 @@ import { Chip } from '@mui/material';
 import { red, teal } from '@mui/material/colors';
 import TimechipPopper from './TimechipPopper';
 import { fetchUserById } from '../../store/slices/user/userSlice';
-import { selectType } from '../../store/slices/auth/authSlice';
+import { Timeslot } from '../../model/Model';
+import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
 
 interface Props {
+  timeslot: Timeslot;
   date: string;
   time: string;
   patientId: string;
   selected: boolean;
   onDelete?: (date: string, time: string, patientId: string) => void;
-  onClick: (date: string, time: string, patientId: string) => void;
+  onClick: (timeslot: Timeslot) => void;
   onCancelAppointment?: () => void;
 }
 
@@ -50,6 +52,7 @@ const bookedTimeSX = {
 };
 
 const Timechip = ({
+  timeslot,
   date,
   time,
   patientId,
@@ -60,12 +63,18 @@ const Timechip = ({
 }: Props) => {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
-  const type = useAppSelector(selectType);
+  const type = useAppSelector(selectLoggedUserType);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const isInFuture = new Date() > new Date(`${date}T${time}`);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    onClick(date, time, patientId);
+    onClick(timeslot);
+    console.log(
+      patientId,
+      patientId && (type === 'admin' || type === 'physician')
+        ? 'TRUE'
+        : 'FALSE',
+    );
     if (patientId && (type === 'admin' || type === 'physician')) {
       setAnchorEl(event.currentTarget);
       setOpen(true);
@@ -101,7 +110,7 @@ const Timechip = ({
         variant='outlined'
         disabled={isInFuture}
         onDelete={() => onDelete(date, time, patientId)}
-        onClick={() => onClick(date, time, patientId)}
+        onClick={() => onClick(timeslot)}
         sx={patientId === null ? freeTimeSX(selected) : bookedTimeSX}
       />
     );

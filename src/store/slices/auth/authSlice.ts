@@ -65,7 +65,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const selectLoggedUser = (state: RootState) => state.auth.loggedUser;
+// export const selectLoggedUser = (state: RootState) => state.auth.loggedUser;
 export const selectLoggedUserType = (state: RootState) =>
   state.auth.loggedUser?.type || '';
 export const selectPastAppointments = (state: RootState) =>

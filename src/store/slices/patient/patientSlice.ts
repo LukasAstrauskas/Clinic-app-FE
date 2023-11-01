@@ -144,6 +144,7 @@ export const fetchPatientInfo = createAsyncThunk(
     const response = await axios.get(`${PATIENTS_ADDITIONAL_INFO_URL}${id}`, {
       headers: authHeader(),
     });
+
     sessionStorage.setItem('gender', response.data.gender);
     sessionStorage.setItem('birthDate', response.data.birthDate);
     sessionStorage.setItem('phone', response.data.phone);

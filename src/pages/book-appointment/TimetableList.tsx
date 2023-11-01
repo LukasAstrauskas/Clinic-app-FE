@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,23 +8,21 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Timechip from './Timechip';
 import { Chip, Stack } from '@mui/material';
-import TimeslotModal from '../../components/modals/TimeslotModal';
-import TimeslotSetDateModal from '../../components/modals/TimeslotSetDateModal';
 import { Timeslot } from '../../model/Model';
 import { getWeekDay } from '../../components/utils';
-import AlertModal from '../../components/modals/AlertModal';
 import useToggle from '../../hooks/useToggle';
-import AppointmentContext from '../../hooks/AppointmentContext';
 import { grey, teal } from '@mui/material/colors';
-import { selectId, selectType } from '../../store/slices/auth/authSlice';
 import dayjs, { Dayjs } from 'dayjs';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { selectTimeslots } from '../../store/slices/timeslot/timeslotSlice';
+import {
+  pickTimeslot,
+  selectTimeslot,
+  selectTimeslots,
+} from '../../store/slices/timeslot/timeslotSlice';
 import MonthPicker from './MonthPicker';
 import {
   deletePatientFromTimeslot,
-  deleteTimeslot,
-  getTimeslot,
+  getTimeslots,
 } from '../../store/slices/timeslot/timeslotActions';
 
 type Props = {
@@ -32,68 +30,20 @@ type Props = {
 };
 
 const TimetableList = ({ physicianId }: Props) => {
-  const deleteMessage = 'Are you sure you want to delete this timeslot?';
-  const [openModal, setOpenModal] = useToggle();
-  const [openNewDateTimeModal, setOpenNewDateTimeModal] = useToggle();
-  const [openNewDateModal, setOpenNewDateModal] = useToggle();
-  const [openConfirm, setOpenConfirm] = useToggle();
-  const [openAlert, toggleAlert] = useToggle();
-  const [loadData, setLoadData] = useToggle();
-  const type = useAppSelector(selectType);
+  // const [loadData, setLoadData] = useToggle();
   const dispatch = useAppDispatch();
-  const loggedInUserId = useAppSelector(selectId);
-  const [date, setDate] = useState<string>('');
-  const viewerType = sessionStorage.getItem('type');
-  const selectedTimeslots = useAppSelector(selectTimeslots);
-  let formatedTimeslot;
-  if (viewerType === 'patient') {
-    formatedTimeslot = selectedTimeslots.filter(({ date }) =>
-      dayjs(date).isAfter(dayjs()),
-    );
-  } else {
-    formatedTimeslot = selectedTimeslots;
-  }
+  const groupedTimeslots = useAppSelector(selectTimeslots);
 
-  const [timeslot, setTimeslot] = useState<Timeslot>({
+  const emptySlot: Timeslot = {
     id: '',
     physicianId: '',
     date: '',
     patientId: '',
-  });
+  };
 
-  const { appointment, setAppointment } = useContext(AppointmentContext);
+  const pickedTimeslot = useAppSelector(selectTimeslot);
 
   const [pickDate, setPickDate] = useState<Dayjs>(dayjs().date(1));
-
-  // const handleOpenModal = (date: string): void => {
-  //   setOpenModal();
-  //   setTimeslot({ ...timeslot, date: date });
-  //   setDate('');
-  // };
-
-  // const handleNewDateButton = () => {
-  //   setOpenNewDateModal();
-  //   if (!openNewDateTimeModal) setOpenNewDateTimeModal();
-  // };
-
-  // const deleteButtonAction = (
-  //   date: string,
-  //   time: string,
-  //   patientId: string,
-  // ): void => {
-  //   if (patientId === null) {
-  //     setTimeslot({ ...timeslot, date: date });
-  //     setOpenConfirm();
-  //   } else {
-  //     toggleAlert();
-  //   }
-  // };
-
-  const handleDeleteTimeslot = (): void => {
-    dispatch(deleteTimeslot(timeslot));
-    setLoadData();
-    setOpenConfirm();
-  };
 
   const handleRemovePatientFromTimeslot = async (
     physicianId: string,
@@ -108,72 +58,47 @@ const TimetableList = ({ physicianId }: Props) => {
       patientId: patientId,
     };
     dispatch(deletePatientFromTimeslot(timeslot));
-    setLoadData();
+    // setLoadData();
   };
 
-  const handleChipClick = (timeslot: Timeslot): void => {
-    setTimeslot(timeslot);
-    setAppointment({
-      ...appointment,
-      date: date,
-    });
+  const handleChipClick = (timeslot: Timeslot) => {
+    if (timeslot.patientId === null) {
+      dispatch(
+        pickTimeslot({
+          ...pickedTimeslot,
+          id: timeslot.id,
+          physicianId: timeslot.physicianId,
+          date: timeslot.date,
+        }),
+      );
+    } else {
+      dispatch(
+        pickTimeslot({
+          ...pickedTimeslot,
+          id: '',
+          physicianId: '',
+          date: '',
+        }),
+      );
+    }
   };
 
   const isSelected = (id: string) => {
-    return id === timeslot.id;
+    return id === pickedTimeslot.id;
   };
 
   useEffect(() => {
-    setAppointment((appointment) => {
-      return {
-        ...appointment,
-        patientId: type === 'patient' ? loggedInUserId : undefined,
-        physicianId: physicianId,
-        date: '',
-        time: '',
-      };
-    });
-    setTimeslot({ ...timeslot, physicianId: physicianId });
-  }, [physicianId]);
-
-  useEffect(() => {
     dispatch(
-      getTimeslot({
+      getTimeslots({
         id: physicianId,
         date: pickDate,
       }),
     );
-  }, [loadData, physicianId, pickDate]);
+  }, [physicianId, pickDate]);
 
   useEffect(() => {
     setPickDate(dayjs().date(1));
   }, [physicianId]);
-
-  // const renderAddNewTimeslotButton = ({ date }: { date: string }) => {
-  //   return !appointment.physicianId &&
-  //     dayjs(date).endOf('day').isAfter(dayjs()) ? (
-  //     <Chip
-  //       label='+ NEW'
-  //       sx={{ backgroundColor: teal['A400'], mt: 0.5 }}
-  //       onClick={() => handleOpenModal(date)}
-  //     />
-  //   ) : (
-  //     <></>
-  //   );
-  // };
-
-  // const renderAddNewDateButton = () => {
-  //   return (
-  //     !appointment.physicianId && (
-  //       // type === 'admin' &&
-  //       <Chip
-  //         label='+ New Date'
-  //         sx={{ fontWeight: 'normal', backgroundColor: teal['A400'] }}
-  //         onClick={handleNewDateButton}
-  //       />
-  //     )
-  //   );
-  // };
 
   return (
     <>
@@ -194,6 +119,8 @@ const TimetableList = ({ physicianId }: Props) => {
               >
                 <MonthPicker date={pickDate} setDate={setPickDate} />
                 <p>Book-Appointment</p>
+                <p>{dayjs().date(1).format('YYYY-MM-DDTHH:mm:ss')}</p>
+                {/* <p>{dayjs().date(1).toString()}</p> */}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -217,21 +144,20 @@ const TimetableList = ({ physicianId }: Props) => {
                     alignItems: 'center',
                   }}
                 >
-                  Time{' '}
-                  {appointment.physicianId
-                    ? `ID: ${appointment.physicianId}.`
-                    : 'No Id'}
-                  {/* {renderAddNewDateButton()} */}
+                  Time
+                  {pickedTimeslot.physicianId
+                    ? ` ID: ${pickedTimeslot.physicianId.slice(0, 8)}.`
+                    : ' No Id'}
                 </div>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {formatedTimeslot.length !== 0 ? (
+            {groupedTimeslots.length > 0 ? (
               <>
-                {formatedTimeslot.map(({ date, timeslots }) => (
+                {groupedTimeslots.map(({ date, timeslots }) => (
                   <TableRow
-                    key={`${date}${physicianId}`}
+                    key={date}
                     sx={{
                       '&:last-child td, &:last-child th': { border: 0 },
                     }}
@@ -240,6 +166,7 @@ const TimetableList = ({ physicianId }: Props) => {
                       component='th'
                       scope='row'
                       sx={{ backgroundColor: teal['A400'] }}
+                      key={`Date${date}`}
                     >
                       <Chip
                         variant='outlined'
@@ -248,48 +175,30 @@ const TimetableList = ({ physicianId }: Props) => {
                       ></Chip>
                     </TableCell>
 
-                    <TableCell align='left'>
+                    <TableCell align='left' key={`Stack${date}`}>
                       <Stack direction='row' style={{ flexWrap: 'wrap' }}>
                         {timeslots.map((timeslot) => {
                           const time = dayjs(timeslot.date).format('HH:mm');
                           return (
-                            <>
-                              {appointment.physicianId ? (
-                                <Timechip
-                                  timeslot={timeslot}
-                                  date={date}
-                                  time={time}
-                                  patientId={timeslot.patientId}
-                                  onClick={handleChipClick}
-                                  // key={`${date}${time}${physicianId}`}
-                                  selected={isSelected(timeslot.id)}
-                                  onCancelAppointment={() =>
-                                    handleRemovePatientFromTimeslot(
-                                      physicianId,
-                                      date,
-                                      time,
-                                      timeslot.patientId,
-                                    )
-                                  }
-                                />
-                              ) : (
-                                <>
-                                  {/* <Timechip
-                                    timeslot={timeslot}
-                                    date={date}
-                                    time={time}
-                                    patientId={timeslot.patientId}
-                                    onDelete={deleteButtonAction}
-                                    onClick={handleChipClick}
-                                    // key={`${date}${time}${physicianId}`}
-                                    selected={isSelected(physicianId)}
-                                  /> */}
-                                </>
-                              )}
-                            </>
+                            <Timechip
+                              timeslot={timeslot}
+                              date={date}
+                              time={time}
+                              patientId={timeslot.patientId}
+                              onClick={handleChipClick}
+                              key={timeslot.id}
+                              selected={isSelected(timeslot.id)}
+                              onCancelAppointment={() =>
+                                handleRemovePatientFromTimeslot(
+                                  physicianId,
+                                  date,
+                                  time,
+                                  timeslot.patientId,
+                                )
+                              }
+                            />
                           );
                         })}
-                        {/* {renderAddNewTimeslotButton({ date })} */}
                       </Stack>
                     </TableCell>
                   </TableRow>
@@ -305,44 +214,6 @@ const TimetableList = ({ physicianId }: Props) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <p>Slot ID: {timeslot.id}</p>
-      <p>Ph. ID: {timeslot.physicianId}</p>
-      <p>Date: {timeslot.date}</p>
-      <p>Pat. ID: {timeslot.patientId}</p>
-
-      <TimeslotSetDateModal
-        openModal={openNewDateModal}
-        closeModal={setOpenNewDateModal}
-        setDate={setDate}
-      />
-      <TimeslotModal
-        openModal={openModal}
-        closeModal={setOpenModal}
-        loadData={setLoadData}
-        id={physicianId}
-        date={timeslot.date}
-      />
-      <TimeslotModal
-        openModal={openNewDateTimeModal && !openNewDateModal && date !== ''}
-        closeModal={setOpenNewDateTimeModal}
-        loadData={setLoadData}
-        id={physicianId}
-        date={date}
-      />
-      <AlertModal
-        open={openConfirm}
-        onClose={setOpenConfirm}
-        message={deleteMessage}
-        onConfirm={handleDeleteTimeslot}
-        confirmMsg='Delete'
-        closeMsg='Cancel'
-      />
-      <AlertModal
-        open={openAlert}
-        onClose={toggleAlert}
-        message='This time slot is already booked and cannot be deleted'
-        closeMsg='Ok, close.'
-      />
     </>
   );
 };

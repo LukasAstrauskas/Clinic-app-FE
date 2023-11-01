@@ -66,8 +66,8 @@ export const authSlice = createSlice({
 });
 
 // export const selectLoggedUser = (state: RootState) => state.auth.loggedUser;
-export const selectLoggedUserType = (state: RootState) =>
-  state.auth.loggedUser?.type || '';
+// export const selectLoggedUserType = (state: RootState) =>
+//   state.auth.loggedUser?.type || '';
 export const selectPastAppointments = (state: RootState) =>
   state.auth.loggedUser?.pastAppointment || [];
 export const selectPatientInfo = (state: RootState) =>
@@ -96,8 +96,8 @@ export const selectInitials = (state: RootState): string | null => {
 
   return setInitials(name);
 };
-export const selectType = (state: RootState) => state.auth.type;
-export const selectId = (state: RootState) => state.auth.id;
+// export const selectType = (state: RootState) => state.auth.type;
+// export const selectId = (state: RootState) => state.auth.id;
 export const selectisLoggedIn = (state: RootState) => state.auth.isLoggedIn;
 
 export const authLoading = (state: RootState) => state.auth.loading;

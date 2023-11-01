@@ -121,6 +121,7 @@ export const physicianSlice = createSlice({
       })
       .addCase(getUsers.fulfilled, (state, action) => {
         state.physicians = action.payload;
+        state.selectedPhysician = state.physicians[1];
         console.log(action.payload);
       });
   },

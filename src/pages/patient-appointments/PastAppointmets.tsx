@@ -46,11 +46,12 @@ const PastAppointments = () => {
           scrollableTarget='scrollBox'
           dataLength={appointments.length}
           next={fetchMoreAppointments}
-          hasMore={hasMore()}
+          hasMore={true}
           loader={
-            <Typography variant='h5' sx={{ textAlign: 'center' }}>
-              loading...
-            </Typography>
+            <></>
+            // <Typography variant='h5' sx={{ textAlign: 'center' }}>
+            //   loading...
+            // </Typography>
           }
           endMessage={
             <Typography variant='h5' sx={{ textAlign: 'center' }}>

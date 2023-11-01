@@ -15,14 +15,14 @@ import { getWeekDay } from '../../components/utils';
 import AlertModal from '../../components/modals/AlertModal';
 import useToggle from '../../hooks/useToggle';
 import { grey, teal } from '@mui/material/colors';
-import { selectId, selectType } from '../../store/slices/auth/authSlice';
+// import { selectId, selectType } from '../../store/slices/auth/authSlice';
 import dayjs, { Dayjs } from 'dayjs';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectTimeslots } from '../../store/slices/timeslot/timeslotSlice';
 import MonthPicker from '../book-appointment/MonthPicker';
 import {
   deleteTimeslot,
-  getTimeslot,
+  getTimeslots,
 } from '../../store/slices/timeslot/timeslotActions';
 
 type Props = {
@@ -37,9 +37,9 @@ const TimeslotList = ({ physicianId }: Props) => {
   const [openConfirm, setOpenConfirm] = useToggle();
   const [openAlert, toggleAlert] = useToggle();
   const [loadData, setLoadData] = useToggle();
-  const type = useAppSelector(selectType);
+  // const type = useAppSelector(selectType);
   const dispatch = useAppDispatch();
-  const loggedInUserId = useAppSelector(selectId);
+  // const loggedInUserId = useAppSelector(selectId);
   const [date, setDate] = useState('');
 
   const selectedTimeslots = useAppSelector(selectTimeslots);
@@ -110,7 +110,7 @@ const TimeslotList = ({ physicianId }: Props) => {
 
   useEffect(() => {
     dispatch(
-      getTimeslot({
+      getTimeslots({
         id: physicianId,
         date: pickDate,
       }),
@@ -191,7 +191,7 @@ const TimeslotList = ({ physicianId }: Props) => {
           <TableBody>
             {selectedTimeslots.length !== 0 ? (
               <>
-                {selectedTimeslots.map(({ date, timeslots }, index) => (
+                {selectedTimeslots.map(({ date, timeslots }) => (
                   <TableRow
                     key={date}
                     sx={{
@@ -202,7 +202,7 @@ const TimeslotList = ({ physicianId }: Props) => {
                       component='th'
                       scope='row'
                       sx={{ backgroundColor: teal['A400'] }}
-                      key={`${index}${date}`}
+                      key={`Date${date}`}
                     >
                       <Chip
                         variant='outlined'
@@ -211,7 +211,7 @@ const TimeslotList = ({ physicianId }: Props) => {
                       ></Chip>
                     </TableCell>
 
-                    <TableCell align='left' key={index}>
+                    <TableCell align='left' key={`Stack${date}`}>
                       <Stack direction='row' style={{ flexWrap: 'wrap' }}>
                         {timeslots.map((timeslot) => {
                           const time = dayjs(timeslot.date).format('HH:mm');

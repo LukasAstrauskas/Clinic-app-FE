@@ -24,17 +24,26 @@ import {
   selectPhysicians,
   fetchPhysicians,
   searchPhysician,
+  selectPhysician,
 } from '../../store/slices/physician/physicianSlice';
-import { selectId, selectType } from '../../store/slices/auth/authSlice';
+// import { selectId, selectType } from '../../store/slices/auth/authSlice';
+import { PATIENT } from '../../utils/Users';
+import { pickTimeslot } from '../../store/slices/timeslot/timeslotSlice';
+import {
+  selectLoggedUserId,
+  selectLoggedUserType,
+} from '../../store/slices/loggedUser/loggedUserSlice';
 
 type props = {
   tableTitle?: string;
 };
 
 const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
-  const type = useAppSelector(selectType);
-  const loggedInPhysicianId = useAppSelector(selectId);
+  const type = useAppSelector(selectLoggedUserType);
+  const loggedUserId = useAppSelector(selectLoggedUserId);
+  // const loggedInPhysicianId = useAppSelector(selectId);
   const physicianId = useAppSelector(selectPhysicianId);
+  const initialID = useAppSelector(selectPhysician)?.id || '';
   const physicians = useAppSelector(selectPhysicians);
   const dispatch = useAppDispatch();
   // const [refresh, setRefresh] = useState<boolean>(false);
@@ -42,6 +51,14 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
 
   const handleClick = (id: string) => {
     dispatch(setPhysicianId(id));
+    dispatch(
+      pickTimeslot({
+        id: '',
+        physicianId: '',
+        date: '',
+        patientId: type === PATIENT ? loggedUserId : '',
+      }),
+    );
   };
 
   const handleSearch = (search: string, occupation: string) => {
@@ -60,6 +77,17 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
   */
   useEffect(() => {
     dispatch(fetchPhyNameOccupation());
+    if (type === PATIENT) {
+      console.log(`SEt ID ${loggedUserId}`);
+      dispatch(
+        pickTimeslot({
+          id: '',
+          physicianId: '',
+          date: '',
+          patientId: loggedUserId,
+        }),
+      );
+    }
   }, []);
 
   return (
@@ -92,12 +120,14 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
           )}
           {type === 'physician' ? (
             <Grid item lg={12}>
-              <TimetableList physicianId={loggedInPhysicianId || ''} />
+              <TimetableList physicianId={''} />
             </Grid>
           ) : (
             <Grid item lg={8}>
               {physicianId ? (
-                <TimetableList physicianId={physicianId} />
+                <TimetableList
+                  physicianId={physicianId === '' ? initialID : physicianId}
+                />
               ) : (
                 <Box sx={{ display: 'flex', border: 2 }}>
                   <Card>

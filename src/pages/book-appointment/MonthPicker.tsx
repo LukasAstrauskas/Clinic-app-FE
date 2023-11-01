@@ -65,7 +65,7 @@ const MonthPicker = ({ date, setDate }: DateState) => {
                   setDate(newValue.date(1));
                 }
               }}
-              sx={{ width: '12em' }}
+              sx={{ width: '13.5em' }}
             />
           </LocalizationProvider>
         </Grid>

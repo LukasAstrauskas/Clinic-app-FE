@@ -67,7 +67,9 @@ export const fetchPatientPastAppointments = createAsyncThunk(
   async (offset: number) => {
     const response = await axios.get(
       BASE_URL.concat(TIMESLOT).concat(PAST_APPOINTMENTS).concat(`/${offset}`),
-      { headers: bearerToken() },
+      {
+        headers: bearerToken(),
+      },
     );
     console.log(response.data);
     return response.data;
@@ -158,6 +160,8 @@ const loggedUserSlice = createSlice({
 
 export const selectLoggedUser = (state: RootState) =>
   state.loggedUser.loggedUser;
+export const selectLoggedUserId = (state: RootState) =>
+  state.loggedUser.loggedUser.id;
 export const initials = (state: RootState) =>
   state.loggedUser.loggedUser.initials;
 export const selectLoggedUserType = (state: RootState) =>

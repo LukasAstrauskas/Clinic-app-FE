@@ -14,8 +14,8 @@ type GetProps = {
   date: Dayjs;
 };
 
-export const getTimeslot = createAsyncThunk(
-  'timeslot/getTimeslot',
+export const getTimeslots = createAsyncThunk(
+  'timeslot/getTimeslots',
   async ({ id, date }: GetProps) => {
     let timeslots: GroupedTimeslots[] = [];
     await axios

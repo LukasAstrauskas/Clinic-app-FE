@@ -3,21 +3,25 @@ import TimetablesContainer from './TimetablesContainer';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import Patients from '../manage-users/Patients';
 import useToggle from '../../hooks/useToggle';
-import AppointmentContext from '../../hooks/AppointmentContext';
-import { Appointment } from '../../model/Model';
+import { Timeslot } from '../../model/Model';
 import Styles from '../../components/styles/UserManagmentStyles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
-import { selectLoggedUserType } from '../../store/slices/auth/authSlice';
+
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import ErrorModal from '../../components/modals/ErrorModal';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { bookTimeslot } from '../../store/slices/timeslot/timeslotSlice';
+import {
+  bookTimeslot,
+  selectTimeslot,
+} from '../../store/slices/timeslot/timeslotSlice';
 import { deletePatientFromUpcomingTimeslot } from '../../store/slices/timeslot/timeslotActions';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { selectPhysicianNameById } from '../../store/slices/physician/phyNameOccupationSlice';
+import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
+import { PATIENT } from '../../utils/Users';
 
 const BookAppointment = () => {
   const type = useAppSelector(selectLoggedUserType);
@@ -28,12 +32,14 @@ const BookAppointment = () => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState('');
-  const [appointment, setAppointment] = useState<Appointment>({
-    physicianId: '',
-    date: '',
-    time: '',
-    patientId: undefined,
-  });
+  // const [appointment, setAppointment] = useState<Timeslot>({
+  //   id: '',
+  //   physicianId: '',
+  //   date: '',
+  //   patientId: '',
+  // });
+
+  const timeslot = useAppSelector(selectTimeslot);
 
   const handleConfirmationClose = () => {
     setIsConfirmationOpen(false);
@@ -41,7 +47,7 @@ const BookAppointment = () => {
   };
 
   const bookAppointment = async () => {
-    await dispatch(bookTimeslot(appointment))
+    await dispatch(bookTimeslot(timeslot))
       .then((resultAction) => {
         unwrapResult(resultAction);
         setConfirmationMessage('Appointment booked successfully!');
@@ -53,7 +59,7 @@ const BookAppointment = () => {
   };
 
   const handleRemovePatientFromTimeslot = async () => {
-    const { physicianId, patientId } = appointment;
+    const { physicianId, patientId } = timeslot;
     if (typeof patientId === 'string') {
       await dispatch(
         deletePatientFromUpcomingTimeslot({ physicianId, patientId }),
@@ -71,12 +77,15 @@ const BookAppointment = () => {
     <Box style={{ textAlign: 'center', marginTop: 10 }}>
       {'Selected Physician: '} <b>{selectedPhysicianName}</b>
       {' | Selected Time: '}
-      <b>{appointment.date + ', ' + appointment.time}</b>
+      <b>{timeslot.date}</b>
     </Box>
   );
 
   return (
     <Box sx={{ width: '100%', marginTop: '0px' }}>
+      <p>
+        Step: {bookingStep.toString()} TYpe: {type} {PATIENT === type && 'TRUE'}
+      </p>
       <Stack
         display='flex'
         justifyContent='center'
@@ -84,29 +93,37 @@ const BookAppointment = () => {
         spacing={2}
         marginBottom={3}
       >
-        <AppointmentContext.Provider value={{ appointment, setAppointment }}>
-          {bookingStep ? (
-            <Stack style={{ alignItems: 'center' }}>
-              <h1 style={{ margin: 0 }}>Select Patient</h1>
-              <Typography variant='h1'>
-                <Patients />
-              </Typography>
-              {appointmentInfo}
-            </Stack>
-          ) : (
-            <TimetablesContainer
-              tableTitle={
-                (type === 'physician' && 'Select Time') ||
-                'Select Physician and Time'
-              }
-            />
-          )}
-        </AppointmentContext.Provider>
+        <p>Slot ID: {timeslot.id}</p>
+        <p>Ph. ID: {timeslot.physicianId}</p>
+        <p>Date: {timeslot.date}</p>
+        <p>
+          Pat. ID:
+          {timeslot.patientId === null ? 'Null' : timeslot.patientId}
+        </p>
+        {bookingStep ? (
+          <Stack style={{ alignItems: 'center' }}>
+            <h1 style={{ margin: 0 }}>Select Patient</h1>
+            <Typography variant='h1'>
+              <Patients />
+            </Typography>
+            {appointmentInfo}
+          </Stack>
+        ) : (
+          <TimetablesContainer
+            tableTitle={
+              (type === 'physician' && 'Select Time') ||
+              'Select Physician and Time'
+            }
+          />
+        )}
+
         <Box
           display='flex'
           justifyContent='center'
           sx={{
             width: '95%',
+            border: 2,
+            borderColor: 'secondary.main',
           }}
         >
           <Button
@@ -122,7 +139,7 @@ const BookAppointment = () => {
               variant='contained'
               onClick={bookAppointment}
               disabled={
-                appointment.patientId === undefined || appointment.time === ''
+                timeslot.patientId === undefined || timeslot.date === ''
               }
               sx={Styles.createNewUserBtn}
             >
@@ -133,10 +150,10 @@ const BookAppointment = () => {
             <Button
               variant='contained'
               onClick={bookAppointment}
-              disabled={appointment.time === ''}
+              disabled={timeslot.id === ''}
               sx={Styles.createNewUserBtn}
             >
-              Book Appointment
+              Patient Book Appointment
             </Button>
           )}
           {!bookingStep && type !== 'patient' && (
@@ -144,7 +161,7 @@ const BookAppointment = () => {
               variant='contained'
               onClick={setBookingStep}
               sx={Styles.createNewUserBtn}
-              disabled={!appointment.date}
+              // disabled={!appointment.date}
             >
               Next
               <ArrowForwardIcon />

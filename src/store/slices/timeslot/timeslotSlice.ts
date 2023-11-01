@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Appointment, GroupedTimeslots } from '../../../model/Model';
+import { Appointment, GroupedTimeslots, Timeslot } from '../../../model/Model';
 import axios from 'axios';
 import { RootState } from '../../reducers';
 import {
-  getTimeslot,
+  getTimeslots,
   deleteTimeslot,
   postTimeslot,
   deletePatientFromTimeslot,
@@ -14,19 +14,26 @@ import authHeader from '../../../authentication/authHeader';
 
 interface TimeslotState {
   groupedTimeslots: GroupedTimeslots[];
+  selectedTimeslot: Timeslot;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: TimeslotState = {
   groupedTimeslots: [],
+  selectedTimeslot: {
+    id: '',
+    physicianId: '',
+    date: '',
+    patientId: '',
+  },
   status: 'idle',
   error: null,
 };
 
 export const bookTimeslot = createAsyncThunk(
   'timeslot/bookTimeslot',
-  async (appointment: Appointment) => {
+  async (appointment: Timeslot) => {
     await axios
       .patch('http://localhost:8080/timeslot', appointment, {
         headers: authHeader(),
@@ -42,18 +49,23 @@ export const bookTimeslot = createAsyncThunk(
 export const timeslotSlice = createSlice({
   name: 'timeslot',
   initialState,
-  reducers: {},
+  reducers: {
+    pickTimeslot(state, action: PayloadAction<Timeslot>) {
+      const timeslot = action.payload;
+      state.selectedTimeslot = { ...timeslot };
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(getTimeslot.pending, (state) => {
+      .addCase(getTimeslots.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(getTimeslot.fulfilled, (state, action) => {
+      .addCase(getTimeslots.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.groupedTimeslots = action.payload;
       })
-      .addCase(getTimeslot.rejected, (state, action) => {
+      .addCase(getTimeslots.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message ?? 'Something went wrong.';
       })
@@ -120,7 +132,11 @@ export const timeslotSlice = createSlice({
   },
 });
 
+export const { pickTimeslot } = timeslotSlice.actions;
+
 export const selectTimeslotState = (state: RootState) => state.timeslot;
+export const selectTimeslot = (state: RootState) =>
+  state.timeslot.selectedTimeslot;
 
 // export const selectTimeslots = (state: RootState) =>
 //   selectTimeslotState(state).timeslots;

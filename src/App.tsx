@@ -35,7 +35,7 @@ function App() {
             <Route path={ROUTES.MANAGEUSERS} element={<ManageUsers />} />
             <Route
               path={ROUTES.MANAGETIMESLOTS}
-              element={<ManageTimeslots />}
+              element={<ManageTimeslots tableTitle='Manage Timeslots' />}
             />
             <Route
               path={ROUTES.BOOKAPPOINTMENT}

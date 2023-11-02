@@ -1,14 +1,17 @@
 import axios from 'axios';
 import {
   ADMIN_SIZE_URL,
+  BASE_URL,
   PATIENTS_BY_PHYSICIANS_ID_SIZE_URL,
   PATIENT_SIZE_URL,
   PHYSICIAN_SIZE_URL,
+  USER,
 } from '../../../utils/httpConstants';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../reducers';
 import authHeader from '../../../authentication/authHeader';
+import { PHYSICIAN } from '../../../utils/Users';
 
 /* This slice holds data only about size/amount of total users(patients, physicians).  */
 
@@ -47,9 +50,9 @@ export const fetchAdminAmount = createAsyncThunk<number>(
 export const fetchPhysicianAmount = createAsyncThunk<number>(
   'patients/fetchPhysicianAmount',
   async () => {
-    const response = await axios.get<number>(PHYSICIAN_SIZE_URL, {
-      headers: authHeader(),
-    });
+    const response = await axios.get<number>(
+      `${BASE_URL}${USER}/userCount?userType=${PHYSICIAN}`,
+    );
     return response.data;
   },
 );

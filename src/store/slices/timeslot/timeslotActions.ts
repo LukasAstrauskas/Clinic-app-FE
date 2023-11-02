@@ -1,13 +1,20 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { Dayjs } from 'dayjs';
-import { GroupedTimeslots, Timeslot } from '../../../model/Model';
+import {
+  GroupedTimeslots,
+  PatientAppointment,
+  Timeslot,
+} from '../../../model/Model';
 import {
   BASE_URL,
   GET_TIMESLOTS,
   TIMESLOT,
 } from '../../../utils/httpConstants';
 import authHeader from '../../../authentication/authHeader';
+import { store } from '../../store';
+import { useAppDispatch } from '../../hooks';
+import { addAppointment, logout } from '../loggedUser/loggedUserSlice';
 
 type GetProps = {
   id: string;
@@ -103,6 +110,25 @@ export const postTimeslot = createAsyncThunk(
       })
       .catch((error) => {
         console.error('Error posting timeslot:', error);
+      });
+  },
+);
+
+export const patientBookTimeslot = createAsyncThunk(
+  'timeslot/bookTimeslot',
+  async (appointment: Timeslot) => {
+    await axios
+      .patch('http://localhost:8080/timeslot', appointment, {
+        headers: authHeader(),
+      })
+      .then((resp) => {
+        const appointment = resp.data as PatientAppointment;
+        addAppointment(appointment);
+      })
+      .catch((error) => {
+        throw new Error(
+          `You already have an appointment with this physician: ${error.message}`,
+        );
       });
   },
 );

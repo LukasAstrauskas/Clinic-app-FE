@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Appointment, GroupedTimeslots, Timeslot } from '../../../model/Model';
+import { GroupedTimeslots, Timeslot } from '../../../model/Model';
 import axios from 'axios';
 import { RootState } from '../../reducers';
 import {

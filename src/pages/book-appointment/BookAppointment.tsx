@@ -19,15 +19,14 @@ import {
 } from '../../store/slices/timeslot/timeslotSlice';
 import { deletePatientFromUpcomingTimeslot } from '../../store/slices/timeslot/timeslotActions';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { selectPhysicianNameById } from '../../store/slices/physician/phyNameOccupationSlice';
 import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
-import { PATIENT } from '../../utils/Users';
+import { PATIENT, PHYSICIAN } from '../../utils/Users';
 
 const BookAppointment = () => {
   const type = useAppSelector(selectLoggedUserType);
   const dispatch = useAppDispatch();
   const [bookingStep, setBookingStep] = useToggle();
-  const selectedPhysicianName = useAppSelector(selectPhysicianNameById);
+
   const navigate = useNavigate();
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
@@ -75,7 +74,7 @@ const BookAppointment = () => {
 
   const appointmentInfo = (
     <Box style={{ textAlign: 'center', marginTop: 10 }}>
-      {'Selected Physician: '} <b>{selectedPhysicianName}</b>
+      {'Selected Physician: '} <b>`Skip`</b>
       {' | Selected Time: '}
       <b>{timeslot.date}</b>
     </Box>
@@ -111,7 +110,7 @@ const BookAppointment = () => {
         ) : (
           <TimetablesContainer
             tableTitle={
-              (type === 'physician' && 'Select Time') ||
+              (type === PHYSICIAN && 'Select Time') ||
               'Select Physician and Time'
             }
           />

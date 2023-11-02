@@ -46,7 +46,6 @@ export const PATIENT_PAST_APPOINTMENTS_AMOUNT =
   'http://localhost:8080/timeslot/getPatientPastAppointmentAmount';
 //Physicians
 export const PHYSICIANS_FULL_URL = 'http://localhost:8080/physicianInfo';
-export const BASE_PHYSICIANS_FULL_URL = 'http://localhost:8080/physicianInfo/';
 export const PHYSICIAN_SEARCH_URL =
   'http://localhost:8080/user/physicianSearch/';
 export const BASE_PHYSICIANS_URL = 'http://localhost:8080/user/physicians/';

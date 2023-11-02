@@ -1,5 +1,9 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { LoggedUser, PatientInfo } from '../../../model/Model';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  PatientAppointment,
+  LoggedUser,
+  PatientInfo,
+} from '../../../model/Model';
 import axios from 'axios';
 import {
   BASE_URL,
@@ -100,6 +104,12 @@ const loggedUserSlice = createSlice({
       localStorage.removeItem('token');
       state.loggedUser = user;
     },
+    addAppointment(state, action: PayloadAction<PatientAppointment>) {
+      state.loggedUser.upcomingAppointment = [
+        ...state.loggedUser.upcomingAppointment,
+        action.payload,
+      ];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -177,5 +187,5 @@ export const selectIsLogged = () => localStorage.getItem('token') !== null;
 export const selectIsUserLoaded = (state: RootState) =>
   !!state.loggedUser.loggedUser.id;
 
-export const { logout } = loggedUserSlice.actions;
+export const { logout, addAppointment } = loggedUserSlice.actions;
 export default loggedUserSlice.reducer;

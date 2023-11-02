@@ -14,19 +14,13 @@ import {
 import TimetableList from './TimetableList';
 import PhysicianTable from '../../components/physician-table/PhysicianTable';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import {
-  fetchPhyNameOccupation,
-  selectPhysicianId,
-  setPhysicianId,
-} from '../../store/slices/physician/phyNameOccupationSlice';
 import PhysicianSearchBar from '../../components/physician-table/PhysicianSearchBar';
 import {
   selectPhysicians,
-  fetchPhysicians,
   searchPhysician,
-  selectPhysician,
+  selectPhysicianId,
+  setPhysicianId,
 } from '../../store/slices/physician/physicianSlice';
-// import { selectId, selectType } from '../../store/slices/auth/authSlice';
 import { PATIENT } from '../../utils/Users';
 import { pickTimeslot } from '../../store/slices/timeslot/timeslotSlice';
 import {
@@ -41,9 +35,9 @@ type props = {
 const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
   const type = useAppSelector(selectLoggedUserType);
   const loggedUserId = useAppSelector(selectLoggedUserId);
-  // const loggedInPhysicianId = useAppSelector(selectId);
+  // // const loggedInPhysicianId = useAppSelector(selectId);
+  // const physicianId = useAppSelector(selectPhysicianId);
   const physicianId = useAppSelector(selectPhysicianId);
-  const initialID = useAppSelector(selectPhysician)?.id || '';
   const physicians = useAppSelector(selectPhysicians);
   const dispatch = useAppDispatch();
   // const [refresh, setRefresh] = useState<boolean>(false);
@@ -62,12 +56,13 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
   };
 
   const handleSearch = (search: string, occupation: string) => {
+    console.log('Timetable-container. handleSearch ');
     if (search.length != 0 || occupation) {
       dispatch(searchPhysician({ search, occupation }));
       setIsSearch(true);
     } else {
       setIsSearch(false);
-      dispatch(fetchPhysicians());
+      // dispatch(fetchPhysicians());
       // setRefresh(true);
     }
   };
@@ -76,7 +71,7 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
   handleSearch() if no search param fetches physicians on component mount
   */
   useEffect(() => {
-    dispatch(fetchPhyNameOccupation());
+    // dispatch(fetchPhyNameOccupation());
     if (type === PATIENT) {
       console.log(`SEt ID ${loggedUserId}`);
       dispatch(
@@ -125,9 +120,7 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
           ) : (
             <Grid item lg={8}>
               {physicianId ? (
-                <TimetableList
-                  physicianId={physicianId === '' ? initialID : physicianId}
-                />
+                <TimetableList physicianId={physicianId} />
               ) : (
                 <Box sx={{ display: 'flex', border: 2 }}>
                   <Card>

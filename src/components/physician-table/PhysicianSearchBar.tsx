@@ -50,6 +50,7 @@ const PhysicianSearchBar = ({ onSearch }: SearchProps) => {
   const [occupID, setOccupID] = useState('');
 
   const handleOccupChange = (text: string) => {
+    console.log('Occup change');
     setOccupID(text);
   };
 

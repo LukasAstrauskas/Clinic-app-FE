@@ -41,7 +41,7 @@ export const Patients = () => {
   const dispatch = useAppDispatch();
   const patients = useAppSelector(selectPatients);
   const [open, setOpen] = useState(false);
-  const [more, setMore] = useState<boolean>(true);
+  const [more, setMore] = useState(true);
   const { appointment, setAppointment } = useContext(AppointmentContext);
   const choosePatient = (patientId: string): void => {
     setAppointment({ ...appointment, patientId: patientId });

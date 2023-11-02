@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../../../model/Model';
 import {
   PHYSICIANS_FULL_URL,
@@ -9,17 +9,18 @@ import axios from 'axios';
 import { RootState } from '../../reducers';
 import authHeader from '../../../authentication/authHeader';
 import { getUsers } from '../user/userActios';
+import userSlice from '../user/userSlice';
 
 interface PhysicianState {
   physicians: User[];
-  selectedPhysician: User | null;
+  physicianId: string;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: PhysicianState = {
   physicians: [],
-  selectedPhysician: null,
+  physicianId: '',
   isLoading: false,
   error: null,
 };
@@ -76,7 +77,11 @@ export const searchPhysician = createAsyncThunk(
 export const physicianSlice = createSlice({
   name: 'physician',
   initialState,
-  reducers: {},
+  reducers: {
+    setPhysicianId(state, action: PayloadAction<string>) {
+      state.physicianId = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPhysicians.pending, (state) => {
@@ -121,14 +126,16 @@ export const physicianSlice = createSlice({
       })
       .addCase(getUsers.fulfilled, (state, action) => {
         state.physicians = action.payload;
-        state.selectedPhysician = state.physicians[1];
+        state.physicianId = state.physicians[0].id;
         console.log(action.payload);
       });
   },
 });
 
-export const selectPhysician = (state: RootState) =>
-  state.physician.selectedPhysician;
+export const { setPhysicianId } = physicianSlice.actions;
+
+export const selectPhysicianId = (state: RootState) =>
+  state.physician.physicianId;
 export const selectPhysicians = (state: RootState) =>
   state.physician.physicians;
 

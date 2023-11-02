@@ -3,16 +3,13 @@ import { Box, Container, Grid } from '@mui/material';
 import TimeslotList from './TimeslotList';
 import PhysicianTable from '../../components/physician-table/PhysicianTable';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import {
-  fetchPhyNameOccupation,
-  selectPhysicianId,
-  setPhysicianId,
-} from '../../store/slices/physician/phyNameOccupationSlice';
 import PhysicianSearchBar from '../../components/physician-table/PhysicianSearchBar';
 import {
   selectPhysicians,
   fetchPhysicians,
   searchPhysician,
+  setPhysicianId,
+  selectPhysicianId,
 } from '../../store/slices/physician/physicianSlice';
 
 type props = {
@@ -45,9 +42,9 @@ const ManageTimeslots = ({ tableTitle = 'Physicians' }: props) => {
   /* Not  fetchPhyNameOccupation(), but <PhysicianSearchBar/> component
   provides physicians, search side effect.
   Sets physicianId to first ID in physicians list */
-  useEffect(() => {
-    dispatch(fetchPhyNameOccupation());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchPhyNameOccupation());
+  // }, []);
 
   return (
     <Container maxWidth={'lg'}>

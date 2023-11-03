@@ -11,7 +11,7 @@ import {
   GET_TIMESLOTS,
   TIMESLOT,
 } from '../../../utils/httpConstants';
-import authHeader from '../../../authentication/authHeader';
+import authHeader, { bearerToken } from '../../../authentication/authHeader';
 import { store } from '../../store';
 import { useAppDispatch } from '../../hooks';
 import { addAppointment, logout } from '../loggedUser/loggedUserSlice';
@@ -31,7 +31,7 @@ export const getTimeslots = createAsyncThunk(
           'YYYY-MM-DD',
         )}`,
         {
-          headers: authHeader(),
+          headers: bearerToken(),
         },
       )
       .then((response) => {

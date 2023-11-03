@@ -22,9 +22,7 @@ interface LoggedUserState {
   error: string | null;
 }
 
-const user: LoggedUser = JSON.parse(
-  localStorage.getItem('loggedUser') ||
-    `{
+const userString = JSON.stringify({
   id: '',
   name: '',
   surname: '',
@@ -35,8 +33,39 @@ const user: LoggedUser = JSON.parse(
   patientInfo: null,
   upcomingAppointment: [],
   pastAppointment: [],
-}`,
+});
+
+console.log(userString);
+
+const user: LoggedUser = JSON.parse(
+  localStorage.getItem('loggedUser') || userString,
 );
+
+//     `{
+//   id: '',
+//   name: '',
+//   surname: '',
+//   initials: '',
+//   email: '',
+//   type: '',
+//   occupation: null,
+//   patientInfo: null,
+//   upcomingAppointment: [],
+//   pastAppointment: [],
+// }`,
+
+// const user: LoggedUser = {
+//   id: '',
+//   name: '',
+//   surname: '',
+//   initials: '',
+//   email: '',
+//   type: '',
+//   occupation: null,
+//   patientInfo: null,
+//   upcomingAppointment: [],
+//   pastAppointment: [],
+// };
 
 const loggedUserState: LoggedUserState = {
   loggedUser: user,
@@ -114,8 +143,9 @@ const loggedUserSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(userLogin.fulfilled, (state, action) => {
-        state.loggedUser = action.payload.data.loggedUser;
-        localStorage.setItem('token', action.payload.data.token);
+        const loginDTO = action.payload.data;
+        state.loggedUser = loginDTO.loggedUser;
+        localStorage.setItem('token', JSON.stringify(loginDTO.token));
         localStorage.setItem('loggedUser', JSON.stringify(state.loggedUser));
         state.status = 'succeeded';
       })

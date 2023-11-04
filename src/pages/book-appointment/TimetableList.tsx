@@ -30,7 +30,6 @@ type Props = {
 };
 
 const TimetableList = ({ physicianId }: Props) => {
-  // const [loadData, setLoadData] = useToggle();
   const dispatch = useAppDispatch();
   const groupedTimeslots = useAppSelector(selectTimeslots);
 
@@ -48,7 +47,6 @@ const TimetableList = ({ physicianId }: Props) => {
   const handleRemovePatientFromTimeslot = async (
     physicianId: string,
     date: string,
-    time: string,
     patientId: string,
   ) => {
     const timeslot = {
@@ -118,9 +116,6 @@ const TimetableList = ({ physicianId }: Props) => {
                 sx={{ backgroundColor: grey[200] }}
               >
                 <MonthPicker date={pickDate} setDate={setPickDate} />
-                <p>Book-Appointment</p>
-                <p>{dayjs().date(1).format('YYYY-MM-DDTHH:mm:ss')}</p>
-                {/* <p>{dayjs().date(1).toString()}</p> */}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -192,7 +187,6 @@ const TimetableList = ({ physicianId }: Props) => {
                                 handleRemovePatientFromTimeslot(
                                   physicianId,
                                   date,
-                                  time,
                                   timeslot.patientId,
                                 )
                               }

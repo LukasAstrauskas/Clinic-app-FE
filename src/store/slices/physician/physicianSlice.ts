@@ -13,14 +13,22 @@ import userSlice from '../user/userSlice';
 
 interface PhysicianState {
   physicians: User[];
-  physicianId: string;
+  physician: User;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: PhysicianState = {
   physicians: [],
-  physicianId: '',
+  physician: {
+    id: '',
+    name: '',
+    surname: '',
+    password: '',
+    email: '',
+    type: '',
+    occupation: null,
+  },
   isLoading: false,
   error: null,
 };
@@ -78,8 +86,8 @@ export const physicianSlice = createSlice({
   name: 'physician',
   initialState,
   reducers: {
-    setPhysicianId(state, action: PayloadAction<string>) {
-      state.physicianId = action.payload;
+    setPhysician(state, action: PayloadAction<User>) {
+      state.physician = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -126,16 +134,15 @@ export const physicianSlice = createSlice({
       })
       .addCase(getUsers.fulfilled, (state, action) => {
         state.physicians = action.payload;
-        state.physicianId = state.physicians[0].id;
+        state.physician = state.physicians[0];
         console.log(action.payload);
       });
   },
 });
 
-export const { setPhysicianId } = physicianSlice.actions;
+export const { setPhysician } = physicianSlice.actions;
 
-export const selectPhysicianId = (state: RootState) =>
-  state.physician.physicianId;
+export const selectPhysician = (state: RootState) => state.physician.physician;
 export const selectPhysicians = (state: RootState) =>
   state.physician.physicians;
 

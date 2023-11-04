@@ -10,7 +10,7 @@ import {
   deletePatientFromTimeslot,
   deletePatientFromUpcomingTimeslot,
 } from './timeslotActions';
-import authHeader from '../../../authentication/authHeader';
+import { bearerToken } from '../../../authentication/authHeader';
 
 interface TimeslotState {
   groupedTimeslots: GroupedTimeslots[];
@@ -34,15 +34,16 @@ const initialState: TimeslotState = {
 export const bookTimeslot = createAsyncThunk(
   'timeslot/bookTimeslot',
   async (appointment: Timeslot) => {
-    await axios
-      .patch('http://localhost:8080/timeslot', appointment, {
-        headers: authHeader(),
+    const resp = await axios
+      .patch('http://localhost:8080/timeslot/bookAppointment', appointment, {
+        headers: bearerToken(),
       })
       .catch((error) => {
         throw new Error(
           `You already have an appointment with this physician: ${error.message}`,
         );
       });
+    return resp;
   },
 );
 

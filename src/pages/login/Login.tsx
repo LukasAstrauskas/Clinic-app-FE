@@ -42,9 +42,10 @@ const Login = () => {
               label='Email'
               placeholder='Enter email'
               fullWidth
+              type='email'
               margin='normal'
               value={email}
-              autoComplete='off'
+              autoComplete='on'
               onChange={(e) => setEmail(e.target.value)}
               sx={{ marginBottom: '15px' }}
             />

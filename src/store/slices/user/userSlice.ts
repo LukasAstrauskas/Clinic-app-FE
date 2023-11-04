@@ -122,7 +122,8 @@ export const userSlice = createSlice({
 });
 
 export const selectUser = (state: RootState) => state.user.user;
-export const selectUserName = (state: RootState) => state.user.user?.name || '';
+export const selectUserName = (state: RootState) =>
+  `${selectUser(state)?.name} ${selectUser(state)?.surname}`;
 export const selectUserLoading = (state: RootState) => state.user.loading;
 export const selectUserError = (state: RootState) => state.user.error;
 

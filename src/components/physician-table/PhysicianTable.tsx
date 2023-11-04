@@ -12,7 +12,9 @@ import { grey } from '@mui/material/colors';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {
   fetchMorePhysicians,
+  selectPhysician,
   selectPhysicians,
+  setPhysician,
 } from '../../store/slices/physician/physicianSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
@@ -22,11 +24,6 @@ import {
 import { getUsers } from '../../store/slices/user/userActios';
 
 type Props = {
-  physicians: User[];
-  // refresh: boolean;
-  // setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedId: string | null;
-  rowClick: (id: string) => void;
   isSearch: boolean;
 };
 
@@ -40,15 +37,16 @@ export const tableRowSX = (isSelected: boolean) => {
   };
 };
 
-const PhysicianTable = ({
-  physicians,
-  selectedId,
-  rowClick,
-  isSearch,
-}: Props) => {
+const PhysicianTable = ({ isSearch }: Props) => {
   const userSize = useAppSelector(selectUserSize);
-  const myPhysicians = useAppSelector(selectPhysicians);
+  const physicians = useAppSelector(selectPhysicians);
+  const selectedPhysician = useAppSelector(selectPhysician);
   const dispatch = useAppDispatch();
+
+  const rowClick = (physician: User) => {
+    dispatch(setPhysician(physician));
+  };
+
   const getMoreData = async () => {
     if (!isSearch) {
       await dispatch(fetchMorePhysicians(physicians.length));
@@ -93,22 +91,17 @@ const PhysicianTable = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              {myPhysicians.map(({ id, name, surname, occupation }) => (
-                <TableRow key={id} hover sx={tableRowSX(selectedId === id)}>
-                  <TableCell
-                    onClick={() => {
-                      rowClick(id);
-                    }}
-                  >
-                    {name} {surname}
+              {physicians.map((physician) => (
+                <TableRow
+                  key={physician.id}
+                  hover
+                  sx={tableRowSX(selectedPhysician.id === physician.id)}
+                  onClick={() => rowClick(physician)}
+                >
+                  <TableCell>
+                    {physician.name} {physician.surname}
                   </TableCell>
-                  <TableCell
-                    onClick={() => {
-                      rowClick(id);
-                    }}
-                  >
-                    {occupation?.name}
-                  </TableCell>
+                  <TableCell>{physician.occupation?.name}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

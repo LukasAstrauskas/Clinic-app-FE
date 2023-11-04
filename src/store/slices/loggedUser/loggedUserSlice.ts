@@ -15,10 +15,13 @@ import {
 } from '../../../utils/httpConstants';
 import { RootState } from '../../reducers';
 import { bearerToken } from '../../../authentication/authHeader';
+import { bookTimeslot } from '../timeslot/timeslotSlice';
+import { Status } from '../../../utils/Status';
+import { PATIENT } from '../../../utils/Users';
 
 interface LoggedUserState {
   loggedUser: LoggedUser;
-  status: 'idle' | 'pending' | 'succeeded' | 'failed';
+  status: Status.IDLE | 'pending' | 'succeeded' | 'failed';
   error: string | null;
 }
 
@@ -69,7 +72,7 @@ const user: LoggedUser = JSON.parse(
 
 const loggedUserState: LoggedUserState = {
   loggedUser: user,
-  status: 'idle',
+  status: Status.IDLE,
   error: null,
 };
 
@@ -104,7 +107,6 @@ export const fetchPatientPastAppointments = createAsyncThunk(
         headers: bearerToken(),
       },
     );
-    console.log(response.data);
     return response.data;
   },
 );
@@ -134,10 +136,12 @@ const loggedUserSlice = createSlice({
       state.loggedUser = user;
     },
     addAppointment(state, action: PayloadAction<PatientAppointment>) {
+      console.log(`Appoinment: ${action.payload}.`);
       state.loggedUser.upcomingAppointment = [
         ...state.loggedUser.upcomingAppointment,
         action.payload,
       ];
+      localStorage.setItem('loggedUser', JSON.stringify(state.loggedUser));
     },
   },
   extraReducers: (builder) => {
@@ -194,6 +198,13 @@ const loggedUserSlice = createSlice({
       .addCase(patientCancelAppointment.rejected, (state, action) => {
         state.error = action.error.message ?? 'Failed cancel appointment.';
         state.status = 'failed';
+      })
+      .addCase(bookTimeslot.fulfilled, (state, action) => {
+        if (state.loggedUser.type === PATIENT) {
+          state.loggedUser.upcomingAppointment = action.payload.data;
+          localStorage.setItem('loggedUser', JSON.stringify(state.loggedUser));
+        }
+        state.status = Status.IDLE;
       });
   },
 });

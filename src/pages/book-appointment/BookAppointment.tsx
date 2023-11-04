@@ -31,12 +31,6 @@ const BookAppointment = () => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState('');
-  // const [appointment, setAppointment] = useState<Timeslot>({
-  //   id: '',
-  //   physicianId: '',
-  //   date: '',
-  //   patientId: '',
-  // });
 
   const timeslot = useAppSelector(selectTimeslot);
 
@@ -82,9 +76,6 @@ const BookAppointment = () => {
 
   return (
     <Box sx={{ width: '100%', marginTop: '0px' }}>
-      <p>
-        Step: {bookingStep.toString()} TYpe: {type} {PATIENT === type && 'TRUE'}
-      </p>
       <Stack
         display='flex'
         justifyContent='center'
@@ -92,13 +83,6 @@ const BookAppointment = () => {
         spacing={2}
         marginBottom={3}
       >
-        <p>Slot ID: {timeslot.id}</p>
-        <p>Ph. ID: {timeslot.physicianId}</p>
-        <p>Date: {timeslot.date}</p>
-        <p>
-          Pat. ID:
-          {timeslot.patientId === null ? 'Null' : timeslot.patientId}
-        </p>
         {bookingStep ? (
           <Stack style={{ alignItems: 'center' }}>
             <h1 style={{ margin: 0 }}>Select Patient</h1>

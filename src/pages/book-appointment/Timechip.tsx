@@ -69,12 +69,6 @@ const Timechip = ({
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     onClick(timeslot);
-    console.log(
-      patientId,
-      patientId && (type === 'admin' || type === 'physician')
-        ? 'TRUE'
-        : 'FALSE',
-    );
     if (patientId && (type === 'admin' || type === 'physician')) {
       setAnchorEl(event.currentTarget);
       setOpen(true);

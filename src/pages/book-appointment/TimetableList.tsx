@@ -56,7 +56,6 @@ const TimetableList = ({ physicianId }: Props) => {
       patientId: patientId,
     };
     dispatch(deletePatientFromTimeslot(timeslot));
-    // setLoadData();
   };
 
   const handleChipClick = (timeslot: Timeslot) => {
@@ -173,13 +172,10 @@ const TimetableList = ({ physicianId }: Props) => {
                     <TableCell align='left' key={`Stack${date}`}>
                       <Stack direction='row' style={{ flexWrap: 'wrap' }}>
                         {timeslots.map((timeslot) => {
-                          const time = dayjs(timeslot.date).format('HH:mm');
                           return (
                             <Timechip
                               timeslot={timeslot}
                               date={date}
-                              time={time}
-                              patientId={timeslot.patientId}
                               onClick={handleChipClick}
                               key={timeslot.id}
                               selected={isSelected(timeslot.id)}

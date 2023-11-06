@@ -6,14 +6,13 @@ import TimechipPopper from './TimechipPopper';
 import { fetchUserById } from '../../store/slices/user/userSlice';
 import { Timeslot } from '../../model/Model';
 import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
+import dayjs from 'dayjs';
 
 interface Props {
   timeslot: Timeslot;
   date: string;
-  time: string;
-  patientId: string;
   selected: boolean;
-  onDelete?: (date: string, time: string, patientId: string) => void;
+  onDelete?: (timeslot: Timeslot) => void;
   onClick: (timeslot: Timeslot) => void;
   onCancelAppointment?: () => void;
 }
@@ -54,8 +53,6 @@ const bookedTimeSX = {
 const Timechip = ({
   timeslot,
   date,
-  time,
-  patientId,
   selected,
   onDelete,
   onClick,
@@ -64,15 +61,17 @@ const Timechip = ({
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const type = useAppSelector(selectLoggedUserType);
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const time = dayjs(timeslot.date).format('HH:mm');
   const isInFuture = new Date() > new Date(`${date}T${time}`);
+  const isInFutureT = dayjs().isAfter(timeslot.date);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     onClick(timeslot);
-    if (patientId && (type === 'admin' || type === 'physician')) {
+    if (timeslot.patientId && (type === 'admin' || type === 'physician')) {
       setAnchorEl(event.currentTarget);
       setOpen(true);
-      dispatch(fetchUserById(patientId));
+      dispatch(fetchUserById(timeslot.patientId));
     }
   };
 
@@ -84,10 +83,10 @@ const Timechip = ({
           variant='outlined'
           disabled={isInFuture}
           onClick={handleClick}
-          sx={patientId === null ? freeTimeSX(selected) : bookedTimeSX}
+          sx={timeslot.patientId === null ? freeTimeSX(selected) : bookedTimeSX}
         />
         <TimechipPopper
-          patientId={patientId}
+          patientId={timeslot.patientId}
           open={open}
           setOpen={setOpen}
           anchorEl={anchorEl}
@@ -103,9 +102,9 @@ const Timechip = ({
         label={time}
         variant='outlined'
         disabled={isInFuture}
-        onDelete={() => onDelete(date, time, patientId)}
+        onDelete={() => onDelete(timeslot)}
         onClick={() => onClick(timeslot)}
-        sx={patientId === null ? freeTimeSX(selected) : bookedTimeSX}
+        sx={timeslot.patientId === null ? freeTimeSX(selected) : bookedTimeSX}
       />
     );
   }

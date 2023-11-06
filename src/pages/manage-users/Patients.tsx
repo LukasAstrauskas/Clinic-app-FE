@@ -14,8 +14,11 @@ import AddPatientModal from '../../components/modals/AddPatientModal';
 import TableHeadComponent from '../../components/manage-users-tables/TableHeadComponent';
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableBodyComponent from '../../components/manage-users-tables/TableBodyComponent';
-import AppointmentContext from '../../hooks/AppointmentContext';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import {
+  bookTimeslot,
+  selectTimeslot,
+} from '../../store/slices/timeslot/timeslotSlice';
 
 export const searchBaraSx = (isSelected: string) => {
   return {
@@ -42,9 +45,10 @@ export const Patients = () => {
   const patients = useAppSelector(selectPatients);
   const [open, setOpen] = useState(false);
   const [more, setMore] = useState(true);
-  const { appointment, setAppointment } = useContext(AppointmentContext);
+  const appointment = useAppSelector(selectTimeslot);
+
   const choosePatient = (patientId: string): void => {
-    setAppointment({ ...appointment, patientId: patientId });
+    dispatch(bookTimeslot({ ...appointment, patientId: patientId }));
   };
   const [isSearch, setIsSearch] = useState(false);
 

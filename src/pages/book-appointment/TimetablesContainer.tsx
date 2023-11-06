@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Badge,
   Box,
   Card,
   CardContent,
-  Chip,
   CircularProgress,
   Container,
   Grid,
-  Stack,
   Typography,
 } from '@mui/material';
 import TimetableList from './TimetableList';
@@ -16,10 +13,8 @@ import PhysicianTable from '../../components/physician-table/PhysicianTable';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import PhysicianSearchBar from '../../components/physician-table/PhysicianSearchBar';
 import {
-  selectPhysicians,
   searchPhysician,
   selectPhysician,
-  setPhysician,
 } from '../../store/slices/physician/physicianSlice';
 import { PATIENT } from '../../utils/Users';
 import { pickTimeslot } from '../../store/slices/timeslot/timeslotSlice';
@@ -38,18 +33,6 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
   const physician = useAppSelector(selectPhysician);
   const dispatch = useAppDispatch();
   const [isSearch, setIsSearch] = useState(false);
-
-  // const handleClick = (id: string) => {
-  //   dispatch(setPhysicianId(id));
-  //   dispatch(
-  //     pickTimeslot({
-  //       id: '',
-  //       physicianId: '',
-  //       date: '',
-  //       patientId: type === PATIENT ? loggedUserId : '',
-  //     }),
-  //   );
-  // };
 
   const handleSearch = (search: string, occupation: string) => {
     console.log('Timetable-container. handleSearch ');

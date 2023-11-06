@@ -42,7 +42,7 @@ const TimeslotList = ({ physicianId }: Props) => {
   // const loggedInUserId = useAppSelector(selectId);
   const [date, setDate] = useState('');
 
-  const selectedTimeslots = useAppSelector(selectTimeslots);
+  const timeslots = useAppSelector(selectTimeslots);
 
   const [timeslot, setTimeslot] = useState<Timeslot>({
     id: '',
@@ -64,9 +64,9 @@ const TimeslotList = ({ physicianId }: Props) => {
     if (!openNewDateTimeModal) setOpenNewDateTimeModal();
   };
 
-  const deleteButtonAction = (date: string, patientId: string) => {
-    if (patientId === null) {
-      setTimeslot({ ...timeslot, date: date });
+  const deleteButtonAction = (timeslot: Timeslot) => {
+    if (timeslot.patientId === null) {
+      setTimeslot(timeslot);
       setOpenConfirm();
     } else {
       toggleAlert();
@@ -189,9 +189,9 @@ const TimeslotList = ({ physicianId }: Props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {selectedTimeslots.length !== 0 ? (
+            {timeslots.length !== 0 ? (
               <>
-                {selectedTimeslots.map(({ date, timeslots }) => (
+                {timeslots.map(({ date, timeslots }) => (
                   <TableRow
                     key={date}
                     sx={{
@@ -214,13 +214,10 @@ const TimeslotList = ({ physicianId }: Props) => {
                     <TableCell align='left' key={`Stack${date}`}>
                       <Stack direction='row' style={{ flexWrap: 'wrap' }}>
                         {timeslots.map((timeslot) => {
-                          const time = dayjs(timeslot.date).format('HH:mm');
                           return (
                             <Timechip
                               timeslot={timeslot}
                               date={date}
-                              time={time}
-                              patientId={timeslot.patientId}
                               onDelete={deleteButtonAction}
                               onClick={handleChipClick}
                               key={timeslot.id}

@@ -5,10 +5,8 @@ import PhysicianTable from '../../components/physician-table/PhysicianTable';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import PhysicianSearchBar from '../../components/physician-table/PhysicianSearchBar';
 import {
-  selectPhysicians,
   fetchPhysicians,
   searchPhysician,
-  setPhysician,
   selectPhysician,
 } from '../../store/slices/physician/physicianSlice';
 
@@ -21,7 +19,6 @@ const ManageTimeslots = ({ tableTitle = 'Physicians' }: props) => {
   // const loggedInPhysicianId = useSelector(selectId);
   const physician = useAppSelector(selectPhysician);
   const dispatch = useAppDispatch();
-  // const [refresh, setRefresh] = useState<boolean>(false);
   const [isSearch, setIsSearch] = useState(false);
 
   const handleSearch = (search: string, occupation: string) => {
@@ -31,7 +28,6 @@ const ManageTimeslots = ({ tableTitle = 'Physicians' }: props) => {
     } else {
       setIsSearch(false);
       dispatch(fetchPhysicians());
-      // setRefresh(true);
     }
   };
   /* Not  fetchPhyNameOccupation(), but <PhysicianSearchBar/> component
@@ -57,22 +53,11 @@ const ManageTimeslots = ({ tableTitle = 'Physicians' }: props) => {
 
           <Grid item lg={4} sx={{ pr: 2 }}>
             <PhysicianSearchBar onSearch={handleSearch} />
-            <PhysicianTable
-              // refresh={refresh}
-              // setRefresh={setRefresh}
-              isSearch={isSearch}
-            />
+            <PhysicianTable isSearch={isSearch} />
           </Grid>
-
-          {/* {type === 'physician' ? (
-            <Grid item lg={12}>
-              <TimetableList physicianId={loggedInPhysicianId || ''} />
-            </Grid>
-          ) : ( */}
           <Grid item lg={8}>
             {physician.id ? <TimeslotList physicianId={physician.id} /> : <></>}
           </Grid>
-          {/* )} */}
         </Grid>
       </Box>
     </Container>

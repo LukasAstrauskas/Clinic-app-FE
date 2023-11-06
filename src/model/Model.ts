@@ -75,14 +75,14 @@ export type UpdateUserDTO = {
   userDTO: CreateUserDTO;
 };
 
-export interface Appointment {
-  physicianId: string;
-  date: string;
-  time: string;
-  patientId?: string | null;
-}
+// export interface Appointment {
+//   physicianId: string;
+//   date: string;
+//   time: string;
+//   patientId?: string | null;
+// }
 
-export interface AppointmentState {
-  appointment: Appointment;
-  setAppointment: React.Dispatch<React.SetStateAction<Appointment>>;
-}
+// export interface AppointmentState {
+//   appointment: Appointment;
+//   setAppointment: React.Dispatch<React.SetStateAction<Appointment>>;
+// }

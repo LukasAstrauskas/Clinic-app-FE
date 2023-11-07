@@ -8,6 +8,7 @@ import {
 } from '../../../model/Model';
 import {
   BASE_URL,
+  CANCEL_APPOINTMENT,
   GET_TIMESLOTS,
   TIMESLOT,
 } from '../../../utils/httpConstants';
@@ -47,11 +48,10 @@ export const getTimeslots = createAsyncThunk(
 
 export const deleteTimeslot = createAsyncThunk(
   'timeslot/deleteTimeslot',
-  async (timeslot: Timeslot) => {
+  async (timeslotId: string) => {
     await axios
-      .delete('http://localhost:8080/timeslot', {
+      .delete(`${BASE_URL}${TIMESLOT}?timeslotId=${timeslotId}`, {
         headers: authHeader(),
-        data: timeslot,
       })
       .catch((error) => {
         console.error('Error deleting timeslot:', error);
@@ -59,6 +59,7 @@ export const deleteTimeslot = createAsyncThunk(
   },
 );
 
+// REMOVE this thunk
 export const deletePatientFromUpcomingTimeslot = createAsyncThunk(
   'timeslot/deletePatientFromUpcomingTimeslot',
   async ({
@@ -87,17 +88,18 @@ export const deletePatientFromUpcomingTimeslot = createAsyncThunk(
   },
 );
 
-export const deletePatientFromTimeslot = createAsyncThunk(
-  'timeslot/deletePatientFromTimeslot',
-  async (timeslot: Timeslot) => {
-    await axios
-      .put('http://localhost:8080/timeslot/removePatient', timeslot, {
-        headers: authHeader(),
-      })
-      .catch((error) => {
-        console.error('Error deleting patient from timeslot:', error);
-        throw error;
-      });
+export const cancelAppointment = createAsyncThunk(
+  'timeslot/cancelAppointment',
+  async (timeslotId: string) => {
+    const config = {
+      headers: bearerToken(),
+    };
+    const response = await axios.patch(
+      BASE_URL.concat(TIMESLOT).concat(CANCEL_APPOINTMENT),
+      { timeslotId },
+      config,
+    );
+    return response.data;
   },
 );
 
@@ -105,7 +107,7 @@ export const postTimeslot = createAsyncThunk(
   'timeslot/ postTimeslot',
   async (timeslot: Timeslot) => {
     await axios
-      .post('http://localhost:8080/timeslot', timeslot, {
+      .post(`${BASE_URL}${TIMESLOT}`, timeslot, {
         headers: authHeader(),
       })
       .catch((error) => {

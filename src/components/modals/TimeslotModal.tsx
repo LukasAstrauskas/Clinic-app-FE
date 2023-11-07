@@ -36,6 +36,7 @@ const TimeslotModal = ({
 }: Props) => {
   const dayStart = dayjs(date).startOf('day');
   const [time, setTime] = useState<Dayjs>(dayStart);
+  const dateString = time.format(`YYYY-MM-DDTHH:mm`);
   const dispatch = useAppDispatch();
   const [timeError, setTimeError] = useState(false);
 
@@ -48,7 +49,7 @@ const TimeslotModal = ({
       postTimeslot({
         id: '',
         physicianId: id,
-        date: date,
+        date: dateString,
         patientId: '',
       }),
     );

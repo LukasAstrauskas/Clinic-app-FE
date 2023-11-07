@@ -4,6 +4,9 @@ import TextField from '@mui/material/TextField';
 import AlertModal from './AlertModal';
 import useToggle from '../../hooks/useToggle';
 import Styles from '../styles/UserManagmentStyles';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 
 const style = {
   position: 'absolute' as const,
@@ -72,6 +75,17 @@ const TimeslotSetDateModal = ({ openModal, closeModal, setDate }: Props) => {
               shrink: true,
             }}
           />
+
+          <p></p>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label='Date'
+              views={['day']}
+              format='YYYY-MM-DD'
+              defaultValue={dayjs()}
+            />
+          </LocalizationProvider>
+
           <Stack direction='row' spacing={2} sx={{ marginTop: 2 }}>
             <Button
               variant='contained'

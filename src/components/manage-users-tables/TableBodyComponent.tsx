@@ -111,7 +111,7 @@ const TableBodyComponent = ({
       await dispatch(resetAdminData());
       await dispatch(fetchAdminAmount());
     }
-    setUsers(users.filter((user) => user != id));
+    setUsers((prevUsers) => prevUsers.filter((user) => user != id));
   };
 
   const getMoreData = async () => {

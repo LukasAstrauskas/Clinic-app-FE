@@ -1,29 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Box, Popper, Button, Typography } from '@mui/material';
 import Styles from '../../components/styles/UserManagmentStyles';
 import { fetchPatientInfo } from '../../store/slices/patient/patientSlice';
 import { selectUserName } from '../../store/slices/user/userSlice';
 import PatientInfoModal from '../../components/modals/PatientInfoModal';
+import { cancelAppointment } from '../../store/slices/timeslot/timeslotActions';
 
 interface Props {
   patientId: string;
+  timeslotId: string;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   anchorEl: HTMLElement | null;
-  onCancelAppointment?: () => void;
+  // onCancelAppointment?: () => void;
 }
 
 const TimechipPopper = ({
   patientId,
+  timeslotId,
   open,
   setOpen,
   anchorEl,
-  onCancelAppointment,
-}: Props) => {
+}: // onCancelAppointment,
+Props) => {
   const dispatch = useAppDispatch();
   const patientName = useAppSelector(selectUserName);
-  const [modalOpen, setModalOpen] = React.useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleInfoClick = () => {
     dispatch(fetchPatientInfo(patientId));
@@ -32,6 +35,10 @@ const TimechipPopper = ({
 
   const handleModalClose = () => {
     setModalOpen(false);
+  };
+
+  const onCancelAppointment = () => {
+    dispatch(cancelAppointment(timeslotId));
   };
 
   return (
@@ -98,7 +105,7 @@ const TimechipPopper = ({
                 padding: '2px 8px',
               }}
               variant='outlined'
-              onClick={() => onCancelAppointment && onCancelAppointment()}
+              onClick={onCancelAppointment}
             >
               CANCEL APPOINTMENT
             </Button>

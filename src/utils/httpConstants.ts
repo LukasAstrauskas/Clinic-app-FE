@@ -6,7 +6,7 @@ export const LOGIN = '/login';
 export const TIMESLOT = '/timeslot';
 export const PAST_APPOINTMENTS = '/patientPastAppointments';
 export const PAST_APPOINTMENTS_AMOUNT = '/patientPastAppointmentsAmount';
-export const PATIENT_CANCEL_APPOINTMENT = '/patientCancelAppointment';
+export const CANCEL_APPOINTMENT = '/cancelAppointment';
 export const GET_TIMESLOTS = '/getMonthsTimeslots';
 
 export const PATIENT_INFO = '/patientInfo';

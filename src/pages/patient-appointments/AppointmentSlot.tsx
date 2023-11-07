@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import AlertModal from '../../components/modals/AlertModal';
 import { PatientAppointment } from '../../model/Model';
 import { useAppDispatch } from '../../store/hooks';
-import { patientCancelAppointment } from '../../store/slices/loggedUser/loggedUserSlice';
+import { cancelAppointment } from '../../store/slices/timeslot/timeslotActions';
+
 interface Props {
   appointment: PatientAppointment;
 }
@@ -13,7 +14,7 @@ const AppointmentSlot = ({ appointment }: Props) => {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const handleCancel = async () => {
-    dispatch(patientCancelAppointment(appointment.id));
+    dispatch(cancelAppointment(appointment.id));
     setOpen(false);
   };
 

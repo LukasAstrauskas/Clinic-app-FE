@@ -9,7 +9,6 @@ import {
   BASE_URL,
   LOGIN,
   PAST_APPOINTMENTS,
-  PATIENT_CANCEL_APPOINTMENT,
   PATIENT_INFO,
   TIMESLOT,
 } from '../../../utils/httpConstants';
@@ -18,6 +17,7 @@ import { bearerToken } from '../../../authentication/authHeader';
 import { bookTimeslot } from '../timeslot/timeslotSlice';
 import { Status } from '../../../utils/Status';
 import { PATIENT } from '../../../utils/Users';
+import { cancelAppointment } from '../timeslot/timeslotActions';
 
 interface LoggedUserState {
   loggedUser: LoggedUser;
@@ -38,37 +38,11 @@ const userString = JSON.stringify({
   pastAppointment: [],
 });
 
-console.log(userString);
+// console.log(userString);
 
 const user: LoggedUser = JSON.parse(
   localStorage.getItem('loggedUser') || userString,
 );
-
-//     `{
-//   id: '',
-//   name: '',
-//   surname: '',
-//   initials: '',
-//   email: '',
-//   type: '',
-//   occupation: null,
-//   patientInfo: null,
-//   upcomingAppointment: [],
-//   pastAppointment: [],
-// }`,
-
-// const user: LoggedUser = {
-//   id: '',
-//   name: '',
-//   surname: '',
-//   initials: '',
-//   email: '',
-//   type: '',
-//   occupation: null,
-//   patientInfo: null,
-//   upcomingAppointment: [],
-//   pastAppointment: [],
-// };
 
 const loggedUserState: LoggedUserState = {
   loggedUser: user,
@@ -106,21 +80,6 @@ export const fetchPatientPastAppointments = createAsyncThunk(
       {
         headers: bearerToken(),
       },
-    );
-    return response.data;
-  },
-);
-
-export const patientCancelAppointment = createAsyncThunk(
-  'timeslot/deletePatientFromUpcomingTimeslot',
-  async (timeslotId: string) => {
-    const config = {
-      headers: bearerToken(),
-    };
-    const response = await axios.patch(
-      BASE_URL.concat(TIMESLOT).concat(PATIENT_CANCEL_APPOINTMENT),
-      { timeslotId },
-      config,
     );
     return response.data;
   },
@@ -187,15 +146,21 @@ const loggedUserSlice = createSlice({
         state.error = action.error.message ?? 'user info not updated.';
         state.status = 'failed';
       })
-      .addCase(patientCancelAppointment.fulfilled, (state, action) => {
-        state.loggedUser.upcomingAppointment = action.payload;
+      .addCase(cancelAppointment.fulfilled, (state, action) => {
+        const deletedId: string = action.payload;
+
+        const filteredAppointments =
+          state.loggedUser.upcomingAppointment.filter(
+            (appointment) => appointment.id !== deletedId,
+          );
+        state.loggedUser.upcomingAppointment = filteredAppointments;
         localStorage.setItem('loggedUser', JSON.stringify(state.loggedUser));
         state.status = 'succeeded';
       })
-      .addCase(patientCancelAppointment.pending, (state) => {
+      .addCase(cancelAppointment.pending, (state) => {
         state.status = 'pending';
       })
-      .addCase(patientCancelAppointment.rejected, (state, action) => {
+      .addCase(cancelAppointment.rejected, (state, action) => {
         state.error = action.error.message ?? 'Failed cancel appointment.';
         state.status = 'failed';
       })

@@ -10,7 +10,6 @@ import Timechip from './Timechip';
 import { Chip, Stack } from '@mui/material';
 import { Timeslot } from '../../model/Model';
 import { getWeekDay } from '../../components/utils';
-import useToggle from '../../hooks/useToggle';
 import { grey, teal } from '@mui/material/colors';
 import dayjs, { Dayjs } from 'dayjs';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -20,10 +19,7 @@ import {
   selectTimeslots,
 } from '../../store/slices/timeslot/timeslotSlice';
 import MonthPicker from './MonthPicker';
-import {
-  deletePatientFromTimeslot,
-  getTimeslots,
-} from '../../store/slices/timeslot/timeslotActions';
+import { getTimeslots } from '../../store/slices/timeslot/timeslotActions';
 
 type Props = {
   physicianId: string;
@@ -33,30 +29,9 @@ const TimetableList = ({ physicianId }: Props) => {
   const dispatch = useAppDispatch();
   const groupedTimeslots = useAppSelector(selectTimeslots);
 
-  const emptySlot: Timeslot = {
-    id: '',
-    physicianId: '',
-    date: '',
-    patientId: '',
-  };
-
   const pickedTimeslot = useAppSelector(selectTimeslot);
 
   const [pickDate, setPickDate] = useState<Dayjs>(dayjs().date(1));
-
-  const handleRemovePatientFromTimeslot = async (
-    physicianId: string,
-    date: string,
-    patientId: string,
-  ) => {
-    const timeslot = {
-      id: '',
-      physicianId: physicianId,
-      date,
-      patientId: patientId,
-    };
-    dispatch(deletePatientFromTimeslot(timeslot));
-  };
 
   const handleChipClick = (timeslot: Timeslot) => {
     if (timeslot.patientId === null) {
@@ -142,6 +117,7 @@ const TimetableList = ({ physicianId }: Props) => {
                   {pickedTimeslot.physicianId
                     ? ` ID: ${pickedTimeslot.physicianId.slice(0, 8)}.`
                     : ' No Id'}
+                  Pat ID: {pickedTimeslot.patientId}
                 </div>
               </TableCell>
             </TableRow>
@@ -179,13 +155,6 @@ const TimetableList = ({ physicianId }: Props) => {
                               onClick={handleChipClick}
                               key={timeslot.id}
                               selected={isSelected(timeslot.id)}
-                              onCancelAppointment={() =>
-                                handleRemovePatientFromTimeslot(
-                                  physicianId,
-                                  date,
-                                  timeslot.patientId,
-                                )
-                              }
                             />
                           );
                         })}

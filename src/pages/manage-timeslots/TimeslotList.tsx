@@ -74,7 +74,7 @@ const TimeslotList = ({ physicianId }: Props) => {
   };
 
   const handleDeleteTimeslot = (): void => {
-    dispatch(deleteTimeslot(timeslot));
+    dispatch(deleteTimeslot(timeslot.id));
     setLoadData();
     setOpenConfirm();
   };

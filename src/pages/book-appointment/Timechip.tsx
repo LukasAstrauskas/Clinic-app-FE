@@ -14,7 +14,6 @@ interface Props {
   selected: boolean;
   onDelete?: (timeslot: Timeslot) => void;
   onClick: (timeslot: Timeslot) => void;
-  onCancelAppointment?: () => void;
 }
 
 const freeTimeSX = (selected: boolean) => {
@@ -50,14 +49,7 @@ const bookedTimeSX = {
   },
 };
 
-const Timechip = ({
-  timeslot,
-  date,
-  selected,
-  onDelete,
-  onClick,
-  onCancelAppointment,
-}: Props) => {
+const Timechip = ({ timeslot, date, selected, onDelete, onClick }: Props) => {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const type = useAppSelector(selectLoggedUserType);
@@ -87,12 +79,10 @@ const Timechip = ({
         />
         <TimechipPopper
           patientId={timeslot.patientId}
+          timeslotId={timeslot.id}
           open={open}
           setOpen={setOpen}
           anchorEl={anchorEl}
-          onCancelAppointment={() =>
-            onCancelAppointment && onCancelAppointment()
-          }
         />
       </>
     );

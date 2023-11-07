@@ -7,8 +7,8 @@ import {
   getTimeslots,
   deleteTimeslot,
   postTimeslot,
-  deletePatientFromTimeslot,
   deletePatientFromUpcomingTimeslot,
+  cancelAppointment,
 } from './timeslotActions';
 import { bearerToken } from '../../../authentication/authHeader';
 
@@ -106,15 +106,15 @@ export const timeslotSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message ?? 'Failed to delete.';
       })
-      .addCase(deletePatientFromTimeslot.pending, (state) => {
+      .addCase(cancelAppointment.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(deletePatientFromTimeslot.fulfilled, (state) => {
+      .addCase(cancelAppointment.fulfilled, (state) => {
         state.status = 'succeeded';
         state.error = null;
       })
-      .addCase(deletePatientFromTimeslot.rejected, (state, action) => {
+      .addCase(cancelAppointment.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message ?? 'Failed to delete.';
       })

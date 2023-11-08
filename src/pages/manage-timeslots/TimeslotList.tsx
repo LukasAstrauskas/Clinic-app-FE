@@ -121,24 +121,40 @@ const TimeslotList = ({ physicianId }: Props) => {
     setPickDate(dayjs().date(1));
   }, [physicianId]);
 
-  const renderAddNewTimeslotButton = (date: string) =>
-    dayjs(date).endOf('day').isAfter(dayjs()) && (
+  // const RenderAddNewTimeslotButton = (date: string) =>
+  //   dayjs(date).endOf('day').isAfter(dayjs()) ? (
+  //     <Chip
+  //       label='+ NEW'
+  //       sx={{ backgroundColor: teal['A400'], mt: 0.5 }}
+  //       onClick={() => handleOpenModal(date)}
+  //     />
+  //   ) : (
+  //     <></>
+  //   );
+
+  interface BtnProps {
+    date: string;
+  }
+
+  const RenderAddNewTimeslotButton = ({ date }: BtnProps) => {
+    return dayjs(date).endOf('day').isAfter(dayjs()) ? (
       <Chip
         label='+ NEW'
         sx={{ backgroundColor: teal['A400'], mt: 0.5 }}
         onClick={() => handleOpenModal(date)}
       />
-    );
-
-  const renderAddNewDateButton = () => {
-    return (
-      <Chip
-        label='+ New Date'
-        sx={{ fontWeight: 'normal', backgroundColor: teal['A400'] }}
-        onClick={handleNewDateButton}
-      />
+    ) : (
+      <></>
     );
   };
+
+  const RenderAddNewDateButton = () => (
+    <Chip
+      label='+ New Date'
+      sx={{ fontWeight: 'normal', backgroundColor: teal['A400'] }}
+      onClick={handleNewDateButton}
+    />
+  );
 
   return (
     <>
@@ -183,7 +199,9 @@ const TimeslotList = ({ physicianId }: Props) => {
                   }}
                 >
                   Time
-                  {renderAddNewDateButton()}
+                  {pickDate.endOf('month').isAfter(dayjs()) && (
+                    <RenderAddNewDateButton />
+                  )}
                 </div>
               </TableCell>
             </TableRow>
@@ -225,7 +243,7 @@ const TimeslotList = ({ physicianId }: Props) => {
                             />
                           );
                         })}
-                        {renderAddNewTimeslotButton(date)}
+                        <RenderAddNewTimeslotButton date={date} />
                       </Stack>
                     </TableCell>
                   </TableRow>

@@ -40,14 +40,20 @@ const BookAppointment = () => {
   };
 
   const bookAppointment = async () => {
+    let message = '';
     await dispatch(bookTimeslot(timeslot))
-      .then((resultAction) => {
-        unwrapResult(resultAction);
-        setConfirmationMessage('Appointment booked successfully!');
-        setIsConfirmationOpen(true);
+      .unwrap()
+      .then((result) => {
+        // const array: Timeslot[] = result.data;
+        message = 'Appointment booked successfully!';
       })
       .catch(() => {
-        setIsErrorModalOpen(true);
+        // setIsErrorModalOpen(true);
+        message = 'You have already booked appointment with this physician. ';
+      })
+      .finally(() => {
+        setConfirmationMessage(message);
+        setIsConfirmationOpen(true);
       });
   };
 

@@ -67,7 +67,7 @@ const Timechip = ({ timeslot, date, selected, onDelete, onClick }: Props) => {
     }
   };
 
-  if (typeof onDelete === 'undefined') {
+  if (onDelete === undefined) {
     return (
       <>
         <Chip
@@ -88,14 +88,23 @@ const Timechip = ({ timeslot, date, selected, onDelete, onClick }: Props) => {
     );
   } else {
     return (
-      <Chip
-        label={time}
-        variant='outlined'
-        disabled={isInFuture}
-        onDelete={() => onDelete(timeslot)}
-        onClick={() => onClick(timeslot)}
-        sx={timeslot.patientId === null ? freeTimeSX(selected) : bookedTimeSX}
-      />
+      <>
+        <Chip
+          label={time}
+          variant='outlined'
+          disabled={isInFuture}
+          onDelete={() => onDelete(timeslot)}
+          onClick={handleClick}
+          sx={timeslot.patientId === null ? freeTimeSX(selected) : bookedTimeSX}
+        />
+        <TimechipPopper
+          patientId={timeslot.patientId}
+          timeslotId={timeslot.id}
+          open={open}
+          setOpen={setOpen}
+          anchorEl={anchorEl}
+        />
+      </>
     );
   }
 };

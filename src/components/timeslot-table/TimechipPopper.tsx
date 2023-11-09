@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Box, Popper, Button, Typography } from '@mui/material';
-import Styles from '../../components/styles/UserManagmentStyles';
+import Styles from '../styles/UserManagmentStyles';
 import { fetchPatientInfo } from '../../store/slices/patient/patientSlice';
-import { selectUserName } from '../../store/slices/user/userSlice';
-import PatientInfoModal from '../../components/modals/PatientInfoModal';
+import { selectUserName } from '../../store/slices/manage-users/userSlice';
+import PatientInfoModal from '../modals/PatientInfoModal';
 import { cancelAppointment } from '../../store/slices/timeslot/timeslotActions';
 
 interface Props {

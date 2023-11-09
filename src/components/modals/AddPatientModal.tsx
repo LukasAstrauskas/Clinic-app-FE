@@ -15,7 +15,7 @@ import {
   isValidPassword,
   isValidEmail,
 } from '../utils';
-import { createUser } from '../../store/slices/user/userSlice';
+import { createUser } from '../../store/slices/manage-users/userSlice';
 import { CreateUserDTO } from '../../model/Model';
 
 interface Props {

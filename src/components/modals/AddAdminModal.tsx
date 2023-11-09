@@ -16,7 +16,7 @@ import {
   isValidEmail,
 } from '../utils';
 import { CreateUserDTO } from '../../model/Model';
-import { createUser } from '../../store/slices/user/userSlice';
+import { createUser } from '../../store/slices/manage-users/userSlice';
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;

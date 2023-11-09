@@ -1,21 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { Dayjs } from 'dayjs';
-import {
-  GroupedTimeslots,
-  PatientAppointment,
-  Timeslot,
-} from '../../../model/Model';
+import { GroupedTimeslots, Timeslot } from '../../../model/Model';
 import {
   BASE_URL,
+  BOOK_APPOINTMENT,
   CANCEL_APPOINTMENT,
   GET_TIMESLOTS,
   TIMESLOT,
 } from '../../../utils/httpConstants';
 import authHeader, { bearerToken } from '../../../authentication/authHeader';
-import { store } from '../../store';
-import { useAppDispatch } from '../../hooks';
-import { addAppointment, logout } from '../loggedUser/loggedUserSlice';
 
 type GetProps = {
   id: string;
@@ -115,21 +109,37 @@ export const postTimeslot = createAsyncThunk(
   },
 );
 
-export const patientBookTimeslot = createAsyncThunk(
+// export const patientBookTimeslot = createAsyncThunk(
+//   'timeslot/bookTimeslot',
+//   async (appointment: Timeslot) => {
+//     await axios
+//       .patch('http://localhost:8080/timeslot', appointment, {
+//         headers: authHeader(),
+//       })
+//       .then((resp) => {
+//         const appointment = resp.data as PatientAppointment;
+//         addAppointment(appointment);
+//       })
+//       .catch((error) => {
+//         throw new Error(
+//           `You already have an appointment with this physician: ${error.message}`,
+//         );
+//       });
+//   },
+// );
+
+export const bookTimeslot = createAsyncThunk(
   'timeslot/bookTimeslot',
   async (appointment: Timeslot) => {
-    await axios
-      .patch('http://localhost:8080/timeslot', appointment, {
-        headers: authHeader(),
-      })
-      .then((resp) => {
-        const appointment = resp.data as PatientAppointment;
-        addAppointment(appointment);
+    const resp = await axios
+      .patch(`${BASE_URL}${TIMESLOT}${BOOK_APPOINTMENT}`, appointment, {
+        headers: bearerToken(),
       })
       .catch((error) => {
         throw new Error(
           `You already have an appointment with this physician: ${error.message}`,
         );
       });
+    return resp;
   },
 );

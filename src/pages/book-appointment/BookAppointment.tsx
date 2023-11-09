@@ -13,14 +13,15 @@ import { ROUTES } from '../../routes/routes';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import ErrorModal from '../../components/modals/ErrorModal';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { selectTimeslot } from '../../store/slices/timeslot/timeslotSlice';
 import {
   bookTimeslot,
-  selectTimeslot,
-} from '../../store/slices/timeslot/timeslotSlice';
-import { deletePatientFromUpcomingTimeslot } from '../../store/slices/timeslot/timeslotActions';
+  deletePatientFromUpcomingTimeslot,
+} from '../../store/slices/timeslot/timeslotActions';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
 import { PATIENT, PHYSICIAN } from '../../utils/Users';
+import UserTable from './UserTable';
 
 const BookAppointment = () => {
   const type = useAppSelector(selectLoggedUserType);
@@ -93,7 +94,7 @@ const BookAppointment = () => {
           <Stack style={{ alignItems: 'center' }}>
             <h1 style={{ margin: 0 }}>Select Patient</h1>
             <Typography variant='h1'>
-              <Patients />
+              <UserTable />
             </Typography>
             {appointmentInfo}
           </Stack>
@@ -127,9 +128,7 @@ const BookAppointment = () => {
             <Button
               variant='contained'
               onClick={bookAppointment}
-              disabled={
-                timeslot.patientId === undefined || timeslot.date === ''
-              }
+              disabled={timeslot.patientId === ''}
               sx={Styles.createNewUserBtn}
             >
               Book an appointment
@@ -150,7 +149,7 @@ const BookAppointment = () => {
               variant='contained'
               onClick={setBookingStep}
               sx={Styles.createNewUserBtn}
-              // disabled={!appointment.date}
+              disabled={timeslot.id === ''}
             >
               Next
               <ArrowForwardIcon />

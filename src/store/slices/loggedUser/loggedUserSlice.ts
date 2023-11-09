@@ -14,10 +14,9 @@ import {
 } from '../../../utils/httpConstants';
 import { RootState } from '../../reducers';
 import { bearerToken } from '../../../authentication/authHeader';
-import { bookTimeslot } from '../timeslot/timeslotSlice';
 import { Status } from '../../../utils/Status';
 import { PATIENT } from '../../../utils/Users';
-import { cancelAppointment } from '../timeslot/timeslotActions';
+import { bookTimeslot, cancelAppointment } from '../timeslot/timeslotActions';
 
 interface LoggedUserState {
   loggedUser: LoggedUser;

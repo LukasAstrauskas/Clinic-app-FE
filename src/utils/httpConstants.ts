@@ -8,6 +8,7 @@ export const PAST_APPOINTMENTS = '/patientPastAppointments';
 export const PAST_APPOINTMENTS_AMOUNT = '/patientPastAppointmentsAmount';
 export const CANCEL_APPOINTMENT = '/cancelAppointment';
 export const GET_TIMESLOTS = '/getMonthsTimeslots';
+export const BOOK_APPOINTMENT = '/bookAppointment';
 
 export const PATIENT_INFO = '/patientInfo';
 

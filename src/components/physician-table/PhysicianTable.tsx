@@ -21,7 +21,7 @@ import {
   fetchPhysicianAmount,
   selectUserSize,
 } from '../../store/slices/userSize/userSizeSlice';
-import { getUsers } from '../../store/slices/user/userActios';
+import { getUsers } from '../../store/slices/manage-users/userActios';
 
 type Props = {
   isSearch: boolean;

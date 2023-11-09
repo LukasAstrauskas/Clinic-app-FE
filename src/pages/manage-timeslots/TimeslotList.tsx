@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Timechip from '../book-appointment/Timechip';
+import Timechip from '../../components/timeslot-table/Timechip';
 import { Chip, Stack } from '@mui/material';
 import TimeslotModal from '../../components/modals/TimeslotModal';
 import TimeslotSetDateModal from '../../components/modals/TimeslotSetDateModal';
@@ -15,11 +15,10 @@ import { getWeekDay } from '../../components/utils';
 import AlertModal from '../../components/modals/AlertModal';
 import useToggle from '../../hooks/useToggle';
 import { grey, teal } from '@mui/material/colors';
-// import { selectId, selectType } from '../../store/slices/auth/authSlice';
 import dayjs, { Dayjs } from 'dayjs';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectTimeslots } from '../../store/slices/timeslot/timeslotSlice';
-import MonthPicker from '../book-appointment/MonthPicker';
+import MonthPicker from '../../components/timeslot-table/MonthPicker';
 import {
   deleteTimeslot,
   getTimeslots,
@@ -96,15 +95,6 @@ const TimeslotList = ({ physicianId }: Props) => {
   };
 
   useEffect(() => {
-    // setAppointment((appointment) => {
-    //   return {
-    //     ...appointment,
-    //     patientId: type === 'patient' ? loggedInUserId : undefined,
-    //     physicianId: physicianId,
-    //     date: '',
-    //     time: '',
-    //   };
-    // });
     setTimeslot({ ...timeslot, physicianId: physicianId });
   }, [physicianId]);
 
@@ -120,17 +110,6 @@ const TimeslotList = ({ physicianId }: Props) => {
   useEffect(() => {
     setPickDate(dayjs().date(1));
   }, [physicianId]);
-
-  // const RenderAddNewTimeslotButton = (date: string) =>
-  //   dayjs(date).endOf('day').isAfter(dayjs()) ? (
-  //     <Chip
-  //       label='+ NEW'
-  //       sx={{ backgroundColor: teal['A400'], mt: 0.5 }}
-  //       onClick={() => handleOpenModal(date)}
-  //     />
-  //   ) : (
-  //     <></>
-  //   );
 
   interface BtnProps {
     date: string;

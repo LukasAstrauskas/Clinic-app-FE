@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Timechip from './Timechip';
+import Timechip from '../../components/timeslot-table/Timechip';
 import { Chip, Stack } from '@mui/material';
 import { Timeslot } from '../../model/Model';
 import { getWeekDay } from '../../components/utils';
@@ -18,7 +18,7 @@ import {
   selectTimeslot,
   selectTimeslots,
 } from '../../store/slices/timeslot/timeslotSlice';
-import MonthPicker from './MonthPicker';
+import MonthPicker from '../../components/timeslot-table/MonthPicker';
 import { getTimeslots } from '../../store/slices/timeslot/timeslotActions';
 
 type Props = {
@@ -54,6 +54,10 @@ const TimetableList = ({ physicianId }: Props) => {
       );
     }
   };
+
+  useEffect(() => {
+    console.log('Timeslots list state changed');
+  }, [groupedTimeslots]);
 
   const isSelected = (id: string) => {
     return id === pickedTimeslot.id;

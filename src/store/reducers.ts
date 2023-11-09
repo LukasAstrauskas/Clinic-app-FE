@@ -4,12 +4,13 @@ import { authSlice } from './slices/auth/authSlice';
 import { patientSlice } from './slices/patient/patientSlice';
 import { adminSlice } from './slices/admin/adminSlice';
 import { physicianSlice } from './slices/physician/physicianSlice';
-import { userSlice } from './slices/user/userSlice';
+import { userSlice } from './slices/manage-users/userSlice';
 import { userSizeSlice } from './slices/userSize/userSizeSlice';
 import { occupationSlice } from './slices/occupation/occupationSlice';
 import { timeslotSlice } from './slices/timeslot/timeslotSlice';
 import loggedUserReducer from './slices/loggedUser/loggedUserSlice';
 import { appointmentSlice } from './slices/appointment/appointmentSlice';
+import { patientsSlice } from './slices/users/patientsSlice';
 // import appointmentReducer from './slices/appointment/appointmentSlice';
 // import loggedUserSlice from './slices/loggedUser/loggedUserSlice';
 
@@ -28,6 +29,7 @@ const appReducer = combineReducers({
   loggedUser: loggedUserReducer,
   // appointment: appointmentReducer,
   appointment: appointmentSlice.reducer,
+  patients: patientsSlice.reducer,
 });
 
 export const rootReducer: Reducer<

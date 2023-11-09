@@ -15,10 +15,8 @@ import TableHeadComponent from '../../components/manage-users-tables/TableHeadCo
 import Styles from '../../components/styles/UserManagmentStyles';
 import TableBodyComponent from '../../components/manage-users-tables/TableBodyComponent';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import {
-  bookTimeslot,
-  selectTimeslot,
-} from '../../store/slices/timeslot/timeslotSlice';
+import { selectTimeslot } from '../../store/slices/timeslot/timeslotSlice';
+import { bookTimeslot } from '../../store/slices/timeslot/timeslotActions';
 
 export const searchBaraSx = (isSelected: string) => {
   return {

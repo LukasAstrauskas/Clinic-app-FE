@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Chip } from '@mui/material';
 import { red, teal } from '@mui/material/colors';
 import TimechipPopper from './TimechipPopper';
-import { fetchUserById } from '../../store/slices/user/userSlice';
+import { fetchUserById } from '../../store/slices/manage-users/userSlice';
 import { Timeslot } from '../../model/Model';
 import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
 import dayjs from 'dayjs';
@@ -75,7 +75,10 @@ const Timechip = ({ timeslot, date, selected, onDelete, onClick }: Props) => {
           variant='outlined'
           disabled={isInFuture}
           onClick={handleClick}
-          sx={timeslot.patientId === null ? freeTimeSX(selected) : bookedTimeSX}
+          sx={
+            // timeslot.patientId === null || timeslot.patientId === ''
+            !timeslot.patientId ? freeTimeSX(selected) : bookedTimeSX
+          }
         />
         <TimechipPopper
           patientId={timeslot.patientId}

@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { isValidName, isValidEmail, isValidPasswordOrEmpty } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { updateUser } from '../../store/slices/user/userSlice';
+import { updateUser } from '../../store/slices/manage-users/userSlice';
 import {
   fetchOccupations,
   selectOccupations,

@@ -9,8 +9,8 @@ import {
   postTimeslot,
   deletePatientFromUpcomingTimeslot,
   cancelAppointment,
+  bookTimeslot,
 } from './timeslotActions';
-import { bearerToken } from '../../../authentication/authHeader';
 
 interface TimeslotState {
   groupedTimeslots: GroupedTimeslots[];
@@ -19,33 +19,19 @@ interface TimeslotState {
   error: string | null;
 }
 
+const emptyTimeslot = {
+  id: '',
+  physicianId: '',
+  date: '',
+  patientId: '',
+};
+
 const initialState: TimeslotState = {
   groupedTimeslots: [],
-  selectedTimeslot: {
-    id: '',
-    physicianId: '',
-    date: '',
-    patientId: '',
-  },
+  selectedTimeslot: emptyTimeslot,
   status: 'idle',
   error: null,
 };
-
-export const bookTimeslot = createAsyncThunk(
-  'timeslot/bookTimeslot',
-  async (appointment: Timeslot) => {
-    const resp = await axios
-      .patch('http://localhost:8080/timeslot/bookAppointment', appointment, {
-        headers: bearerToken(),
-      })
-      .catch((error) => {
-        throw new Error(
-          `You already have an appointment with this physician: ${error.message}`,
-        );
-      });
-    return resp;
-  },
-);
 
 export const timeslotSlice = createSlice({
   name: 'timeslot',
@@ -77,6 +63,7 @@ export const timeslotSlice = createSlice({
       .addCase(bookTimeslot.fulfilled, (state) => {
         state.status = 'succeeded';
         state.error = null;
+        state.selectedTimeslot = emptyTimeslot;
       })
       .addCase(bookTimeslot.rejected, (state, action) => {
         state.status = 'failed';
@@ -110,13 +97,29 @@ export const timeslotSlice = createSlice({
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(cancelAppointment.fulfilled, (state) => {
+      .addCase(cancelAppointment.fulfilled, (state, action) => {
+        const arr: GroupedTimeslots[] = state.groupedTimeslots.map(
+          ({ date, timeslots }) => {
+            return {
+              date: date,
+              timeslots: timeslots.map((timeslot) => {
+                if (timeslot.id === action.payload) {
+                  return { ...timeslot, patientId: '' };
+                } else {
+                  return timeslot;
+                }
+              }),
+            };
+          },
+        );
+        state.groupedTimeslots = arr;
         state.status = 'succeeded';
         state.error = null;
+        console.log(JSON.stringify(state.groupedTimeslots));
       })
       .addCase(cancelAppointment.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message ?? 'Failed to delete.';
+        state.error = action.error.message ?? 'Failed to cancel appoinment.';
       })
       .addCase(postTimeslot.pending, (state) => {
         state.status = 'loading';
@@ -139,10 +142,10 @@ export const selectTimeslotState = (state: RootState) => state.timeslot;
 export const selectTimeslot = (state: RootState) =>
   state.timeslot.selectedTimeslot;
 
-// export const selectTimeslots = (state: RootState) =>
-//   selectTimeslotState(state).timeslots;
-
 export const selectTimeslots = (state: RootState) =>
-  selectTimeslotState(state).groupedTimeslots;
+  state.timeslot.groupedTimeslots;
+
+// export const selectTimeslots = (state: RootState) =>
+//   selectTimeslotState(state).groupedTimeslots;
 
 export default timeslotSlice.reducer;

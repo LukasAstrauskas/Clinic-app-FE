@@ -34,7 +34,7 @@ import {
   selectUserSize,
 } from '../../store/slices/userSize/userSizeSlice';
 import EditUserModal from '../modals/EditUserModal';
-import { deleteUser } from '../../store/slices/user/userSlice';
+import { deleteUser } from '../../store/slices/manage-users/userSlice';
 
 interface Props {
   userList: User[];

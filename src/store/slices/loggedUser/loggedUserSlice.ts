@@ -37,8 +37,6 @@ const userString = JSON.stringify({
   pastAppointment: [],
 });
 
-// console.log(userString);
-
 const user: LoggedUser = JSON.parse(
   localStorage.getItem('loggedUser') || userString,
 );

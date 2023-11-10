@@ -21,6 +21,7 @@ const ManageTimeslots = ({ tableTitle = 'Physicians' }: props) => {
   const dispatch = useAppDispatch();
   const [isSearch, setIsSearch] = useState(false);
 
+  // this method is called on component mount
   const handleSearch = (search: string, occupation: string) => {
     if (search.length != 0 || occupation) {
       dispatch(searchPhysician({ search, occupation }));

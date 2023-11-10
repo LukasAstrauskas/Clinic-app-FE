@@ -113,9 +113,10 @@ const TimeslotList = ({ physicianId }: Props) => {
 
   interface BtnProps {
     date: string;
+    elX?: string;
   }
 
-  const RenderAddNewTimeslotButton = ({ date }: BtnProps) => {
+  const RenderAddNewTimeslotButton = ({ date, elX = 'ElX' }: BtnProps) => {
     return dayjs(date).endOf('day').isAfter(dayjs()) ? (
       <Chip
         label='+ NEW'

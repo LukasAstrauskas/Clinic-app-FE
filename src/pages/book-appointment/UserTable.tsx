@@ -23,29 +23,19 @@ import {
   pickTimeslot,
   selectTimeslot,
 } from '../../store/slices/timeslot/timeslotSlice';
-import { PATIENT, PHYSICIAN } from '../../utils/Users';
-
-type Patiento = {
-  id: number;
-  name: string;
-  email: string;
-};
-
-const optData: Patiento[] = [
-  { id: 1, name: 'Perl', email: 'perl@ml' },
-  { id: 2, name: 'Gregor', email: 'greg@ml' },
-  { id: 3, name: 'Orlova', email: 'orl@ml' },
-];
+import { PATIENT } from '../../utils/Users';
 
 type tableProps = {
-  data?: Patiento[];
+  data?: User[];
 };
 
-const UserTable = ({ data = optData }: tableProps) => {
+const UserTable = ({ data }: tableProps) => {
   const dispach = useAppDispatch();
   const timeslot = useAppSelector(selectTimeslot);
   const patients = useAppSelector(selectPatients);
   const [selectedID, setSelectedID] = useState('');
+
+  console.log(data?.length);
 
   const rowClick = (id: string) => {
     setSelectedID(id);
@@ -53,7 +43,13 @@ const UserTable = ({ data = optData }: tableProps) => {
   };
 
   useEffect(() => {
-    dispach(getPatients({}));
+    if (patients.length === 0) {
+      dispach(getPatients({}));
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(patients);
   }, []);
 
   const occup = (occup: Occupation | null) => {
@@ -63,6 +59,12 @@ const UserTable = ({ data = optData }: tableProps) => {
   const colName = (type: string) => {
     return type === PATIENT ? 'Patient' : 'Occup';
   };
+
+  const occupHeadCell = (
+    <TableCell align='right' sx={{ fontWeight: 'bold' }}>
+      {colName(PATIENT)}
+    </TableCell>
+  );
 
   return (
     <TableContainer
@@ -99,9 +101,7 @@ const UserTable = ({ data = optData }: tableProps) => {
             <TableCell align='right' sx={{ fontWeight: 'bold' }}>
               EMAIL
             </TableCell>
-            <TableCell align='right' sx={{ fontWeight: 'bold' }}>
-              {colName(PATIENT)}
-            </TableCell>
+            {occupHeadCell}
           </TableRow>
         </TableHead>
         <TableBody>

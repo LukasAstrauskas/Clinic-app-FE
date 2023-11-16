@@ -24,6 +24,7 @@ import {
   selectTimeslot,
 } from '../../store/slices/timeslot/timeslotSlice';
 import { PATIENT } from '../../utils/Users';
+import UserSearchBar from './UserSearchBar';
 
 type tableProps = {
   data?: User[];
@@ -33,7 +34,7 @@ const UserTable = ({ data }: tableProps) => {
   const dispach = useAppDispatch();
   const timeslot = useAppSelector(selectTimeslot);
   const patients = useAppSelector(selectPatients);
-  const [selectedID, setSelectedID] = useState('');
+  const [selectedID, setSelectedID] = useState(timeslot.patientId || '');
 
   console.log(data?.length);
 
@@ -82,6 +83,7 @@ const UserTable = ({ data }: tableProps) => {
           <Typography variant='body2'> Pat ID {timeslot.patientId}</Typography>
         </CardContent>
       </Card>
+      <UserSearchBar />
       <Table
         size='small'
         aria-label='a dense table'

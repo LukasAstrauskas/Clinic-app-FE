@@ -39,6 +39,9 @@ Props) => {
 
   const onCancelAppointment = () => {
     dispatch(cancelAppointment(timeslotId));
+    setTimeout(() => {
+      setOpen(false);
+    }, 500);
   };
 
   return (

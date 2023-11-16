@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import TimetablesContainer from './TimetablesContainer';
 import { Box, Button, Stack, Typography } from '@mui/material';
-import Patients from '../manage-users/Patients';
 import useToggle from '../../hooks/useToggle';
-import { Timeslot } from '../../model/Model';
 import Styles from '../../components/styles/UserManagmentStyles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -18,13 +16,14 @@ import {
   bookTimeslot,
   deletePatientFromUpcomingTimeslot,
 } from '../../store/slices/timeslot/timeslotActions';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
-import { PATIENT, PHYSICIAN } from '../../utils/Users';
+import { PHYSICIAN } from '../../utils/Users';
 import UserTable from './UserTable';
+import { selectPhysician } from '../../store/slices/physician/physicianSlice';
 
 const BookAppointment = () => {
   const type = useAppSelector(selectLoggedUserType);
+  const selectedPhysician = useAppSelector(selectPhysician);
   const dispatch = useAppDispatch();
   const [bookingStep, setBookingStep] = useToggle();
 
@@ -44,7 +43,7 @@ const BookAppointment = () => {
     let message = '';
     await dispatch(bookTimeslot(timeslot))
       .unwrap()
-      .then((result) => {
+      .then(() => {
         // const array: Timeslot[] = result.data;
         message = 'Appointment booked successfully!';
       })
@@ -75,7 +74,10 @@ const BookAppointment = () => {
 
   const appointmentInfo = (
     <Box style={{ textAlign: 'center', marginTop: 10 }}>
-      {'Selected Physician: '} <b>`Skip`</b>
+      Selected Physician:
+      <b>
+        {selectedPhysician.name} {selectedPhysician.surname}
+      </b>
       {' | Selected Time: '}
       <b>{timeslot.date}</b>
     </Box>

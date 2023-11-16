@@ -52,8 +52,12 @@ const TimeslotModal = ({
         date: dateString,
         patientId: '',
       }),
-    );
-    loadData();
+    )
+      .unwrap()
+      .then((response) => {
+        response && loadData();
+      });
+
     closeModal();
   };
 

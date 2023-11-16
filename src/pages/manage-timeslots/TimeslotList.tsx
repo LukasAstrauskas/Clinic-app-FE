@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Timechip from '../../components/timeslot-table/Timechip';
-import { Chip, Stack } from '@mui/material';
+import { Card, CardContent, Chip, Stack, Typography } from '@mui/material';
 import TimeslotModal from '../../components/modals/TimeslotModal';
 import TimeslotSetDateModal from '../../components/modals/TimeslotSetDateModal';
 import { Timeslot } from '../../model/Model';
@@ -17,7 +17,11 @@ import useToggle from '../../hooks/useToggle';
 import { grey, teal } from '@mui/material/colors';
 import dayjs, { Dayjs } from 'dayjs';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { selectTimeslots } from '../../store/slices/timeslot/timeslotSlice';
+import {
+  pickTimeslot,
+  selectTimeslot,
+  selectTimeslots,
+} from '../../store/slices/timeslot/timeslotSlice';
 import MonthPicker from '../../components/timeslot-table/MonthPicker';
 import {
   deleteTimeslot,
@@ -42,20 +46,20 @@ const TimeslotList = ({ physicianId }: Props) => {
   const [date, setDate] = useState('');
 
   const timeslots = useAppSelector(selectTimeslots);
+  const timeslot = useAppSelector(selectTimeslot);
 
-  const [timeslot, setTimeslot] = useState<Timeslot>({
-    id: '',
-    physicianId: '',
-    date: '',
-    patientId: '',
-  });
+  // const [timeslot, setTimeslot] = useState<Timeslot>({
+  //   id: '',
+  //   physicianId: '',
+  //   date: '',
+  //   patientId: '',
+  // });
 
   const [pickDate, setPickDate] = useState<Dayjs>(dayjs().date(1));
 
   const handleOpenModal = (date: string): void => {
     setOpenModal();
-    setTimeslot({ ...timeslot, date: date });
-    setDate('');
+    dispatch(pickTimeslot({ ...timeslot, date: date }));
   };
 
   const handleNewDateButton = () => {
@@ -65,7 +69,8 @@ const TimeslotList = ({ physicianId }: Props) => {
 
   const deleteButtonAction = (timeslot: Timeslot) => {
     if (timeslot.patientId === null) {
-      setTimeslot(timeslot);
+      // setTimeslot(timeslot);
+      dispatch(pickTimeslot(timeslot));
       setOpenConfirm();
     } else {
       toggleAlert();
@@ -79,7 +84,8 @@ const TimeslotList = ({ physicianId }: Props) => {
   };
 
   const handleChipClick = (timeslot: Timeslot): void => {
-    setTimeslot(timeslot);
+    dispatch(pickTimeslot(timeslot));
+    // setTimeslot(timeslot);
     // {
     //   patientId === null &&
     //     setAppointment({
@@ -95,7 +101,7 @@ const TimeslotList = ({ physicianId }: Props) => {
   };
 
   useEffect(() => {
-    setTimeslot({ ...timeslot, physicianId: physicianId });
+    dispatch(pickTimeslot({ ...timeslot, physicianId: physicianId }));
   }, [physicianId]);
 
   useEffect(() => {
@@ -105,6 +111,7 @@ const TimeslotList = ({ physicianId }: Props) => {
         date: pickDate,
       }),
     );
+    console.log('getTimeslots');
   }, [loadData, physicianId, pickDate]);
 
   useEffect(() => {
@@ -153,7 +160,15 @@ const TimeslotList = ({ physicianId }: Props) => {
                 colSpan={2}
                 sx={{ backgroundColor: grey[200] }}
               >
-                <>Manage timeslots</>
+                <Card sx={{ maxWidth: 350 }}>
+                  <CardContent>
+                    <Typography variant='body2'> Manage timeslots</Typography>
+                    <Typography variant='body2'>Ph ID {physicianId}</Typography>
+                    <Typography variant='body2'>
+                      Date {pickDate.format('YYYY-MM-DD HH:mm')}
+                    </Typography>
+                  </CardContent>
+                </Card>
                 <MonthPicker date={pickDate} setDate={setPickDate} />
               </TableCell>
             </TableRow>

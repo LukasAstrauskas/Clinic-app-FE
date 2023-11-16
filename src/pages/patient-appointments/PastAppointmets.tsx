@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Card, CardActions, CardContent, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import AppointmentSlot from './AppointmentSlot';
@@ -41,17 +41,22 @@ const PastAppointments = () => {
           overflow: 'auto',
         }}
       >
+        <Card sx={{ maxWidth: 150 }}>
+          <CardContent>
+            <Typography>Length rendered: {appointments.length}</Typography>
+            <Typography>Length total: {appointmentAmount}</Typography>
+          </CardContent>
+        </Card>
         <InfiniteScroll
           style={{ overflow: 'hidden' }}
           scrollableTarget='scrollBox'
           dataLength={appointments.length}
           next={fetchMoreAppointments}
-          hasMore={true}
+          hasMore={hasMore()}
           loader={
-            <></>
-            // <Typography variant='h5' sx={{ textAlign: 'center' }}>
-            //   loading...
-            // </Typography>
+            <Typography variant='h5' sx={{ textAlign: 'center' }}>
+              loading...
+            </Typography>
           }
           endMessage={
             <Typography variant='h5' sx={{ textAlign: 'center' }}>

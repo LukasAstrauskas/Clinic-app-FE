@@ -54,8 +54,10 @@ const PhysicianTable = ({ isSearch }: Props) => {
   };
 
   useEffect(() => {
-    dispatch(fetchPhysicianAmount());
-    dispatch(getUsers({}));
+    if (userSize === 0) {
+      dispatch(fetchPhysicianAmount());
+      dispatch(getUsers({}));
+    }
   }, []);
 
   return (

@@ -34,7 +34,7 @@ const TimetableList = ({ physicianId }: Props) => {
   const [pickDate, setPickDate] = useState<Dayjs>(dayjs().date(1));
 
   const handleChipClick = (timeslot: Timeslot) => {
-    if (timeslot.patientId === null) {
+    if (!timeslot.patientId) {
       dispatch(
         pickTimeslot({
           ...pickedTimeslot,

@@ -2,7 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_URL, USER } from '../../../utils/httpConstants';
 import { bearerToken } from '../../../authentication/authHeader';
-import { User } from '../../../model/Model';
 import { PHYSICIAN } from '../../../utils/Users';
 
 export const getUsers = createAsyncThunk(

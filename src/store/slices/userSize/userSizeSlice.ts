@@ -4,7 +4,6 @@ import {
   BASE_URL,
   PATIENTS_BY_PHYSICIANS_ID_SIZE_URL,
   PATIENT_SIZE_URL,
-  PHYSICIAN_SIZE_URL,
   USER,
 } from '../../../utils/httpConstants';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';

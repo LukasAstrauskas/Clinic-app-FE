@@ -9,7 +9,6 @@ import axios from 'axios';
 import { RootState } from '../../reducers';
 import authHeader from '../../../authentication/authHeader';
 import { getUsers } from '../manage-users/userActios';
-import userSlice from '../manage-users/userSlice';
 
 interface PhysicianState {
   physicians: User[];

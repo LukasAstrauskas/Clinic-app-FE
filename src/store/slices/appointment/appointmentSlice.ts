@@ -28,7 +28,7 @@ const initialState: AppointmentState = {
 export const fetchPatientPastAppointmentAmount = createAsyncThunk(
   'appointment/past-appointments-amount',
   async () => {
-    const response = await axios.get(
+    const response = await axios.get<number>(
       BASE_URL.concat(TIMESLOT).concat(PAST_APPOINTMENTS_AMOUNT),
       { headers: bearerToken() },
     );
@@ -57,7 +57,7 @@ export const appointmentSlice = createSlice({
   },
 });
 
-export const selectAppointments = (state: RootState) => state.appointment;
+export const selectAppointmentState = (state: RootState) => state.appointment;
 export const selectPastAppointmentsAmount = (state: RootState) =>
   state.appointment.pastAppointmentAmount;
 

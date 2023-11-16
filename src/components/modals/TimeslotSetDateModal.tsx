@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { Box, Button, Modal, Stack } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Modal,
+  Stack,
+  Typography,
+} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import AlertModal from './AlertModal';
 import useToggle from '../../hooks/useToggle';
@@ -36,6 +44,7 @@ const TimeslotSetDateModal = ({ openModal, closeModal, setDate }: Props) => {
 
   const handleDateSubmit = () => {
     const currentDate = new Date();
+    currentDate.setHours(0, 0, 0);
     const maxDate = new Date();
     const selectedDateObj = new Date(selectedDate);
     maxDate.setMonth(currentDate.getMonth() + 6);
@@ -65,6 +74,7 @@ const TimeslotSetDateModal = ({ openModal, closeModal, setDate }: Props) => {
       >
         <Box sx={style}>
           <h2 id='modal-title'>Choose a Date</h2>
+
           <TextField
             id='date-picker'
             label='Date'

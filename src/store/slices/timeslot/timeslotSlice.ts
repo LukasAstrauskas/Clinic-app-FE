@@ -1,7 +1,6 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { GroupedTimeslots, Timeslot } from '../../../model/Model';
-import axios from 'axios';
 import { RootState } from '../../reducers';
 import {
   getTimeslots,
@@ -104,6 +103,9 @@ export const timeslotSlice = createSlice({
               date: date,
               timeslots: timeslots.map((timeslot) => {
                 if (timeslot.id === action.payload) {
+                  console.log(timeslot.id + ' ' + timeslot.physicianId);
+                  const tstSlot = { ...timeslot, patientId: '' };
+                  console.log(tstSlot.id + ' ' + tstSlot.physicianId);
                   return { ...timeslot, patientId: '' };
                 } else {
                   return timeslot;

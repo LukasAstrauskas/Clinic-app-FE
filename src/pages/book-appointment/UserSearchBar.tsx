@@ -18,7 +18,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import useDebouncedSearch from '../../hooks/useDebouncedSearch';
 
 interface SearchProps {
-  onSearch: (value: string, searchBy: string) => void;
+  onSearch?: (value: string, searchBy: string) => void;
 }
 
 const PhysicianSearchBar = ({ onSearch }: SearchProps) => {
@@ -44,7 +44,7 @@ const PhysicianSearchBar = ({ onSearch }: SearchProps) => {
   }, []);
 
   useEffect(() => {
-    onSearch(debouncedSearchTerm, searchBy);
+    onSearch && onSearch(debouncedSearchTerm, searchBy);
   }, [debouncedSearchTerm, searchBy]);
 
   const [occupID, setOccupID] = useState('');

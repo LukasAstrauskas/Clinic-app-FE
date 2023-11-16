@@ -99,13 +99,13 @@ export const cancelAppointment = createAsyncThunk(
 export const postTimeslot = createAsyncThunk(
   'timeslot/ postTimeslot',
   async (timeslot: Timeslot) => {
-    await axios
-      .post(`${BASE_URL}${TIMESLOT}`, timeslot, {
-        headers: authHeader(),
-      })
-      .catch((error) => {
-        console.error('Error posting timeslot:', error);
-      });
+    const response = await axios.post(`${BASE_URL}${TIMESLOT}`, timeslot, {
+      headers: authHeader(),
+    });
+    // .catch((error) => {
+    //   console.error('Error posting timeslot:', error);
+    // });
+    return response.data as boolean;
   },
 );
 

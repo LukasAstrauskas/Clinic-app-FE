@@ -34,7 +34,7 @@ export const getPatients = createAsyncThunk(
     userType?: string;
   }) => {
     const responce = await axios.get(
-      ` ${BASE_URL}${USER}?offset=${offset}?userType=${userType}`,
+      ` ${BASE_URL}${USER}?offset=${offset}&userType=${userType}`,
       { headers: bearerToken() },
     );
     return responce.data;
@@ -47,7 +47,7 @@ export const patientsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getPatients.fulfilled, (state, action) => {
-      state.patients = action.payload;
+      state.patients = [...state.patients, ...action.payload];
       state.status = Status.SUCCEEDED;
       localStorage.setItem('patients', JSON.stringify(action.payload));
     });

@@ -23,19 +23,23 @@ import {
   pickTimeslot,
   selectTimeslot,
 } from '../../store/slices/timeslot/timeslotSlice';
-import { PATIENT } from '../../utils/Users';
+import { ADMIN, PATIENT, PHYSICIAN } from '../../utils/Users';
 import UserSearchBar from './UserSearchBar';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { off } from 'process';
 
 type tableProps = {
   data?: User[];
+  userType: typeof PATIENT | typeof PHYSICIAN | typeof ADMIN;
 };
 
-const UserTable = ({ data }: tableProps) => {
+const UserTable = ({ data, userType }: tableProps) => {
   const dispach = useAppDispatch();
   const timeslot = useAppSelector(selectTimeslot);
   const patients = useAppSelector(selectPatients);
   const [selectedID, setSelectedID] = useState(timeslot.patientId || '');
 
+  const offset = patients.length;
   console.log(data?.length);
 
   const rowClick = (id: string) => {
@@ -45,7 +49,7 @@ const UserTable = ({ data }: tableProps) => {
 
   useEffect(() => {
     if (patients.length === 0) {
-      dispach(getPatients({}));
+      dispach(getPatients({ offset, userType }));
     }
   }, []);
 
@@ -70,9 +74,13 @@ const UserTable = ({ data }: tableProps) => {
   return (
     <TableContainer
       component={Paper}
+      id='scrollBox'
       sx={{
         backgroundColor: grey[200],
         marginTop: 2,
+        border: 2,
+        height: 400,
+        overflow: 'auto',
       }}
     >
       <Card sx={{ maxWidth: 350 }}>
@@ -83,46 +91,60 @@ const UserTable = ({ data }: tableProps) => {
           <Typography variant='body2'> Pat ID {timeslot.patientId}</Typography>
         </CardContent>
       </Card>
-      <UserSearchBar />
-      <Table
-        size='small'
-        aria-label='a dense table'
-        sx={{
-          minWidth: 420,
+      <UserSearchBar type={PHYSICIAN} />
+
+      <InfiniteScroll
+        scrollableTarget='scrollBox'
+        next={() => {
+          console.log('fetch data');
+          dispach(getPatients({ offset, userType }));
         }}
+        hasMore={true}
+        loader={<></>}
+        dataLength={offset}
       >
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ fontWeight: 'bold' }}>ID {selectedID}</TableCell>
-            <TableCell align='right' sx={{ fontWeight: 'bold' }}>
-              NAME
-            </TableCell>
-            <TableCell align='right' sx={{ fontWeight: 'bold' }}>
-              SURNAME
-            </TableCell>
-            <TableCell align='right' sx={{ fontWeight: 'bold' }}>
-              EMAIL
-            </TableCell>
-            {occupHeadCell}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {patients.map((patient) => (
-            <TableRow
-              key={patient.id}
-              sx={tableRowSX(patient.id === selectedID)}
-              hover
-              onClick={() => rowClick(patient.id)}
-            >
-              <TableCell>{patient.id}</TableCell>
-              <TableCell align='right'>{patient.name}</TableCell>
-              <TableCell align='right'>{patient.surname}</TableCell>
-              <TableCell align='right'>{patient.email}</TableCell>
-              <TableCell align='right'>{occup(patient.occupation)}</TableCell>
+        <Table
+          size='medium'
+          aria-label='a dense table'
+          sx={{
+            // border: 2,
+            minWidth: 420,
+          }}
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ fontWeight: 'bold' }}>ID {selectedID}</TableCell>
+              <TableCell align='right' sx={{ fontWeight: 'bold' }}>
+                NAME
+              </TableCell>
+              <TableCell align='right' sx={{ fontWeight: 'bold' }}>
+                SURNAME
+              </TableCell>
+              <TableCell align='right' sx={{ fontWeight: 'bold' }}>
+                EMAIL
+              </TableCell>
+              {occupHeadCell}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+
+          <TableBody>
+            {patients.map((patient) => (
+              <TableRow
+                key={patient.id}
+                sx={tableRowSX(patient.id === selectedID)}
+                hover
+                onClick={() => rowClick(patient.id)}
+              >
+                <TableCell>{patient.id}</TableCell>
+                <TableCell align='right'>{patient.name}</TableCell>
+                <TableCell align='right'>{patient.surname}</TableCell>
+                <TableCell align='right'>{patient.email}</TableCell>
+                <TableCell align='right'>{occup(patient.occupation)}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </InfiniteScroll>
     </TableContainer>
   );
 };

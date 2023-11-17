@@ -17,7 +17,7 @@ import {
   deletePatientFromUpcomingTimeslot,
 } from '../../store/slices/timeslot/timeslotActions';
 import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
-import { PHYSICIAN } from '../../utils/Users';
+import { PATIENT, PHYSICIAN } from '../../utils/Users';
 import UserTable from './UserTable';
 import { selectPhysician } from '../../store/slices/physician/physicianSlice';
 
@@ -96,7 +96,7 @@ const BookAppointment = () => {
           <Stack style={{ alignItems: 'center' }}>
             <h1 style={{ margin: 0 }}>Select Patient</h1>
             <Typography variant='h1'>
-              <UserTable />
+              <UserTable userType={PATIENT} />
             </Typography>
             {appointmentInfo}
           </Stack>

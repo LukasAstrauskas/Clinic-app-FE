@@ -19,7 +19,7 @@ const patients: User[] = JSON.parse(localStorage.getItem('patients') || '[]');
 
 const initialState: PatientState = {
   patients: patients,
-  size: 0,
+  size: 100,
   status: Status.IDLE,
   error: null,
 };
@@ -49,7 +49,7 @@ export const patientsSlice = createSlice({
     builder.addCase(getPatients.fulfilled, (state, action) => {
       state.patients = [...state.patients, ...action.payload];
       state.status = Status.SUCCEEDED;
-      localStorage.setItem('patients', JSON.stringify(action.payload));
+      localStorage.setItem('patients', JSON.stringify(state.patients));
     });
   },
 });

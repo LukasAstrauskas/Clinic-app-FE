@@ -78,20 +78,25 @@ const UserTable = ({ data, userType }: tableProps) => {
       sx={{
         backgroundColor: grey[200],
         marginTop: 2,
-        border: 2,
-        height: 400,
-        overflow: 'auto',
+        // border: 2,
+        height: 320,
+        overflow: 'scroll',
       }}
     >
-      <Card sx={{ maxWidth: 350 }}>
-        <CardContent>
-          <Typography variant='body2'> ID {timeslot.id}</Typography>
-          <Typography variant='body2'> Ph ID {timeslot.physicianId}</Typography>
-          <Typography variant='body2'> Date {timeslot.date}</Typography>
-          <Typography variant='body2'> Pat ID {timeslot.patientId}</Typography>
-        </CardContent>
-      </Card>
-      <UserSearchBar type={PHYSICIAN} />
+      {/* <Card sx={{ maxWidth: 350 }}>
+          <CardContent>
+            <Typography variant='body2'> ID {timeslot.id}</Typography>
+            <Typography variant='body2'>
+              {' '}
+              Ph ID {timeslot.physicianId}
+            </Typography>
+            <Typography variant='body2'> Date {timeslot.date}</Typography>
+            <Typography variant='body2'>
+              {' '}
+              Pat ID {timeslot.patientId}
+            </Typography>
+          </CardContent>
+        </Card> */}
 
       <InfiniteScroll
         scrollableTarget='scrollBox'

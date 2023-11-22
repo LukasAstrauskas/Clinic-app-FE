@@ -17,13 +17,14 @@ import {
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import useDebouncedSearch from '../../hooks/useDebouncedSearch';
 import { PHYSICIAN } from '../../utils/Users';
+import useDebounce from '../../hooks/useDebounce';
 
 interface SearchProps {
-  onSearch?: (value: string, searchBy: string) => void;
+  onSearch: (search: string | null, occupationId?: string) => void;
   type: 'patient' | 'physician';
 }
 
-const PhysicianSearchBar = ({ onSearch, type }: SearchProps) => {
+const UserSearchBar = ({ onSearch, type }: SearchProps) => {
   const occupations = useAppSelector(selectOccupations);
 
   const dispatch = useAppDispatch();
@@ -31,13 +32,18 @@ const PhysicianSearchBar = ({ onSearch, type }: SearchProps) => {
   const [searchBy, setSearchBy] = useState('');
   const debouncedSearchTerm = useDebouncedSearch(searchTerm, 300);
 
-  const [text, setText] = useState('');
-  const delayedText = useDebouncedSearch(text, 500);
+  const [text, setText] = useState<string>('');
+  const [debouncedValue, setDebounce] = useDebounce(1000);
+  const [occupID, setOccupID] = useState('');
 
-  const textChange = (text: string) => {
-    console.log('text change');
-    setText(text);
-  };
+  useEffect(() => {
+    if (debouncedValue !== null || occupID !== '') {
+      const val = debouncedValue !== '' ? debouncedValue : 'Empty str';
+      // console.log('myhook:' + val);
+      // console.log('ID:' + occupID);
+      onSearch(debouncedValue, occupID);
+    }
+  }, [debouncedValue, occupID]);
 
   useEffect(() => {
     if (occupations.length === 0) {
@@ -45,11 +51,10 @@ const PhysicianSearchBar = ({ onSearch, type }: SearchProps) => {
     }
   }, []);
 
-  useEffect(() => {
-    onSearch && onSearch(debouncedSearchTerm, searchBy);
-  }, [debouncedSearchTerm, searchBy]);
-
-  const [occupID, setOccupID] = useState('');
+  // useEffect(() => {
+  //   console.log('Raw: ' + debouncedSearchTerm);
+  //   onSearch && onSearch(debouncedSearchTerm, searchBy);
+  // }, [debouncedSearchTerm, searchBy]);
 
   const handleOccupChange = (text: string) => {
     console.log('Occup change');
@@ -72,7 +77,7 @@ const PhysicianSearchBar = ({ onSearch, type }: SearchProps) => {
       spacing={1}
       sx={{
         marginBottom: 1,
-        border: 1,
+        // border: 1,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -92,9 +97,11 @@ const PhysicianSearchBar = ({ onSearch, type }: SearchProps) => {
           backgroundColor: '#ededed',
           width: '45%',
         }}
-        onChange={(event) => textChange(event.target.value)}
+        onChange={(event) => {
+          setDebounce(event.target.value);
+        }}
       />
-      {/* <TextField /> */}
+      <Chip label={debouncedValue} />
       {type === PHYSICIAN && (
         <FormControl
           size='small'
@@ -122,4 +129,4 @@ const PhysicianSearchBar = ({ onSearch, type }: SearchProps) => {
   );
 };
 
-export default PhysicianSearchBar;
+export default UserSearchBar;

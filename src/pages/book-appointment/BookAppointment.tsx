@@ -20,6 +20,7 @@ import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSl
 import { PATIENT, PHYSICIAN } from '../../utils/Users';
 import UserTable from './UserTable';
 import { selectPhysician } from '../../store/slices/physician/physicianSlice';
+import UserSearchBar from './UserSearchBar';
 
 const BookAppointment = () => {
   const type = useAppSelector(selectLoggedUserType);
@@ -72,6 +73,10 @@ const BookAppointment = () => {
     }
   };
 
+  const onSearch = (search: string | null, occupationId?: string) => {
+    console.log(`Delaeyd: ${search} ${occupationId}`);
+  };
+
   const appointmentInfo = (
     <Box style={{ textAlign: 'center', marginTop: 10 }}>
       Selected Physician:
@@ -96,6 +101,7 @@ const BookAppointment = () => {
           <Stack style={{ alignItems: 'center' }}>
             <h1 style={{ margin: 0 }}>Select Patient</h1>
             <Typography variant='h1'>
+              <UserSearchBar onSearch={onSearch} type={PATIENT} />
               <UserTable userType={PATIENT} />
             </Typography>
             {appointmentInfo}

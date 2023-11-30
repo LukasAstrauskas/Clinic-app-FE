@@ -11,7 +11,10 @@ import { ROUTES } from '../../routes/routes';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import ErrorModal from '../../components/modals/ErrorModal';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { selectTimeslot } from '../../store/slices/timeslot/timeslotSlice';
+import {
+  pickTimeslot,
+  selectTimeslot,
+} from '../../store/slices/timeslot/timeslotSlice';
 import {
   bookTimeslot,
   deletePatientFromUpcomingTimeslot,
@@ -21,6 +24,13 @@ import { PATIENT, PHYSICIAN } from '../../utils/Users';
 import UserTable from './UserTable';
 import { selectPhysician } from '../../store/slices/physician/physicianSlice';
 import UserSearchBar from './UserSearchBar';
+import {
+  clearPatients,
+  selectPatientSearch,
+  selectPatients,
+  setPatientSearch,
+} from '../../store/slices/users/patientsSlice';
+import { getUsers } from '../../store/slices/users/userActions';
 
 const BookAppointment = () => {
   const type = useAppSelector(selectLoggedUserType);
@@ -34,6 +44,10 @@ const BookAppointment = () => {
   const [confirmationMessage, setConfirmationMessage] = useState('');
 
   const timeslot = useAppSelector(selectTimeslot);
+
+  const patients = useAppSelector(selectPatients);
+  const search = useAppSelector(selectPatientSearch);
+  const patient = PATIENT;
 
   const handleConfirmationClose = () => {
     setIsConfirmationOpen(false);
@@ -73,8 +87,19 @@ const BookAppointment = () => {
     }
   };
 
-  const onSearch = (search: string | null, occupationId?: string) => {
-    console.log(`Delaeyd: ${search} ${occupationId}`);
+  const onSearch = (search: string, userType: string) => {
+    dispatch(setPatientSearch(search));
+    dispatch(clearPatients());
+    dispatch(
+      getUsers({
+        search,
+        userType,
+      }),
+    );
+  };
+
+  const rowClick = (id: string) => {
+    dispatch(pickTimeslot({ ...timeslot, patientId: id }));
   };
 
   const appointmentInfo = (
@@ -101,8 +126,14 @@ const BookAppointment = () => {
           <Stack style={{ alignItems: 'center' }}>
             <h1 style={{ margin: 0 }}>Select Patient</h1>
             <Typography variant='h1'>
-              <UserSearchBar onSearch={onSearch} type={PATIENT} />
-              <UserTable userType={PATIENT} />
+              <UserSearchBar onSearch={onSearch} userType={patient} />
+              <UserTable
+                userType={patient}
+                users={patients}
+                search={search}
+                onClick={rowClick}
+                selectedID={timeslot.patientId}
+              />
             </Typography>
             {appointmentInfo}
           </Stack>

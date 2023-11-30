@@ -1,6 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import type { Reducer } from '@reduxjs/toolkit';
-import { authSlice } from './slices/auth/authSlice';
 import { patientSlice } from './slices/patient/patientSlice';
 import { adminSlice } from './slices/admin/adminSlice';
 import { physicianSlice } from './slices/physician/physicianSlice';
@@ -19,7 +18,6 @@ export const resetStore = () => ({ type: 'RESET_STORE' });
 const appReducer = combineReducers({
   size: userSizeSlice.reducer,
   user: userSlice.reducer,
-  auth: authSlice.reducer,
   patient: patientSlice.reducer,
   physician: physicianSlice.reducer,
   admin: adminSlice.reducer,

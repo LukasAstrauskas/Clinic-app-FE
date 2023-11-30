@@ -16,45 +16,41 @@ import { tableRowSX } from '../../components/physician-table/PhysicianTable';
 import { Occupation, User } from '../../model/Model';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
-  getPatients,
-  selectPatients,
-} from '../../store/slices/users/patientsSlice';
-import {
   pickTimeslot,
   selectTimeslot,
 } from '../../store/slices/timeslot/timeslotSlice';
 import { ADMIN, PATIENT, PHYSICIAN } from '../../utils/Users';
-import UserSearchBar from './UserSearchBar';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { off } from 'process';
+import { getUsers } from '../../store/slices/users/userActions';
 
-type tableProps = {
-  data?: User[];
+type props = {
+  users: User[];
+  search: string;
   userType: typeof PATIENT | typeof PHYSICIAN | typeof ADMIN;
+  onClick?: (id: string) => void;
+  selectedID: string;
 };
 
-const UserTable = ({ data, userType }: tableProps) => {
+const UserTable = ({
+  users,
+  search,
+  userType,
+  onClick = (id) => {
+    console.log(`Clicked: ${id}`);
+  },
+  selectedID,
+}: props) => {
   const dispach = useAppDispatch();
-  const timeslot = useAppSelector(selectTimeslot);
-  const patients = useAppSelector(selectPatients);
-  const [selectedID, setSelectedID] = useState(timeslot.patientId || '');
-
-  const offset = patients.length;
-  console.log(data?.length);
-
-  const rowClick = (id: string) => {
-    setSelectedID(id);
-    dispach(pickTimeslot({ ...timeslot, patientId: id }));
-  };
+  const offset = users.length;
 
   useEffect(() => {
-    if (patients.length === 0) {
-      dispach(getPatients({ offset, userType }));
+    if (users.length === 0) {
+      dispach(getUsers({ offset, userType }));
     }
   }, []);
 
   useEffect(() => {
-    console.log(patients);
+    console.log(users);
   }, []);
 
   const occup = (occup: Occupation | null) => {
@@ -67,10 +63,15 @@ const UserTable = ({ data, userType }: tableProps) => {
 
   const occupHeadCell = (
     <TableCell align='right' sx={{ fontWeight: 'bold' }}>
-      {colName(PATIENT)}
+      Occupation
     </TableCell>
   );
 
+  const occupBodyCell = (user: User) => (
+    <TableCell align='right' sx={{ fontWeight: 'bold' }}>
+      {user.occupation?.name}
+    </TableCell>
+  );
   return (
     <TableContainer
       component={Paper}
@@ -84,25 +85,20 @@ const UserTable = ({ data, userType }: tableProps) => {
       }}
     >
       {/* <Card sx={{ maxWidth: 350 }}>
-          <CardContent>
-            <Typography variant='body2'> ID {timeslot.id}</Typography>
-            <Typography variant='body2'>
-              {' '}
-              Ph ID {timeslot.physicianId}
-            </Typography>
-            <Typography variant='body2'> Date {timeslot.date}</Typography>
-            <Typography variant='body2'>
-              {' '}
-              Pat ID {timeslot.patientId}
-            </Typography>
-          </CardContent>
-        </Card> */}
+        <CardContent>
+          <Typography variant='body2'> ID {timeslot.id}</Typography>
+          <Typography variant='body2'> Ph ID {timeslot.physicianId}</Typography>
+          <Typography variant='body2'> Date {timeslot.date}</Typography>
+          <Typography variant='body2'> Pat ID {timeslot.patientId}</Typography>
+          <Typography variant='body2'> Lenght {patients.length}</Typography>
+        </CardContent>
+      </Card> */}
 
       <InfiniteScroll
         scrollableTarget='scrollBox'
         next={() => {
           console.log('fetch data');
-          dispach(getPatients({ offset, userType }));
+          dispach(getUsers({ offset, search, userType }));
         }}
         hasMore={true}
         loader={<></>}
@@ -118,33 +114,31 @@ const UserTable = ({ data, userType }: tableProps) => {
         >
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 'bold' }}>ID {selectedID}</TableCell>
-              <TableCell align='right' sx={{ fontWeight: 'bold' }}>
-                NAME
-              </TableCell>
+              {/* <TableCell sx={{ fontWeight: 'bold' }}>ID {selectedID}</TableCell> */}
+              <TableCell sx={{ fontWeight: 'bold' }}>NAME</TableCell>
               <TableCell align='right' sx={{ fontWeight: 'bold' }}>
                 SURNAME
               </TableCell>
               <TableCell align='right' sx={{ fontWeight: 'bold' }}>
-                EMAIL
+                EMAIL {users.length}
               </TableCell>
-              {occupHeadCell}
+              {userType === PHYSICIAN && occupHeadCell}
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {patients.map((patient) => (
+            {users.map((user) => (
               <TableRow
-                key={patient.id}
-                sx={tableRowSX(patient.id === selectedID)}
+                key={user.id}
+                sx={tableRowSX(user.id === selectedID)}
                 hover
-                onClick={() => rowClick(patient.id)}
+                onClick={() => onClick(user.id)}
               >
-                <TableCell>{patient.id}</TableCell>
-                <TableCell align='right'>{patient.name}</TableCell>
-                <TableCell align='right'>{patient.surname}</TableCell>
-                <TableCell align='right'>{patient.email}</TableCell>
-                <TableCell align='right'>{occup(patient.occupation)}</TableCell>
+                {/* <TableCell>{patient.id}</TableCell> */}
+                <TableCell>{user.name}</TableCell>
+                <TableCell align='right'>{user.surname}</TableCell>
+                <TableCell align='right'>{user.email}</TableCell>
+                {userType === PHYSICIAN && occupBodyCell(user)}
               </TableRow>
             ))}
           </TableBody>

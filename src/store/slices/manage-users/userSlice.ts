@@ -83,10 +83,9 @@ export const userSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(createUser.fulfilled, (state, action) => {
+      .addCase(createUser.fulfilled, (state) => {
         state.loading = false;
         state.error = null;
-        // state.user = action.payload;
       })
       .addCase(createUser.rejected, (state, action) => {
         state.loading = false;
@@ -96,10 +95,9 @@ export const userSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateUser.fulfilled, (state, action) => {
+      .addCase(updateUser.fulfilled, (state) => {
         state.loading = false;
         state.error = null;
-        // state.user = action.payload;
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;

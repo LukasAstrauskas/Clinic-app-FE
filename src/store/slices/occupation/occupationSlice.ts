@@ -1,14 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { Occupation } from '../../../model/Model';
-import {
-  ALL_OCCUPATIONS,
-  BASE_URL,
-  OCCUPATIONS_URL,
-} from '../../../utils/httpConstants';
+import { ALL_OCCUPATIONS, BASE_URL } from '../../../utils/httpConstants';
 import axios from 'axios';
 import { RootState } from '../../reducers';
-import authHeader from '../../../authentication/authHeader';
 import { Status } from '../../../utils/Status';
 
 interface OccupationsState {

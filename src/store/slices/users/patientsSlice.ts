@@ -1,21 +1,9 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { User } from '../../../model/Model';
 import { Status } from '../../../utils/Status';
 import { PATIENT } from '../../../utils/Users';
 import { RootState } from '../../reducers';
 import { getUsers } from './userActions';
-
-interface Params {
-  search: string;
-  occupationId: string | null;
-  userType: string;
-}
-
-const initialParams: Params = {
-  search: '',
-  userType: PATIENT,
-  occupationId: null,
-};
 
 interface PatientState {
   patients: User[];

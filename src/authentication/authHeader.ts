@@ -1,8 +1,3 @@
-const tokenOrNull = localStorage.getItem('token');
-// const token: string = JSON.parse(
-//   tokenOrNull !== null ? tokenOrNull : `"No token"`,
-// );
-
 export default function authHeader() {
   const tokenOrNull = localStorage.getItem('token');
   const token: string = JSON.parse(

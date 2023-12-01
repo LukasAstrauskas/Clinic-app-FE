@@ -1,7 +1,7 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { User } from '../../../model/Model';
 import { Status } from '../../../utils/Status';
-import { PATIENT, PHYSICIAN } from '../../../utils/Users';
+import { PHYSICIAN } from '../../../utils/Users';
 import { getUsers } from './userActions';
 import { RootState } from '../../reducers';
 

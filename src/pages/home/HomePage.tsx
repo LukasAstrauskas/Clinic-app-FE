@@ -13,9 +13,6 @@ import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSl
 
 const HomePage = () => {
   const loggedUserType = useAppSelector(selectLoggedUserType);
-  // const isUserLoaded = useAppSelector(selectIsUserLoaded);
-
-  // useEffect()[]
 
   return (
     <Grid

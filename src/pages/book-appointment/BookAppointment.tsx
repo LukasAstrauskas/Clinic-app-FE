@@ -59,11 +59,9 @@ const BookAppointment = () => {
     await dispatch(bookTimeslot(timeslot))
       .unwrap()
       .then(() => {
-        // const array: Timeslot[] = result.data;
         message = 'Appointment booked successfully!';
       })
       .catch(() => {
-        // setIsErrorModalOpen(true);
         message = 'You have already booked appointment with this physician. ';
       })
       .finally(() => {

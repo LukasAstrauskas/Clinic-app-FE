@@ -1,7 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Box,
-  Chip,
   FormControl,
   InputAdornment,
   MenuItem,
@@ -19,7 +17,6 @@ import { ADMIN, PATIENT, PHYSICIAN } from '../../utils/Users';
 import useDebounce from '../../hooks/useDebounce';
 import {
   selectOccupationId,
-  selectPhysicianSearch,
   setOccupationSearch,
 } from '../../store/slices/users/physiciansSlice';
 
@@ -50,10 +47,6 @@ const UserSearchBar = ({
       onSearch(debouncedSearch, userType, occupationID);
     }
   }, [debouncedSearch]);
-
-  // useEffect(() => {
-  //   onSearch(debouncedSearch, userType, occupationID);
-  // }, [debouncedSearch, occupationID]);
 
   useEffect(() => {
     if (occupations.length === 0) {
@@ -103,7 +96,6 @@ const UserSearchBar = ({
           setDebounce(event.target.value);
         }}
       />
-      {/* <Chip label={localStorage.getItem('patientSearch') || ''} /> */}
       {userType === PHYSICIAN && onOccupationChange && (
         <FormControl
           size='small'

@@ -1,4 +1,4 @@
-import { Box, Card, CardActions, CardContent, Typography } from '@mui/material';
+import { Box, Card, CardContent, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import AppointmentSlot from './AppointmentSlot';
@@ -15,7 +15,6 @@ import {
 
 const PastAppointments = () => {
   const appointments = useAppSelector(selectPastAppointments);
-  // appoint amount has no place
   const appointmentAmount = useAppSelector(selectPastAppointmentsAmount);
   const dispatch = useAppDispatch();
 

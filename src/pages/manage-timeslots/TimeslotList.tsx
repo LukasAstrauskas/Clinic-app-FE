@@ -40,20 +40,11 @@ const TimeslotList = ({ physicianId }: Props) => {
   const [openConfirm, setOpenConfirm] = useToggle();
   const [openAlert, toggleAlert] = useToggle();
   const [loadData, setLoadData] = useToggle();
-  // const type = useAppSelector(selectType);
   const dispatch = useAppDispatch();
-  // const loggedInUserId = useAppSelector(selectId);
   const [date, setDate] = useState('');
 
   const timeslots = useAppSelector(selectTimeslots);
   const timeslot = useAppSelector(selectTimeslot);
-
-  // const [timeslot, setTimeslot] = useState<Timeslot>({
-  //   id: '',
-  //   physicianId: '',
-  //   date: '',
-  //   patientId: '',
-  // });
 
   const [pickDate, setPickDate] = useState<Dayjs>(dayjs().date(1));
 
@@ -69,7 +60,6 @@ const TimeslotList = ({ physicianId }: Props) => {
 
   const deleteButtonAction = (timeslot: Timeslot) => {
     if (timeslot.patientId === null) {
-      // setTimeslot(timeslot);
       dispatch(pickTimeslot(timeslot));
       setOpenConfirm();
     } else {
@@ -85,15 +75,6 @@ const TimeslotList = ({ physicianId }: Props) => {
 
   const handleChipClick = (timeslot: Timeslot): void => {
     dispatch(pickTimeslot(timeslot));
-    // setTimeslot(timeslot);
-    // {
-    //   patientId === null &&
-    //     setAppointment({
-    //       ...appointment,
-    //       date: date,
-    //       time: time,
-    //     });
-    // }
   };
 
   const isSelected = (id: string) => {
@@ -118,12 +99,7 @@ const TimeslotList = ({ physicianId }: Props) => {
     setPickDate(dayjs().date(1));
   }, [physicianId]);
 
-  interface BtnProps {
-    date: string;
-    elX?: string;
-  }
-
-  const RenderAddNewTimeslotButton = ({ date, elX = 'ElX' }: BtnProps) => {
+  const RenderAddNewTimeslotButton = ({ date }: { date: string }) => {
     return dayjs(date).endOf('day').isAfter(dayjs()) ? (
       <Chip
         label='+ NEW'

@@ -6,19 +6,12 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  Card,
-  CardContent,
-  Typography,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { tableRowSX } from '../../components/physician-table/PhysicianTable';
-import { Occupation, User } from '../../model/Model';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import {
-  pickTimeslot,
-  selectTimeslot,
-} from '../../store/slices/timeslot/timeslotSlice';
+import { User } from '../../model/Model';
+import { useAppDispatch } from '../../store/hooks';
 import { ADMIN, PATIENT, PHYSICIAN } from '../../utils/Users';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getUsers } from '../../store/slices/users/userActions';
@@ -53,14 +46,6 @@ const UserTable = ({
     console.log(users);
   }, []);
 
-  const occup = (occup: Occupation | null) => {
-    return occup !== null ? occup?.name : 'No occup';
-  };
-
-  const colName = (type: string) => {
-    return type === PATIENT ? 'Patient' : 'Occup';
-  };
-
   const occupHeadCell = (
     <TableCell align='right' sx={{ fontWeight: 'bold' }}>
       Occupation
@@ -82,16 +67,6 @@ const UserTable = ({
         overflow: 'scroll',
       }}
     >
-      {/* <Card sx={{ maxWidth: 350 }}>
-        <CardContent>
-          <Typography variant='body2'> ID {timeslot.id}</Typography>
-          <Typography variant='body2'> Ph ID {timeslot.physicianId}</Typography>
-          <Typography variant='body2'> Date {timeslot.date}</Typography>
-          <Typography variant='body2'> Pat ID {timeslot.patientId}</Typography>
-          <Typography variant='body2'> Lenght {patients.length}</Typography>
-        </CardContent>
-      </Card> */}
-
       <InfiniteScroll
         scrollableTarget='scrollBox'
         next={() => {
@@ -132,7 +107,6 @@ const UserTable = ({
                 hover
                 onClick={() => onClick(user.id)}
               >
-                {/* <TableCell>{patient.id}</TableCell> */}
                 <TableCell>{user.name}</TableCell>
                 <TableCell align='right'>{user.surname}</TableCell>
                 <TableCell align='right'>{user.email}</TableCell>

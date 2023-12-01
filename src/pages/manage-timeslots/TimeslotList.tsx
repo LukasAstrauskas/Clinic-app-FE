@@ -162,7 +162,9 @@ const TimeslotList = ({ physicianId }: Props) => {
               >
                 <Card sx={{ maxWidth: 350 }}>
                   <CardContent>
-                    <Typography variant='body2'> Manage timeslots</Typography>
+                    <Typography variant='body2'>
+                      Manage timeslots {physicianId}
+                    </Typography>
                     <Typography variant='body2'>Ph ID {physicianId}</Typography>
                     <Typography variant='body2'>
                       Date {pickDate.format('YYYY-MM-DD HH:mm')}

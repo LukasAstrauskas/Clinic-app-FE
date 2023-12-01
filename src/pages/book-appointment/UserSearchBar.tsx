@@ -17,24 +17,37 @@ import {
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { ADMIN, PATIENT, PHYSICIAN } from '../../utils/Users';
 import useDebounce from '../../hooks/useDebounce';
+import {
+  selectOccupationId,
+  selectPhysicianSearch,
+  setOccupationSearch,
+} from '../../store/slices/users/physiciansSlice';
 
 interface SearchProps {
   onSearch: (search: string, userType: string, occupationId?: string) => void;
   userType: typeof PATIENT | typeof PHYSICIAN | typeof ADMIN;
+  onOccupationChange?: (occupationId: string) => void;
+  searchState?: string;
 }
 
-const UserSearchBar = ({ onSearch, userType }: SearchProps) => {
+const UserSearchBar = ({
+  onSearch,
+  userType,
+  onOccupationChange,
+  searchState = '',
+}: SearchProps) => {
   const occupations = useAppSelector(selectOccupations);
 
   const dispatch = useAppDispatch();
 
   const [debouncedSearch, setDebounce] = useDebounce(1000);
-  const [occupationID, setOccupationID] = useState('');
+  const occupationID = useAppSelector(selectOccupationId);
+  const [searchValue, setSearchValue] = useState(searchState);
 
   useEffect(() => {
     console.log(`debounce change |${debouncedSearch}|`);
     if (debouncedSearch !== null) {
-      onSearch(debouncedSearch, userType);
+      onSearch(debouncedSearch, userType, occupationID);
     }
   }, [debouncedSearch]);
 
@@ -47,10 +60,6 @@ const UserSearchBar = ({ onSearch, userType }: SearchProps) => {
       dispatch(fetchOccupations());
     }
   }, []);
-
-  const handleOccupChange = (occupationID: string) => {
-    setOccupationID(occupationID);
-  };
 
   const MenuProps = {
     PaperProps: {
@@ -77,7 +86,7 @@ const UserSearchBar = ({ onSearch, userType }: SearchProps) => {
       <TextField
         placeholder='Search'
         size='small'
-        // value={value.current}
+        value={searchValue}
         InputProps={{
           startAdornment: (
             <InputAdornment position='start'>
@@ -90,11 +99,12 @@ const UserSearchBar = ({ onSearch, userType }: SearchProps) => {
           width: '45%',
         }}
         onChange={(event) => {
+          setSearchValue(event.target.value);
           setDebounce(event.target.value);
         }}
       />
       {/* <Chip label={localStorage.getItem('patientSearch') || ''} /> */}
-      {userType === PHYSICIAN && (
+      {userType === PHYSICIAN && onOccupationChange && (
         <FormControl
           size='small'
           sx={{ backgroundColor: '#ededed', width: '45%' }}
@@ -102,7 +112,11 @@ const UserSearchBar = ({ onSearch, userType }: SearchProps) => {
           <Select
             id='demo-simple-select'
             value={occupationID}
-            onChange={(event) => handleOccupChange(event.target.value)}
+            onChange={(event) => {
+              const id = event.target.value;
+              dispatch(setOccupationSearch(id));
+              onOccupationChange(id);
+            }}
             displayEmpty
             MenuProps={MenuProps}
           >

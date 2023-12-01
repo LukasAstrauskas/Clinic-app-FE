@@ -10,6 +10,7 @@ import { timeslotSlice } from './slices/timeslot/timeslotSlice';
 import loggedUserReducer from './slices/loggedUser/loggedUserSlice';
 import { appointmentSlice } from './slices/appointment/appointmentSlice';
 import { patientsSlice } from './slices/users/patientsSlice';
+import { physiciansSlice } from './slices/users/physiciansSlice';
 // import appointmentReducer from './slices/appointment/appointmentSlice';
 // import loggedUserSlice from './slices/loggedUser/loggedUserSlice';
 
@@ -28,6 +29,7 @@ const appReducer = combineReducers({
   // appointment: appointmentReducer,
   appointment: appointmentSlice.reducer,
   patients: patientsSlice.reducer,
+  physicians: physiciansSlice.reducer,
 });
 
 export const rootReducer: Reducer<

@@ -21,7 +21,7 @@ export const getUsers = createAsyncThunk(
     params.append('search', search);
     params.append('offset', offset.toString());
     params.append('userType', userType);
-    if (occupationId) params.append('occupatioinId', occupationId);
+    if (occupationId) params.append('occupationId', occupationId);
     console.log(`${BASE_URL}${USER}?${params}`);
     const responce = await axios.get<User[]>(`${BASE_URL}${USER}?${params}`, {
       headers: bearerToken(),

@@ -27,18 +27,18 @@ type props = {
   users: User[];
   search: string;
   userType: typeof PATIENT | typeof PHYSICIAN | typeof ADMIN;
-  onClick?: (id: string) => void;
+  onClick: (id: string) => void;
   selectedID: string;
+  occupationId?: string;
 };
 
 const UserTable = ({
   users,
   search,
   userType,
-  onClick = (id) => {
-    console.log(`Clicked: ${id}`);
-  },
+  onClick,
   selectedID,
+  occupationId = '',
 }: props) => {
   const dispach = useAppDispatch();
   const offset = users.length;
@@ -68,9 +68,7 @@ const UserTable = ({
   );
 
   const occupBodyCell = (user: User) => (
-    <TableCell align='right' sx={{ fontWeight: 'bold' }}>
-      {user.occupation?.name}
-    </TableCell>
+    <TableCell align='right'>{user.occupation?.name}</TableCell>
   );
   return (
     <TableContainer
@@ -98,7 +96,7 @@ const UserTable = ({
         scrollableTarget='scrollBox'
         next={() => {
           console.log('fetch data');
-          dispach(getUsers({ offset, search, userType }));
+          dispach(getUsers({ offset, search, userType, occupationId }));
         }}
         hasMore={true}
         loader={<></>}

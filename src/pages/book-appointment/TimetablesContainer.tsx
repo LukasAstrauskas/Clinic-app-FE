@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Card,
@@ -9,44 +9,22 @@ import {
   Typography,
 } from '@mui/material';
 import TimetableList from './TimetableList';
-import PhysicianTable from '../../components/physician-table/PhysicianTable';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import PhysicianSearchBar from '../../components/physician-table/PhysicianSearchBar';
-import {
-  searchPhysician,
-  selectPhysician,
-} from '../../store/slices/physician/physicianSlice';
-import { PATIENT } from '../../utils/Users';
+import { PATIENT, PHYSICIAN } from '../../utils/Users';
 import { pickTimeslot } from '../../store/slices/timeslot/timeslotSlice';
 import {
   selectLoggedUserId,
   selectLoggedUserType,
 } from '../../store/slices/loggedUser/loggedUserSlice';
+import TimeslotsPhysiciansTable from '../../components/physician-table/TimeslotsPhysiciansTable';
+import { selectPhysicianId } from '../../store/slices/users/physiciansSlice';
 
-type props = {
-  tableTitle?: string;
-};
-
-const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
+const TimetablesContainer = () => {
   const type = useAppSelector(selectLoggedUserType);
   const loggedUserId = useAppSelector(selectLoggedUserId);
-  const physician = useAppSelector(selectPhysician);
+  const physicianId = useAppSelector(selectPhysicianId);
   const dispatch = useAppDispatch();
-  const [isSearch, setIsSearch] = useState(false);
 
-  const handleSearch = (search: string, occupation: string) => {
-    console.log('Timetable-container. handleSearch ');
-    if (search.length != 0 || occupation) {
-      dispatch(searchPhysician({ search, occupation }));
-      setIsSearch(true);
-    } else {
-      setIsSearch(false);
-    }
-  };
-  /* Not  fetchPhyNameOccupation(), but <PhysicianSearchBar/> component
-  provides physicians, search side effect.
-  handleSearch() if no search param fetches physicians on component mount
-  */
   useEffect(() => {
     if (type === PATIENT) {
       dispatch(
@@ -71,12 +49,13 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
             justifyContent='center'
             alignItems='center'
           >
-            <h1>{tableTitle}</h1>
+            <h1>
+              {type === PHYSICIAN ? 'Select Time' : 'Select Physician and Time'}
+            </h1>
           </Grid>
           {type !== 'physician' && (
             <Grid item lg={4} sx={{ border: 2 }}>
-              <PhysicianSearchBar onSearch={handleSearch} />
-              <PhysicianTable isSearch={isSearch} />
+              <TimeslotsPhysiciansTable />
             </Grid>
           )}
           {type === 'physician' ? (
@@ -85,8 +64,8 @@ const TimetablesContainer = ({ tableTitle = 'Physicians' }: props) => {
             </Grid>
           ) : (
             <Grid item lg={8}>
-              {physician.id ? (
-                <TimetableList physicianId={physician.id} />
+              {physicianId ? (
+                <TimetableList physicianId={physicianId} />
               ) : (
                 <Box sx={{ display: 'flex', border: 2 }}>
                   <Card>

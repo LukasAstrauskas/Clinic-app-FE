@@ -110,19 +110,7 @@ const TimetableList = ({ physicianId }: Props) => {
                 sx={{ fontWeight: 'bold', backgroundColor: grey[200] }}
                 align='left'
               >
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  Time
-                  {pickedTimeslot.physicianId
-                    ? ` ID: ${pickedTimeslot.physicianId.slice(0, 8)}.`
-                    : ' No Id'}
-                  Pat ID: {pickedTimeslot.patientId}
-                </div>
+                Time
               </TableCell>
             </TableRow>
           </TableHead>

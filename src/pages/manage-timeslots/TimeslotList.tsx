@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Timechip from '../../components/timeslot-table/Timechip';
-import { Card, CardContent, Chip, Stack, Typography } from '@mui/material';
+import { Chip, Stack } from '@mui/material';
 import TimeslotModal from '../../components/modals/TimeslotModal';
 import TimeslotSetDateModal from '../../components/modals/TimeslotSetDateModal';
 import { Timeslot } from '../../model/Model';
@@ -136,17 +136,6 @@ const TimeslotList = ({ physicianId }: Props) => {
                 colSpan={2}
                 sx={{ backgroundColor: grey[200] }}
               >
-                <Card sx={{ maxWidth: 350 }}>
-                  <CardContent>
-                    <Typography variant='body2'>
-                      Manage timeslots {physicianId}
-                    </Typography>
-                    <Typography variant='body2'>Ph ID {physicianId}</Typography>
-                    <Typography variant='body2'>
-                      Date {pickDate.format('YYYY-MM-DD HH:mm')}
-                    </Typography>
-                  </CardContent>
-                </Card>
                 <MonthPicker date={pickDate} setDate={setPickDate} />
               </TableCell>
             </TableRow>

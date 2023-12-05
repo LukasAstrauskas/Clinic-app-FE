@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box } from '@mui/system';
-import { TableContainer, Table, Paper } from '@mui/material';
+import { TableContainer, Table, Paper, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import PhysicianModalContent from '../../components/modals/AddPhysicianModal';
 import Styles from '../../components/styles/UserManagmentStyles';
-import TableHeadComponent from '../../components/manage-users-tables/TableHeadComponent';
-import TableBodyComponent from '../../components/manage-users-tables/TableBodyComponent';
+import TableHeadComponent from '../../components/manage-users/TableHeadComponent';
+import TableBodyComponent from '../../components/manage-users/TableBodyComponent';
 import {
   selectPhysicians,
   fetchPhysicians,

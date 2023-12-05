@@ -56,7 +56,6 @@ const Timechip = ({ timeslot, date, selected, onDelete, onClick }: Props) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const time = dayjs(timeslot.date).format('HH:mm');
   const isInFuture = new Date() > new Date(`${date}T${time}`);
-  const isInFutureT = dayjs().isAfter(timeslot.date);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     onClick(timeslot);

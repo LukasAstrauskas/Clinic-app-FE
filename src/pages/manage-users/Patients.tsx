@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box } from '@mui/system';
-import { TableContainer, Table, Paper } from '@mui/material';
+import { TableContainer, Table, Paper, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import {
   fetchPatients,
@@ -11,9 +10,9 @@ import {
   selectPatients,
 } from '../../store/slices/patient/patientSlice';
 import AddPatientModal from '../../components/modals/AddPatientModal';
-import TableHeadComponent from '../../components/manage-users-tables/TableHeadComponent';
+import TableHeadComponent from '../../components/manage-users/TableHeadComponent';
 import Styles from '../../components/styles/UserManagmentStyles';
-import TableBodyComponent from '../../components/manage-users-tables/TableBodyComponent';
+import TableBodyComponent from '../../components/manage-users/TableBodyComponent';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectTimeslot } from '../../store/slices/timeslot/timeslotSlice';
 import { bookTimeslot } from '../../store/slices/timeslot/timeslotActions';
@@ -65,6 +64,7 @@ export const Patients = () => {
       setIsSearch(false);
     }
   };
+
   return (
     <>
       <Box sx={searchBaraSx(appointment.physicianId)}>

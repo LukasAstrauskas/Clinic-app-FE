@@ -14,11 +14,11 @@
     "prepare": "npx husky install"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.8",
-    "@emotion/styled": "^11.10.8",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^4.5.8",
-    "@mui/icons-material": "^5.11.11",
-    "@mui/material": "^5.12.2",
+    "@mui/icons-material": "^5.14.19",
+    "@mui/material": "^5.14.19",
     "@mui/x-date-pickers": "^6.3.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/react-redux": "^7.1.28",

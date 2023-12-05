@@ -15,6 +15,7 @@ import { useAppDispatch } from '../../store/hooks';
 import { ADMIN, PATIENT, PHYSICIAN } from '../../utils/Users';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getUsers } from '../../store/slices/users/userActions';
+import EditBodyCell from '../../components/manage-users/EditBodyCell';
 
 type props = {
   users: User[];
@@ -23,6 +24,8 @@ type props = {
   onClick: (id: string) => void;
   selectedID: string;
   occupationId?: string;
+  renderEmail?: boolean;
+  renderEditButtons?: boolean;
 };
 
 const UserTable = ({
@@ -32,12 +35,15 @@ const UserTable = ({
   onClick,
   selectedID,
   occupationId = '',
+  renderEmail = true,
+  renderEditButtons = false,
 }: props) => {
   const dispach = useAppDispatch();
   const offset = users.length;
 
   useEffect(() => {
     if (users.length === 0) {
+      console.log(`length 0, fetching data`);
       dispach(getUsers({ offset, userType }));
     }
   }, []);
@@ -55,6 +61,49 @@ const UserTable = ({
   const occupBodyCell = (user: User) => (
     <TableCell align='right'>{user.occupation?.name}</TableCell>
   );
+
+  const emailHeadCell = () => (
+    <TableCell align='right' sx={{ fontWeight: 'bold' }}>
+      EMAIL {users.length}
+    </TableCell>
+  );
+
+  const emailBodyCell = (user: User) => (
+    <TableCell align='right'>{user.email}</TableCell>
+  );
+
+  const editHeadCell = (userType: string) => {
+    return (
+      <TableCell align='right' sx={{ fontWeight: 'bold' }}>
+        EDIT {userType.toUpperCase()}
+      </TableCell>
+    );
+  };
+
+  // const editBodyCell = (user: User) => {
+  //   const { name, surname } = user;
+  //   return (
+  //     <TableCell>
+  //       <IconButton
+  //         color='success'
+  //         onClick={() => {
+  //           console.log(`edit user ${name} ${surname}`);
+  //         }}
+  //       >
+  //         <EditIcon />
+  //       </IconButton>
+  //       <IconButton
+  //         color='success'
+  //         onClick={() => {
+  //           console.log('del user');
+  //         }}
+  //       >
+  //         <DeleteIcon />
+  //       </IconButton>
+  //     </TableCell>
+  //   );
+  // };
+
   return (
     <TableContainer
       component={Paper}
@@ -73,29 +122,20 @@ const UserTable = ({
           console.log('fetch data');
           dispach(getUsers({ offset, search, userType, occupationId }));
         }}
-        hasMore={true}
+        hasMore={offset > 4}
         loader={<></>}
         dataLength={offset}
       >
-        <Table
-          size='medium'
-          aria-label='a dense table'
-          sx={{
-            // border: 2,
-            minWidth: 420,
-          }}
-        >
+        <Table size='medium' aria-label='a dense table' sx={{}}>
           <TableHead>
             <TableRow>
-              {/* <TableCell sx={{ fontWeight: 'bold' }}>ID {selectedID}</TableCell> */}
               <TableCell sx={{ fontWeight: 'bold' }}>NAME</TableCell>
               <TableCell align='right' sx={{ fontWeight: 'bold' }}>
                 SURNAME
               </TableCell>
-              <TableCell align='right' sx={{ fontWeight: 'bold' }}>
-                EMAIL {users.length}
-              </TableCell>
+              {renderEmail && emailHeadCell()}
               {userType === PHYSICIAN && occupHeadCell}
+              {renderEditButtons && editHeadCell(userType)}
             </TableRow>
           </TableHead>
 
@@ -109,8 +149,9 @@ const UserTable = ({
               >
                 <TableCell>{user.name}</TableCell>
                 <TableCell align='right'>{user.surname}</TableCell>
-                <TableCell align='right'>{user.email}</TableCell>
+                {renderEmail && emailBodyCell(user)}
                 {userType === PHYSICIAN && occupBodyCell(user)}
+                {renderEditButtons && <EditBodyCell user={user} />}
               </TableRow>
             ))}
           </TableBody>

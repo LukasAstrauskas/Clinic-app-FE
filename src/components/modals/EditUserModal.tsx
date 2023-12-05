@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { Box } from '@mui/system';
-import { Modal } from '@mui/material';
+import { Box, Modal } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { isValidName, isValidEmail, isValidPasswordOrEmpty } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
@@ -131,13 +130,13 @@ const EditUserModal = ({
               fontWeight: '700',
             }}
           >
-            {userToUpdate.type === 'physician'
+            {/* {userToUpdate.type === 'physician'
               ? 'Modify Physician'
               : 'Modify User'}
             <p>Name: {userDTO.name}.</p>
             <p>Surname: {userDTO.surname}.</p>
             <p>Type: {userDTO.type}.</p>
-            <p>InfoID: {userDTO.infoID}.</p>
+            <p>InfoID: {userDTO.infoID}.</p> */}
           </Typography>
           <Box
             sx={{

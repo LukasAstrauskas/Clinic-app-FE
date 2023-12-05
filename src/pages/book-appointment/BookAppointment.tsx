@@ -20,7 +20,7 @@ import {
   deletePatientFromUpcomingTimeslot,
 } from '../../store/slices/timeslot/timeslotActions';
 import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
-import { PATIENT, PHYSICIAN } from '../../utils/Users';
+import { PATIENT } from '../../utils/Users';
 import UserTable from './UserTable';
 import { selectPhysician } from '../../store/slices/physician/physicianSlice';
 import UserSearchBar from './UserSearchBar';
@@ -33,7 +33,7 @@ import {
 import { getUsers } from '../../store/slices/users/userActions';
 
 const BookAppointment = () => {
-  const type = useAppSelector(selectLoggedUserType);
+  const type: string = useAppSelector(selectLoggedUserType);
   const selectedPhysician = useAppSelector(selectPhysician);
   const dispatch = useAppDispatch();
   const [bookingStep, setBookingStep] = useToggle();
@@ -124,7 +124,11 @@ const BookAppointment = () => {
           <Stack style={{ alignItems: 'center' }}>
             <h1 style={{ margin: 0 }}>Select Patient</h1>
             <Typography variant='h1'>
-              <UserSearchBar onSearch={onSearch} userType={patient} />
+              <UserSearchBar
+                onSearch={onSearch}
+                userType={patient}
+                searchState={search}
+              />
               <UserTable
                 userType={patient}
                 users={patients}
@@ -136,12 +140,7 @@ const BookAppointment = () => {
             {appointmentInfo}
           </Stack>
         ) : (
-          <TimetablesContainer
-            tableTitle={
-              (type === PHYSICIAN && 'Select Time') ||
-              'Select Physician and Time'
-            }
-          />
+          <TimetablesContainer />
         )}
 
         <Box

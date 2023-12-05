@@ -4,9 +4,11 @@ import { Status } from '../../../utils/Status';
 import { PATIENT } from '../../../utils/Users';
 import { RootState } from '../../reducers';
 import { getUsers } from './userActions';
+import exp from 'constants';
 
 interface PatientState {
   patients: User[];
+  patientId: string;
   search: string;
   status: Status.IDLE | Status.PENDING | Status.SUCCEEDED | Status.FAILED;
   error: string | null;
@@ -19,6 +21,7 @@ const search: string = JSON.parse(
 
 const initialState: PatientState = {
   patients: patients,
+  patientId: '',
   search: search,
   status: Status.IDLE,
   error: null,
@@ -38,6 +41,9 @@ export const patientsSlice = createSlice({
       state.search = action.payload;
       localStorage.setItem('patientSearch', JSON.stringify(state.search));
     },
+    setPatientId(state, action: PayloadAction<string>) {
+      state.patientId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getUsers.fulfilled, (state, action) => {
@@ -56,8 +62,10 @@ export const patientsSlice = createSlice({
   },
 });
 
-export const { clearPatients, setPatientSearch } = patientsSlice.actions;
+export const { clearPatients, setPatientSearch, setPatientId } =
+  patientsSlice.actions;
 export const selectPatients = (state: RootState) => state.patients.patients;
 export const selectPatientSearch = (state: RootState) => state.patients.search;
+export const selectPatientId = (state: RootState) => state.patients.patientId;
 export const patientsLength = (state: RootState) =>
   state.patients.patients.length;

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Box } from '@mui/system';
 import { Patients } from './Patients';
 import { Physicians } from './Physicians';
 import { Admins } from './Admins';
-import { Tabs, Tab, createTheme } from '@mui/material';
+import { Tabs, Tab, createTheme, Box } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
 import TabPanel from '../../components/TabPanel';
+import ManagePatients from './ManagePatients';
 
 const theme = createTheme({
   palette: {
@@ -27,7 +27,7 @@ const ManageUsers = () => {
     <>
       <h2 style={{ textAlign: 'center' }}>Manage Users</h2>
       <ThemeProvider theme={theme}>
-        <Box>
+        <Box sx={{ marginBottom: '20px' }}>
           <Tabs
             value={value}
             onChange={handleTabs}
@@ -49,7 +49,7 @@ const ManageUsers = () => {
         </Box>
 
         <TabPanel value={value} index={0}>
-          <Patients />
+          <ManagePatients />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <Physicians />

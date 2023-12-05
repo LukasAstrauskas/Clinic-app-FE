@@ -16,6 +16,16 @@ export interface User {
   occupation: Occupation | null;
 }
 
+export interface UserDTO {
+  id: string;
+  name: string;
+  surname: string;
+  password: string;
+  email: string;
+  type: string;
+  occupationId: string;
+}
+
 export interface LoggedUser {
   id: string;
   name: string;
@@ -74,15 +84,3 @@ export type UpdateUserDTO = {
   id: string;
   userDTO: CreateUserDTO;
 };
-
-// export interface Appointment {
-//   physicianId: string;
-//   date: string;
-//   time: string;
-//   patientId?: string | null;
-// }
-
-// export interface AppointmentState {
-//   appointment: Appointment;
-//   setAppointment: React.Dispatch<React.SetStateAction<Appointment>>;
-// }

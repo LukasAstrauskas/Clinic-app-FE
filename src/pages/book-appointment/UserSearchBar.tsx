@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   FormControl,
+  IconButton,
   InputAdornment,
   MenuItem,
   Select,
@@ -19,12 +20,15 @@ import {
   selectOccupationId,
   setOccupationSearch,
 } from '../../store/slices/users/physiciansSlice';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddUserButton from '../manage-users/AddUserButton';
 
 interface SearchProps {
   onSearch: (search: string, userType: string, occupationId?: string) => void;
   userType: typeof PATIENT | typeof PHYSICIAN | typeof ADMIN;
   onOccupationChange?: (occupationId: string) => void;
   searchState?: string;
+  addButton?: boolean;
 }
 
 const UserSearchBar = ({
@@ -32,6 +36,7 @@ const UserSearchBar = ({
   userType,
   onOccupationChange,
   searchState = '',
+  addButton = false,
 }: SearchProps) => {
   const occupations = useAppSelector(selectOccupations);
 
@@ -70,7 +75,7 @@ const UserSearchBar = ({
       spacing={1}
       sx={{
         marginBottom: 1,
-        // border: 1,
+        border: 1,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -89,7 +94,7 @@ const UserSearchBar = ({
         }}
         sx={{
           backgroundColor: '#ededed',
-          width: '45%',
+          minWidth: '45%',
         }}
         onChange={(event) => {
           setSearchValue(event.target.value);
@@ -123,6 +128,7 @@ const UserSearchBar = ({
           </Select>
         </FormControl>
       )}
+      {addButton && <AddUserButton userType={userType} />}
     </Stack>
   );
 };

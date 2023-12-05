@@ -1,4 +1,4 @@
-import { Visibility } from '@mui/icons-material';
+import Visibility from '@mui/icons-material/Visibility';
 import {
   Box,
   Button,
@@ -36,13 +36,14 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState(false);
+  const [occupationId, setOccupationId] = useState<string>('');
+
   const [nameError, setNameError] = useState(false);
   const [lastNameError, setLastNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [occupationError, setOccupationError] = useState(false);
   const [duplicationError, setDuplicationError] = useState(false);
-  const [occupationId, setOccupationId] = useState<string>('');
 
   const handleClose = () => {
     setOpen(false);
@@ -162,7 +163,7 @@ const PhysicianModal: FC<Props> = ({ setOpen, open }) => {
               error={lastNameError}
               helperText={
                 lastNameError && (
-                  <>Last name length between 3 and 20 symbols, letters onl</>
+                  <>Last name length between 3 and 20 symbols, letters only</>
                 )
               }
               id='new-patient-LastName-field'

@@ -18,7 +18,26 @@ interface PhysicianState {
 }
 
 const initialState: PhysicianState = {
-  physicians: [],
+  physicians: [
+    {
+      id: '1234UUId',
+      name: 'Pat',
+      surname: 'Gaiver',
+      password: '',
+      email: 'gaiver@gmail.com',
+      type: 'physician',
+      occupation: null,
+    },
+    {
+      id: '4321UUId',
+      name: 'Jar',
+      surname: 'Bin',
+      password: '',
+      email: 'bin@gmail.com',
+      type: 'physician',
+      occupation: null,
+    },
+  ],
   physician: {
     id: '',
     name: '',

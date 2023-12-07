@@ -1,31 +1,24 @@
+import React, { useState } from 'react';
 import {
   Box,
   Button,
-  Container,
-  FormControl,
   Grid,
   IconButton,
   Input,
   InputAdornment,
-  InputLabel,
   MenuItem,
   Modal,
-  OutlinedInput,
-  Select,
   TextField,
   Typography,
 } from '@mui/material';
-import { type } from 'os';
-import React, { useState } from 'react';
 import useToggle from '../../hooks/useToggle';
-import CloseIcon from '@mui/icons-material/Close';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { User, UserDTO } from '../../model/Model';
+import { UserDTO } from '../../model/Model';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectOccupations } from '../../store/slices/occupation/occupationSlice';
 import { PHYSICIAN } from '../../utils/Users';
-import shadows from '@mui/material/styles/shadows';
+import { insertUser } from '../../store/slices/manage-users/userSlice';
 
 type props = {
   open: boolean;
@@ -48,6 +41,7 @@ const style = {
 const AddUserModal = ({ open, switchOpen, userType }: props) => {
   const occupations = useAppSelector(selectOccupations);
   const [showPass, switchShowPass] = useToggle();
+  const dispatch = useAppDispatch();
 
   const initialUser: UserDTO = {
     id: '',
@@ -56,7 +50,7 @@ const AddUserModal = ({ open, switchOpen, userType }: props) => {
     password: '',
     email: '',
     type: userType,
-    occupationId: '',
+    occupationId: null,
   };
   const [user, setUser] = useState(initialUser);
 
@@ -71,7 +65,8 @@ const AddUserModal = ({ open, switchOpen, userType }: props) => {
   const addUser = () => {
     if (showPass) switchShowPass();
     setUser(initialUser);
-    // closeModal();
+    dispatch(insertUser(user));
+    closeModal();
   };
   return (
     <Modal open={open} onClose={closeModal}>
@@ -107,7 +102,7 @@ const AddUserModal = ({ open, switchOpen, userType }: props) => {
                 placeholder='Post'
                 onChange={(event) => {
                   const email = event.target.value;
-                  setUser({ ...user, email: event.target.value });
+                  setUser({ ...user, email });
                 }}
                 value={user.email}
               />
@@ -117,7 +112,6 @@ const AddUserModal = ({ open, switchOpen, userType }: props) => {
                 autoComplete='off'
                 placeholder='Secret'
                 onChange={(event) => {
-                  //   const password = event.target.value;
                   setUser({ ...user, password: event.target.value });
                 }}
                 value={user.password}
@@ -161,7 +155,8 @@ const AddUserModal = ({ open, switchOpen, userType }: props) => {
 
         <Typography id='modal-modal-description' sx={{ mt: 2 }}>
           User: N:{user.name} S:{user.surname} E:{user.email} P:{user.password}
-          Type:{user.type} Occ:{user.occupationId}
+          Type:{user.type} Occ:
+          {user.occupationId === null ? 'Null' : user.occupationId}
         </Typography>
         <Grid
           container

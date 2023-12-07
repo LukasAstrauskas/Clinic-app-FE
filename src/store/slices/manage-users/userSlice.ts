@@ -1,7 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../../reducers';
-import { CreateUserDTO, UpdateUserDTO, User } from '../../../model/Model';
+import {
+  CreateUserDTO,
+  UpdateUserDTO,
+  User,
+  UserDTO,
+} from '../../../model/Model';
 import { ADMIN_ACTION, BASE_USER_URL } from '../../../utils/httpConstants';
 import authHeader from '../../../authentication/authHeader';
 
@@ -26,10 +31,21 @@ export const fetchUserById = createAsyncThunk<User, string>(
     return response.data as User;
   },
 );
+
+export const insertUser = createAsyncThunk(
+  'insertUser',
+  async (newUser: UserDTO) => {
+    const response = await axios.post<string>(`${ADMIN_ACTION}`, newUser, {
+      headers: authHeader(),
+    });
+    return response.data;
+  },
+);
+
 export const createUser = createAsyncThunk(
   'patients/createPatient',
-  async (createUserDTO: CreateUserDTO) => {
-    const response = await axios.post(`${ADMIN_ACTION}`, createUserDTO, {
+  async (newUser: CreateUserDTO) => {
+    const response = await axios.post(`${ADMIN_ACTION}`, newUser, {
       headers: authHeader(),
     });
     return response.data;
@@ -107,10 +123,11 @@ export const userSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteUser.fulfilled, (state) => {
+      .addCase(deleteUser.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
         state.user = null;
+        console.log(action.payload);
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;

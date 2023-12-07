@@ -3,8 +3,7 @@ import { User } from '../../../model/Model';
 import { Status } from '../../../utils/Status';
 import { PATIENT } from '../../../utils/Users';
 import { RootState } from '../../reducers';
-import { getUsers } from './userActions';
-import exp from 'constants';
+import { deleteUser, getUsers } from './userActions';
 
 interface PatientState {
   patients: User[];
@@ -54,11 +53,15 @@ export const patientsSlice = createSlice({
         localStorage.setItem('patients', JSON.stringify(state.patients));
       }
     });
-    // builder.addCase(patientSearch.fulfilled, (state, action) => {
-    //   state.patients = [...state.patients, ...action.payload];
-    //   state.status = Status.SUCCEEDED;
-    //   localStorage.setItem('patients', JSON.stringify(state.patients));
-    // });
+    builder.addCase(deleteUser.fulfilled, (state, action) => {
+      const { id, type } = action.payload;
+      if (type === PATIENT) {
+        const filtered = state.patients.filter((patient) => patient.id !== id);
+        state.patients = filtered;
+        state.status = Status.SUCCEEDED;
+        localStorage.setItem('patients', JSON.stringify(state.patients));
+      }
+    });
   },
 });
 

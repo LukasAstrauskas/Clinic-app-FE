@@ -23,7 +23,7 @@ export interface UserDTO {
   password: string;
   email: string;
   type: string;
-  occupationId: string;
+  occupationId: string | null;
 }
 
 export interface LoggedUser {

@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { bearerToken } from '../../../authentication/authHeader';
 import { User } from '../../../model/Model';
-import { BASE_URL, USER } from '../../../utils/httpConstants';
+import { ADMIN_ACTION, BASE_URL, USER } from '../../../utils/httpConstants';
 
 export const getUsers = createAsyncThunk(
   'user/getPatients',
@@ -27,5 +27,15 @@ export const getUsers = createAsyncThunk(
       headers: bearerToken(),
     });
     return responce.data;
+  },
+);
+
+export const deleteUser = createAsyncThunk(
+  'deleteUser',
+  async ({ id, type }: { id: string; type: string }) => {
+    await axios.delete<string>(`${ADMIN_ACTION}/${id}`, {
+      headers: bearerToken(),
+    });
+    return { id, type };
   },
 );

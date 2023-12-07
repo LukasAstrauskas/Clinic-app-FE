@@ -1,12 +1,15 @@
-import { TableCell, IconButton, Box, Modal, Typography } from '@mui/material';
 import React from 'react';
+import { TableCell, IconButton, Box, Modal, Typography } from '@mui/material';
 import { User } from '../../model/Model';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import useToggle from '../../hooks/useToggle';
+import { useAppDispatch } from '../../store/hooks';
+import { deleteUser } from '../../store/slices/users/userActions';
 
 const EditBodyCell = ({ user }: { user: User }) => {
-  const { name, surname, type } = user;
+  const { id, name, surname, type } = user;
+  const dipatch = useAppDispatch();
 
   const style = {
     position: 'absolute',
@@ -37,12 +40,14 @@ const EditBodyCell = ({ user }: { user: User }) => {
           color='success'
           onClick={() => {
             console.log('del user');
+            dipatch(deleteUser({ id, type }));
           }}
         >
           <DeleteIcon />
         </IconButton>
       </TableCell>
 
+      {/* move to EditUserModal */}
       <Modal
         open={open}
         onClose={switchOpen}

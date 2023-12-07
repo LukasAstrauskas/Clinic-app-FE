@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import UserSearchBar from '../book-appointment/UserSearchBar';
 import UserTable from '../book-appointment/UserTable';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -49,6 +49,7 @@ const ManagePatients = () => {
       }}
     >
       <Stack>
+        <Typography variant='caption'>{search}</Typography>
         <UserSearchBar
           onSearch={onSearch}
           userType={patient}

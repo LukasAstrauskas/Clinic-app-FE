@@ -1,12 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../../reducers';
-import {
-  CreateUserDTO,
-  UpdateUserDTO,
-  User,
-  UserDTO,
-} from '../../../model/Model';
+import { CreateUserDTO, UpdateUserDTO, User } from '../../../model/Model';
 import { ADMIN_ACTION, BASE_USER_URL } from '../../../utils/httpConstants';
 import authHeader from '../../../authentication/authHeader';
 
@@ -29,16 +24,6 @@ export const fetchUserById = createAsyncThunk<User, string>(
       headers: authHeader(),
     });
     return response.data as User;
-  },
-);
-
-export const insertUser = createAsyncThunk(
-  'insertUser',
-  async (newUser: UserDTO) => {
-    const response = await axios.post<string>(`${ADMIN_ACTION}`, newUser, {
-      headers: authHeader(),
-    });
-    return response.data;
   },
 );
 

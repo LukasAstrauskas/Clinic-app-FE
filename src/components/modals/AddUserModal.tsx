@@ -18,7 +18,7 @@ import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectOccupations } from '../../store/slices/occupation/occupationSlice';
 import { PHYSICIAN } from '../../utils/Users';
-import { insertUser } from '../../store/slices/manage-users/userSlice';
+import { insertUser } from '../../store/slices/users/userActions';
 
 type props = {
   open: boolean;
@@ -142,9 +142,9 @@ const AddUserModal = ({ open, switchOpen, userType }: props) => {
                   }}
                   value={user.occupationId}
                 >
-                  {occupations.map((occupation) => (
-                    <MenuItem key={occupation.id} value={occupation.id}>
-                      {occupation.name}
+                  {occupations.map(({ id, name }) => (
+                    <MenuItem key={id} value={id}>
+                      {name}
                     </MenuItem>
                   ))}
                 </TextField>

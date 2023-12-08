@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { bearerToken } from '../../../authentication/authHeader';
-import { User } from '../../../model/Model';
+import { User, UserDTO } from '../../../model/Model';
 import { ADMIN_ACTION, BASE_URL, USER } from '../../../utils/httpConstants';
 
 export const getUsers = createAsyncThunk(
@@ -30,6 +30,16 @@ export const getUsers = createAsyncThunk(
   },
 );
 
+export const insertUser = createAsyncThunk(
+  'insertUser',
+  async (newUser: UserDTO) => {
+    const response = await axios.post<string>(`${ADMIN_ACTION}`, newUser, {
+      headers: bearerToken(),
+    });
+    return response.data;
+  },
+);
+
 export const deleteUser = createAsyncThunk(
   'deleteUser',
   async ({ id, type }: { id: string; type: string }) => {
@@ -37,5 +47,19 @@ export const deleteUser = createAsyncThunk(
       headers: bearerToken(),
     });
     return { id, type };
+  },
+);
+
+export const updateUser = createAsyncThunk(
+  'updateUser',
+  async (updateUser: UserDTO) => {
+    const response = await axios.put(
+      `${ADMIN_ACTION}/${updateUser.id}`,
+      updateUser,
+      {
+        headers: bearerToken(),
+      },
+    );
+    return response.data;
   },
 );

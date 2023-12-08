@@ -5,7 +5,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import useToggle from '../../hooks/useToggle';
 import { useAppDispatch } from '../../store/hooks';
+// import { deleteUser } from '../../store/slices/users/userActions';
+import AlertModal from '../modals/AlertModal';
 import { deleteUser } from '../../store/slices/users/userActions';
+import EditUserModalNew from '../modals/EditUserModalNew';
 
 const EditBodyCell = ({ user }: { user: User }) => {
   const { id, name, surname, type } = user;
@@ -22,7 +25,13 @@ const EditBodyCell = ({ user }: { user: User }) => {
     boxShadow: 24,
     p: 4,
   };
-  const [open, switchOpen] = useToggle();
+  const [openEdit, switchOpenEdit] = useToggle();
+  const [openAlert, switchOpenAlert] = useToggle();
+
+  const handleDeleteUser = () => {
+    dipatch(deleteUser({ id, type }));
+    switchOpenAlert();
+  };
 
   return (
     <>
@@ -31,38 +40,42 @@ const EditBodyCell = ({ user }: { user: User }) => {
           color='success'
           onClick={() => {
             console.log(`edit user ${name} ${surname}`);
-            switchOpen();
+            switchOpenEdit();
           }}
         >
           <EditIcon />
         </IconButton>
-        <IconButton
-          color='success'
-          onClick={() => {
-            console.log('del user');
-            dipatch(deleteUser({ id, type }));
-          }}
-        >
+        <IconButton color='success' onClick={switchOpenAlert}>
           <DeleteIcon />
         </IconButton>
       </TableCell>
 
+      <AlertModal
+        open={openAlert}
+        onClose={switchOpenAlert}
+        message={`Delete ${name} ${surname}!`}
+        onConfirm={handleDeleteUser}
+        confirmMsg='Confirm'
+        closeMsg='Cancel'
+      />
+
       {/* move to EditUserModal */}
-      <Modal
-        open={open}
-        onClose={switchOpen}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-      >
+      <EditUserModalNew
+        open={openEdit}
+        switchOpen={switchOpenEdit}
+        userToUpdate={user}
+      />
+
+      {/* <Modal open={openEdit} onClose={switchOpenEdit}>
         <Box sx={style}>
-          <Typography id='modal-modal-title' variant='h6' component='h2'>
+          <Typography variant='h6' component='h2'>
             Editing User
           </Typography>
-          <Typography id='modal-modal-description' sx={{ mt: 2 }}>
+          <Typography sx={{ mt: 2 }}>
             `{name} {surname} {type}
           </Typography>
         </Box>
-      </Modal>
+      </Modal> */}
     </>
   );
 };

@@ -2,16 +2,21 @@ import React, { useState } from 'react';
 import {
   Box,
   Button,
+  FormControl,
+  FormHelperText,
   Grid,
   IconButton,
   Input,
   InputAdornment,
+  InputLabel,
   MenuItem,
   Modal,
+  OutlinedInput,
   TextField,
   Typography,
 } from '@mui/material';
 import useToggle from '../../hooks/useToggle';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { UserDTO } from '../../model/Model';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
@@ -19,6 +24,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectOccupations } from '../../store/slices/occupation/occupationSlice';
 import { PHYSICIAN } from '../../utils/Users';
 import { insertUser } from '../../store/slices/users/userActions';
+import { isValidEmail, isValidPassword, nameValid } from '../utils';
 
 type props = {
   open: boolean;
@@ -36,6 +42,7 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  borderRadius: '20px',
 };
 
 const AddUserModal = ({ open, switchOpen, userType }: props) => {
@@ -53,6 +60,42 @@ const AddUserModal = ({ open, switchOpen, userType }: props) => {
     occupationId: null,
   };
   const [user, setUser] = useState(initialUser);
+  const [nameError, setNameError] = useState('');
+  const [surnameError, setSurnameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const checkIsNameValid = (name: string) => {
+    nameValid(name) ? setNameError('') : setNameError('Min 2 symbols.');
+  };
+  const checkIsSurnameValid = (surname: string) => {
+    nameValid(surname)
+      ? setSurnameError('')
+      : setSurnameError('Min 2 symbols.');
+  };
+
+  const handleEmailCheck = (email: string) => {
+    isValidEmail(email) ? setEmailError('') : setEmailError('Like: mail@ml.lp');
+  };
+
+  const checkPassword = (password: string) => {
+    isValidPassword(password)
+      ? setPasswordError('')
+      : setPasswordError('At least 4 symbols.');
+  };
+
+  const inputErrors = () => {
+    return (
+      user.name === '' ||
+      user.surname === '' ||
+      user.email === '' ||
+      user.password === '' ||
+      nameError !== '' ||
+      surnameError !== '' ||
+      emailError !== '' ||
+      passwordError !== ''
+    );
+  };
 
   const closeModal = () => {
     setUser(initialUser);
@@ -60,6 +103,7 @@ const AddUserModal = ({ open, switchOpen, userType }: props) => {
       switchShowPass();
     }
     switchOpen();
+    setNameError('');
   };
 
   const addUser = () => {
@@ -77,57 +121,81 @@ const AddUserModal = ({ open, switchOpen, userType }: props) => {
         <Box component='form' noValidate autoComplete='off'>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Input
-                placeholder='Name'
-                onChange={(event) => {
-                  const name = event.target.value;
-                  setUser({ ...user, name });
-                }}
-                value={user.name}
-              />
+              <FormControl error={nameError !== ''}>
+                <InputLabel htmlFor='name-input'>Name</InputLabel>
+                <OutlinedInput
+                  id='name-input'
+                  label='Name'
+                  value={user.name}
+                  onChange={(event) => {
+                    const name = event.target.value;
+                    setUser({ ...user, name });
+                    checkIsNameValid(name);
+                  }}
+                />
+                <FormHelperText>{nameError}</FormHelperText>
+              </FormControl>
             </Grid>
             <Grid item xs={6}>
-              <Input
-                placeholder='Surname'
-                onChange={(event) => {
-                  const surname = event.target.value;
-                  setUser({ ...user, surname });
-                }}
-                value={user.surname}
-              />
+              <FormControl error={surnameError !== ''}>
+                <InputLabel htmlFor='surname-input'>Surname</InputLabel>
+                <OutlinedInput
+                  id='surname-input'
+                  label='Surname'
+                  autoComplete='off'
+                  onChange={(event) => {
+                    const surname = event.target.value;
+                    setUser({ ...user, surname });
+                    checkIsSurnameValid(surname);
+                  }}
+                />
+                <FormHelperText>{surnameError}</FormHelperText>
+              </FormControl>
             </Grid>
             <Grid item xs={6}>
-              <Input
-                autoComplete='off'
-                placeholder='Post'
-                onChange={(event) => {
-                  const email = event.target.value;
-                  setUser({ ...user, email });
-                }}
-                value={user.email}
-              />
+              <FormControl error={emailError !== ''}>
+                <InputLabel htmlFor='email-input'>Email</InputLabel>
+                <OutlinedInput
+                  autoComplete='off'
+                  id='email-input'
+                  label='Email'
+                  onChange={(event) => {
+                    const email = event.target.value;
+                    setUser({ ...user, email });
+                    handleEmailCheck(email);
+                  }}
+                />
+                <FormHelperText>{emailError}</FormHelperText>
+              </FormControl>
             </Grid>
             <Grid item xs={6}>
-              <Input
-                autoComplete='off'
-                placeholder='Secret'
-                onChange={(event) => {
-                  setUser({ ...user, password: event.target.value });
-                }}
-                value={user.password}
-                type={showPass ? 'text' : 'password'}
-                endAdornment={
-                  <InputAdornment position='end'>
-                    <IconButton
-                      aria-label='toggle password visibility'
-                      onClick={switchShowPass}
-                      edge='end'
-                    >
-                      {showPass ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
+              <FormControl error={passwordError !== ''}>
+                <InputLabel htmlFor='pass-input'>Password</InputLabel>
+                <OutlinedInput
+                  autoComplete='off'
+                  id='pass-input'
+                  label='Password'
+                  onChange={(event) => {
+                    const password = event.target.value;
+                    setUser({ ...user, password });
+                    checkPassword(password);
+                  }}
+                  value={user.password}
+                  type={showPass ? 'text' : 'password'}
+                  endAdornment={
+                    <InputAdornment position='end'>
+                      <IconButton
+                        aria-label='toggle password visibility'
+                        onClick={switchShowPass}
+                      >
+                        {showPass ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  sx={{ background: 'WhiteSmoke' }}
+                />
+                <FormHelperText>{passwordError}</FormHelperText>
+              </FormControl>
             </Grid>
             {userType === PHYSICIAN && (
               <Grid item xs={6}>
@@ -150,6 +218,22 @@ const AddUserModal = ({ open, switchOpen, userType }: props) => {
                 </TextField>
               </Grid>
             )}
+
+            {/* <Grid item xs={6}>
+              <FormControl error={nameError !== ''}>
+                <InputLabel htmlFor='name-input'>Name</InputLabel>
+                <OutlinedInput
+                  id='name-input'
+                  label='Name'
+                  onChange={(event) => {
+                    const name = event.target.value;
+                    setUser({ ...user, name });
+                    checkIsNameValid(name);
+                  }}
+                />
+                <FormHelperText>{nameError}</FormHelperText>
+              </FormControl>
+            </Grid> */}
           </Grid>
         </Box>
 
@@ -164,9 +248,21 @@ const AddUserModal = ({ open, switchOpen, userType }: props) => {
           justifyContent='space-around'
           alignItems='center'
         >
-          <Button variant='contained' color='success' onClick={addUser}>
+          {/* <Button
+            variant='contained'
+            color='success'
+            disabled={inputErrors()}
+            onClick={addUser}
+          >
             Add
-          </Button>
+          </Button> */}
+          <IconButton
+            color='success'
+            disabled={inputErrors()}
+            onClick={addUser}
+          >
+            <AddBoxIcon fontSize='large' />
+          </IconButton>
           <IconButton color='success' onClick={closeModal}>
             <CancelIcon fontSize='large' />
           </IconButton>

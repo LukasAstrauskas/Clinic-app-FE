@@ -10,9 +10,11 @@ import {
   selectPatients,
   selectPatientId,
   setPatientId,
+  setPatient,
 } from '../../store/slices/users/patientsSlice';
 import { PATIENT } from '../../utils/Users';
 import { getUsers } from '../../store/slices/users/userActions';
+import { User } from '../../model/Model';
 
 const ManagePatients = () => {
   const dispatch = useAppDispatch();
@@ -34,7 +36,6 @@ const ManagePatients = () => {
   const patients = useAppSelector(selectPatients);
 
   function rowClick(id: string): void {
-    console.log(id);
     dispatch(setPatientId(id));
   }
 

@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { Box, Modal } from '@mui/material';
+import {
+  Box,
+  Grid,
+  IconButton,
+  Input,
+  InputAdornment,
+  Modal,
+} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { isValidName, isValidEmail, isValidPasswordOrEmpty } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
@@ -13,14 +20,23 @@ import {
 import { User, UserDTO } from '../../model/Model';
 import { updateUser } from '../../store/slices/users/userActions';
 import { PHYSICIAN } from '../../utils/Users';
+import CancelIcon from '@mui/icons-material/Cancel';
+import EditIcon from '@mui/icons-material/Edit';
+import { Visibility, Edit, VisibilityOff, Cancel } from '@mui/icons-material';
+import useToggle from '../../hooks/useToggle';
+import { setUser } from '../../store/slices/manage-users/userSlice';
 
 interface Props {
-  open: boolean;
-  switchOpen: () => void;
+  open?: boolean;
+  switchOpen?: () => void;
   userToUpdate: User;
 }
 
-const EditUserModalNew = ({ open, switchOpen, userToUpdate }: Props) => {
+const EditUserModalNew = ({
+  open = true,
+  switchOpen = () => undefined,
+  userToUpdate,
+}: Props) => {
   const dispatch = useAppDispatch();
   const occupations = useAppSelector(selectOccupations);
   const { id, name, surname, email, type, occupation } = userToUpdate;
@@ -34,7 +50,9 @@ const EditUserModalNew = ({ open, switchOpen, userToUpdate }: Props) => {
     type,
     occupationId: occupation ? occupation.id : null,
   };
+
   const [userDTO, setUserDTO] = useState<UserDTO>(initialState);
+  const [showPass, switchShowPass] = useToggle();
 
   const [emailError, setEmailError] = useState('');
   const [firstNameError, setFirstNameError] = useState('');
@@ -51,13 +69,12 @@ const EditUserModalNew = ({ open, switchOpen, userToUpdate }: Props) => {
     setLastNameError('');
     setEmailError('');
     setPasswordError('');
-    setUserDTO(initialState);
+    dispatch(setUser(null));
     switchOpen();
   };
 
   useEffect(() => {
-    if (userToUpdate.type === PHYSICIAN && occupations.length === 0) {
-      alert(`Get occupations`);
+    if (type === PHYSICIAN && occupations.length === 0) {
       dispatch(fetchOccupations());
     }
   }, []);
@@ -70,24 +87,20 @@ const EditUserModalNew = ({ open, switchOpen, userToUpdate }: Props) => {
     isValidName(name)
       ? setFirstNameError('')
       : setFirstNameError(
-          'First name length between 3 and 20 symbols, letters only',
+          'First name length between 2 and 20 symbols, letters only',
         );
   };
 
   const handleLastNameCheck = (name: string) => {
     isValidName(name)
       ? setLastNameError('')
-      : setLastNameError(
-          'First name length between 3 and 20 symbols, letters only',
-        );
+      : setLastNameError('Surame must have at least 2 symbols.');
   };
 
   const handlePasswordCheck = (password: string) => {
     isValidPasswordOrEmpty(password)
       ? setPasswordError('')
-      : setPasswordError(
-          'Password requires 1 letter, 1 number, and must be at least 8 characters long',
-        );
+      : setPasswordError('Must contain at least 4 characters.');
   };
 
   const isInputsValid = () => {
@@ -110,15 +123,7 @@ const EditUserModalNew = ({ open, switchOpen, userToUpdate }: Props) => {
               marginTop: 30,
               fontWeight: '700',
             }}
-          >
-            {/* {userToUpdate.type === 'physician'
-              ? 'Modify Physician'
-              : 'Modify User'}
-            <p>Name: {userDTO.name}.</p>
-            <p>Surname: {userDTO.surname}.</p>
-            <p>Type: {userDTO.type}.</p>
-            <p>InfoID: {userDTO.infoID}.</p> */}
-          </Typography>
+          ></Typography>
           <Box
             sx={{
               width: '470px',
@@ -132,11 +137,9 @@ const EditUserModalNew = ({ open, switchOpen, userToUpdate }: Props) => {
               id='firstName'
               value={userDTO.name}
               onChange={(e) => {
-                setUserDTO({
-                  ...userDTO,
-                  name: e.target.value.trim(),
-                });
-                handleFirstNameCheck(e.target.value);
+                const name = e.target.value;
+                setUserDTO({ ...userDTO, name });
+                handleFirstNameCheck(name);
               }}
               helperText={firstNameError === '' ? 'First Name' : firstNameError}
               error={firstNameError !== ''}
@@ -174,7 +177,7 @@ const EditUserModalNew = ({ open, switchOpen, userToUpdate }: Props) => {
             <TextField
               sx={Styles.textField}
               id='password'
-              type='password'
+              type={showPass ? 'text' : 'password'}
               value={userDTO.password}
               onChange={(e) => {
                 setUserDTO({
@@ -186,7 +189,41 @@ const EditUserModalNew = ({ open, switchOpen, userToUpdate }: Props) => {
               style={{ marginLeft: '20px' }}
               helperText={passwordError === '' ? 'Password' : passwordError}
               error={passwordError !== ''}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton onClick={switchShowPass}>
+                      {showPass ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             ></TextField>
+            {/* <Input
+              autoComplete='off'
+              placeholder='Secret'
+              onChange={(e) => {
+                setUserDTO({
+                  ...userDTO,
+                  password: e.target.value.trim(),
+                });
+                handlePasswordCheck(e.target.value);
+              }}
+              value={userDTO.password}
+              type={showPass ? 'text' : 'password'}
+              error={passwordError !== ''}
+              endAdornment={
+                <InputAdornment position='end'>
+                  <IconButton
+                    aria-label='toggle password visibility'
+                    onClick={switchShowPass}
+                    edge='end'
+                  >
+                    {showPass ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            /> */}
             {userToUpdate.type === 'physician' && (
               <TextField
                 sx={Styles.textField}
@@ -213,7 +250,7 @@ const EditUserModalNew = ({ open, switchOpen, userToUpdate }: Props) => {
             )}
           </Box>
 
-          <Box
+          {/* <Box
             sx={{
               mt: 9,
               textAlign: 'right',
@@ -245,7 +282,24 @@ const EditUserModalNew = ({ open, switchOpen, userToUpdate }: Props) => {
             >
               Modify
             </Button>
-          </Box>
+          </Box> */}
+          <Grid
+            container
+            direction='row'
+            justifyContent='space-evenly'
+            alignItems='center'
+          >
+            <IconButton
+              color='success'
+              onClick={handleUpdateUser}
+              disabled={!isInputsValid()}
+            >
+              <EditIcon fontSize='large' />
+            </IconButton>
+            <IconButton color='success' onClick={handleClose}>
+              <Cancel fontSize='large' />
+            </IconButton>
+          </Grid>
         </Box>
       </Modal>
     </>

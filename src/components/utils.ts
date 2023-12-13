@@ -1,3 +1,6 @@
+const MIN_LENGTH = 2;
+const MAX_LENGTH = 20;
+
 export function isValidFirstName(firstName: string) {
   const MIN_LENGTH = 2;
   const MAX_LENGTH = 21;
@@ -34,6 +37,9 @@ export function isValidName(name: string) {
   );
 }
 
+export const nameValid = (name: string) =>
+  name.length >= MIN_LENGTH && name.length <= MAX_LENGTH;
+
 export function isValidEmail(email: string) {
   const MIN_LENGTH = 5;
   const MAX_LENGTH = 254;
@@ -46,14 +52,12 @@ export function isValidEmail(email: string) {
 }
 
 export function isValidPassword(password: string) {
-  const MIN_LENGTH = 8;
+  const MIN_LENGTH = 4;
   const MAX_LENGTH = 20;
 
   return (
-    password.length >= MIN_LENGTH &&
-    password.length <= MAX_LENGTH &&
-    /[a-z]/i.test(password) &&
-    /[0-9]/.test(password)
+    password.length >= MIN_LENGTH && password.length <= MAX_LENGTH
+    //  && /[a-z]/i.test(password) && /[0-9]/.test(password)
   );
 }
 

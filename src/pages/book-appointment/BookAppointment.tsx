@@ -31,6 +31,7 @@ import {
   setPatientSearch,
 } from '../../store/slices/users/patientsSlice';
 import { getUsers } from '../../store/slices/users/userActions';
+import { User } from '../../model/Model';
 
 const BookAppointment = () => {
   const type: string = useAppSelector(selectLoggedUserType);
@@ -96,8 +97,8 @@ const BookAppointment = () => {
     );
   };
 
-  const rowClick = (id: string) => {
-    dispatch(pickTimeslot({ ...timeslot, patientId: id }));
+  const rowClick = (patientId: string) => {
+    dispatch(pickTimeslot({ ...timeslot, patientId }));
   };
 
   const appointmentInfo = (

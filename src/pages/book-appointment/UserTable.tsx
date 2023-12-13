@@ -11,11 +11,14 @@ import { grey } from '@mui/material/colors';
 import React, { useEffect } from 'react';
 import { tableRowSX } from '../../components/physician-table/PhysicianTable';
 import { User } from '../../model/Model';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { ADMIN, PATIENT, PHYSICIAN } from '../../utils/Users';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getUsers } from '../../store/slices/users/userActions';
 import EditBodyCell from '../../components/manage-users/EditBodyCell';
+import EditUserModalNew from '../../components/modals/EditUserModalNew';
+import { selectPatient } from '../../store/slices/users/patientsSlice';
+import { selectUser } from '../../store/slices/manage-users/userSlice';
 
 type props = {
   users: User[];
@@ -40,16 +43,13 @@ const UserTable = ({
 }: props) => {
   const dispach = useAppDispatch();
   const offset = users.length;
+  const selectedUser = useAppSelector(selectUser);
 
   useEffect(() => {
     if (users.length === 0) {
       console.log(`length 0, fetching data`);
       dispach(getUsers({ offset, userType }));
     }
-  }, []);
-
-  useEffect(() => {
-    console.log(users);
   }, []);
 
   const occupHeadCell = (
@@ -80,30 +80,6 @@ const UserTable = ({
     );
   };
 
-  // const editBodyCell = (user: User) => {
-  //   const { name, surname } = user;
-  //   return (
-  //     <TableCell>
-  //       <IconButton
-  //         color='success'
-  //         onClick={() => {
-  //           console.log(`edit user ${name} ${surname}`);
-  //         }}
-  //       >
-  //         <EditIcon />
-  //       </IconButton>
-  //       <IconButton
-  //         color='success'
-  //         onClick={() => {
-  //           console.log('del user');
-  //         }}
-  //       >
-  //         <DeleteIcon />
-  //       </IconButton>
-  //     </TableCell>
-  //   );
-  // };
-
   return (
     <TableContainer
       component={Paper}
@@ -111,7 +87,6 @@ const UserTable = ({
       sx={{
         backgroundColor: grey[200],
         marginTop: 2,
-        // border: 2,
         height: 320,
         overflow: 'scroll',
       }}
@@ -157,6 +132,7 @@ const UserTable = ({
           </TableBody>
         </Table>
       </InfiniteScroll>
+      {selectedUser && <EditUserModalNew userToUpdate={selectedUser} />}
     </TableContainer>
   );
 };

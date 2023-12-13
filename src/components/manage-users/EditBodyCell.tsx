@@ -9,6 +9,8 @@ import { useAppDispatch } from '../../store/hooks';
 import AlertModal from '../modals/AlertModal';
 import { deleteUser } from '../../store/slices/users/userActions';
 import EditUserModalNew from '../modals/EditUserModalNew';
+import { setPatient } from '../../store/slices/users/patientsSlice';
+import { setUser } from '../../store/slices/manage-users/userSlice';
 
 const EditBodyCell = ({ user }: { user: User }) => {
   const { id, name, surname, type } = user;
@@ -25,7 +27,7 @@ const EditBodyCell = ({ user }: { user: User }) => {
     boxShadow: 24,
     p: 4,
   };
-  const [openEdit, switchOpenEdit] = useToggle();
+  // const [openEdit, switchOpenEdit] = useToggle();
   const [openAlert, switchOpenAlert] = useToggle();
 
   const handleDeleteUser = () => {
@@ -40,7 +42,8 @@ const EditBodyCell = ({ user }: { user: User }) => {
           color='success'
           onClick={() => {
             console.log(`edit user ${name} ${surname}`);
-            switchOpenEdit();
+            // switchOpenEdit();
+            dipatch(setUser(user));
           }}
         >
           <EditIcon />
@@ -59,12 +62,12 @@ const EditBodyCell = ({ user }: { user: User }) => {
         closeMsg='Cancel'
       />
 
-      {/* move to EditUserModal */}
-      <EditUserModalNew
+      {/* move to UserTable */}
+      {/* <EditUserModalNew
         open={openEdit}
         switchOpen={switchOpenEdit}
         userToUpdate={user}
-      />
+      /> */}
 
       {/* <Modal open={openEdit} onClose={switchOpenEdit}>
         <Box sx={style}>

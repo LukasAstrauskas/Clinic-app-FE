@@ -13,6 +13,7 @@ import {
 } from '../../store/slices/users/physiciansSlice';
 import { getUsers } from '../../store/slices/users/userActions';
 import { PHYSICIAN } from '../../utils/Users';
+import { User } from '../../model/Model';
 
 const TimeslotsPhysiciansTable = () => {
   const dispatch = useAppDispatch();

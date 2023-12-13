@@ -53,13 +53,9 @@ export const deleteUser = createAsyncThunk(
 export const updateUser = createAsyncThunk(
   'updateUser',
   async (updateUser: UserDTO) => {
-    const response = await axios.put(
-      `${ADMIN_ACTION}/${updateUser.id}`,
-      updateUser,
-      {
-        headers: bearerToken(),
-      },
-    );
+    const response = await axios.put(`${ADMIN_ACTION}`, updateUser, {
+      headers: bearerToken(),
+    });
     return response.data;
   },
 );

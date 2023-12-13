@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../../reducers';
 import { CreateUserDTO, UpdateUserDTO, User } from '../../../model/Model';
@@ -64,7 +64,11 @@ export const deleteUser = createAsyncThunk(
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setUser(state, action: PayloadAction<User | null>) {
+      state.user = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserById.pending, (state) => {
@@ -120,6 +124,8 @@ export const userSlice = createSlice({
       });
   },
 });
+
+export const { setUser } = userSlice.actions;
 
 export const selectUser = (state: RootState) => state.user.user;
 export const selectUserName = (state: RootState) =>

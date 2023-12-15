@@ -17,7 +17,6 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { getUsers } from '../../store/slices/users/userActions';
 import EditBodyCell from '../../components/manage-users/EditBodyCell';
 import EditUserModalNew from '../../components/modals/EditUserModalNew';
-import { selectPatient } from '../../store/slices/users/patientsSlice';
 import { selectUser } from '../../store/slices/manage-users/userSlice';
 
 type props = {

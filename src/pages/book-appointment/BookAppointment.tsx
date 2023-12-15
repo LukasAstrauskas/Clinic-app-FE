@@ -31,7 +31,6 @@ import {
   setPatientSearch,
 } from '../../store/slices/users/patientsSlice';
 import { getUsers } from '../../store/slices/users/userActions';
-import { User } from '../../model/Model';
 
 const BookAppointment = () => {
   const type: string = useAppSelector(selectLoggedUserType);

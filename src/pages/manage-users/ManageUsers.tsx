@@ -34,6 +34,7 @@ const ManageUsers = () => {
             textColor='secondary'
             indicatorColor='secondary'
             style={{
+              border: 2,
               backgroundColor: '#f4f4f4',
               borderRadius: '5px',
               padding: 1,

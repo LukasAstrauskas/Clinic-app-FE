@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import {
-  Box,
-  Grid,
-  IconButton,
-  Input,
-  InputAdornment,
-  Modal,
-} from '@mui/material';
+import { Box, Grid, IconButton, InputAdornment, Modal } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { isValidName, isValidEmail, isValidPasswordOrEmpty } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
@@ -20,9 +13,8 @@ import {
 import { User, UserDTO } from '../../model/Model';
 import { updateUser } from '../../store/slices/users/userActions';
 import { PHYSICIAN } from '../../utils/Users';
-import CancelIcon from '@mui/icons-material/Cancel';
 import EditIcon from '@mui/icons-material/Edit';
-import { Visibility, Edit, VisibilityOff, Cancel } from '@mui/icons-material';
+import { Visibility, VisibilityOff, Cancel } from '@mui/icons-material';
 import useToggle from '../../hooks/useToggle';
 import { setUser } from '../../store/slices/manage-users/userSlice';
 
@@ -199,31 +191,7 @@ const EditUserModalNew = ({
                 ),
               }}
             ></TextField>
-            {/* <Input
-              autoComplete='off'
-              placeholder='Secret'
-              onChange={(e) => {
-                setUserDTO({
-                  ...userDTO,
-                  password: e.target.value.trim(),
-                });
-                handlePasswordCheck(e.target.value);
-              }}
-              value={userDTO.password}
-              type={showPass ? 'text' : 'password'}
-              error={passwordError !== ''}
-              endAdornment={
-                <InputAdornment position='end'>
-                  <IconButton
-                    aria-label='toggle password visibility'
-                    onClick={switchShowPass}
-                    edge='end'
-                  >
-                    {showPass ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            /> */}
+
             {userToUpdate.type === 'physician' && (
               <TextField
                 sx={Styles.textField}
@@ -250,39 +218,6 @@ const EditUserModalNew = ({
             )}
           </Box>
 
-          {/* <Box
-            sx={{
-              mt: 9,
-              textAlign: 'right',
-            }}
-          >
-            <Button
-              sx={{
-                border: '1px solid orange',
-                color: 'orange',
-                '&:hover': {
-                  color: 'orange',
-                },
-              }}
-              onClick={handleClose}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant='contained'
-              sx={{
-                marginLeft: 3,
-                bgcolor: '#25ced1',
-                '&:hover': {
-                  bgcolor: '#25ced1',
-                },
-              }}
-              disabled={!isInputsValid()}
-              onClick={handleUpdateUser}
-            >
-              Modify
-            </Button>
-          </Box> */}
           <Grid
             container
             direction='row'

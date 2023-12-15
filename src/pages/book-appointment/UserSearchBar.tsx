@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   FormControl,
-  IconButton,
   InputAdornment,
   MenuItem,
   Select,
@@ -20,7 +19,6 @@ import {
   selectOccupationId,
   setOccupationSearch,
 } from '../../store/slices/users/physiciansSlice';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import AddUserButton from '../manage-users/AddUserButton';
 
 interface SearchProps {
@@ -75,7 +73,7 @@ const UserSearchBar = ({
       spacing={1}
       sx={{
         marginBottom: 1,
-        border: 1,
+        // border: 1,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

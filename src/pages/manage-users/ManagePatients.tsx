@@ -10,11 +10,9 @@ import {
   selectPatients,
   selectPatientId,
   setPatientId,
-  setPatient,
 } from '../../store/slices/users/patientsSlice';
 import { PATIENT } from '../../utils/Users';
 import { getUsers } from '../../store/slices/users/userActions';
-import { User } from '../../model/Model';
 
 const ManagePatients = () => {
   const dispatch = useAppDispatch();
@@ -50,7 +48,7 @@ const ManagePatients = () => {
       }}
     >
       <Stack>
-        <Typography variant='caption'>{search}</Typography>
+        {/* <Typography variant='caption'>{search}</Typography> */}
         <UserSearchBar
           onSearch={onSearch}
           userType={patient}

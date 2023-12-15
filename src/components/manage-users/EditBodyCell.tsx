@@ -5,11 +5,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import useToggle from '../../hooks/useToggle';
 import { useAppDispatch } from '../../store/hooks';
-// import { deleteUser } from '../../store/slices/users/userActions';
 import AlertModal from '../modals/AlertModal';
 import { deleteUser } from '../../store/slices/users/userActions';
-import EditUserModalNew from '../modals/EditUserModalNew';
-import { setPatient } from '../../store/slices/users/patientsSlice';
 import { setUser } from '../../store/slices/manage-users/userSlice';
 
 const EditBodyCell = ({ user }: { user: User }) => {
@@ -27,7 +24,6 @@ const EditBodyCell = ({ user }: { user: User }) => {
     boxShadow: 24,
     p: 4,
   };
-  // const [openEdit, switchOpenEdit] = useToggle();
   const [openAlert, switchOpenAlert] = useToggle();
 
   const handleDeleteUser = () => {
@@ -41,8 +37,6 @@ const EditBodyCell = ({ user }: { user: User }) => {
         <IconButton
           color='success'
           onClick={() => {
-            console.log(`edit user ${name} ${surname}`);
-            // switchOpenEdit();
             dipatch(setUser(user));
           }}
         >
@@ -52,7 +46,6 @@ const EditBodyCell = ({ user }: { user: User }) => {
           <DeleteIcon />
         </IconButton>
       </TableCell>
-
       <AlertModal
         open={openAlert}
         onClose={switchOpenAlert}
@@ -61,24 +54,6 @@ const EditBodyCell = ({ user }: { user: User }) => {
         confirmMsg='Confirm'
         closeMsg='Cancel'
       />
-
-      {/* move to UserTable */}
-      {/* <EditUserModalNew
-        open={openEdit}
-        switchOpen={switchOpenEdit}
-        userToUpdate={user}
-      /> */}
-
-      {/* <Modal open={openEdit} onClose={switchOpenEdit}>
-        <Box sx={style}>
-          <Typography variant='h6' component='h2'>
-            Editing User
-          </Typography>
-          <Typography sx={{ mt: 2 }}>
-            `{name} {surname} {type}
-          </Typography>
-        </Box>
-      </Modal> */}
     </>
   );
 };

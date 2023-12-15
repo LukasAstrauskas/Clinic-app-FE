@@ -140,6 +140,7 @@ const TimetableList = ({ physicianId }: Props) => {
                     <TableCell align='left' key={`Stack${date}`}>
                       <Stack direction='row' style={{ flexWrap: 'wrap' }}>
                         {timeslots.map((timeslot) => {
+                          console.log(timeslot.patientId);
                           return (
                             <Timechip
                               timeslot={timeslot}

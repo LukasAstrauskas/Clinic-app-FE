@@ -95,9 +95,9 @@ const Timechip = ({ timeslot, date, selected, onDelete, onClick }: Props) => {
           label={time}
           variant='outlined'
           disabled={isInFuture}
-          onDelete={() => onDelete(timeslot)}
+          onDelete={onDelete}
           onClick={handleClick}
-          sx={timeslot.patientId === null ? freeTimeSX(selected) : bookedTimeSX}
+          sx={!timeslot.patientId ? freeTimeSX(selected) : bookedTimeSX}
         />
         <TimechipPopper
           patientId={timeslot.patientId}

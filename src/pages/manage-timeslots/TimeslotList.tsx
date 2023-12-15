@@ -43,10 +43,14 @@ const TimeslotList = ({ physicianId }: Props) => {
   const dispatch = useAppDispatch();
   const [date, setDate] = useState('');
 
-  const timeslots = useAppSelector(selectTimeslots);
+  const groupedTimeslots = useAppSelector(selectTimeslots);
   const timeslot = useAppSelector(selectTimeslot);
 
   const [pickDate, setPickDate] = useState<Dayjs>(dayjs().date(1));
+
+  useEffect(() => {
+    console.log('Timeslots list state changed');
+  }, [groupedTimeslots]);
 
   const handleOpenModal = (date: string): void => {
     setOpenModal();
@@ -169,9 +173,9 @@ const TimeslotList = ({ physicianId }: Props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {timeslots.length !== 0 ? (
+            {groupedTimeslots.length !== 0 ? (
               <>
-                {timeslots.map(({ date, timeslots }) => (
+                {groupedTimeslots.map(({ date, timeslots }) => (
                   <TableRow
                     key={date}
                     sx={{
@@ -194,6 +198,7 @@ const TimeslotList = ({ physicianId }: Props) => {
                     <TableCell align='left' key={`Stack${date}`}>
                       <Stack direction='row' style={{ flexWrap: 'wrap' }}>
                         {timeslots.map((timeslot) => {
+                          // console.log(JSON.stringify(timeslot));
                           return (
                             <Timechip
                               timeslot={timeslot}

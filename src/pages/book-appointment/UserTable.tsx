@@ -131,7 +131,9 @@ const UserTable = ({
           </TableBody>
         </Table>
       </InfiniteScroll>
-      {selectedUser && <EditUserModalNew userToUpdate={selectedUser} />}
+      {selectedUser && renderEditButtons && (
+        <EditUserModalNew userToUpdate={selectedUser} />
+      )}
     </TableContainer>
   );
 };

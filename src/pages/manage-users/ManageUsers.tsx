@@ -6,6 +6,8 @@ import { Tabs, Tab, createTheme, Box } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
 import TabPanel from '../../components/TabPanel';
 import ManagePatients from './ManagePatients';
+import ManagePhysicians from './ManagePhysicians';
+import ManageAdmins from './ManageAdmins';
 
 const theme = createTheme({
   palette: {
@@ -44,6 +46,7 @@ const ManageUsers = () => {
             }}
           >
             <Tab label='Patients' />
+            {/* <Tab label='Physicians' /> */}
             <Tab label='Physicians' />
             <Tab label='Admins' />
           </Tabs>
@@ -52,11 +55,14 @@ const ManageUsers = () => {
         <TabPanel value={value} index={0}>
           <ManagePatients />
         </TabPanel>
-        <TabPanel value={value} index={1}>
+        {/* <TabPanel value={value} index={1}>
           <Physicians />
+        </TabPanel> */}
+        <TabPanel value={value} index={1}>
+          <ManagePhysicians />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <Admins />
+          <ManageAdmins />
         </TabPanel>
       </ThemeProvider>
     </>

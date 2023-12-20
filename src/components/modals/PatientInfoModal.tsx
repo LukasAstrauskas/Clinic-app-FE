@@ -19,7 +19,7 @@ const PatientInfoModal = ({ open, onClose, patientName }: Props) => {
         sx={{
           position: 'absolute',
           top: '50%',
-          left: '50%',
+          left: '20%',
           transform: 'translate(-50%, -50%)',
           height: '80%',
           width: '30%',
@@ -93,7 +93,7 @@ const PatientInfoModal = ({ open, onClose, patientName }: Props) => {
           sx={{
             display: 'flex',
             justifyContent: 'flex-end',
-            marginTop: '30px',
+            marginTop: '5px',
           }}
         >
           <Button

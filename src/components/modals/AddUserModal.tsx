@@ -218,22 +218,6 @@ const AddUserModal = ({ open, switchOpen, userType }: props) => {
                 </TextField>
               </Grid>
             )}
-
-            {/* <Grid item xs={6}>
-              <FormControl error={nameError !== ''}>
-                <InputLabel htmlFor='name-input'>Name</InputLabel>
-                <OutlinedInput
-                  id='name-input'
-                  label='Name'
-                  onChange={(event) => {
-                    const name = event.target.value;
-                    setUser({ ...user, name });
-                    checkIsNameValid(name);
-                  }}
-                />
-                <FormHelperText>{nameError}</FormHelperText>
-              </FormControl>
-            </Grid> */}
           </Grid>
         </Box>
 
@@ -248,14 +232,6 @@ const AddUserModal = ({ open, switchOpen, userType }: props) => {
           justifyContent='space-around'
           alignItems='center'
         >
-          {/* <Button
-            variant='contained'
-            color='success'
-            disabled={inputErrors()}
-            onClick={addUser}
-          >
-            Add
-          </Button> */}
           <IconButton
             color='success'
             disabled={inputErrors()}

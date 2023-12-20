@@ -11,6 +11,7 @@ import loggedUserReducer from './slices/loggedUser/loggedUserSlice';
 import { appointmentSlice } from './slices/appointment/appointmentSlice';
 import { patientsSlice } from './slices/users/patientsSlice';
 import { physiciansSlice } from './slices/users/physiciansSlice';
+import { adminsSlice } from './slices/users/adminsSlice';
 // import appointmentReducer from './slices/appointment/appointmentSlice';
 // import loggedUserSlice from './slices/loggedUser/loggedUserSlice';
 
@@ -30,6 +31,7 @@ const appReducer = combineReducers({
   appointment: appointmentSlice.reducer,
   patients: patientsSlice.reducer,
   physicians: physiciansSlice.reducer,
+  admins: adminsSlice.reducer,
 });
 
 export const rootReducer: Reducer<

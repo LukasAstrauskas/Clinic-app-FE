@@ -1,27 +1,27 @@
 import React from 'react';
-import { Box, Stack, Typography } from '@mui/material';
+import { ADMIN } from '../../utils/Users';
+import { Box, Stack } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import UserSearchBar from '../book-appointment/UserSearchBar';
 import UserTable from '../book-appointment/UserTable';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import {
-  setPatientSearch,
-  clearPatients,
-  selectPatientSearch,
-  selectPatients,
-  selectPatientId,
-  setPatientId,
-} from '../../store/slices/users/patientsSlice';
-import { PATIENT } from '../../utils/Users';
 import { getUsers } from '../../store/slices/users/userActions';
+import {
+  clearAdmins,
+  selectAdminId,
+  selectAdminSearch,
+  selectAdmins,
+  setAdminID,
+  setAdminsSearch,
+} from '../../store/slices/users/adminsSlice';
 
-const ManagePatients = () => {
+const ManageAdmins = () => {
   const dispatch = useAppDispatch();
 
-  const search = useAppSelector(selectPatientSearch);
+  const search = useAppSelector(selectAdminSearch);
 
   const onSearch = (search: string, userType: string) => {
-    dispatch(setPatientSearch(search));
-    dispatch(clearPatients());
+    dispatch(setAdminsSearch(search));
+    dispatch(clearAdmins());
     dispatch(
       getUsers({
         search,
@@ -29,15 +29,15 @@ const ManagePatients = () => {
       }),
     );
   };
-  const patient = PATIENT;
+  const admin = ADMIN;
 
-  const patients = useAppSelector(selectPatients);
+  const admins = useAppSelector(selectAdmins);
 
   function rowClick(id: string): void {
-    dispatch(setPatientId(id));
+    dispatch(setAdminID(id));
   }
 
-  const selectedID = useAppSelector(selectPatientId);
+  const selectedID = useAppSelector(selectAdminId);
 
   return (
     <Box
@@ -50,13 +50,13 @@ const ManagePatients = () => {
       <Stack>
         <UserSearchBar
           onSearch={onSearch}
-          userType={patient}
+          userType={admin}
           searchState={search}
           addButton
         />
         <UserTable
-          userType={patient}
-          users={patients}
+          userType={admin}
+          users={admins}
           search={search}
           onClick={rowClick}
           selectedID={selectedID}
@@ -67,4 +67,4 @@ const ManagePatients = () => {
   );
 };
 
-export default ManagePatients;
+export default ManageAdmins;

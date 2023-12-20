@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { Box, Popper, Button, Typography } from '@mui/material';
+import { Box, Popper, Button, Typography, Alert } from '@mui/material';
 import Styles from '../styles/UserManagmentStyles';
 import { fetchPatientInfo } from '../../store/slices/patient/patientSlice';
-import { selectUserName } from '../../store/slices/manage-users/userSlice';
+import {
+  selectUserName,
+  setUser,
+} from '../../store/slices/manage-users/userSlice';
 import PatientInfoModal from '../modals/PatientInfoModal';
 import { cancelAppointment } from '../../store/slices/timeslot/timeslotActions';
 
@@ -11,7 +14,7 @@ interface Props {
   patientId: string;
   timeslotId: string;
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  switchOpen: () => void;
   anchorEl: HTMLElement | null;
   // onCancelAppointment?: () => void;
 }
@@ -20,7 +23,7 @@ const TimechipPopper = ({
   patientId,
   timeslotId,
   open,
-  setOpen,
+  switchOpen,
   anchorEl,
 }: // onCancelAppointment,
 Props) => {
@@ -35,13 +38,18 @@ Props) => {
 
   const handleModalClose = () => {
     setModalOpen(false);
+    dispatch(setUser(null));
   };
 
   const onCancelAppointment = () => {
     dispatch(cancelAppointment(timeslotId));
     setTimeout(() => {
-      setOpen(false);
+      closePopper();
     }, 500);
+  };
+  const closePopper = () => {
+    switchOpen();
+    // dispatch(setUser(null));
   };
 
   return (
@@ -55,6 +63,7 @@ Props) => {
             enabled: false,
           },
         ]}
+        onMouseLeave={closePopper}
       >
         <Box
           sx={{
@@ -63,7 +72,6 @@ Props) => {
             borderRadius: '10px',
             backgroundColor: 'white',
           }}
-          onMouseLeave={() => setOpen(false)}
         >
           <Box
             sx={{

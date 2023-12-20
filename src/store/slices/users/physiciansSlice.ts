@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { User } from '../../../model/Model';
 import { Status } from '../../../utils/Status';
 import { PHYSICIAN } from '../../../utils/Users';
-import { getUsers } from './userActions';
+import { deleteUser, getUsers, updateUser } from './userActions';
 import { RootState } from '../../reducers';
 
 interface PhysiciansState {
@@ -71,11 +71,31 @@ export const physiciansSlice = createSlice({
         localStorage.setItem('physicians', JSON.stringify(state.physicians));
       }
     });
-    // builder.addCase(patientSearch.fulfilled, (state, action) => {
-    //   state.patients = [...state.patients, ...action.payload];
-    //   state.status = Status.SUCCEEDED;
-    //   localStorage.setItem('patients', JSON.stringify(state.patients));
-    // });
+    builder.addCase(deleteUser.fulfilled, (state, action) => {
+      const { id, type } = action.payload;
+      if (type === PHYSICIAN) {
+        state.physicians = state.physicians.filter(
+          (physician) => physician.id !== id,
+        );
+        state.status = Status.SUCCEEDED;
+        localStorage.setItem('physicians', JSON.stringify(state.physicians));
+      }
+    });
+    builder.addCase(updateUser.fulfilled, (state, action) => {
+      const updatedUser: User = action.payload;
+      const { id, type, name, surname, email, occupation } = updatedUser;
+      if (type === PHYSICIAN) {
+        const arrayUser: User[] = state.physicians.map((physician) => {
+          if (physician.id === id) {
+            physician = { ...physician, name, surname, email, occupation };
+          }
+          return physician;
+        });
+        state.physicians = arrayUser;
+        state.status = Status.SUCCEEDED;
+        localStorage.setItem('patients', JSON.stringify(state.physicians));
+      }
+    });
   },
 });
 
@@ -85,6 +105,7 @@ export const {
   setPhysicianID,
   setOccupationSearch,
 } = physiciansSlice.actions;
+
 export const selectPhysicians = (state: RootState) =>
   state.physicians.physicians;
 export const selectPhysicianSearch = (state: RootState) =>
@@ -93,5 +114,8 @@ export const selectOccupationId = (state: RootState) =>
   state.physicians.occupationId;
 export const selectPhysicianId = (state: RootState) =>
   state.physicians.physicianId;
+
+// export const selectPhysiciaNState = (state: RootState) =>
+// state.physicians.;
 // export const patientsLength = (state: RootState) =>
 //   state.patients.patients.length;

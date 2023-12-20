@@ -12,6 +12,7 @@ import {
   selectIsLogged,
   selectLoggedUser,
 } from '../../store/slices/loggedUser/loggedUserSlice';
+import { PAGENEAME } from '../../utils/Constants';
 
 const Header = () => {
   const loggedUser = useAppSelector(selectLoggedUser);
@@ -44,7 +45,7 @@ const Header = () => {
             alt='clinic-logo'
             className={styles.clinicLogo}
           />
-          <h1>G-Unit Clinic</h1>
+          <h1>{PAGENEAME}</h1>
         </div>
       </NavLink>
       <Stack direction='row' spacing={2}>

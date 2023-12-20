@@ -90,6 +90,8 @@ const loggedUserSlice = createSlice({
       localStorage.removeItem('loggedUser');
       localStorage.removeItem('token');
       localStorage.removeItem('patients');
+      localStorage.removeItem('physicians');
+      localStorage.removeItem('admins');
       state.loggedUser = user;
     },
     addAppointment(state, action: PayloadAction<PatientAppointment>) {

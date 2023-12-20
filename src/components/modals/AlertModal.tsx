@@ -22,25 +22,23 @@ const AlertModal = ({
   closeMsg: close = 'Close',
 }: Props) => {
   return (
-    <div>
-      <Dialog
-        open={open}
-        onClose={onClose}
-        sx={{
-          backdropFilter: 'blur(5px)',
-        }}
-      >
-        <DialogTitle>{message}</DialogTitle>
-        <DialogActions sx={{ m: 'auto' }}>
-          {onConfirm !== undefined && (
-            <Button onClick={onConfirm}>{agree}</Button>
-          )}
-          <Button onClick={onClose} autoFocus>
-            {close}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      sx={{
+        backdropFilter: 'blur(5px)',
+      }}
+    >
+      <DialogTitle>{message}</DialogTitle>
+      <DialogActions sx={{ m: 'auto' }}>
+        {onConfirm !== undefined && (
+          <Button onClick={onConfirm}>{agree}</Button>
+        )}
+        <Button onClick={onClose} autoFocus>
+          {close}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

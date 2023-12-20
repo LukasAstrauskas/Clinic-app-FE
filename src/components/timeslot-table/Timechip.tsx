@@ -7,6 +7,7 @@ import { fetchUserById } from '../../store/slices/manage-users/userSlice';
 import { Timeslot } from '../../model/Model';
 import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
 import dayjs from 'dayjs';
+import useToggle from '../../hooks/useToggle';
 
 interface Props {
   timeslot: Timeslot;
@@ -51,7 +52,8 @@ const bookedTimeSX = {
 
 const Timechip = ({ timeslot, date, selected, onDelete, onClick }: Props) => {
   const dispatch = useAppDispatch();
-  const [open, setOpen] = useState(false);
+  // const [isOpen, switchOpen] = useState(false);
+  const [isOpen, switchOpen] = useToggle();
   const type = useAppSelector(selectLoggedUserType);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const time = dayjs(timeslot.date).format('HH:mm');
@@ -61,54 +63,65 @@ const Timechip = ({ timeslot, date, selected, onDelete, onClick }: Props) => {
     onClick(timeslot);
     if (timeslot.patientId && (type === 'admin' || type === 'physician')) {
       setAnchorEl(event.currentTarget);
-      setOpen(true);
+      switchOpen();
       dispatch(fetchUserById(timeslot.patientId));
     }
   };
 
-  if (onDelete === undefined) {
-    return (
-      <>
-        <Chip
-          label={time}
-          variant='outlined'
-          disabled={isInFuture}
-          onClick={handleClick}
-          sx={
-            // timeslot.patientId === null || timeslot.patientId === ''
-            !timeslot.patientId ? freeTimeSX(selected) : bookedTimeSX
-          }
-        />
-        <TimechipPopper
-          patientId={timeslot.patientId}
-          timeslotId={timeslot.id}
-          open={open}
-          setOpen={setOpen}
-          anchorEl={anchorEl}
-        />
-      </>
+  const timeChip =
+    onDelete === undefined ? (
+      <Chip
+        label={time}
+        variant='outlined'
+        disabled={isInFuture}
+        onClick={handleClick}
+        sx={!timeslot.patientId ? freeTimeSX(selected) : bookedTimeSX}
+      />
+    ) : (
+      <Chip
+        label={time}
+        variant='outlined'
+        disabled={isInFuture}
+        onDelete={onDelete}
+        onClick={handleClick}
+        sx={!timeslot.patientId ? freeTimeSX(selected) : bookedTimeSX}
+      />
     );
-  } else {
-    return (
-      <>
-        <Chip
-          label={time}
-          variant='outlined'
-          disabled={isInFuture}
-          onDelete={onDelete}
-          onClick={handleClick}
-          sx={!timeslot.patientId ? freeTimeSX(selected) : bookedTimeSX}
-        />
-        <TimechipPopper
-          patientId={timeslot.patientId}
-          timeslotId={timeslot.id}
-          open={open}
-          setOpen={setOpen}
-          anchorEl={anchorEl}
-        />
-      </>
-    );
-  }
+
+  // if (onDelete === undefined) {
+  return (
+    <>
+      {timeChip}
+      <TimechipPopper
+        patientId={timeslot.patientId}
+        timeslotId={timeslot.id}
+        open={isOpen}
+        switchOpen={switchOpen}
+        anchorEl={anchorEl}
+      />
+    </>
+  );
+  // } else {
+  //   return (
+  //     <>
+  //       <Chip
+  //         label={time}
+  //         variant='outlined'
+  //         disabled={isInFuture}
+  //         onDelete={onDelete}
+  //         onClick={handleClick}
+  //         sx={!timeslot.patientId ? freeTimeSX(selected) : bookedTimeSX}
+  //       />
+  //       <TimechipPopper
+  //         patientId={timeslot.patientId}
+  //         timeslotId={timeslot.id}
+  //         open={open}
+  //         setOpen={setOpen}
+  //         anchorEl={anchorEl}
+  //       />
+  //     </>
+  //   );
+  // }
 };
 
 export default Timechip;

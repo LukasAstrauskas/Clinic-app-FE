@@ -1,62 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { Box, Modal } from '@mui/material';
+import { Box, Grid, IconButton, InputAdornment, Modal } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { isValidName, isValidEmail, isValidPasswordOrEmpty } from '../utils';
 import Styles from '../styles/UserManagmentStyles';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { updateUser } from '../../store/slices/manage-users/userSlice';
 import {
   fetchOccupations,
   selectOccupations,
 } from '../../store/slices/occupation/occupationSlice';
-import { CreateUserDTO, UpdateUserDTO } from '../../model/Model';
+import { User, UserDTO } from '../../model/Model';
+import { updateUser } from '../../store/slices/users/userActions';
+import { PHYSICIAN } from '../../utils/Users';
+import EditIcon from '@mui/icons-material/Edit';
+import { Visibility, VisibilityOff, Cancel } from '@mui/icons-material';
+import useToggle from '../../hooks/useToggle';
+import { setUser } from '../../store/slices/manage-users/userSlice';
 
 interface Props {
-  setOpen: (open: boolean) => void;
-  open: boolean;
-  id: string;
-  userToUpdate: CreateUserDTO;
-  refresh: boolean;
-  setRefresh: (refresh: boolean) => void;
+  open?: boolean;
+  switchOpen?: () => void;
+  userToUpdate: User;
 }
 
 const EditUserModal = ({
-  open,
-  setOpen,
-  id,
+  open = true,
+  switchOpen = () => undefined,
   userToUpdate,
-  setRefresh,
-  refresh,
 }: Props) => {
   const dispatch = useAppDispatch();
   const occupations = useAppSelector(selectOccupations);
+  const { id, name, surname, email, type, occupation } = userToUpdate;
 
-  const initialState: CreateUserDTO = {
-    name: '',
-    surname: '',
-    email: '',
+  const initialState: UserDTO = {
+    id,
+    name,
+    surname,
     password: '',
-    type: '',
-    infoID: undefined,
+    email,
+    type,
+    occupationId: occupation ? occupation.id : null,
   };
-  const [userDTO, setUserDTO] = useState<CreateUserDTO>(initialState);
+
+  const [userDTO, setUserDTO] = useState<UserDTO>(initialState);
+  const [showPass, switchShowPass] = useToggle();
 
   const [emailError, setEmailError] = useState('');
   const [firstNameError, setFirstNameError] = useState('');
   const [lastNameError, setLastNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-  const handleUpdateUserById = async () => {
-    const updatedUserDTO: UpdateUserDTO = {
-      id: id,
-      userDTO: userDTO,
-    };
-
-    await dispatch(updateUser(updatedUserDTO));
-
-    setRefresh(!refresh);
+  const handleUpdateUser = async () => {
+    dispatch(updateUser(userDTO));
     handleClose();
   };
 
@@ -65,21 +61,15 @@ const EditUserModal = ({
     setLastNameError('');
     setEmailError('');
     setPasswordError('');
-
-    setUserDTO(initialState);
-
-    setOpen(false);
+    dispatch(setUser(null));
+    switchOpen();
   };
 
   useEffect(() => {
-    if (open) {
-      if (userToUpdate.type === 'physician' && occupations.length === 0) {
-        alert(`Get occupations`);
-        dispatch(fetchOccupations());
-      }
-      setUserDTO(userToUpdate);
+    if (type === PHYSICIAN && occupations.length === 0) {
+      dispatch(fetchOccupations());
     }
-  }, [open, dispatch]);
+  }, []);
 
   const handleEmailCheck = (email: string) => {
     isValidEmail(email) ? setEmailError('') : setEmailError('Email is invalid');
@@ -89,24 +79,20 @@ const EditUserModal = ({
     isValidName(name)
       ? setFirstNameError('')
       : setFirstNameError(
-          'First name length between 3 and 20 symbols, letters only',
+          'First name length between 2 and 20 symbols, letters only',
         );
   };
 
   const handleLastNameCheck = (name: string) => {
     isValidName(name)
       ? setLastNameError('')
-      : setLastNameError(
-          'First name length between 3 and 20 symbols, letters only',
-        );
+      : setLastNameError('Surame must have at least 2 symbols.');
   };
 
   const handlePasswordCheck = (password: string) => {
     isValidPasswordOrEmpty(password)
       ? setPasswordError('')
-      : setPasswordError(
-          'Password requires 1 letter, 1 number, and must be at least 8 characters long',
-        );
+      : setPasswordError('Must contain at least 4 characters.');
   };
 
   const isInputsValid = () => {
@@ -129,15 +115,7 @@ const EditUserModal = ({
               marginTop: 30,
               fontWeight: '700',
             }}
-          >
-            {/* {userToUpdate.type === 'physician'
-              ? 'Modify Physician'
-              : 'Modify User'}
-            <p>Name: {userDTO.name}.</p>
-            <p>Surname: {userDTO.surname}.</p>
-            <p>Type: {userDTO.type}.</p>
-            <p>InfoID: {userDTO.infoID}.</p> */}
-          </Typography>
+          ></Typography>
           <Box
             sx={{
               width: '470px',
@@ -151,11 +129,9 @@ const EditUserModal = ({
               id='firstName'
               value={userDTO.name}
               onChange={(e) => {
-                setUserDTO({
-                  ...userDTO,
-                  name: e.target.value.trim(),
-                });
-                handleFirstNameCheck(e.target.value);
+                const name = e.target.value;
+                setUserDTO({ ...userDTO, name });
+                handleFirstNameCheck(name);
               }}
               helperText={firstNameError === '' ? 'First Name' : firstNameError}
               error={firstNameError !== ''}
@@ -193,7 +169,7 @@ const EditUserModal = ({
             <TextField
               sx={Styles.textField}
               id='password'
-              type='password'
+              type={showPass ? 'text' : 'password'}
               value={userDTO.password}
               onChange={(e) => {
                 setUserDTO({
@@ -205,19 +181,29 @@ const EditUserModal = ({
               style={{ marginLeft: '20px' }}
               helperText={passwordError === '' ? 'Password' : passwordError}
               error={passwordError !== ''}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton onClick={switchShowPass}>
+                      {showPass ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             ></TextField>
+
             {userToUpdate.type === 'physician' && (
               <TextField
                 sx={Styles.textField}
                 id='occupation'
-                value={userDTO.infoID}
+                value={userDTO.occupationId}
                 select
                 variant='outlined'
                 helperText='Occupation'
                 onChange={(e) =>
                   setUserDTO({
                     ...userDTO,
-                    infoID: e.target.value,
+                    occupationId: e.target.value,
                   })
                 }
                 SelectProps={{ native: true }}
@@ -232,39 +218,23 @@ const EditUserModal = ({
             )}
           </Box>
 
-          <Box
-            sx={{
-              mt: 9,
-              textAlign: 'right',
-            }}
+          <Grid
+            container
+            direction='row'
+            justifyContent='space-evenly'
+            alignItems='center'
           >
-            <Button
-              sx={{
-                border: '1px solid orange',
-                color: 'orange',
-                '&:hover': {
-                  color: 'orange',
-                },
-              }}
-              onClick={handleClose}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant='contained'
-              sx={{
-                marginLeft: 3,
-                bgcolor: '#25ced1',
-                '&:hover': {
-                  bgcolor: '#25ced1',
-                },
-              }}
+            <IconButton
+              color='success'
+              onClick={handleUpdateUser}
               disabled={!isInputsValid()}
-              onClick={handleUpdateUserById}
             >
-              Modify
-            </Button>
-          </Box>
+              <EditIcon fontSize='large' />
+            </IconButton>
+            <IconButton color='success' onClick={handleClose}>
+              <Cancel fontSize='large' />
+            </IconButton>
+          </Grid>
         </Box>
       </Modal>
     </>

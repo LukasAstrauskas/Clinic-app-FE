@@ -1,8 +1,8 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../../reducers';
-import { CreateUserDTO, UpdateUserDTO, User } from '../../../model/Model';
-import { ADMIN_ACTION, BASE_USER_URL } from '../../../utils/httpConstants';
+import { User } from '../../../model/Model';
+import { BASE_USER_URL } from '../../../utils/httpConstants';
 import authHeader from '../../../authentication/authHeader';
 
 interface UserState {
@@ -24,40 +24,6 @@ export const fetchUserById = createAsyncThunk<User, string>(
       headers: authHeader(),
     });
     return response.data as User;
-  },
-);
-
-export const createUser = createAsyncThunk(
-  'patients/createPatient',
-  async (newUser: CreateUserDTO) => {
-    const response = await axios.post(`${ADMIN_ACTION}`, newUser, {
-      headers: authHeader(),
-    });
-    return response.data;
-  },
-);
-
-export const updateUser = createAsyncThunk(
-  'user/update',
-  async (updateUser: UpdateUserDTO) => {
-    const response = await axios.put(
-      `${ADMIN_ACTION}/${updateUser.id}`,
-      updateUser.userDTO,
-      {
-        headers: authHeader(),
-      },
-    );
-    return response.data;
-  },
-);
-
-export const deleteUser = createAsyncThunk(
-  'user/deleteAdmin',
-  async (id: string) => {
-    const response = await axios.delete(`${ADMIN_ACTION}/${id}`, {
-      headers: authHeader(),
-    });
-    return response.data;
   },
 );
 
@@ -83,44 +49,6 @@ export const userSlice = createSlice({
       .addCase(fetchUserById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? 'Failed to fetch user';
-      })
-      .addCase(createUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(createUser.fulfilled, (state) => {
-        state.loading = false;
-        state.error = null;
-      })
-      .addCase(createUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message ?? 'Failed to create user';
-      })
-      .addCase(updateUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(updateUser.fulfilled, (state) => {
-        state.loading = false;
-        state.error = null;
-      })
-      .addCase(updateUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message ?? 'Failed to update user';
-      })
-      .addCase(deleteUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(deleteUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        state.user = null;
-        console.log(action.payload);
-      })
-      .addCase(deleteUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message ?? 'Failed to delete user';
       });
   },
 });

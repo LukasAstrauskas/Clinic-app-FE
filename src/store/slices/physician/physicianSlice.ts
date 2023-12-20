@@ -8,7 +8,6 @@ import {
 import axios from 'axios';
 import { RootState } from '../../reducers';
 import authHeader from '../../../authentication/authHeader';
-import { getUsers } from '../manage-users/userActios';
 
 interface PhysicianState {
   physicians: User[];
@@ -149,12 +148,12 @@ export const physicianSlice = createSlice({
       })
       .addCase(resetPhysicianData.fulfilled, (state, action) => {
         state.physicians = action.payload;
-      })
-      .addCase(getUsers.fulfilled, (state, action) => {
-        state.physicians = action.payload;
-        state.physician = state.physicians[0];
-        console.log(action.payload);
       });
+    // .addCase(getUsers.fulfilled, (state, action) => {
+    //   state.physicians = action.payload;
+    //   state.physician = state.physicians[0];
+    //   console.log(action.payload);
+    // });
   },
 });
 

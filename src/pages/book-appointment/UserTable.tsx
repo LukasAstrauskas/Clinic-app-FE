@@ -9,14 +9,13 @@ import {
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import React, { useEffect } from 'react';
-import { tableRowSX } from '../../components/physician-table/PhysicianTable';
 import { User } from '../../model/Model';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { ADMIN, PATIENT, PHYSICIAN } from '../../utils/Users';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getUsers } from '../../store/slices/users/userActions';
 import EditBodyCell from '../../components/manage-users/EditBodyCell';
-import EditUserModalNew from '../../components/modals/EditUserModalNew';
+import EditUserModal from '../../components/modals/EditUserModal';
 import { selectUser } from '../../store/slices/manage-users/userSlice';
 
 type props = {
@@ -28,6 +27,17 @@ type props = {
   occupationId?: string;
   renderEmail?: boolean;
   renderEditButtons?: boolean;
+};
+
+// export to separate css file
+export const tableRowSX = (isSelected: boolean) => {
+  return {
+    backgroundColor: isSelected ? '#f5cec2 !important' : 'none',
+    '&:hover': {
+      backgroundColor: '#f5cec2 !important',
+    },
+    cursor: 'pointer',
+  };
 };
 
 const UserTable = ({
@@ -132,7 +142,7 @@ const UserTable = ({
         </Table>
       </InfiniteScroll>
       {selectedUser && renderEditButtons && (
-        <EditUserModalNew userToUpdate={selectedUser} />
+        <EditUserModal userToUpdate={selectedUser} />
       )}
     </TableContainer>
   );

@@ -16,7 +16,6 @@ const AddUserButton = ({ userType = '' }: props): JSX.Element => {
         color='success'
         onClick={() => {
           switchOpen();
-          console.log('open Add User modal' + open.valueOf());
         }}
       >
         <AddCircleIcon fontSize='large' />

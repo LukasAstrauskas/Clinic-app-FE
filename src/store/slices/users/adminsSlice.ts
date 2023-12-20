@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { User } from '../../../model/Model';
 import { Status } from '../../../utils/Status';
-import { ADMIN, PHYSICIAN } from '../../../utils/Users';
+import { ADMIN } from '../../../utils/Users';
 import { getUsers } from './userActions';
 import { RootState } from '../../reducers';
 

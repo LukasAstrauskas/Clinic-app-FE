@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { Box, Popper, Button, Typography, Alert } from '@mui/material';
+import { Box, Popper, Button, Typography } from '@mui/material';
 import Styles from '../styles/UserManagmentStyles';
 import { fetchPatientInfo } from '../../store/slices/patient/patientSlice';
 import {

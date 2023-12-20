@@ -4,7 +4,6 @@ import { Status } from '../../../utils/Status';
 import { PATIENT } from '../../../utils/Users';
 import { RootState } from '../../reducers';
 import { deleteUser, getUsers, updateUser } from './userActions';
-import exp from 'constants';
 
 interface PatientState {
   patients: User[];

@@ -7,7 +7,6 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
-
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import ErrorModal from '../../components/modals/ErrorModal';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -22,7 +21,6 @@ import {
 import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
 import { PATIENT } from '../../utils/Users';
 import UserTable from './UserTable';
-import { selectPhysician } from '../../store/slices/physician/physicianSlice';
 import UserSearchBar from './UserSearchBar';
 import {
   clearPatients,
@@ -31,10 +29,10 @@ import {
   setPatientSearch,
 } from '../../store/slices/users/patientsSlice';
 import { getUsers } from '../../store/slices/users/userActions';
+import AppointmentInfo from './AppointmentInfo';
 
 const BookAppointment = () => {
   const type: string = useAppSelector(selectLoggedUserType);
-  const selectedPhysician = useAppSelector(selectPhysician);
   const dispatch = useAppDispatch();
   const [bookingStep, setBookingStep] = useToggle();
 
@@ -100,17 +98,6 @@ const BookAppointment = () => {
     dispatch(pickTimeslot({ ...timeslot, patientId }));
   };
 
-  const appointmentInfo = (
-    <Box style={{ textAlign: 'center', marginTop: 10 }}>
-      Selected Physician:
-      <b>
-        {selectedPhysician.name} {selectedPhysician.surname}
-      </b>
-      {' | Selected Time: '}
-      <b>{timeslot.date}</b>
-    </Box>
-  );
-
   return (
     <Box sx={{ width: '100%', marginTop: '0px' }}>
       <Stack
@@ -137,7 +124,7 @@ const BookAppointment = () => {
                 selectedID={timeslot.patientId}
               />
             </Typography>
-            {appointmentInfo}
+            <AppointmentInfo />
           </Stack>
         ) : (
           <TimetablesContainer />

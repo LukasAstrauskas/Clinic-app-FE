@@ -115,6 +115,21 @@ export const selectOccupationId = (state: RootState) =>
 export const selectPhysicianId = (state: RootState) =>
   state.physicians.physicianId;
 
+export const selectPhysician = (state: RootState) => {
+  let physician: User = {
+    id: '',
+    name: 'Not',
+    surname: 'Found',
+    password: '',
+    email: '',
+    type: PHYSICIAN,
+    occupation: null,
+  };
+  const user = physicians.find(({ id }) => id === physicianId);
+  if (user) physician = user;
+  return physician;
+};
+
 // export const selectPhysiciaNState = (state: RootState) =>
 // state.physicians.;
 // export const patientsLength = (state: RootState) =>

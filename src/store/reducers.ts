@@ -1,7 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import type { Reducer } from '@reduxjs/toolkit';
 import { patientSlice } from './slices/patient/patientSlice';
-import { physicianSlice } from './slices/physician/physicianSlice';
 import { userSlice } from './slices/manage-users/userSlice';
 import { occupationSlice } from './slices/occupation/occupationSlice';
 import { timeslotSlice } from './slices/timeslot/timeslotSlice';
@@ -16,7 +15,6 @@ export const resetStore = () => ({ type: 'RESET_STORE' });
 const appReducer = combineReducers({
   user: userSlice.reducer,
   patient: patientSlice.reducer,
-  physician: physicianSlice.reducer,
   occupation: occupationSlice.reducer,
   timeslot: timeslotSlice.reducer,
   loggedUser: loggedUserReducer,

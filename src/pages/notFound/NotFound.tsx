@@ -1,15 +1,21 @@
 import React from 'react';
-import styles from './NotFound.module.css';
+import { Alert, AlertTitle, Container, Typography } from '@mui/material';
 
 const NotFound = () => {
   return (
-    <div className={styles.centerItems}>
-      <h1>Error 404</h1>
-      <h2>
-        We apologize, but it seems the page you are looking for has taken a sick
-        day
-      </h2>
-    </div>
+    <Container sx={{ padding: '15%' }}>
+      <Alert severity='info'>
+        <AlertTitle>
+          <Typography variant='h4' component='h4'>
+            Error 404
+          </Typography>
+        </AlertTitle>
+        <Typography variant='h5' component='h5'>
+          <strong>We apologize,</strong> but it seems the page you are looking
+          for has taken a sick day.
+        </Typography>
+      </Alert>
+    </Container>
   );
 };
 

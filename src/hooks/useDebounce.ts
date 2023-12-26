@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 let timer: NodeJS.Timeout;
 
-const useDebounce = (
+export const useDebounce = (
   delay: number,
 ): [string | null, (text: string) => void] => {
   const [debouncedValue, setDebouncedValue] = useState<string | null>(null);
@@ -16,4 +16,3 @@ const useDebounce = (
 
   return [debouncedValue, setDebounce];
 };
-export default useDebounce;

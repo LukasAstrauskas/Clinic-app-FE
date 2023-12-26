@@ -70,17 +70,3 @@ export type Occupation = {
   id: string;
   name: string;
 };
-
-export type CreateUserDTO = {
-  name: string;
-  surname: string;
-  email: string;
-  password: string;
-  type: string;
-  infoID?: string;
-};
-
-export type UpdateUserDTO = {
-  id: string;
-  userDTO: CreateUserDTO;
-};

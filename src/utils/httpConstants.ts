@@ -26,11 +26,3 @@ export const ADMIN_ACTION = 'http://localhost:8080/user/admin';
 
 export const PATIENTS_ADDITIONAL_INFO_URL =
   'http://localhost:8080/patientInfo/';
-//Physicians
-export const PHYSICIANS_FULL_URL = 'http://localhost:8080/physicianInfo';
-export const PHYSICIAN_SEARCH_URL =
-  'http://localhost:8080/user/physicianSearch/';
-export const BASE_PHYSICIANS_URL = 'http://localhost:8080/user/physicians/';
-export const PHYSICIAN_SIZE_URL = 'http://localhost:8080/user/physicianCount';
-export const INCOMING_PHYSICIANS_TO_BE_RENDERED_URL =
-  'http://localhost:8080/physicianInfo/physcians/offset/';

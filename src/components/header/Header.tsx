@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './Header.module.css';
-import clinicLogo from '../../assets/clinic-logo.svg';
+import medClinic from '../../assets/med-clinic.svg';
 import { Avatar, IconButton, Menu, MenuItem, Stack } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -41,7 +41,7 @@ const Header = () => {
       <NavLink to={ROUTES.HOMEPAGE} className={styles.headerLogoLink}>
         <div className={styles.headerLogoSection}>
           <img
-            src={clinicLogo}
+            src={medClinic}
             alt='clinic-logo'
             className={styles.clinicLogo}
           />

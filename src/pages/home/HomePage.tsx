@@ -2,11 +2,10 @@ import React from 'react';
 import { Grid } from '@mui/material';
 import styles from './HomePage.module.css';
 import Item from './Item';
-import mannageApointmentIcon from '../../assets/manage-appointments-icon.svg';
-import physicianTimetablesIcon from '../../assets/physician-timetables-icon.svg';
-import manageUsersIcon from '../../assets/manage-users-icon.svg';
-import managePhysiciansIcon from '../../assets/manage-physicians-icon.svg';
-import newAppointmentIcon from '../../assets/new-appointment-icon.svg';
+import bookAppointment from '../../assets/book-appointment.svg';
+import manageTimeslots from '../../assets/manage-timeslots.svg';
+import manageUsers from '../../assets/manage-users.svg';
+import appointments from '../../assets/appointments.svg';
 import { ROUTES } from '../../routes/routes';
 import { useAppSelector } from '../../store/hooks';
 import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
@@ -26,13 +25,12 @@ const HomePage = () => {
         <>
           <Item
             title='Manage users'
-            icon1={manageUsersIcon}
-            icon2={managePhysiciansIcon}
+            icon={manageUsers}
             linkTo={ROUTES.MANAGEUSERS}
           ></Item>
           <Item
             title='Manage timeslots'
-            icon1={physicianTimetablesIcon}
+            icon={manageTimeslots}
             linkTo={ROUTES.MANAGETIMESLOTS}
           ></Item>
         </>
@@ -40,14 +38,14 @@ const HomePage = () => {
 
       <Item
         title='Book appointment'
-        icon1={mannageApointmentIcon}
+        icon={bookAppointment}
         linkTo={ROUTES.BOOKAPPOINTMENT}
       ></Item>
 
       {loggedUserType == 'patient' && (
         <Item
           title='Your appointments'
-          icon1={newAppointmentIcon}
+          icon={appointments}
           linkTo={ROUTES.PATIENTAPPOINTMENTS}
         ></Item>
       )}

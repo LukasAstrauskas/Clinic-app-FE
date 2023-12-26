@@ -14,7 +14,7 @@ import {
 } from '../../store/slices/occupation/occupationSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { ADMIN, PATIENT, PHYSICIAN } from '../../utils/Users';
-import useDebounce from '../../hooks/useDebounce';
+import { useDebounce } from '../../hooks/useDebounce';
 import {
   selectOccupationId,
   setOccupationSearch,

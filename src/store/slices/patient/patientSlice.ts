@@ -142,14 +142,7 @@ export const patientSlice = createSlice({
   },
 });
 
-// export const selectPatients = (state: RootState) => state.patient.patients;
 export const selectPatientAdditionalInfo = (state: RootState) =>
   state.patient.additionalInfo;
-// export const selectUpcomingAppointments = (state: RootState) =>
-//   state.patient.upcomingAppointments;
-// export const selectPastAppointments = (state: RootState) =>
-//   state.patient.pastAppointments;
-// export const selectTotalPastAppointmentAmount = (state: RootState) =>
-//   state.patient.totalPastAppointmentAmount;
 
 export default patientSlice.reducer;

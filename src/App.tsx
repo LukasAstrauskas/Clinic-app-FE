@@ -24,7 +24,7 @@ function App() {
         sx={{
           border: '1px solid #e3f2fd',
           bgcolor: '#e3f2fd',
-          minHeight: '33rem',
+          minHeight: '35.5rem',
         }}
       >
         <Routes>

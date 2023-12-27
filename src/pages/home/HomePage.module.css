@@ -1,6 +1,9 @@
 .main {
-  height: 75vh;
+  height: 80vh;
+  /* height: 100%; */
   width: 100%;
+  /* border-width: 2px; */
+  /* border-style: solid; */
 }
 
 .item {

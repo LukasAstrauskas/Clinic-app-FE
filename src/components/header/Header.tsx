@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
-import styles from './Header.module.css';
 import medClinic from '../../assets/med-clinic.svg';
-import { Avatar, IconButton, Menu, MenuItem, Stack } from '@mui/material';
-import { grey } from '@mui/material/colors';
-import { NavLink, useNavigate } from 'react-router-dom';
+import {
+  AppBar,
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
 import { logout } from '../../store/slices/loggedUser/loggedUserSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -12,7 +20,7 @@ import {
   selectIsLogged,
   selectLoggedUser,
 } from '../../store/slices/loggedUser/loggedUserSlice';
-import { PAGENEAME } from '../../utils/Constants';
+import { PAGENEAME, MAINGREEN } from '../../utils/Constants';
 
 const Header = () => {
   const loggedUser = useAppSelector(selectLoggedUser);
@@ -37,26 +45,37 @@ const Header = () => {
   };
 
   return (
-    <div className={styles.header}>
-      <NavLink to={ROUTES.HOMEPAGE} className={styles.headerLogoLink}>
-        <div className={styles.headerLogoSection}>
-          <img
-            src={medClinic}
-            alt='clinic-logo'
-            className={styles.clinicLogo}
-          />
-          <h1>{PAGENEAME}</h1>
-        </div>
-      </NavLink>
-      <Stack direction='row' spacing={2}>
-        {isLogged && (
-          <IconButton onClick={handleClickAvatar} disableRipple>
-            <Avatar className={styles.avatar} sx={{ bgcolor: grey[100] }}>
-              <div className={styles.avatarLogo}>{loggedUser.initials}</div>
-            </Avatar>
+    <>
+      <AppBar position='static' sx={{ background: 'white', boxShadow: 'none' }}>
+        <Toolbar variant='dense'>
+          <IconButton
+            edge='start'
+            color='inherit'
+            aria-label='menu'
+            sx={{ mr: 2 }}
+            onClick={() => navige(ROUTES.HOMEPAGE)}
+          >
+            <Avatar
+              variant='rounded'
+              src={medClinic}
+              sx={{ width: 45, height: 45 }}
+            />
           </IconButton>
-        )}
-      </Stack>
+          <Button variant='text' onClick={() => navige(ROUTES.HOMEPAGE)}>
+            <Typography variant='h6' color='black' component='div'>
+              <strong>{PAGENEAME}</strong>
+            </Typography>
+          </Button>
+
+          <Box sx={{ flexGrow: 1 }}></Box>
+          {isLogged && (
+            <IconButton onClick={handleClickAvatar}>
+              <Avatar sx={{ bgcolor: MAINGREEN }}>{loggedUser.initials}</Avatar>
+            </IconButton>
+          )}
+        </Toolbar>
+      </AppBar>
+
       <Menu open={openMenu} anchorEl={anchorEl} onClose={handleCloseMenu}>
         {loggedUser.type === 'patient' && (
           <MenuItem
@@ -70,7 +89,7 @@ const Header = () => {
         )}
         <MenuItem onClick={handelLogout}>Log-out</MenuItem>
       </Menu>
-    </div>
+    </>
   );
 };
 

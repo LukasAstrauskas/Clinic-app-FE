@@ -2,7 +2,7 @@ import { Box, Tab, Tabs, ThemeProvider, createTheme } from '@mui/material';
 import React, { useState } from 'react';
 import PastAppointments from './PastAppointmets';
 import UpcomingAppointments from './UpcomingApppointments';
-import TabPanel from '../../components/TabPanel';
+import TabPanel from '../../components/manage-users/TabPanel';
 
 const PatientAppointments = () => {
   const [value, setValue] = useState(0);

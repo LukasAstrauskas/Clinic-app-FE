@@ -1,7 +1,7 @@
 import { Box, Stack } from '@mui/material';
 import React from 'react';
-import UserSearchBar from '../book-appointment/UserSearchBar';
-import UserTable from '../book-appointment/UserTable';
+import UserSearchBar from '../../components/manage-users/UserSearchBar';
+import UserTable from '../../components/manage-users/UserTable';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { PHYSICIAN } from '../../utils/Users';
 import {

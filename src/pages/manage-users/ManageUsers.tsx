@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tabs, Tab, createTheme, Box } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
-import TabPanel from '../../components/TabPanel';
+import TabPanel from '../../components/manage-users/TabPanel';
 import ManagePatients from './ManagePatients';
 import ManagePhysicians from './ManagePhysicians';
 import ManageAdmins from './ManageAdmins';

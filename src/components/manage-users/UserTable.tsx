@@ -14,8 +14,8 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { ADMIN, PATIENT, PHYSICIAN } from '../../utils/Users';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getUsers } from '../../store/slices/users/userActions';
-import EditBodyCell from '../../components/manage-users/EditBodyCell';
-import EditUserModal from '../../components/modals/EditUserModal';
+import EditBodyCell from './EditBodyCell';
+import EditUserModal from '../modals/EditUserModal';
 import { selectUser } from '../../store/slices/manage-users/userSlice';
 
 type props = {

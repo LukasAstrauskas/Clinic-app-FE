@@ -2,8 +2,8 @@ import React from 'react';
 import { ADMIN } from '../../utils/Users';
 import { Box, Stack } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import UserSearchBar from '../book-appointment/UserSearchBar';
-import UserTable from '../book-appointment/UserTable';
+import UserSearchBar from '../../components/manage-users/UserSearchBar';
+import UserTable from '../../components/manage-users/UserTable';
 import { getUsers } from '../../store/slices/users/userActions';
 import {
   clearAdmins,

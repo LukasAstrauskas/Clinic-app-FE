@@ -19,7 +19,7 @@ import {
   selectOccupationId,
   setOccupationSearch,
 } from '../../store/slices/users/physiciansSlice';
-import AddUserButton from '../manage-users/AddUserButton';
+import AddUserButton from '../../pages/manage-users/AddUserButton';
 
 interface SearchProps {
   onSearch: (search: string, userType: string, occupationId?: string) => void;

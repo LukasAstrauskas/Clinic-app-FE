@@ -20,8 +20,8 @@ import {
 } from '../../store/slices/timeslot/timeslotActions';
 import { selectLoggedUserType } from '../../store/slices/loggedUser/loggedUserSlice';
 import { PATIENT } from '../../utils/Users';
-import UserTable from './UserTable';
-import UserSearchBar from './UserSearchBar';
+import UserTable from '../../components/manage-users/UserTable';
+import UserSearchBar from '../../components/manage-users/UserSearchBar';
 import {
   clearPatients,
   selectPatientSearch,

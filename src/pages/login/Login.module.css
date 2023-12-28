@@ -1,23 +1,24 @@
-.login {
-    width: 100 vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 12%;
+/* .login {
+  width: 100 vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12%;
+  border: solid;
 }
 .centerItems {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100px;
-  }
-  .centerItems h2 {
-    margin-top: 10px;
-  }
-  .buttonContainer {
-    display: flex;
-    justify-content: center;
-    text-decoration: none;
-    margin: 20px;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+.centerItems h2 {
+  margin-top: 10px;
+}
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  text-decoration: none;
+  margin: 20px;
+} */

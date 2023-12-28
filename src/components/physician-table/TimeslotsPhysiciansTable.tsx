@@ -1,6 +1,6 @@
 import React from 'react';
-import UserSearchBar from '../../pages/book-appointment/UserSearchBar';
-import UserTable from '../../pages/book-appointment/UserTable';
+import UserSearchBar from '../manage-users/UserSearchBar';
+import UserTable from '../manage-users/UserTable';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   clearPhysicians,

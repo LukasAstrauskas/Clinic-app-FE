@@ -193,5 +193,7 @@ export const selectIsLogged = () => localStorage.getItem('token') !== null;
 export const selectIsUserLoaded = (state: RootState) =>
   !!state.loggedUser.loggedUser.id;
 
+export const loginError = (state: RootState) => state.loggedUser.error;
+
 export const { logout, addAppointment } = loggedUserSlice.actions;
 export default loggedUserSlice.reducer;

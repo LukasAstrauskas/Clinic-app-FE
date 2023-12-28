@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Stack } from '@mui/material';
-import UserSearchBar from '../book-appointment/UserSearchBar';
-import UserTable from '../book-appointment/UserTable';
+import UserSearchBar from '../../components/manage-users/UserSearchBar';
+import UserTable from '../../components/manage-users/UserTable';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   setPatientSearch,
